@@ -4,6 +4,8 @@ Console.WriteLine("Hello, World!");
 
 Raylib.InitWindow(800, 480, "Hello World");
 
+Raylib.SetTargetFPS(1);
+
 while (!Raylib.WindowShouldClose())
 {
     Raylib.BeginDrawing();
@@ -12,7 +14,7 @@ while (!Raylib.WindowShouldClose())
     Raylib.DrawText("Hello world!", 12, 12, 20, Color.BLACK);
 
     var frametime = Raylib.GetFrameTime();
-    Raylib.DrawText($"Frame time: {frametime / 1000.0f}ms", 12, 36, 20, Color.BLACK);
+    Raylib.DrawText($"Frame time: {frametime / 1000.0f} S", 12, 36, 20, Color.BLACK);
     Raylib.DrawText($"FPS: {1.0f / frametime} FPS", 12, 60, 20, Color.BLACK);
 
     Raylib.EndDrawing();
