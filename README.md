@@ -1,16 +1,15 @@
-H3Roguelike
+## H3Roguelike
+### Scrum roles
 
-Scrum roles
-
-Product Owner: Michael.
-Developer: Victor.
+Product Owner: Michael.</br>
+Developer: Victor.</br>
 Scrum Master: Pierre.
 
-End Product:
+## End Product:
 
-Small procedural generated Roguelite.
+### Small procedural generated Roguelite.
 
-Created with:
+### Created with:
 * Raylib-cs https://github.com/ChrisDill/Raylib-cs
 * MongoDB https://www.mongodb.com/
 * Using Kenney.nl Assets https://kenney.nl/assets/micro-roguelike
