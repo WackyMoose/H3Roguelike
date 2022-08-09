@@ -17,6 +17,8 @@ while (!Raylib.WindowShouldClose())
     Raylib.DrawText($"Frame time: {frametime / 1000.0f} S", 12, 36, 20, Color.BLACK);
     Raylib.DrawText($"FPS: {1.0f / frametime} FPS", 12, 60, 20, Color.BLACK);
 
+    Raylib.DrawCircle(Raylib.GetScreenWidth()/2, Raylib.GetScreenHeight()/2, 20, Color.RED);
+
     Raylib.EndDrawing();
 }
 
