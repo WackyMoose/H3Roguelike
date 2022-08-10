@@ -26,6 +26,10 @@ while (!Raylib.WindowShouldClose())
     var dest = new Rectangle(128, 128, 64, 64);
     Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
 
+    var source1 = new Rectangle(0, 0, 8, 8);
+    var dest1 = new Rectangle(128, 192, 64, 64);
+    Raylib.DrawTexturePro(texture, source1, dest1, Vector2.Zero, 0.0f, Color.WHITE);
+
     source = new Rectangle(8, 0, 8, 8);
     dest = new Rectangle(128 + 64, 128, 64, 64);
     Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
@@ -38,7 +42,7 @@ while (!Raylib.WindowShouldClose())
     dest = new Rectangle(128 + 128 + 64, 128, 64, 64);
     Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
 
-    Raylib.DrawTextureEx(texture, new Vector2(), 0.0f, 1.0f, Color.WHITE);
+    Raylib.DrawTextureEx(texture, Vector2.Zero, 0.0f, 1.0f, Color.WHITE);
 
     Raylib.EndDrawing();
 }
