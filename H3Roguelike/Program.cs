@@ -1,10 +1,16 @@
 ﻿using Raylib_cs;
+using System.Numerics;
+
+const int WINDOW_WIDTH = 1600;
+const int WINDOW_HEIGHT = 900;
 
 Console.WriteLine("Hello, World!");
 
-Raylib.InitWindow(800, 480, "Hello World");
+Raylib.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World");
 
-Raylib.SetTargetFPS(1);
+Raylib.SetTargetFPS(15);
+
+var texture = Raylib.LoadTexture("Resources/Textures/colored_tilemap_packed.png");
 
 while (!Raylib.WindowShouldClose())
 {
@@ -12,12 +18,27 @@ while (!Raylib.WindowShouldClose())
     Raylib.ClearBackground(Color.WHITE);
 
     Raylib.DrawText("Hello world!", 12, 12, 20, Color.BLACK);
+    Raylib.DrawFPS(12, 36);
 
-    var frametime = Raylib.GetFrameTime();
-    Raylib.DrawText($"Frame time: {frametime / 1000.0f} S", 12, 36, 20, Color.BLACK);
-    Raylib.DrawText($"FPS: {1.0f / frametime} FPS", 12, 60, 20, Color.BLACK);
+    Raylib.DrawCircle(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2, 20, Color.RED);
 
-    Raylib.DrawCircle(Raylib.GetScreenWidth()/2, Raylib.GetScreenHeight()/2, 20, Color.RED);
+    var source = new Rectangle(0, 0, 8, 8);
+    var dest = new Rectangle(128, 128, 64, 64);
+    Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
+
+    source = new Rectangle(8, 0, 8, 8);
+    dest = new Rectangle(128 + 64, 128, 64, 64);
+    Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
+
+    source = new Rectangle(16, 0, 8, 8);
+    dest = new Rectangle(128 + 128, 128, 64, 64);
+    Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
+
+    source = new Rectangle(24, 0, 8, 8);
+    dest = new Rectangle(128 + 128 + 64, 128, 64, 64);
+    Raylib.DrawTextureTiled(texture, source, dest, Vector2.Zero, 0.0f, 8.0f, Color.WHITE);
+
+    Raylib.DrawTextureEx(texture, new Vector2(), 0.0f, 1.0f, Color.WHITE);
 
     Raylib.EndDrawing();
 }
