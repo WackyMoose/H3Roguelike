@@ -54,7 +54,8 @@ Through the journal & time spend in the game should result in the player getting
 
 ### <span style="color:#E74C3C ">Graphics:</span>
 Crisp 8 bit art pixel art.</br>
-Sprites from Kenney.nl & itch.io.</br>
+Spritesheet from Kenney.nl, which we will extend https://kenney.nl/assets/micro-roguelike</br>
+Potraits package from itchabop https://itchabop.itch.io/8bit-portrait-pack</br>
 
 ### <span style="color:#E74C3C ">Audio:</span>
 Chiptune, probably made "in-house".
