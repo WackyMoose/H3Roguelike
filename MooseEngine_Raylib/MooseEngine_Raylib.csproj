@@ -7,4 +7,8 @@
     <RootNamespace>MooseEngine</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Raylib-cs" Version="4.0.0.1" />
+  </ItemGroup>
+
 </Project>
