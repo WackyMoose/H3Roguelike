@@ -9,6 +9,19 @@ Scrum Master: Pierre.
 
 Small procedural generated Rogue-lite game.
 
+### <span style="color:#C39BD3 ">Definition of RogueLike:</span>
+
+* Random level / dungeon creation
+* Permadeath
+* Turn-based
+* Non-modal (Every action available regardless of location)
+* Complete goals in multiple ways / emergent gameplay
+* Stamina decay & strict ressource management
+* Hack-N-Slash
+* World exploration
+
+https://en.wikipedia.org/wiki/Roguelike
+
 ### <span style="color:#C39BD3 ">Created with:</span>
 * Robert Nystrom https://gameprogrammingpatterns.com/
 * C# in Visual Studio https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
@@ -64,18 +77,4 @@ Chiptune, probably made "in-house".
 PC - Itch.io, Steam.
 
 </details>
-
-
-### <span style="color:#E74C3C ">Definition of RogueLike:</span>
-
-* Random level / dungeon creation
-* Permadeath
-* Turn-based
-* Non-modal (Every action available regardless of location)
-* Complete goals in multiple ways / emergent gameplay
-* Stamina decay & strict ressource management
-* Hack-N-Slash
-* World exploration
-
-https://en.wikipedia.org/wiki/Roguelike
 
