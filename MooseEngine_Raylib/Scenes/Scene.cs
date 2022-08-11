@@ -1,4 +1,5 @@
-﻿using MooseEngine.Extensions.Runtime;
+﻿using MooseEngine.Core;
+using MooseEngine.Extensions.Runtime;
 
 namespace MooseEngine.Scenes;
 
@@ -24,15 +25,14 @@ public class Scene : Disposeable
             var entity = _entities[i];
             entity.Update(deltaTime);
         }
-    }
 
-    public void RenderRuntime()
-    {
+        Renderer.Begin();
         for (int i = _entities.Count - 1; i >= 0; i--)
         {
             var entity = _entities[i];
-            entity.Render();
+            Renderer.RenderEntity(entity);
         }
+        Renderer.End();
     }
 
     public void Add(Entity entity)

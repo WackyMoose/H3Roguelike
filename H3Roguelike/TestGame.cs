@@ -29,9 +29,4 @@ internal class TestGame : IGame
     {
         _scene?.UpdateRuntime(deltaTime);
     }
-
-    public void Render()
-    {
-        _scene?.RenderRuntime();
-    }
 }
