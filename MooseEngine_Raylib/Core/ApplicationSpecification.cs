@@ -17,4 +17,14 @@ public struct ApplicationSpecification
         WindowWidth = width;
         WindowHeight = height;
     }
+
+    public static implicit operator WindowSpecification(ApplicationSpecification applicationSpecification)
+    {
+        return new WindowSpecification
+        {
+            Title = applicationSpecification.Name,
+            Width = applicationSpecification.WindowWidth,
+            Height = applicationSpecification.WindowHeight
+        };
+    }
 }
