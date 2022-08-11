@@ -1,5 +1,6 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Scene;
+using MooseEngine.Utility;
 using System.Numerics;
 
 namespace H3Roguelike;
@@ -15,7 +16,7 @@ internal class TestGame : Game
     public override void Start()
     {
         //throw new NotImplementedException();
-        var spriteCoords = new Vector2(4, 0);
+        var spriteCoords = new Coords2D(4, 0);
 
         testEntity = new TestEntity(spriteCoords);
         testEntity.Scale = new Vector2(64, 64);

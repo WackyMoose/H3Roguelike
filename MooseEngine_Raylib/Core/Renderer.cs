@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using MooseEngine.Scene;
 using System.Numerics;
+using MooseEngine.Utility;
 
 // Spritesheet path "..\..\..\Resources\Textures\Tilemap_Modified.png"
 
@@ -41,7 +42,7 @@ namespace MooseEngine.Core
 
         public static void RenderEntity(Entity entity)
         {
-            Vector2 spritePosition = entity.SpriteCoords;
+            Coords2D spritePosition = entity.SpriteCoords;
             Rectangle pixelSourcePosition = new Rectangle(_offSet + ((_spriteSize + _padding) * spritePosition.X), _offSet + ((_spriteSize + _padding) * spritePosition.Y), _spriteSize, _spriteSize);
             Rectangle pixelDestinationPosition = new Rectangle(entity.Position.X, entity.Position.Y, entity.Scale.X, entity.Scale.Y);
 
