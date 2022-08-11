@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 using MooseEngine.Scenes;
+using MooseEngine.Extensions.Runtime;
 
 // Spritesheet path "..\..\..\Resources\Textures\Tilemap_Modified.png"
 
@@ -23,6 +24,7 @@ namespace MooseEngine.Core
             Raylib.SetTargetFPS(60);
 
             // TODO: add null check
+            Throw.IfNull(_spriteSheet, $"Failed to load spritesheet, path: {spriteSheetPath}");
         }
 
         public static void Begin()
