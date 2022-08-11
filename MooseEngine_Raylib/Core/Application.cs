@@ -23,6 +23,8 @@ public class Application : Disposeable
     private Window? _window = null;
     private IGame? _game = null;
 
+    public Window Window { get { return _window ?? throw new InvalidOperationException("Window is not initialized!"); } }
+
     public Application()
         : this(new())
     {
