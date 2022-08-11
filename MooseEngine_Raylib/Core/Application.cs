@@ -39,7 +39,8 @@ public class Application : IDisposable
 
         // Window creation
         Raylib.InitWindow(_specification.WindowWidth, _specification.WindowHeight, _specification.Name);
-        Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+        //Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
 
     }
 

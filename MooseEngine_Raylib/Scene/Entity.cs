@@ -6,12 +6,13 @@ namespace MooseEngine.Scene;
 
 public abstract class Entity
 {
+    // TODO: Add Coords2D struct instead of Vector2
     public Vector2 Position { get; set; }
     public Vector2 Scale { get; set; }
-    public Rectangle SpriteCoords { get; init; }
+    public Vector2 SpriteCoords { get; init; }
     public Color ColorTint { get; set; }
 
-    public Entity(Rectangle spriteCoords, Color colorTint)
+    public Entity(Vector2 spriteCoords, Color colorTint)
     {
         Position = Vector2.Zero;
         Scale = Vector2.One;
@@ -19,7 +20,7 @@ public abstract class Entity
         ColorTint = colorTint;
     }
 
-    public Entity(Rectangle spriteCoords)
+    public Entity(Vector2 spriteCoords)
     : this(spriteCoords, Color.WHITE)
     {
     }
