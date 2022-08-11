@@ -4,20 +4,20 @@ using System.Numerics;
 
 namespace H3Roguelike;
 
-internal class TestEntity : Entity
-{
-    public TestEntity(Vector4 spriteCoords) : base(spriteCoords)
-    {
-    }
+//internal class TestEntity : Entity
+//{
+//    public TestEntity(Vector2 spriteCoords) : base(spriteCoords)
+//    {
+//    }
 
-    public override void Initialize()
-    {
-    }
+//    public override void Initialize()
+//    {
+//    }
 
-    public override void Update(float deltaTime)
-    {
-    }
-}
+//    public override void Update(float deltaTime)
+//    {
+//    }
+//}
 
 internal class TestGame : IGame
 {
@@ -26,8 +26,9 @@ internal class TestGame : IGame
     public void Initialize()
     {
         _scene = new Scene();
-        
-        var entity = new TestEntity(new Vector4(8 * 5, 0, 8, 8));
+
+        var entity = new TestEntity(new Vector2(5, 0));
+        entity.Scale = new Vector2(64, 64);
         entity.Position = new Vector2(128, 192);
 
         _scene?.Add(entity);

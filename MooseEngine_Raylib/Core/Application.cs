@@ -38,6 +38,9 @@ public class Application : Disposeable
 
         _window = new Window(specification);
         _window.Initialize();
+        //Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
+
     }
 
     protected override void DisposeManagedState()
@@ -62,12 +65,11 @@ public class Application : Disposeable
             var deltaTime = Raylib.GetFrameTime();
             _game?.Update(deltaTime);
 
-            Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.WHITE);
+            Renderer.Begin();
 
             _game?.Render();
 
-            Raylib.EndDrawing();
+            Renderer.End();
         }
 
         _game?.Uninitialize();
