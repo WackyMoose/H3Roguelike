@@ -4,21 +4,6 @@ using System.Numerics;
 
 namespace H3Roguelike;
 
-//internal class TestEntity : Entity
-//{
-//    public TestEntity(Vector2 spriteCoords) : base(spriteCoords)
-//    {
-//    }
-
-//    public override void Initialize()
-//    {
-//    }
-
-//    public override void Update(float deltaTime)
-//    {
-//    }
-//}
-
 internal class TestGame : IGame
 {
     private Scene? _scene;
