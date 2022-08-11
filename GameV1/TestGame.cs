@@ -3,8 +3,6 @@ using MooseEngine.Scene;
 using MooseEngine.Utility;
 using System.Numerics;
 
-namespace H3Roguelike;
-
 internal class TestGame : Game
 {
     public TestGame()
