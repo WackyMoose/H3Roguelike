@@ -35,12 +35,17 @@ namespace MooseEngine.Core
         {
             Raylib.BeginDrawing();
 
-            Raylib.ClearBackground(Color.WHITE);
+            Raylib.ClearBackground(Color.DARKGRAY);
         }
 
         public static void End()
         {
             Raylib.EndDrawing();
+        }
+
+        public static void RenderTexture(Texture2D texture, int x, int y)
+        {
+            Raylib.DrawTextureEx(texture, Vector2.Zero, 0.0f, 1.0f, Color.WHITE);
         }
 
         public static void RenderEntity(Entity entity)
