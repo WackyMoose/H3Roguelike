@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace MooseEngine.Scene;
+namespace MooseEngine.Scenes;
 
 public abstract class Entity
 {
@@ -10,17 +10,21 @@ public abstract class Entity
     public Rectangle SpriteCoords { get; init; }
     public Color ColorTint { get; set; }
 
-    public Entity(Rectangle spriteCoords)
+    private Texture2D _spritesheet;
+
+    public Entity(Vector4 spriteCoords)
         : this(spriteCoords, Color.WHITE)
     {
     }
 
-    public Entity(Rectangle spriteCoords, Color colorTint)
+    public Entity(Vector4 spriteCoords, Color colorTint)
     {
         Position = Vector2.Zero;
         Scale = Vector2.One;
-        SpriteCoords = spriteCoords;
+        SpriteCoords = new(spriteCoords.X, spriteCoords.Y, spriteCoords.Z, spriteCoords.W);
         ColorTint = colorTint;
+
+        _spritesheet = Raylib.LoadTexture("../../../Resources/Textures/colored_tilemap_packed.png"); 
     }
 
     public abstract void Initialize();
@@ -28,8 +32,8 @@ public abstract class Entity
 
     public virtual void Render()
     {
-        var dest = new Rectangle(Position.X, Position.Y, Scale.X, Scale.Y);
+        var dest = new Rectangle(Position.X, Position.Y, Scale.X * 64.0f, Scale.Y * 64.0f);
 
-        Raylib.DrawTexturePro(new Texture2D(), SpriteCoords, dest, Vector2.Zero, 0.0f, ColorTint);
+        Raylib.DrawTexturePro(_spritesheet, SpriteCoords, dest, Vector2.Zero, 0.0f, ColorTint);
     }
 }
