@@ -27,6 +27,10 @@ namespace MooseEngine.Core
             Throw.IfNull(_spriteSheet, $"Failed to load spritesheet, path: {spriteSheetPath}");
         }
 
+        public static void Shutdown()
+        {
+        }
+
         public static void Begin()
         {
             Raylib.BeginDrawing();
