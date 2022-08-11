@@ -1,25 +1,51 @@
 ﻿using MooseEngine.Core;
+using MooseEngine.Scenes;
+using System.Numerics;
 
 namespace H3Roguelike;
 
-internal class TestGame : Game
+internal class TestEntity : Entity
 {
-    public TestGame()
+    public TestEntity(Vector4 spriteCoords) : base(spriteCoords)
     {
     }
 
-    public override void Start()
+    public override void Initialize()
     {
-        throw new NotImplementedException();
     }
 
     public override void Update(float deltaTime)
     {
-        throw new NotImplementedException();
+    }
+}
+
+internal class TestGame : IGame
+{
+    private Scene? _scene;
+
+    public void Initialize()
+    {
+        _scene = new Scene();
+        
+        var entity = new TestEntity(new Vector4(8 * 5, 0, 8, 8));
+        entity.Position = new Vector2(128, 192);
+
+        _scene?.Add(entity);
     }
 
-    public override void Render()
+    public void Uninitialize()
     {
-        throw new NotImplementedException();
+        _scene?.Dispose();
+        _scene = null;
+    }
+
+    public void Update(float deltaTime)
+    {
+        _scene?.UpdateRuntime(deltaTime);
+    }
+
+    public void Render()
+    {
+        _scene?.RenderRuntime();
     }
 }

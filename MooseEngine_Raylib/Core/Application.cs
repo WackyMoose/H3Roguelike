@@ -1,8 +1,9 @@
-﻿using Raylib_cs;
+﻿using MooseEngine.Extensions.Runtime;
+using Raylib_cs;
 
 namespace MooseEngine.Core;
 
-public class Application : IDisposable
+public class Application : Disposeable
 {
     private static Application? s_Instance = null;
     public static Application Instance
@@ -19,7 +20,8 @@ public class Application : IDisposable
     }
 
     private ApplicationSpecification _specification;
-    private Game? _currentGame = null;
+    private Window? _window = null;
+    private IGame? _game = null;
 
     public Application()
         : this(new())
@@ -29,55 +31,57 @@ public class Application : IDisposable
 
     public Application(ApplicationSpecification specification)
     {
-        if(s_Instance != default)
-        {
-            throw new Exception("Application already exists");
-        }
+        Throw.IfSingletonExists(s_Instance, "Application already exists!");
         s_Instance = this;
 
         _specification = specification;
 
-        // Window creation
-        Raylib.InitWindow(_specification.WindowWidth, _specification.WindowHeight, _specification.Name);
+        _window = new Window(specification);
+        _window.Initialize();
     }
 
-    public void Dispose()
+    protected override void DisposeManagedState()
     {
-        _currentGame = null;
-        Raylib.CloseWindow();
+        _game = null;
+
+        _window?.Shutdown();
+        _window = null;
     }
 
     public void Run()
     {
-        if (_currentGame == default)
-        {
-            return;
-        }
+        Throw.IfNull(_window, "No Window instance.");
+        Throw.IfNull(_game, "No Game instance has been set.");
 
-        _currentGame.Start();
+        _game?.Initialize();
+
+        Raylib.SetTargetFPS(60);
 
         while(!Raylib.WindowShouldClose())
         {
             var deltaTime = Raylib.GetFrameTime();
-            _currentGame.Update(deltaTime);
+            _game?.Update(deltaTime);
 
             Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.WHITE);
 
-            _currentGame.Render();
+            _game?.Render();
 
             Raylib.EndDrawing();
         }
+
+        _game?.Uninitialize();
     }
 
     public void Create<TGame>()
-        where TGame : Game
+        where TGame : IGame
     {
-        var game = Activator.CreateInstance(typeof(TGame)) as Game;
+        var game = Activator.CreateInstance(typeof(TGame)) as IGame;
         if(game == default)
         {
             throw new InvalidOperationException();
         }
 
-        _currentGame = game;
+        _game = game;
     }
 }
