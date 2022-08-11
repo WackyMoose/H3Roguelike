@@ -39,6 +39,8 @@ public class Application : IDisposable
 
         // Window creation
         Raylib.InitWindow(_specification.WindowWidth, _specification.WindowHeight, _specification.Name);
+        Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+
     }
 
     public void Dispose()
@@ -61,11 +63,11 @@ public class Application : IDisposable
             var deltaTime = Raylib.GetFrameTime();
             _currentGame.Update(deltaTime);
 
-            Raylib.BeginDrawing();
+            Renderer.Begin();
 
             _currentGame.Render();
 
-            Raylib.EndDrawing();
+            Renderer.End();
         }
     }
 
