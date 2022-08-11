@@ -10,11 +10,17 @@ public abstract class Entity
     public Rectangle SpriteCoords { get; init; }
     public Color ColorTint { get; set; }
 
-    public Entity(Rectangle spriteCoords, Color colorTint = Color.WHITE)
+    public Entity(Rectangle spriteCoords)
+        : this(spriteCoords, Color.WHITE)
+    {
+    }
+
+    public Entity(Rectangle spriteCoords, Color colorTint)
     {
         Position = Vector2.Zero;
         Scale = Vector2.One;
         SpriteCoords = spriteCoords;
+        ColorTint = colorTint;
     }
 
     public abstract void Initialize();
