@@ -25,6 +25,8 @@ internal class TestGame : IGame
         entity.Scale = new Vector2(64, 64);
         entity.Position = new Vector2(128, 192);
 
+
+
         //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
         //var image = Raylib.GenImageCellular(500, 500, 100);
 
