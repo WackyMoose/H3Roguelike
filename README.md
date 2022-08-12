@@ -62,6 +62,15 @@ this will take a turn & then give the aggroed enemies their turn.</br>
 * Player have a range around their character where they can tab between entities to choose which entity to interact with(Trade,Talk,Attack, etc.),
 this range can be increased by increasing the characters perception stat</br>
 
+### <span style="color:#E74C3C ">Weapon stats</span>
+* Minimum Damage
+* Maximum Damage
+* Critical Chance
+* Critical Damage
+* Range
+* Flat Penetration
+* Percent Penetration
+
 ### <span style="color:#E74C3C ">Creature stats & skills</span>
 ### Stats:
 * Strength - Used to modify damage done.

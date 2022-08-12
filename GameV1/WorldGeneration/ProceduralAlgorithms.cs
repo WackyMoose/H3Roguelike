@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using SimplexNoise;
 
 namespace GameV1.WorldGeneration
 {
@@ -8,6 +9,20 @@ namespace GameV1.WorldGeneration
         //TODO Add overworld generation...
         //TODO Add WFC to generate castles etc...
         //TODO Use Cellular to generate Dungeons...
+
+        private static void GenerateOverworld(int width, int height, int tileSize) 
+        {
+            Dictionary<Vector2, float> overworld = new Dictionary<Vector2, float>();
+
+            for (int x = 0; x < width; x++)
+			{
+                for (int y = 0; y < height; y++)
+			    {
+                    overworld.Add(new Vector2(x,y), Noise.CalcPixel2D(x, y, tileSize));
+			    }
+			}
+
+        }
 
         public static HashSet<Vector2> GenerateForest(ForestSize size, Vector2 position) 
         {
