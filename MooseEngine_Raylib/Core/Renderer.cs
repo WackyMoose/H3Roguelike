@@ -32,15 +32,19 @@ namespace MooseEngine.Core
         {
         }
 
-        public static void Begin()
+        public static void Begin(Camera camera)
         {
             Raylib.BeginDrawing();
 
             Raylib.ClearBackground(Color.DARKGRAY);
+
+            Raylib.BeginMode2D(camera.RaylibCamera);
         }
 
         public static void End()
         {
+            Raylib.EndMode2D();
+
             Raylib.EndDrawing();
         }
 

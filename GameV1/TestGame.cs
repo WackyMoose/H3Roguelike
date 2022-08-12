@@ -19,6 +19,9 @@ internal class TestGame : IGame
         entity.Scale = new Vector2(64, 64);
         entity.Position = new Vector2(128, 192);
 
+        var window = Application.Instance.Window;
+        var camera = new Camera(entity, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
         //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
         //var image = Raylib.GenImageCellular(500, 500, 100);
 
@@ -29,6 +32,7 @@ internal class TestGame : IGame
         //_texture = Raylib.LoadTextureFromImage(image);
 
         _scene?.Add(entity);
+        _scene?.Add(camera);
     }
 
     public void Uninitialize()
