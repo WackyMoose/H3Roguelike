@@ -6,11 +6,11 @@ namespace MooseEngine.Scenes
 {
     public class TestEntity : Entity
     {
-        public TestEntity(Coords2D spriteCoords, Color colorTint) : base(spriteCoords, colorTint)
+        public TestEntity(Coords2D spriteCoords, Color colorTint) : base("TestEntity", spriteCoords, colorTint)
         {
         }
 
-        public TestEntity(Coords2D spriteCoords) : base(spriteCoords)
+        public TestEntity(Coords2D spriteCoords) : base("TestEntity", spriteCoords)
         {
         }
 

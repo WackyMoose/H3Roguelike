@@ -14,20 +14,8 @@ public abstract class Entity
     public Color ColorTint { get; set; }
     public string Name { get; set; }
 
-    public Entity(Coords2D spriteCoords) : this(spriteCoords, Color.WHITE)
-    {
-    }
-
     public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.WHITE)
     {
-    }
-
-    public Entity(Coords2D spriteCoords, Color colorTint)
-    {
-        Position = Vector2.Zero;
-        Scale = Vector2.One;
-        SpriteCoords = spriteCoords;
-        ColorTint = colorTint;
     }
 
     public Entity(string name, Coords2D spriteCoords, Color colorTint)

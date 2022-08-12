@@ -1,4 +1,4 @@
-﻿using MooseEngine.Scenes;
+﻿
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System;
@@ -7,20 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameV1.Entities
+namespace MooseEngine.Scenes
 {
-    public class Tile : Entity
+    public class Camera : Entity
     {
-        public bool Walkable { get; set; }
 
-        public Tile(string name, bool walkable, Coords2D spriteCoords) : base(name, spriteCoords)
+        public Camera(string name, Coords2D spriteCoords) : base(name, spriteCoords)
         {
-            Walkable = walkable;
         }
 
-        public Tile(string name, bool walkable, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public Camera(string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
-            Walkable = walkable;
         }
 
         public override void Initialize()
