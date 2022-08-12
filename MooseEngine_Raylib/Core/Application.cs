@@ -50,7 +50,7 @@ public class Application : Disposeable
     {
         _game = null;
 
-        Renderer.End();
+        Renderer.Shutdown();
 
         _window?.Shutdown();
         _window = null;
