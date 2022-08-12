@@ -1,5 +1,5 @@
 ﻿using MooseEngine.Core;
-using MooseEngine.Utility;
+using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
 

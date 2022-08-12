@@ -1,6 +1,6 @@
 ﻿using Raylib_cs;
 
-namespace MooseEngine.Utility
+namespace MooseEngine.Utilities
 {
     public struct Coords2D
     {
@@ -9,14 +9,14 @@ namespace MooseEngine.Utility
 
         public Coords2D(int x, int y)
         {
-            X = x; 
-            Y = y; 
+            X = x;
+            Y = y;
         }
 
         public Coords2D(Rectangle rectangle)
         {
-            X = (int) rectangle.x;
-            Y = (int) rectangle.y;
+            X = (int)rectangle.x;
+            Y = (int)rectangle.y;
         }
     }
 }
