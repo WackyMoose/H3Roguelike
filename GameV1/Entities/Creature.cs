@@ -1,6 +1,7 @@
 ﻿using MooseEngine.Scenes;
-using MooseEngine.Utility;
+using MooseEngine.Utilities;
 using Raylib_cs;
+using RPG_V3.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace GameV1.Entities
 {
     public class Creature : Entity
     {
+        public CreatureSpeciesCategory Species { get; set; }
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }
@@ -23,7 +25,7 @@ namespace GameV1.Entities
         public int MovementPoints { get; set; }
         public int Health { get; set; }
         public int Stamina { get; set; }
-        public Storage Inventory { get; set; }
+        public Container Inventory { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

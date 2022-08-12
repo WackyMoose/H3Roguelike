@@ -2,7 +2,7 @@
 using System.Numerics;
 using MooseEngine.Scenes;
 using MooseEngine.Extensions.Runtime;
-using MooseEngine.Utility;
+using MooseEngine.Utilities;
 
 // Spritesheet path "..\..\..\Resources\Textures\Tilemap_Modified.png"
 
