@@ -24,29 +24,8 @@ namespace GameV1.WorldGeneration
 
         }
 
-        public static HashSet<Vector2> GenerateForest(ForestSize size, Vector2 position) 
+        public static HashSet<Vector2> GenerateForest(int iterations, int walkLength, Vector2 position) 
         {
-            int iterations = 0;
-            int walkLength = 0;
-
-            switch (size)
-            {
-                case ForestSize.small:
-                    iterations = 50;
-                    walkLength = 6;
-                    break;
-                case ForestSize.medium:
-                    iterations = 75;
-                    walkLength = 8;
-                    break;
-                case ForestSize.large:
-                    iterations = 100;
-                    walkLength = 10;
-                    break;
-                default:
-                    break;
-            }
-
             HashSet<Vector2> treePositions = new HashSet<Vector2>();
 
             for (int i = 0; i < iterations; i++)
@@ -67,7 +46,7 @@ namespace GameV1.WorldGeneration
 
             for (int i = 0; i < walkLength; i++)
             {
-                var newPosition = prevPosition + Direction2D.GetRandomCardinalDirection();
+                var newPosition = prevPosition + Direction2D.GetRandomCardinalDirection() * 64;
                 path.Add(newPosition);
                 prevPosition = newPosition;
             }
