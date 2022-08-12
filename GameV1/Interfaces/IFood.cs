@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameV1.Categories
+namespace GameV1.Interfaces
 {
-    internal class ArmorCategories
+    internal interface IFood
     {
     }
 }

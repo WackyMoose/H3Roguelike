@@ -7,7 +7,7 @@ Scrum Master: Pierre.
 
 ### <span style="color:#C39BD3 ">End Product:</span>
 
-Small procedural generated Rogue-lite game.
+Small procedurally generated Rogue-lite game.
 
 ### <span style="color:#C39BD3 ">Definition of RogueLike:</span>
 
@@ -23,9 +23,9 @@ Small procedural generated Rogue-lite game.
 https://en.wikipedia.org/wiki/Roguelike
 
 ### <span style="color:#C39BD3 ">Created with:</span>
-* Robert Nystrom https://gameprogrammingpatterns.com/
+* *Game Programming Patterns* by Robert Nystrom https://gameprogrammingpatterns.com/
 * C# in Visual Studio https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
-* Raylib-cs https://github.com/ChrisDill/Raylib-cs
+* Raylib-cs (raylib for C#) https://github.com/ChrisDill/Raylib-cs
 * MongoDB https://www.mongodb.com/
 * Kenney Assets https://kenney.nl/assets/micro-roguelike
 * 8-bit Portrait Pack https://itchabop.itch.io/8bit-portrait-pack
@@ -43,7 +43,7 @@ Interaction - E</br>
 Inventory Screen - I</br>
 Character Screen - C</br>
 Pause Menu - P</br>
-Quick Slot Menu - F Keys</br>
+Quick Slot Menu - Number keys 0-9</br>
 Map - M</br>
 
 ### <span style="color:#E74C3C ">Unique Selling Points:</span>

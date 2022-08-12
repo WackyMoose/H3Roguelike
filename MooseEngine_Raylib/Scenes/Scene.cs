@@ -1,5 +1,6 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
+using Raylib_cs;
 
 namespace MooseEngine.Scenes;
 
@@ -26,12 +27,21 @@ public class Scene : Disposeable
             entity.Update(deltaTime);
         }
 
-        Renderer.Begin();
+        var camera = _entities.SingleOrDefault(x => x.GetType() == typeof(Camera));
+        Throw.IfNull(camera, "Scene does not contain a Camera entity!");
+        
+        Renderer.Begin((Camera)camera!);
+
         for (int i = _entities.Count - 1; i >= 0; i--)
         {
             var entity = _entities[i];
             Renderer.RenderEntity(entity);
         }
+
+        Raylib.EndMode2D();
+
+        Renderer.RenderUI();
+
         Renderer.End();
     }
 

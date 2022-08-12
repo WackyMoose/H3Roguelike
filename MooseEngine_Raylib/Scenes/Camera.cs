@@ -1,33 +1,35 @@
-﻿
-using MooseEngine.Utilities;
+﻿using MooseEngine.Utilities;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
-namespace MooseEngine.Scenes
+namespace MooseEngine.Scenes;
+
+public class Camera : Entity
 {
-    public class Camera : Entity
+    private Camera2D _raylibCamera;
+    private readonly Entity _targetEntity;
+
+    public Camera(Entity target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D())
     {
+        _targetEntity = target;
 
-        public Camera(string name, Coords2D spriteCoords) : base(name, spriteCoords)
+        _raylibCamera = new Camera2D
         {
-        }
+            target = _targetEntity.Position,
+            offset = offset,
+            zoom = zoom,
+            rotation = 0.0f
+        };
+    }
 
-        public Camera(string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
-        {
-        }
+    public Camera2D RaylibCamera { get { return _raylibCamera; } }
 
-        public override void Initialize()
-        {
-            throw new NotImplementedException();
-        }
+    public override void Initialize()
+    {
+    }
 
-        public override void Update(float deltaTime)
-        {
-            throw new NotImplementedException();
-        }
+    public override void Update(float deltaTime)
+    {
+        _raylibCamera.target = _targetEntity.Position;
     }
 }

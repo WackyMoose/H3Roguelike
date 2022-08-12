@@ -14,13 +14,19 @@ namespace MooseEngine.Core
         private static int _spriteSize;
         private static int _offSet;
         private static int _padding;
+        public static Camera2D camera;
 
+        // TODO: Remove hard-coded values
         public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 8)
         {
             _offSet = offSet;
             _padding = padding;
             _spriteSize = spriteSize;
             _spriteSheet = Raylib.LoadTexture(spriteSheetPath);
+
+            camera.rotation = 0.0f;
+            camera.zoom = 4.0f;
+            camera.offset = new Vector2(Application.Instance.Window.Width / 2.0f - (_spriteSize * camera.zoom), Application.Instance.Window.Height / 2.0f - (_spriteSize * camera.zoom));
 
             Raylib.SetTargetFPS(60);
 
@@ -32,15 +38,19 @@ namespace MooseEngine.Core
         {
         }
 
-        public static void Begin()
+        public static void Begin(Camera camera)
         {
             Raylib.BeginDrawing();
 
             Raylib.ClearBackground(Color.DARKGRAY);
+
+            Raylib.BeginMode2D(camera.RaylibCamera);
         }
 
         public static void End()
         {
+            Raylib.EndMode2D();
+
             Raylib.EndDrawing();
         }
 
@@ -56,6 +66,11 @@ namespace MooseEngine.Core
             Rectangle pixelDestinationPosition = new Rectangle(entity.Position.X, entity.Position.Y, entity.Scale.X, entity.Scale.Y);
 
             Raylib.DrawTexturePro(_spriteSheet, pixelSourcePosition, pixelDestinationPosition, Vector2.Zero, 0.0f, entity.ColorTint);
+        }
+
+        public static void RenderUI()
+        {
+
         }
     }
 }

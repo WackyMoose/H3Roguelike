@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using GameV1.Entities;
+using MooseEngine.Core;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
@@ -10,15 +11,19 @@ internal class TestGame : IGame
 {
     private Scene? _scene;
     private Texture2D _texture;
+    private Player entity = new Player("Hero", 120, 1000, new Coords2D(5, 0));
 
     public void Initialize()
     {
+
         _scene = new Scene();
 
-        var entity = new TestEntity(new Coords2D(5, 0));
+        var window = Application.Instance.Window;
+        var camera = new Camera(entity, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        _scene?.Add(camera);
+
         entity.Scale = new Vector2(64, 64);
         entity.Position = new Vector2(128, 192);
-
 
         //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
         //var image = Raylib.GenImageCellular(500, 500, 100);
@@ -40,6 +45,7 @@ internal class TestGame : IGame
 
     public void Update(float deltaTime)
     {
+        Renderer.camera.target = entity.Position;
         //Renderer.Begin();
         //Renderer.RenderTexture(_texture, 100, 100);
         //Renderer.End();
