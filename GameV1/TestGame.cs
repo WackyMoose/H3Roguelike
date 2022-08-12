@@ -1,6 +1,6 @@
-﻿using MooseEngine.Core;
+﻿using GameV1.Entities.Factory;
+using MooseEngine.Core;
 using MooseEngine.Scenes;
-using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
 
@@ -15,23 +15,17 @@ internal class TestGame : IGame
     {
         _scene = new Scene();
 
-        var entity = new TestEntity(new Coords2D(5, 0));
-        entity.Scale = new Vector2(64, 64);
-        entity.Position = new Vector2(128, 192);
+        var entityFactory = new EntityFactory();
+        entityFactory.SetSceneContext(_scene);
+
+        var player = entityFactory.CreatePlayer();
+        player.Scale = new Vector2(64, 64);
+        player.Position = new Vector2(128, 192);
 
         var window = Application.Instance.Window;
-        var camera = new Camera(entity, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
-        //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
-        //var image = Raylib.GenImageCellular(500, 500, 100);
-
-        //var app = Application.Instance;
-        //var window = app.Window;
-
-        //var image = Raylib.GenImageWhiteNoise(window.Width, window.Height, 0.1f);
-        //_texture = Raylib.LoadTextureFromImage(image);
-
-        _scene?.Add(entity);
+        _scene?.Add(player);
         _scene?.Add(camera);
     }
 
@@ -43,9 +37,6 @@ internal class TestGame : IGame
 
     public void Update(float deltaTime)
     {
-        //Renderer.Begin();
-        //Renderer.RenderTexture(_texture, 100, 100);
-        //Renderer.End();
         _scene?.UpdateRuntime(deltaTime);
     }
 }

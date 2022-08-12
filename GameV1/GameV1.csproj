@@ -11,8 +11,4 @@
     <ProjectReference Include="..\MooseEngine_Raylib\MooseEngine_Raylib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Factory\" />
-  </ItemGroup>
-
 </Project>

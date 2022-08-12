@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
 
 namespace MooseEngine.Scenes;
