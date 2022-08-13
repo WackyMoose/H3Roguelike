@@ -2,6 +2,6 @@
 using MooseEngine.Core;
 
 var app = new Application();
-app.Create<TestGame>();
+app.Create<TestGameMSN>();
 app.Run();
 app.Dispose();
