@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Categories
 {
-    internal class WeaponCategory
+    public struct WeaponCategory
     {
     }
 }

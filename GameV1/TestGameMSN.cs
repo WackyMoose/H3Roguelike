@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -11,6 +12,7 @@ internal class TestGameMSN : IGame
 {
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private HashSet<Vector2> forest = new HashSet<Vector2>();
 
     public void Initialize()
     {
@@ -25,6 +27,16 @@ internal class TestGameMSN : IGame
         player.Position = new Vector2(128, 192);
 
         _scene?.Add(player);
+
+        forest = ProceduralAlgorithms.GenerateForest(10, 5, new Vector2(128, 192));
+
+        foreach (var pos in forest)
+        {
+            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
+            tile.Scale = new Vector2(64, 64);
+            tile.Position = pos;
+            _scene?.Add(tile);
+        }
     }
 
     public void Uninitialize()
@@ -35,6 +47,8 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
+
+        player.Position += new Vector2(1, 0);
         Renderer.camera.target = player.Position;
         _scene?.UpdateRuntime(deltaTime);
     }

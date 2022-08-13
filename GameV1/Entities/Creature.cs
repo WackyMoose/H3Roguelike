@@ -13,6 +13,7 @@ namespace GameV1.Entities
     public class Creature : Entity
     {
         public CreatureSpeciesCategory Species { get; set; }
+        public CreatureOccupationCategory Occupation { get; set; }
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }
@@ -26,6 +27,8 @@ namespace GameV1.Entities
         public int Health { get; set; }
         public int Stamina { get; set; }
         public Container Inventory { get; set; }
+        public List<CreatureSpeciesCategory> HostileTowards { get; set; }
+        public List<CreatureSpeciesCategory> FriendlyTowards { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
