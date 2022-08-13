@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -7,25 +8,36 @@ using System.Numerics;
 
 namespace GameV1;
 
-internal class TestGame : IGame
+internal class NoiseTest : IGame
 {
     private Scene? _scene;
     private Texture2D _texture;
-    private Player entity = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
+    private HashSet<Vector2> forest = new HashSet<Vector2>();
 
     public void Initialize()
     {
-
         _scene = new Scene();
 
         var window = Application.Instance.Window;
-        var camera = new Camera(entity, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
+        tile.Scale = new Vector2(64, 64);
+        tile.Position = new Vector2(128, 192);
+
+        _scene?.Add(tile);
+
+        var camera = new Camera(tile, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        entity.Scale = new Vector2(64, 64);
-        entity.Position = new Vector2(128, 192);
+        forest = ProceduralAlgorithms.GenerateForest(10, 5, new Vector2(128, 192));
 
-
+        foreach (var pos in forest)
+        {
+            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
+            tile.Scale = new Vector2(64, 64);
+            tile.Position = pos;
+            _scene?.Add(tile);
+        }
 
         //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
         //var image = Raylib.GenImageCellular(500, 500, 100);
@@ -35,8 +47,6 @@ internal class TestGame : IGame
 
         //var image = Raylib.GenImageWhiteNoise(window.Width, window.Height, 0.1f);
         //_texture = Raylib.LoadTextureFromImage(image);
-
-        _scene?.Add(entity);
     }
 
     public void Uninitialize()
@@ -47,7 +57,6 @@ internal class TestGame : IGame
 
     public void Update(float deltaTime)
     {
-        Renderer.camera.target = entity.Position;
         //Renderer.Begin();
         //Renderer.RenderTexture(_texture, 100, 100);
         //Renderer.End();

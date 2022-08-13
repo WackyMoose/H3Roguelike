@@ -62,6 +62,26 @@ this will take a turn & then give the aggroed enemies their turn.</br>
 * Player have a range around their character where they can tab between entities to choose which entity to interact with(Trade,Talk,Attack, etc.),
 this range can be increased by increasing the characters perception stat</br>
 
+### <span style="color:#E74C3C ">Weapon stats</span>
+* Minimum Damage
+* Maximum Damage
+* Critical Chance
+* Critical Damage
+* Range
+* Flat Penetration
+* Percent Penetration
+
+### <span style="color:#E74C3C ">Creature stats & skills</span>
+### Stats:
+* Strength - Used to modify damage done.
+* Agility - Modifies chance to hit.
+* Toughness - Determines health pool.
+* Perception - Determines at what range the player can interaact with the world.
+* Charisma - Modifies sell/buy price, chance to convert creature from hostile to non-hostile.
+### Skills:
+* Create bonfire - Used to cook food.
+* Hide items - Can dig a hole in the world and hide choosen items, only if player have a shovel in inventory.
+
 ### <span style="color:#E74C3C ">Game Progression:</span>
 * Player will explorer the world, where they will collect items, gold & experience, some they can choose to save for their next character when the current one dies.</br>
 * Player will be in posseion of a journal where they will collect info on the creatures of the world, this will help them get better at surviving the fights.</br>
