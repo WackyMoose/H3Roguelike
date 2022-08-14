@@ -29,12 +29,12 @@ namespace GameV1.Entities
         #region Methods
         public override void Initialize()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public override void Update(float deltaTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         #endregion
 

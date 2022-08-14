@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MooseEngine
 {
-    public static class GlobalConstants
+    public static class Constants
     {
         public const int DEFAULT_ENTITY_SIZE = 64;
     }

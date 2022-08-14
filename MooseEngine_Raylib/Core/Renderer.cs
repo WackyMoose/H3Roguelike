@@ -63,19 +63,25 @@ namespace MooseEngine.Core
         {
             Coords2D spritePosition = entity.SpriteCoords;
            
-            Rectangle pixelSourcePosition = new Rectangle(
+            Rectangle source = new Rectangle(
                 _offSet + ((_spriteSize + _padding) * spritePosition.X), 
                 _offSet + ((_spriteSize + _padding) * spritePosition.Y), 
                 _spriteSize, 
                 _spriteSize);
             
-            Rectangle pixelDestinationPosition = new Rectangle(
+            Rectangle dest = new Rectangle(
                 entity.Position.X + (entity.Position.X/_spriteSize * 0), // Adds a one "pixel" distance between sprites
                 entity.Position.Y + (entity.Position.Y/_spriteSize * 0), 
                 entity.Scale.X, 
                 entity.Scale.Y);
 
-            Raylib.DrawTexturePro(_spriteSheet, pixelSourcePosition, pixelDestinationPosition, Vector2.Zero, 0.0f, entity.ColorTint);
+            Raylib.DrawTexturePro(
+                _spriteSheet,
+                source,
+                dest,
+                new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2), // Vector2.Zero
+                0.0f,
+                entity.ColorTint);
         }
     }
 }

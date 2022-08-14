@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace GameV1.Entities
 {
-    // TODO: Consider renaming to Storage unit
     public abstract class Container : Item, IContainer
     {
         public int MaxItems { get; }

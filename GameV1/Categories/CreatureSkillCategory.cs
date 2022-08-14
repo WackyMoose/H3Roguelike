@@ -28,5 +28,13 @@ namespace GameV1.Categories
         public static CreatureSkillCategory Mining { get { return new CreatureSkillCategory("Mining"); } }
         public static CreatureSkillCategory SwordFighting { get { return new CreatureSkillCategory("SwordFighting"); } }
 
+        public static List<CreatureSkillCategory> List()
+        {
+            return new List<CreatureSkillCategory>
+            { 
+                Archery, Mining, SwordFighting
+            };
+        }
+
     }
 }

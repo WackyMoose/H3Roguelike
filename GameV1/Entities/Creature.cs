@@ -24,7 +24,6 @@ namespace GameV1.Entities
         public int Stamina { get; set; }
         public Container Inventory { get; set; }
         public List<CreatureSpeciesCategory> HostileTowards { get; set; }
-        public List<CreatureSpeciesCategory> FriendlyTowards { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

@@ -40,6 +40,10 @@ public class Scene : Disposeable
 
         Raylib.EndMode2D();
 
+        // Draw crosshair
+        Raylib.DrawLine(0, Application.Instance.Window.Height/2, Application.Instance.Window.Width, Application.Instance.Window.Height / 2, Color.GREEN);
+        Raylib.DrawLine(Application.Instance.Window.Width / 2, 0, Application.Instance.Window.Width / 2, Application.Instance.Window.Height, Color.GREEN);
+
         Renderer.End();
     }
 
