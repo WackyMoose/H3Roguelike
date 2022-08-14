@@ -1,12 +1,7 @@
-﻿using MooseEngine.Scenes;
+﻿using GameV1.Categories;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
-using RPG_V3.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
@@ -14,6 +9,7 @@ namespace GameV1.Entities
     {
         public CreatureSpeciesCategory Species { get; set; }
         public CreatureOccupationCategory Occupation { get; set; }
+        public List <CreatureSkillCategory> Skills { get; set; }
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }

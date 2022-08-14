@@ -20,15 +20,15 @@ internal class TestGameMSN : IGame
         _scene = new Scene();
 
         var window = Application.Instance.Window;
+
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
         player.Scale = new Vector2(64, 64);
         player.Position = new Vector2(128, 192);
-
         _scene?.Add(player);
 
-        forest = ProceduralAlgorithms.GenerateForest(10, 5, new Vector2(128, 192));
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 
         foreach (var pos in forest)
         {
@@ -49,7 +49,7 @@ internal class TestGameMSN : IGame
     {
 
         player.Position += new Vector2(1, 0);
-        Renderer.camera.target = player.Position;
+        //Renderer.camera.target = player.Position;
         _scene?.UpdateRuntime(deltaTime);
     }
 }

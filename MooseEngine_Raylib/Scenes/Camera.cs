@@ -30,6 +30,7 @@ public class Camera : Entity
 
     public override void Update(float deltaTime)
     {
-        _raylibCamera.target = _targetEntity.Position;
+        // _raylibCamera.target = _targetEntity.Position;
+        _raylibCamera.target = _targetEntity.Position + new Vector2(GlobalConstants.DEFAULT_ENTITY_SIZE / 2, GlobalConstants.DEFAULT_ENTITY_SIZE / 2);
     }
 }

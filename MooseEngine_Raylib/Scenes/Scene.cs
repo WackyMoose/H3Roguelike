@@ -40,8 +40,6 @@ public class Scene : Disposeable
 
         Raylib.EndMode2D();
 
-        Renderer.RenderUI();
-
         Renderer.End();
     }
 

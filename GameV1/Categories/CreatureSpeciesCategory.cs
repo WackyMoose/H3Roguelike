@@ -1,4 +1,4 @@
-﻿namespace RPG_V3.Entities
+﻿namespace GameV1.Categories
 {
     public struct CreatureSpeciesCategory
     {
