@@ -17,20 +17,15 @@ namespace MooseEngine.Core
         public static Camera2D camera;
 
         // TODO: Remove hard-coded values
-        public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 8)
+        public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 9)
         {
             _offSet = offSet;
             _padding = padding;
             _spriteSize = spriteSize;
             _spriteSheet = Raylib.LoadTexture(spriteSheetPath);
 
-            camera.rotation = 0.0f;
-            camera.zoom = 4.0f;
-            camera.offset = new Vector2(Application.Instance.Window.Width / 2.0f - (_spriteSize * camera.zoom), Application.Instance.Window.Height / 2.0f - (_spriteSize * camera.zoom));
-
             Raylib.SetTargetFPS(60);
 
-            // TODO: add null check
             Throw.IfNull(_spriteSheet, $"Failed to load spritesheet, path: {spriteSheetPath}");
         }
 
@@ -42,7 +37,7 @@ namespace MooseEngine.Core
         {
             Raylib.BeginDrawing();
 
-            Raylib.ClearBackground(Color.DARKGRAY);
+            Raylib.ClearBackground(Color.BLACK);
 
             Raylib.BeginMode2D(camera.RaylibCamera);
         }
@@ -62,15 +57,26 @@ namespace MooseEngine.Core
         public static void RenderEntity(Entity entity)
         {
             Coords2D spritePosition = entity.SpriteCoords;
-            Rectangle pixelSourcePosition = new Rectangle(_offSet + ((_spriteSize + _padding) * spritePosition.X), _offSet + ((_spriteSize + _padding) * spritePosition.Y), _spriteSize, _spriteSize);
-            Rectangle pixelDestinationPosition = new Rectangle(entity.Position.X, entity.Position.Y, entity.Scale.X, entity.Scale.Y);
+           
+            Rectangle source = new Rectangle(
+                _offSet + ((_spriteSize + _padding) * spritePosition.X), 
+                _offSet + ((_spriteSize + _padding) * spritePosition.Y), 
+                _spriteSize, 
+                _spriteSize);
+            
+            Rectangle dest = new Rectangle(
+                entity.Position.X,
+                entity.Position.Y,
+                entity.Scale.X, 
+                entity.Scale.Y);
 
-            Raylib.DrawTexturePro(_spriteSheet, pixelSourcePosition, pixelDestinationPosition, Vector2.Zero, 0.0f, entity.ColorTint);
-        }
-
-        public static void RenderUI()
-        {
-
+            Raylib.DrawTexturePro(
+                _spriteSheet,
+                source,
+                dest,
+                new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2), // Vector2.Zero
+                0.0f,
+                entity.ColorTint);
         }
     }
 }

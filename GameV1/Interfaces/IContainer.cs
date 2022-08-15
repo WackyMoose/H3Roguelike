@@ -4,6 +4,10 @@ namespace GameV1.Interfaces
 {
     public interface IContainer
     {
-        List<Item?>? Items { get; set; }
+        int MaxItems { get; }
+        List<Item?>? Items { get; }
+
+        bool AddItem(Item item);
+        bool RemoveItem(Item item);
     }
 }
