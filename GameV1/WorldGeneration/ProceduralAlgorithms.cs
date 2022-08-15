@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using MooseEngine;
 using SimplexNoise;
 
 namespace GameV1.WorldGeneration
@@ -46,7 +47,7 @@ namespace GameV1.WorldGeneration
 
             for (int i = 0; i < walkLength; i++)
             {
-                var newPosition = prevPosition + Direction2D.GetRandomCardinalDirection() * 64;
+                var newPosition = prevPosition + Direction2D.GetRandomCardinalDirection() * Constants.DEFAULT_ENTITY_SIZE;
                 path.Add(newPosition);
                 prevPosition = newPosition;
             }

@@ -24,13 +24,8 @@ namespace MooseEngine.Core
             _spriteSize = spriteSize;
             _spriteSheet = Raylib.LoadTexture(spriteSheetPath);
 
-            //camera.rotation = 0.0f;
-            //camera.zoom = 0.1f;
-            //camera.offset = new Vector2(Application.Instance.Window.Width / 2.0f - (_spriteSize * camera.zoom), Application.Instance.Window.Height / 2.0f - (_spriteSize * camera.zoom));
-
             Raylib.SetTargetFPS(60);
 
-            // TODO: add null check
             Throw.IfNull(_spriteSheet, $"Failed to load spritesheet, path: {spriteSheetPath}");
         }
 
@@ -70,8 +65,8 @@ namespace MooseEngine.Core
                 _spriteSize);
             
             Rectangle dest = new Rectangle(
-                entity.Position.X + (entity.Position.X/_spriteSize * 0), // Adds a one "pixel" distance between sprites
-                entity.Position.Y + (entity.Position.Y/_spriteSize * 0), 
+                entity.Position.X,
+                entity.Position.Y,
                 entity.Scale.X, 
                 entity.Scale.Y);
 

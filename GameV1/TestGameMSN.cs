@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
 using GameV1.WorldGeneration;
+using MooseEngine;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -24,7 +25,7 @@ internal class TestGameMSN : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        player.Scale = new Vector2(64, 64);
+        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
         _scene?.Add(player);
 
@@ -33,7 +34,7 @@ internal class TestGameMSN : IGame
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(64, 64);
+            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
             tile.Position = pos;
             _scene?.Add(tile);
         }

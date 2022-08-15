@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
 using GameV1.WorldGeneration;
+using MooseEngine;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -21,7 +22,7 @@ internal class NoiseTest : IGame
 
         var window = Application.Instance.Window;
 
-        tile.Scale = new Vector2(64, 64);
+        tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         tile.Position = new Vector2(128, 192);
 
         _scene?.Add(tile);
@@ -34,7 +35,7 @@ internal class NoiseTest : IGame
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(64, 64);
+            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
             tile.Position = pos;
             _scene?.Add(tile);
         }
