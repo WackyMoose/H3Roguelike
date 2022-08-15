@@ -1,4 +1,5 @@
-﻿using GameV1.Entities;
+﻿using GameV1.Commands;
+using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine;
 using MooseEngine.Core;
@@ -31,6 +32,18 @@ internal class TestGameMSN : IGame
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 
+        // Bind keyboard keys
+        Keyboard.KeyUp = KeyboardKey.KEY_W;
+        Keyboard.KeyDown = KeyboardKey.KEY_S;
+        Keyboard.KeyLeft = KeyboardKey.KEY_A;
+        Keyboard.KeyRight = KeyboardKey.KEY_D;
+
+        // Bind keys to commands
+        InputHandler._key_up = new MoveUpCommand();
+        InputHandler._key_down = new MoveDownCommand();
+        InputHandler._key_left = new MoveLeftCommand();
+        InputHandler._key_right = new MoveRightCommand();
+
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
@@ -48,9 +61,8 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-
-        player.Position += new Vector2(1, 0);
         //Renderer.camera.target = player.Position;
+        InputHandler.HandleInput(player);
         _scene?.UpdateRuntime(deltaTime);
     }
 }
