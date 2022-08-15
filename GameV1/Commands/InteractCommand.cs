@@ -3,17 +3,20 @@ using MooseEngine.Core;
 using MooseEngine.Scenes;
 using System.Numerics;
 
+
 namespace GameV1.Commands
 {
-    public class MoveDownCommand : Command
+    internal class InteractCommand : Command
     {
-        public MoveDownCommand(Entity entity) : base(entity)
+        public InteractCommand(Entity entity) : base(entity)
         {
         }
 
+        public Entity Entity { get; set; }
+
         public override void Execute()
         {
-            Entity.Position += new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
+            
         }
     }
 }

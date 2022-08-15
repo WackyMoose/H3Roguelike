@@ -5,11 +5,15 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class MoveUpCommand : ICommand
+    public class MoveUpCommand : Command
     {
-        public void Execute(Entity entity)
+        public MoveUpCommand(Entity entity) : base(entity)
         {
-            entity.Position += new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
+        }
+
+        public override void Execute()
+        {
+            Entity.Position += new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
         }
     }
 }

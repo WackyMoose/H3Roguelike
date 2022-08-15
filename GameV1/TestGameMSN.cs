@@ -32,17 +32,25 @@ internal class TestGameMSN : IGame
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 
-        // Bind keyboard keys
-        Keyboard.KeyUp = KeyboardKey.KEY_W;
-        Keyboard.KeyDown = KeyboardKey.KEY_S;
-        Keyboard.KeyLeft = KeyboardKey.KEY_A;
-        Keyboard.KeyRight = KeyboardKey.KEY_D;
+        // Bind key press action to key value
+        Keyboard.KeyMoveUp     = KeyboardKey.KEY_W;
+        Keyboard.KeyMoveDown   = KeyboardKey.KEY_S;
+        Keyboard.KeyMoveLeft   = KeyboardKey.KEY_A;
+        Keyboard.KeyMoveRight  = KeyboardKey.KEY_D;
+        Keyboard.KeyInteract   = KeyboardKey.KEY_E;
+        Keyboard.KeyInventory  = KeyboardKey.KEY_I;
+        Keyboard.KeyCharacter  = KeyboardKey.KEY_C;
+        Keyboard.KeyMenu       = KeyboardKey.KEY_M;
+        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
+        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
+        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
+        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
 
-        // Bind keys to commands
-        InputHandler._key_up = new MoveUpCommand();
-        InputHandler._key_down = new MoveDownCommand();
-        InputHandler._key_left = new MoveLeftCommand();
-        InputHandler._key_right = new MoveRightCommand();
+        // Bind key press action to command
+        InputHandler._key_up = new MoveUpCommand(player);
+        InputHandler._key_down = new MoveDownCommand(player);
+        InputHandler._key_left = new MoveLeftCommand(player);
+        InputHandler._key_right = new MoveRightCommand(player);
 
         foreach (var pos in forest)
         {
@@ -62,7 +70,12 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         //Renderer.camera.target = player.Position;
-        InputHandler.HandleInput(player);
+        InputHandler.HandleInput();
+        Command command = InputHandler.HandleInput();
+        //command?.Execute();
+        CommandHandler.Add(command);
+
+        CommandHandler.Execute();
         _scene?.UpdateRuntime(deltaTime);
     }
 }
