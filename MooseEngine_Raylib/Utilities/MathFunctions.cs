@@ -2,10 +2,8 @@
 
 public static class MathFunctions
 {
-
-    public static double Lerp(double minValue, double maxValue, double n)
+    public static float Lerp(float minValue, float maxValue, float n)
     {
         return minValue + n * (maxValue - minValue);
     }
-
 }

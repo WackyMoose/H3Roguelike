@@ -13,15 +13,19 @@ internal class NoiseTest : IGame
     private Scene? _scene;
     private Texture2D _texture;
     private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
-    private HashSet<Vector2> forest = new HashSet<Vector2>();
+    private HashSet<Vector2> _forest = new HashSet<Vector2>();
+    private HashSet<Vector2> _forests = new HashSet<Vector2>();
+    private Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
+    private const float _worldScale = 32;
 
     public void Initialize()
     {
+        
         _scene = new Scene();
 
         var window = Application.Instance.Window;
 
-        tile.Scale = new Vector2(64, 64);
+        tile.Scale = new Vector2(_worldScale, _worldScale);
         tile.Position = new Vector2(128, 192);
 
         _scene?.Add(tile);
@@ -29,15 +33,30 @@ internal class NoiseTest : IGame
         var camera = new Camera(tile, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        forest = ProceduralAlgorithms.GenerateForest(10, 5, new Vector2(128, 192));
+        _overWorld = ProceduralAlgorithms.GenerateOverworld(100, 100, 8, _worldScale);
 
-        foreach (var pos in forest)
+        foreach (var tile in _overWorld)
+        {
+            Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
+            if (tile.Value > 150 && tile.Value < 225)
+            {
+                _forest = ProceduralAlgorithms.GenerateForest(50, 8, tile.Key);
+                foreach (var tree in _forest)
+                {
+                    _forests.Add(tree);
+                }
+            }
+        }
+
+        foreach (var pos in _forests)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(64, 64);
+            tile.Scale = new Vector2(_worldScale, _worldScale);
             tile.Position = pos;
             _scene?.Add(tile);
         }
+
+        Console.WriteLine($"We have {_forests.Count} forest tiles");
 
         //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
         //var image = Raylib.GenImageCellular(500, 500, 100);
