@@ -13,8 +13,8 @@ internal class NoiseTest : IGame
     private Scene? _scene;
     private Texture2D _texture;
     private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
-    private HashSet<Vector2> _forest = new HashSet<Vector2>();
-    private HashSet<Vector2> _forests = new HashSet<Vector2>();
+    private HashSet<Coords2D> _forest = new HashSet<Coords2D>();
+    private HashSet<Coords2D> _forests = new HashSet<Coords2D>();
     private Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
     private const float _worldScale = 32;
 
@@ -38,7 +38,8 @@ internal class NoiseTest : IGame
         foreach (var tile in _overWorld)
         {
             Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
-            if (tile.Value > 150 && tile.Value < 225)
+
+            if (tile.Value > 220 && tile.Value < 225)
             {
                 _forest = ProceduralAlgorithms.GenerateForest(50, 8, tile.Key);
                 foreach (var tree in _forest)
@@ -52,7 +53,7 @@ internal class NoiseTest : IGame
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
             tile.Scale = new Vector2(_worldScale, _worldScale);
-            tile.Position = pos;
+            tile.Position = new Vector2(pos.X, pos.Y);
             _scene?.Add(tile);
         }
 

@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using MooseEngine.Utilities;
+﻿using MooseEngine.Utilities;
 using SimplexNoise;
 
 namespace GameV1.WorldGeneration
