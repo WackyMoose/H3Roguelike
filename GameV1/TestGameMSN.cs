@@ -71,11 +71,10 @@ internal class TestGameMSN : IGame
     {
         //Renderer.camera.target = player.Position;
         InputHandler.HandleInput();
-        Command command = InputHandler.HandleInput();
-        //command?.Execute();
-        CommandHandler.Add(command);
 
+        CommandHandler.Add(InputHandler.HandleInput());
         CommandHandler.Execute();
+
         _scene?.UpdateRuntime(deltaTime);
     }
 }

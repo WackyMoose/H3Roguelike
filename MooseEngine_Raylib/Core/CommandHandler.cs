@@ -10,11 +10,19 @@ namespace MooseEngine.Core
     {
         private static Queue<Command> Commands = new Queue<Command>();
 
-        public static void Add(Command command)
+        public static void Add(Command? command)
         {
             if (command is not null) 
             { 
                 Commands.Enqueue(command);
+            }
+        }
+
+        private static void Dequeue()
+        {
+            while (Commands.Count > 0)
+            {
+                Commands.Dequeue();
             }
         }
 
@@ -27,7 +35,7 @@ namespace MooseEngine.Core
                     command.Execute();
                 }
 
-                Commands.Dequeue();
+                Dequeue();
             }
         }
     }
