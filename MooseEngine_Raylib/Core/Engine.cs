@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MooseEngine.DependencyInjection;
+using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.Core;
 
@@ -24,6 +25,7 @@ public static class Engine
         var containerBuilder = MooseEngineContainerBuilder.Create();
 
         containerBuilder.RegisterApplication<TApplication>(applicationSpecification);
+        containerBuilder.Register<ISceneFactory, SceneFactory>();
 
         register?.Invoke(containerBuilder);
 
