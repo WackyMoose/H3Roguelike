@@ -10,7 +10,7 @@ namespace GameV1.Entities
     public abstract class Container : Item, IContainer
     {
         public int MaxItems { get; }
-        public List<Item?>? Items { get; }
+        public List<Item?>? Items { get; set; } = new List<Item?>();
 
         public Container(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
@@ -38,10 +38,18 @@ namespace GameV1.Entities
 
     }
 
-    public class Chest : Container
+    public class Inventory : Container
     {
-        public Chest(int durability, int maxValue) 
-            : base(durability, maxValue, "Chest", new Coords2D(1,1), Color.WHITE)
+        public Inventory(int durability, int maxValue) 
+            : base(durability, maxValue, "Inventory", new Coords2D(1,1), Color.WHITE)
+        {
+        }
+    }
+
+    public class QuickSlot : Container
+    {
+        public QuickSlot(int durability, int maxValue)
+            : base(durability, maxValue, "QuickSlot", new Coords2D(1, 1), Color.WHITE)
         {
         }
     }

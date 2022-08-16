@@ -69,9 +69,6 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        //Renderer.camera.target = player.Position;
-        InputHandler.HandleInput();
-
         CommandHandler.Add(InputHandler.HandleInput());
         CommandHandler.Execute();
 

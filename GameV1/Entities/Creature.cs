@@ -7,15 +7,13 @@ namespace GameV1.Entities
 {
     public class Creature : Entity
     {
-        public CreatureSpeciesCategory Species { get; set; }
-        public CreatureOccupationCategory Occupation { get; set; }
-        public List <CreatureSkillCategory> Skills { get; set; }
+        public CreatureSpeciesCategory Species { get; set; } = new CreatureSpeciesCategory();
+        public CreatureOccupationCategory Occupation { get; set; } = new CreatureOccupationCategory();
+        public List <CreatureSkillCategory> Skills { get; set; } = new List<CreatureSkillCategory> ();
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Experience { get; set; }
-        public int Level { get; set; }
         public int Toughness { get; set; }
         public int Perception { get; set; }
         public int Charisma { get; set; }
@@ -23,7 +21,7 @@ namespace GameV1.Entities
         public int Health { get; set; }
         public int Stamina { get; set; }
         public Container Inventory { get; set; }
-        public List<CreatureSpeciesCategory> HostileTowards { get; set; }
+        public List<CreatureSpeciesCategory> HostileTowards { get; set; } = new List<CreatureSpeciesCategory> ();
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
