@@ -22,8 +22,8 @@ internal class TestGame : IGame
         player.Scale = new Vector2(64, 64);
         player.Position = new Vector2(128, 192);
 
-        var window = Application.Instance.Window;
-        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var window = Application.Instance?.Window;
+        var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
 
         _scene?.Add(player);
         _scene?.Add(camera);

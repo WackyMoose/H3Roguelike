@@ -1,7 +1,13 @@
 ﻿using GameV1;
+using GameV1.Entities.Factory;
 using MooseEngine.Core;
 
-var app = new Application();
-app.Create<TestGame>();
-app.Run();
-app.Dispose();
+Engine.Start<TestGame>(builder =>
+{
+    builder.RegisterFactory<EntityFactory>();
+    
+    //builder.Register<IEntityFactory, EntityFactory>();
+});
+
+
+

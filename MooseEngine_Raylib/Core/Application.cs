@@ -3,21 +3,19 @@ using Raylib_cs;
 
 namespace MooseEngine.Core;
 
-public class Application : Disposeable
+public interface IApplication : IDisposable
 {
-    private static Application? s_Instance = null;
-    public static Application Instance
-    {
-        get
-        {
-            if (s_Instance == null)
-            {
-                s_Instance = new Application(new());
-            }
+    ApplicationSpecification ApplicationSpecification { get; internal set; }
 
-            return s_Instance;
-        }
-    }
+    void Initialize();
+    void Run();
+
+    void SetGame<TGame>() where TGame : IGame;
+}
+
+public sealed class Application : Disposeable, IApplication
+{
+    public static Application? Instance { get; internal set; }
 
     private ApplicationSpecification _specification;
     private Window? _window = null;
@@ -25,25 +23,22 @@ public class Application : Disposeable
 
     public Window Window { get { return _window ?? throw new InvalidOperationException("Window is not initialized!"); } }
 
-    public Application()
-        : this(new())
+    public ApplicationSpecification ApplicationSpecification
     {
-
+        get { return _specification; }
+        set { _specification = value; }
     }
 
-    public Application(ApplicationSpecification specification)
+    public void Initialize()
     {
-        Throw.IfSingletonExists(s_Instance, "Application already exists!");
-        s_Instance = this;
+        Throw.IfSingletonExists(Instance, "application already exists!");
+        //s_instance = this;
+        Instance = this;
 
-        _specification = specification;
-
-        _window = new Window(specification);
+        _window = new Window(ApplicationSpecification);
         _window.Initialize();
-        
-        //Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
-        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
 
+        Renderer.Initialize(@"..\..\..\resources\textures\colored_tilemap.png", 0, 1, 8);
     }
 
     protected override void DisposeManagedState()
@@ -63,7 +58,7 @@ public class Application : Disposeable
 
         _game?.Initialize();
 
-        while(!Raylib.WindowShouldClose())
+        while (!Raylib.WindowShouldClose())
         {
             var deltaTime = Raylib.GetFrameTime();
             _game?.Update(deltaTime);
@@ -72,11 +67,11 @@ public class Application : Disposeable
         _game?.Uninitialize();
     }
 
-    public void Create<TGame>()
+    public void SetGame<TGame>()
         where TGame : IGame
     {
         var game = Activator.CreateInstance(typeof(TGame)) as IGame;
-        if(game == default)
+        if (game == default)
         {
             throw new InvalidOperationException();
         }

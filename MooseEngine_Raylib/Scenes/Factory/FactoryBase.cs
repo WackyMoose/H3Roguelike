@@ -1,16 +1,16 @@
 ﻿namespace MooseEngine.Scenes.Factory;
 
-public interface IEntityFactory
-{
-    void SetSceneContext(Scene scene);
-}
-
-public abstract class EntityFactoryBase : IEntityFactory
+public abstract class FactoryBase
 {
     private Scene? _scene;
 
-    public TEntity CreateEntity<TEntity>()
-        where TEntity : Entity, new()
+    public FactoryBase(Scene scene)
+    {
+        _scene = scene;
+    }
+
+    protected TEntity CreateEntity<TEntity>()
+        where TEntity : Entity
     {
         var entity = Activator.CreateInstance<TEntity>();
         if(entity == default)
@@ -23,10 +23,5 @@ public abstract class EntityFactoryBase : IEntityFactory
 
         _scene?.Add(entity);
         return entity;
-    }
-
-    public void SetSceneContext(Scene scene)
-    {
-        _scene = scene;
     }
 }
