@@ -4,6 +4,8 @@ using MooseEngine.Core;
 
 Engine.Start<TestGame>(builder =>
 {
+    //builder.RegisterFactory<PlayerFactory>();
+
     //builder.RegisterFactory<EntityFactory>();
     
     //builder.Register<IEntityFactory, EntityFactory>();

@@ -1,50 +1,50 @@
 ﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Scenes.Factory;
 using Raylib_cs;
 
 namespace MooseEngine.Core;
 
 public interface IApplication : IDisposable
 {
-    ApplicationSpecification ApplicationSpecification { get; internal set; }
-
     void Initialize();
     void Run();
-
-    void SetGame<TGame>() where TGame : IGame;
 }
 
 public sealed class Application : Disposeable, IApplication
 {
-    public static Application? Instance { get; internal set; }
+    private static Application? s_Instance;
+    public static Application? Instance { get { return s_Instance; } }
 
     private ApplicationSpecification _specification;
     private Window? _window = null;
-    private IGame? _game = null;
 
-    public Window Window { get { return _window ?? throw new InvalidOperationException("Window is not initialized!"); } }
-
-    public ApplicationSpecification ApplicationSpecification
+    public Application(ApplicationSpecification specification, IGame game, ISceneFactory sceneFactory)
     {
-        get { return _specification; }
-        set { _specification = value; }
-    }
+        Throw.IfSingletonExists(Instance, "Application already exists!");
+        s_Instance = this;
 
-    public void Initialize()
-    {
-        Throw.IfSingletonExists(Instance, "application already exists!");
-        //s_instance = this;
-        Instance = this;
+        Game = game;
+        SceneFactory = sceneFactory;
 
-        _window = new Window(ApplicationSpecification);
+        _specification = specification;
+
+        _window = new Window(specification);
         _window.Initialize();
 
         Renderer.Initialize(@"..\..\..\resources\textures\colored_tilemap.png", 0, 1, 8);
     }
 
+    public IGame Game { get; }
+    public ISceneFactory SceneFactory { get; }
+
+    public Window Window { get { return _window ?? throw new InvalidOperationException("Window is not initialized!"); } }
+
+    public void Initialize()
+    {
+    }
+
     protected override void DisposeManagedState()
     {
-        _game = null;
-
         Renderer.Shutdown();
 
         _window?.Shutdown();
@@ -54,28 +54,16 @@ public sealed class Application : Disposeable, IApplication
     public void Run()
     {
         Throw.IfNull(_window, "No Window instance.");
-        Throw.IfNull(_game, "No Game instance has been set.");
+        Throw.IfNull(Game, "No Game instance has been set.");
 
-        _game?.Initialize();
+        Game?.Initialize();
 
         while (!Raylib.WindowShouldClose())
         {
             var deltaTime = Raylib.GetFrameTime();
-            _game?.Update(deltaTime);
+            Game?.Update(deltaTime);
         }
 
-        _game?.Uninitialize();
-    }
-
-    public void SetGame<TGame>()
-        where TGame : IGame
-    {
-        var game = Activator.CreateInstance(typeof(TGame)) as IGame;
-        if (game == default)
-        {
-            throw new InvalidOperationException();
-        }
-
-        _game = game;
+        Game?.Uninitialize();
     }
 }

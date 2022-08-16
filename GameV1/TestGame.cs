@@ -1,6 +1,8 @@
 ﻿using GameV1.Entities.Factory;
 using MooseEngine.Core;
+using MooseEngine.Extensions.Runtime;
 using MooseEngine.Scenes;
+using MooseEngine.Scenes.Factory;
 using Raylib_cs;
 using System.Numerics;
 
@@ -8,36 +10,38 @@ namespace GameV1;
 
 internal class TestGame : IGame
 {
-    private Scene? _scene;
     private Texture2D _texture;
+
+    public TestGame(ISceneFactory sceneFactory)
+    {
+        Scene = sceneFactory.CreateScene();
+        //PlayerFactory = playerFactory;
+    }
+
+    public Scene Scene { get; }
+    public IPlayerFactory PlayerFactory { get; }
 
     public void Initialize()
     {
-        _scene = new Scene();
-
-        var entityFactory = new EntityFactory();
-        entityFactory.SetSceneContext(_scene);
-
-        var player = entityFactory.CreatePlayer();
+        var player = PlayerFactory.CreatePlayer();
         player.Scale = new Vector2(64, 64);
         player.Position = new Vector2(128, 192);
 
         var window = Application.Instance?.Window;
         var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
 
-        _scene?.Add(player);
-        _scene?.Add(camera);
+        Scene?.Add(player);
+        Scene?.Add(camera);
     }
 
     public void Uninitialize()
     {
-        _scene?.Dispose();
-        _scene = null;
+        Scene?.Dispose();
     }
 
     public void Update(float deltaTime)
     {
-        _scene?.UpdateRuntime(deltaTime);
+        Scene?.UpdateRuntime(deltaTime);
     }
 }
 

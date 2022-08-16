@@ -19,6 +19,7 @@ public static class FactoryContainerBuilderExtensions
     {
         builder.RegisterAssemblyTypes(assembly)
             .AssignableTo<IFactory>()
-            .AsImplementedInterfaces();
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
     }
 }

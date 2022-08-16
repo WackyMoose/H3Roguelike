@@ -8,23 +8,26 @@ namespace MooseEngine.Core;
 public static class Engine
 {
     public static void Start<TGame>(Action<MooseEngineContainerBuilder>? register = null)
-        where TGame : IGame
+        where TGame : class, IGame
     {
-        Start<Application>(register, app => app.SetGame<TGame>());
+        Start<Application, TGame>(register);
     }
 
-    public static void Start<TApplication>(Action<MooseEngineContainerBuilder>? register = null, Action<IApplication>? action = null)
+    public static void Start<TApplication, TGame>(Action<MooseEngineContainerBuilder>? register = null)
         where TApplication : class, IApplication
+        where TGame : class, IGame
     {
-        Start<TApplication>(new(), register, action);
+        Start<TApplication, TGame>(new(), register);
     }
 
-    public static void Start<TApplication>(ApplicationSpecification applicationSpecification, Action<MooseEngineContainerBuilder>? register = null, Action<IApplication>? applicationFunc = null)
+    public static void Start<TApplication, TGame>(ApplicationSpecification applicationSpecification, Action<MooseEngineContainerBuilder>? register = null)
         where TApplication : class, IApplication
+        where TGame : class, IGame
     {
         var containerBuilder = MooseEngineContainerBuilder.Create();
 
         containerBuilder.RegisterApplication<TApplication>(applicationSpecification);
+        containerBuilder.Register<IGame, TGame>();
         containerBuilder.Register<ISceneFactory, SceneFactory>();
 
         register?.Invoke(containerBuilder);
@@ -43,8 +46,6 @@ public static class Engine
         var scope = container.BeginLifetimeScope();
 
         using var app = container.Resolve<IApplication>();
-
-        applicationFunc?.Invoke(app);
 
         app.Initialize();
 
