@@ -7,24 +7,13 @@ using System.Threading.Tasks;
 
 namespace GameV1
 {
-    public class CombatHandler
+    public static class CombatHandler
     {
-        public Creature Attacker { get; set; }
-        public Creature Defender { get; set; }
-        public Weapon AttackWeapon { get; set; }
-
-
-        public CombatHandler(Creature attacker, Creature defender, Weapon attackWeapon)
+        public static void SolveAttack(Creature attacker, Creature defender, Weapon attackWeapon)
         {
-            Attacker = attacker;
-            Defender = defender;
-            AttackWeapon = attackWeapon;
-        }
-
-        public void SolveAttack()
-        {
-            int damage = Attacker.Strength + AttackWeapon.Damage;
-            //int damageModifier = 100 / (100 + (Defender. * (1 - (Attacker.MainHand.Item. / 100)) - Flat penetration)).
+            int damage = attacker.Strength + attackWeapon.Damage;
+            double damageModifier = 100.0 / (100.0 + ((double)defender.Chest.Item.DamageReduction * (1.0 - ((double)attackWeapon.ArmorPenetrationPercent / 100.0)) - (double)attackWeapon.ArmorPenetrationFlat));
+            defender.Health -= (int)(damage * damageModifier);
         }
     }
 }

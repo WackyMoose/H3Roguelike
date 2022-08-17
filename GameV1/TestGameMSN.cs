@@ -32,6 +32,14 @@ internal class TestGameMSN : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
+        weapon.MinDamage = 50;
+        weapon.MaxDamage = 200;
+        weapon.ArmorPenetrationFlat = 50;
+        weapon.ArmorPenetrationPercent = 20;
+
+        armor.MinDamageReduction = 20;
+        armor.MaxDamageReduction = 120;
+
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
         player.MainHand.Add(weapon);
@@ -43,6 +51,12 @@ internal class TestGameMSN : IGame
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
+
+        Console.WriteLine(monster.Health);
+
+        CombatHandler.SolveAttack(player, monster, weapon);
+
+        Console.WriteLine(monster.Health);
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 
