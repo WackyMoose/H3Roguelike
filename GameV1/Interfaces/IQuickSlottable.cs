@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Interfaces
 {
-    internal interface IFood
+    public interface IQuickSlottable
     {
     }
 }

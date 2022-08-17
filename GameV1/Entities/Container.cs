@@ -4,7 +4,7 @@ using Raylib_cs;
 
 namespace GameV1.Entities
 {
-    public abstract class Container<TSlot> : Item, IContainer<TSlot>
+    public abstract class Container<TSlot, TItem> : Item, IContainer<TSlot, TItem>
     {
         public int MaxSlots { get; }
         public List<TSlot> Slots { get; set; }
@@ -15,8 +15,8 @@ namespace GameV1.Entities
             Slots = new List<TSlot>();
         }
 
-        public abstract bool AddItemToSlot(Item item, TSlot slot);
+        public abstract bool AddItemToSlot(TItem item, TSlot slot);
 
-        public abstract Item? RemoveItemFromSlot(TSlot slot);
+        public abstract TItem? RemoveItemFromSlot(TSlot slot);
     }
 }

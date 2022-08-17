@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace GameV1.Interfaces
 {
-    internal interface ISlot<T>
+    internal interface ISlot<TCollection>
     {
-        T? Item { get; set; }
+        TCollection? Item { get; set; }
 
         bool IsEmpty();
-        bool Add(T item);
-        T? Remove();
+        bool Add(TCollection item);
+        TCollection? Remove();
     }
 }

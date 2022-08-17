@@ -1,4 +1,5 @@
-﻿using MooseEngine.Scenes;
+﻿using GameV1.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
-    public class Weapon : Item
+    public class Weapon : Item, IQuickSlottable
     {
         #region Properties
         public int Range { get; set; }

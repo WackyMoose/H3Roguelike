@@ -1,23 +1,18 @@
 ﻿using GameV1.Entities;
 using GameV1.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GameV1.Slots
+namespace GameV1
 {
-    public class WeaponSlot : ISlot<Weapon>
+    public class Slot<T> : ISlot<T>
     {
-        public Weapon? Item { get; set; }
+        public T? Item { get; set; }
 
         public bool IsEmpty()
         {
             return Item == null;
         }
 
-        public bool Add(Weapon item)
+        public bool Add(T item)
         {
             if (IsEmpty())
             {
@@ -27,15 +22,15 @@ namespace GameV1.Slots
             return false;
         }
 
-        public Weapon? Remove()
+        public T? Remove()
         {
             if (!IsEmpty())
             {
-                Weapon? tempItem = Item;
-                Item = null;
+                T? tempItem = Item;
+                Item = default;
                 return tempItem;
             }
-            return null;
+            return default;
         }
     }
 }

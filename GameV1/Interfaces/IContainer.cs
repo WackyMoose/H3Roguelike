@@ -2,12 +2,12 @@
 
 namespace GameV1.Interfaces
 {
-    public interface IContainer<TSlot>
+    public interface IContainer<TSlot, TItem>
     {
         int MaxSlots { get; }
         List<TSlot> Slots { get; set; }
 
-        bool AddItemToSlot(Item item, TSlot slot);
-        Item? RemoveItemFromSlot(TSlot slot);
+        bool AddItemToSlot(TItem item, TSlot slot);
+        TItem? RemoveItemFromSlot(TSlot slot);
     }
 }

@@ -1,22 +1,21 @@
-﻿using GameV1.Slots;
-using MooseEngine.Utilities;
+﻿using MooseEngine.Utilities;
 using Raylib_cs;
 
 namespace GameV1.Entities
 {
-    public class Inventory : Container<InventorySlot>
+    public class Inventory : Container<Slot<Item>, Item>
     {
         public Inventory(int maxSlots, int durability, int maxValue)
             : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.WHITE)
         {
         }
 
-        public override bool AddItemToSlot(Item item, InventorySlot slot)
+        public override bool AddItemToSlot(Item item, Slot<Item> slot)
         {
             return slot.Add(item);
         }
 
-        public override Item? RemoveItemFromSlot(InventorySlot slot)
+        public override Item? RemoveItemFromSlot(Slot<Item> slot)
         {
             return slot.Remove();
         }

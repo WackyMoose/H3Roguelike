@@ -1,6 +1,4 @@
 ﻿using GameV1.Categories;
-using GameV1.Enums;
-using GameV1.Slots;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
@@ -24,9 +22,9 @@ namespace GameV1.Entities
         public Inventory Inventory { get; set; }
         public List<CreatureSpeciesCategory> HostileTowards { get; set; }
         public bool IsDead { get { return Health <= 0; } }
-        public WeaponSlot MainHand { get; set; }
-        public WeaponSlot OffHand { get; set; }
-        public ArmorSlot Chest { get; set; }
+        public Slot<Weapon> MainHand { get; set; }
+        public Slot<Weapon> OffHand { get; set; }
+        public Slot<Armor> Chest { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
@@ -37,9 +35,9 @@ namespace GameV1.Entities
             Skills = new List<Skill>();
             Inventory = new Inventory(16, -1, 0);
             HostileTowards = new List<CreatureSpeciesCategory>();
-            MainHand = new WeaponSlot();
-            OffHand = new WeaponSlot();
-            Chest = new ArmorSlot();
+            MainHand = new Slot<Weapon>();
+            OffHand = new Slot<Weapon>();
+            Chest = new Slot<Armor>();
         }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
@@ -51,9 +49,9 @@ namespace GameV1.Entities
             Skills = new List<Skill>();
             Inventory = new Inventory(16, -1, 12);
             HostileTowards = new List<CreatureSpeciesCategory>();
-            MainHand = new WeaponSlot();
-            OffHand = new WeaponSlot();
-            Chest = new ArmorSlot();
+            MainHand = new Slot<Weapon>();
+            OffHand = new Slot<Weapon>();
+            Chest = new Slot<Armor>();
         }
 
         public void TakeDamage(int damage)
