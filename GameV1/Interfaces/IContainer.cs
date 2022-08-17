@@ -4,10 +4,10 @@ namespace GameV1.Interfaces
 {
     public interface IContainer
     {
-        int MaxItems { get; }
-        List<Item?>? Items { get; set; }
+        int MaxSlots { get; }
+        List<Slot> Slots { get; set; }
 
-        bool AddItem(Item item);
-        bool RemoveItem(Item item);
+        bool AddItemToSlot(Item item, Slot slot);
+        Item? RemoveItemFromSlot(Item item, Slot slot);
     }
 }

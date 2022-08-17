@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
-    internal class Weapon : Item
+    public class Weapon : Item
     {
         #region Properties
         public int Range { get; set; }
-        public int Damage { get; set; }
+        public int Damage => Randomizer.RandomInt(MinDamage, MaxDamage );
         public int CriticalChance { get; set; }
         public int CriticalDamage { get; set; }
         public int MinDamage { get; set; }
         public int MaxDamage { get; set; }
+        public int ArmorPenetrationFlat { get; set; }
+        public int ArmorPenetrationPercent { get; set; }
         #endregion
 
         #region Constructors
@@ -25,6 +27,16 @@ namespace GameV1.Entities
         {
         }
         #endregion
+
+        public int DoDamage()
+        {
+            return IsCritical() ? Damage * CriticalChance : Damage;
+        }
+
+        private bool IsCritical()
+        {
+            return Randomizer.RandomPercent() <= CriticalChance;
+        }
 
         #region Methods
         public override void Initialize()

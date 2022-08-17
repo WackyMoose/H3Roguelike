@@ -9,31 +9,22 @@ namespace GameV1.Entities
 {
     public abstract class Container : Item, IContainer
     {
-        public int MaxItems { get; }
-        public List<Item?>? Items { get; set; } = new List<Item?>();
+        public int MaxSlots { get; }
+        public List<Slot> Slots { get; set; }
 
         public Container(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
+            Slots = new List<Slot>();
         }
 
-        public bool AddItem(Item item)
+        bool IContainer.AddItemToSlot(Item item, Slot slot)
         {
-            if(Items.Count < MaxItems)
-            {
-                Items.Add(item);
-                return true;
-            }
-            return false;
+            return slot.AddItem(item);
         }
 
-        public bool RemoveItem(Item item)
+        Item? IContainer.RemoveItemFromSlot(Item item, Slot slot)
         {
-            if (Items.Contains(item))
-            {
-                Items.Remove(item);
-                return true;
-            }
-            return false;
+            return slot.RemoveItem();
         }
 
     }

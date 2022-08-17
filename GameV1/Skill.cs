@@ -2,7 +2,7 @@
 
 namespace GameV1
 {
-    public class Skill
+    public abstract class Skill
     {
         public Skill(CreatureSkillType type, int experience = 0)
         {
@@ -11,6 +11,7 @@ namespace GameV1
         }
 
         public CreatureSkillType Type { get; set; }
+        public int Modifier { get; set; }
         public int Experience { get; set; }
         public int Level { get => (int)Math.Log10(Experience) + 1; }
 
