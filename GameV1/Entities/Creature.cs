@@ -1,5 +1,6 @@
 ﻿using GameV1.Categories;
 using GameV1.Enums;
+using GameV1.Slots;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;

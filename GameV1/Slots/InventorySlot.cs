@@ -1,7 +1,7 @@
 ﻿using GameV1.Entities;
 using GameV1.Interfaces;
 
-namespace GameV1
+namespace GameV1.Slots
 {
     public class InventorySlot : ISlot<Item>
     {
