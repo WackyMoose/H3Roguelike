@@ -38,13 +38,18 @@ https://en.wikipedia.org/wiki/Roguelike
 the player needs to learn the attack pattern of the worlds creature, level up their character & collect magical items to survive the world.
 
 ### <span style="color:#E74C3C ">Controls:</span>
+
+
 Movement - WASD or Arrow Keys</br>
 Interaction - E</br>
 Inventory Screen - I</br>
 Character Screen - C</br>
-Pause Menu - P</br>
+Main Menu - Esc</br>
 Quick Slot Menu - Number keys 0-9</br>
 Map - M</br>
+
+
+
 
 ### <span style="color:#E74C3C ">Unique Selling Points:</span>
 * The enemies have a specific attack pattern, this introduces a opportunity for the player to grow their skill.</br>

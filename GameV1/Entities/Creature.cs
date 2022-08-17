@@ -20,8 +20,9 @@ namespace GameV1.Entities
         public int MovementPoints { get; set; }
         public int Health { get; set; }
         public int Stamina { get; set; }
-        public Container Inventory { get; set; }
+        public Inventory Inventory { get; set; } = new Inventory(-1, 12);
         public List<CreatureSpeciesCategory> HostileTowards { get; set; } = new List<CreatureSpeciesCategory> ();
+        public bool IsDead { get { return Health <= 0; } }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

@@ -24,17 +24,15 @@ namespace GameV1.Categories
             Level++;
         }
 
-        public static CreatureSkillCategory Archery { get { return new CreatureSkillCategory("Archery"); } }
-        public static CreatureSkillCategory Mining { get { return new CreatureSkillCategory("Mining"); } }
-        public static CreatureSkillCategory SwordFighting { get { return new CreatureSkillCategory("SwordFighting"); } }
+        public static CreatureSkillCategory Ranged { get { return new CreatureSkillCategory("Ranged"); } }
+        public static CreatureSkillCategory Melee { get { return new CreatureSkillCategory("Melee"); } }
         public static CreatureSkillCategory Block { get { return new CreatureSkillCategory("Block"); } }
-        public static CreatureSkillCategory Parry { get { return new CreatureSkillCategory("Parry"); } }
 
         public static List<CreatureSkillCategory> List()
         {
             return new List<CreatureSkillCategory>
-            { 
-                Archery, Mining, SwordFighting
+            {
+                Ranged, Melee, Block
             };
         }
 
