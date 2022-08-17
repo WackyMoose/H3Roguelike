@@ -1,4 +1,5 @@
 ﻿using GameV1.Categories;
+using GameV1.Enums;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
@@ -7,9 +8,8 @@ namespace GameV1.Entities
 {
     public class Creature : Entity
     {
-        public CreatureSpeciesCategory Species { get; set; } = new CreatureSpeciesCategory();
-        public CreatureOccupationCategory Occupation { get; set; } = new CreatureOccupationCategory();
-        public List <CreatureSkillCategory> Skills { get; set; } = new List<CreatureSkillCategory> ();
+        public CreatureSpeciesCategory Species { get; set; }
+        public List <Skill> Skills { get; set; }
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }
@@ -20,20 +20,30 @@ namespace GameV1.Entities
         public int MovementPoints { get; set; }
         public int Health { get; set; }
         public int Stamina { get; set; }
-        public Inventory Inventory { get; set; } = new Inventory(-1, 12);
-        public List<CreatureSpeciesCategory> HostileTowards { get; set; } = new List<CreatureSpeciesCategory> ();
+        public Inventory Inventory { get; set; }
+        public List<CreatureSpeciesCategory> HostileTowards { get; set; }
         public bool IsDead { get { return Health <= 0; } }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
             MovementPoints = movementPoints;
             Health = health;
+
+            Species = new CreatureSpeciesCategory();
+            Skills = new List<Skill>();
+            Inventory = new Inventory(-1, 12);
+            HostileTowards = new List<CreatureSpeciesCategory>();
         }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
         {
             MovementPoints = movementPoints;
             Health = health;
+
+            Species = new CreatureSpeciesCategory();
+            Skills = new List<Skill>();
+            Inventory = new Inventory(-1, 12);
+            HostileTowards = new List<CreatureSpeciesCategory>();
         }
 
         public void TakeDamage(int damage)
