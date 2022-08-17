@@ -11,7 +11,7 @@ public static class FactoryContainerBuilderExtensions
     {
         builder
             .RegisterType<TFactory>()
-            .As<IFactory>()
+            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
     }
 

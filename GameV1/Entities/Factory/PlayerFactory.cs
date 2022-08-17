@@ -12,8 +12,8 @@ public interface IPlayerFactory : ISceneEntityFactory
 
 public class PlayerFactory : SceneEntityFactory, IPlayerFactory
 {
-    public PlayerFactory(IGame game) 
-        : base(game)
+    public PlayerFactory(ISceneFactory sceneFactory) 
+        : base(sceneFactory)
     {
     }
 

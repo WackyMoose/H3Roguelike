@@ -10,16 +10,14 @@ public interface IApplicationFactory : IFactory
 public class ApplicationFactory : FactoryBase, IApplicationFactory
 {
     private IGame _game;
-    private ISceneFactory _sceneFactory;
 
-    public ApplicationFactory(IGame game, ISceneFactory sceneFactory)
+    public ApplicationFactory(IGame game)
     {
         _game = game;
-        _sceneFactory = sceneFactory;
     }
 
     public IApplication CreateApplication(ApplicationSpecification applicationSpecification)
     {
-        return new Application(applicationSpecification, _game, _sceneFactory);
+        return new Application(applicationSpecification, _game);
     }
 }

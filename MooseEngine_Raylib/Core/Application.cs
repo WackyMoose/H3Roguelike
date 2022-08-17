@@ -6,6 +6,8 @@ namespace MooseEngine.Core;
 
 public interface IApplication : IDisposable
 {
+    Window Window { get; }
+
     void Initialize();
     void Run();
 }
@@ -18,20 +20,16 @@ public sealed class Application : Disposeable, IApplication
     private ApplicationSpecification _specification;
     private Window? _window = null;
 
-    public Application(ApplicationSpecification specification, IGame game, ISceneFactory sceneFactory)
+    public Application(ApplicationSpecification specification, IGame game)
     {
         Throw.IfSingletonExists(Instance, "Application already exists!");
         s_Instance = this;
 
         Game = game;
-        SceneFactory = sceneFactory;
 
         _specification = specification;
 
-        _window = new Window(specification);
-        _window.Initialize();
-
-        Renderer.Initialize(@"..\..\..\resources\textures\colored_tilemap.png", 0, 1, 8);
+        SceneFactory = new SceneFactory(this);
     }
 
     public IGame Game { get; }
@@ -41,6 +39,10 @@ public sealed class Application : Disposeable, IApplication
 
     public void Initialize()
     {
+        _window = new Window(_specification);
+        _window.Initialize();
+
+        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
     }
 
     protected override void DisposeManagedState()

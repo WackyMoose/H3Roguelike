@@ -1,6 +1,5 @@
 ﻿using GameV1.Entities.Factory;
 using MooseEngine.Core;
-using MooseEngine.Extensions.Runtime;
 using MooseEngine.Scenes;
 using MooseEngine.Scenes.Factory;
 using Raylib_cs;
@@ -11,37 +10,39 @@ namespace GameV1;
 internal class TestGame : IGame
 {
     private Texture2D _texture;
-
-    public TestGame(ISceneFactory sceneFactory)
-    {
-        Scene = sceneFactory.CreateScene();
-        //PlayerFactory = playerFactory;
-    }
-
-    public Scene Scene { get; }
-    public IPlayerFactory PlayerFactory { get; }
+    private Scene? _scene;
 
     public void Initialize()
     {
-        var player = PlayerFactory.CreatePlayer();
+        var sceneFactory = Application.Instance?.SceneFactory;
+
+        _scene = sceneFactory!.CreateScene();
+
+        var playerFactory = new PlayerFactory(sceneFactory);
+
+        var player = playerFactory.CreatePlayer();
         player.Scale = new Vector2(64, 64);
         player.Position = new Vector2(128, 192);
 
-        var window = Application.Instance?.Window;
-        var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
+        sceneFactory.CreateCenteredCamera(player);
 
-        Scene?.Add(player);
-        Scene?.Add(camera);
+        //var player = PlayerFactory.CreatePlayer();
+
+        //var window = Application.Instance?.Window;
+        //var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
+
+        //Scene?.Add(player);
+        //Scene?.Add(camera);
     }
 
     public void Uninitialize()
     {
-        Scene?.Dispose();
+        _scene?.Dispose();
     }
 
     public void Update(float deltaTime)
     {
-        Scene?.UpdateRuntime(deltaTime);
+        _scene?.UpdateRuntime(deltaTime);
     }
 }
 

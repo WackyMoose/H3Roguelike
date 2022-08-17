@@ -1,6 +1,4 @@
-﻿using MooseEngine.Core;
-
-namespace MooseEngine.Scenes.Factory;
+﻿namespace MooseEngine.Scenes.Factory;
 
 public interface ISceneEntityFactory : IFactory
 {
@@ -8,9 +6,9 @@ public interface ISceneEntityFactory : IFactory
 
 public class SceneEntityFactory : FactoryBase, ISceneEntityFactory
 {
-    public SceneEntityFactory(IGame game)
+    public SceneEntityFactory(ISceneFactory sceneFactory)
     {
-        Scene = game.Scene;
+        Scene = sceneFactory.Scene;
     }
 
     protected Scene Scene { get; }

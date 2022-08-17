@@ -1,26 +1,25 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MooseEngine.DependencyInjection;
-using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.Core;
 
 public static class Engine
 {
-    public static void Start<TGame>(Action<MooseEngineContainerBuilder>? register = null)
+    public static void Start<TGame>()
         where TGame : class, IGame
     {
-        Start<Application, TGame>(register);
+        Start<Application, TGame>();
     }
 
-    public static void Start<TApplication, TGame>(Action<MooseEngineContainerBuilder>? register = null)
+    public static void Start<TApplication, TGame>()
         where TApplication : class, IApplication
         where TGame : class, IGame
     {
-        Start<TApplication, TGame>(new(), register);
+        Start<TApplication, TGame>(new());
     }
 
-    public static void Start<TApplication, TGame>(ApplicationSpecification applicationSpecification, Action<MooseEngineContainerBuilder>? register = null)
+    public static void Start<TApplication, TGame>(ApplicationSpecification applicationSpecification)
         where TApplication : class, IApplication
         where TGame : class, IGame
     {
@@ -28,9 +27,6 @@ public static class Engine
 
         containerBuilder.RegisterApplication<TApplication>(applicationSpecification);
         containerBuilder.Register<IGame, TGame>();
-        containerBuilder.Register<ISceneFactory, SceneFactory>();
-
-        register?.Invoke(containerBuilder);
 
         var container = containerBuilder.Build();
 

@@ -27,14 +27,16 @@ public class Scene : Disposeable
         }
 
         var camera = _entities.SingleOrDefault(x => x.GetType() == typeof(Camera));
-        Throw.IfNull(camera, "Scene does not contain a Camera entity!");
-        Renderer.Begin((Camera)camera!);
-        for (int i = _entities.Count - 1; i >= 0; i--)
+        if (camera != null)
         {
-            var entity = _entities[i];
-            Renderer.RenderEntity(entity);
+            Renderer.Begin((Camera)camera!);
+            for (int i = _entities.Count - 1; i >= 0; i--)
+            {
+                var entity = _entities[i];
+                Renderer.RenderEntity(entity);
+            }
+            Renderer.End();
         }
-        Renderer.End();
     }
 
     public void Add(Entity entity)
