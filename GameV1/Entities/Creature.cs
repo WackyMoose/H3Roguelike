@@ -1,31 +1,28 @@
-﻿using MooseEngine.Scenes;
+﻿using GameV1.Categories;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
-using RPG_V3.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
     public class Creature : Entity
     {
-        public CreatureSpeciesCategory Species { get; set; }
+        public CreatureSpeciesCategory Species { get; set; } = new CreatureSpeciesCategory();
+        public CreatureOccupationCategory Occupation { get; set; } = new CreatureOccupationCategory();
+        public List <CreatureSkillCategory> Skills { get; set; } = new List<CreatureSkillCategory> ();
         public int Fatigue { get; set; }
         public int FatigueDrecrease { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Experience { get; set; }
-        public int Level { get; set; }
         public int Toughness { get; set; }
         public int Perception { get; set; }
         public int Charisma { get; set; }
         public int MovementPoints { get; set; }
         public int Health { get; set; }
         public int Stamina { get; set; }
-        public Container Inventory { get; set; }
+        public Inventory Inventory { get; set; } = new Inventory(-1, 12);
+        public List<CreatureSpeciesCategory> HostileTowards { get; set; } = new List<CreatureSpeciesCategory> ();
+        public bool IsDead { get { return Health <= 0; } }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

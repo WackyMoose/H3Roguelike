@@ -13,7 +13,7 @@ namespace GameV1.Entities
     {
         public int Durability { get; set; }
         public int MaxValue { get; set; }
-        public Material Material { get; set; }
+        public List<Material> Materials { get; set; }
         public bool IsBroken { get { return Durability <= 0; } }
 
         public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
@@ -24,12 +24,12 @@ namespace GameV1.Entities
 
         public override void Initialize()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public override void Update(float deltaTime)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

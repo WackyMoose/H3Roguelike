@@ -14,8 +14,10 @@ namespace MooseEngine.Core
         private static int _spriteSize;
         private static int _offSet;
         private static int _padding;
+        public static Camera2D camera;
 
-        public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 8)
+        // TODO: Remove hard-coded values
+        public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 9)
         {
             _offSet = offSet;
             _padding = padding;
@@ -24,7 +26,6 @@ namespace MooseEngine.Core
 
             Raylib.SetTargetFPS(60);
 
-            // TODO: add null check
             Throw.IfNull(_spriteSheet, $"Failed to load spritesheet, path: {spriteSheetPath}");
         }
 
@@ -56,10 +57,26 @@ namespace MooseEngine.Core
         public static void RenderEntity(Entity entity)
         {
             Coords2D spritePosition = entity.SpriteCoords;
-            Rectangle pixelSourcePosition = new Rectangle(_offSet + ((_spriteSize + _padding) * spritePosition.X), _offSet + ((_spriteSize + _padding) * spritePosition.Y), _spriteSize, _spriteSize);
-            Rectangle pixelDestinationPosition = new Rectangle(entity.Position.X, entity.Position.Y, entity.Scale.X, entity.Scale.Y);
+           
+            Rectangle source = new Rectangle(
+                _offSet + ((_spriteSize + _padding) * spritePosition.X), 
+                _offSet + ((_spriteSize + _padding) * spritePosition.Y), 
+                _spriteSize, 
+                _spriteSize);
+            
+            Rectangle dest = new Rectangle(
+                entity.Position.X,
+                entity.Position.Y,
+                entity.Scale.X, 
+                entity.Scale.Y);
 
-            Raylib.DrawTexturePro(_spriteSheet, pixelSourcePosition, pixelDestinationPosition, Vector2.Zero, 0.0f, entity.ColorTint);
+            Raylib.DrawTexturePro(
+                _spriteSheet,
+                source,
+                dest,
+                new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2), // Vector2.Zero
+                0.0f,
+                entity.ColorTint);
         }
     }
 }

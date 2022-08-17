@@ -13,6 +13,7 @@ public abstract class Entity
     public Coords2D SpriteCoords { get; init; }
     public Color ColorTint { get; set; }
     public string Name { get; set; }
+    public int Id { get; set; }
 
     public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.WHITE)
     {

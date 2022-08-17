@@ -7,7 +7,7 @@ Scrum Master: Pierre.
 
 ### <span style="color:#C39BD3 ">End Product:</span>
 
-Small procedural generated Rogue-lite game.
+Small procedurally generated Rogue-lite game.
 
 ### <span style="color:#C39BD3 ">Definition of RogueLike:</span>
 
@@ -23,12 +23,13 @@ Small procedural generated Rogue-lite game.
 https://en.wikipedia.org/wiki/Roguelike
 
 ### <span style="color:#C39BD3 ">Created with:</span>
-* Robert Nystrom https://gameprogrammingpatterns.com/
+* *Game Programming Patterns* by Robert Nystrom https://gameprogrammingpatterns.com/
 * C# in Visual Studio https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
-* Raylib-cs https://github.com/ChrisDill/Raylib-cs
+* Raylib-cs (raylib for C#) https://github.com/ChrisDill/Raylib-cs
 * MongoDB https://www.mongodb.com/
 * Kenney Assets https://kenney.nl/assets/micro-roguelike
 * 8-bit Portrait Pack https://itchabop.itch.io/8bit-portrait-pack
+* Tiled map editor https://www.mapeditor.org/
 
 
 <details open><summary><span style="color:#E74C3C ">Game Design Document</span></summary>
@@ -38,13 +39,18 @@ https://en.wikipedia.org/wiki/Roguelike
 the player needs to learn the attack pattern of the worlds creature, level up their character & collect magical items to survive the world.
 
 ### <span style="color:#E74C3C ">Controls:</span>
+
+
 Movement - WASD or Arrow Keys</br>
 Interaction - E</br>
 Inventory Screen - I</br>
 Character Screen - C</br>
-Pause Menu - P</br>
-Quick Slot Menu - F Keys</br>
+Main Menu - Esc</br>
+Quick Slot Menu - Number keys 0-9</br>
 Map - M</br>
+
+
+
 
 ### <span style="color:#E74C3C ">Unique Selling Points:</span>
 * The enemies have a specific attack pattern, this introduces a opportunity for the player to grow their skill.</br>
@@ -61,6 +67,26 @@ this will take a turn & then give the aggroed enemies their turn.</br>
 * Everything decays, items, Max stamina on Player.</br>
 * Player have a range around their character where they can tab between entities to choose which entity to interact with(Trade,Talk,Attack, etc.),
 this range can be increased by increasing the characters perception stat</br>
+
+### <span style="color:#E74C3C ">Weapon stats</span>
+* Minimum Damage
+* Maximum Damage
+* Critical Chance
+* Critical Damage
+* Range
+* Flat Penetration
+* Percent Penetration
+
+### <span style="color:#E74C3C ">Creature stats & skills</span>
+### Stats:
+* Strength - Used to modify damage done.
+* Agility - Modifies chance to hit.
+* Toughness - Determines health pool.
+* Perception - Determines at what range the player can interaact with the world.
+* Charisma - Modifies sell/buy price, chance to convert creature from hostile to non-hostile.
+### Skills:
+* Create bonfire - Used to cook food.
+* Hide items - Can dig a hole in the world and hide choosen items, only if player have a shovel in inventory.
 
 ### <span style="color:#E74C3C ">Game Progression:</span>
 * Player will explorer the world, where they will collect items, gold & experience, some they can choose to save for their next character when the current one dies.</br>
