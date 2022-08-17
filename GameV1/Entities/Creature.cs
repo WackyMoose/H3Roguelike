@@ -23,6 +23,9 @@ namespace GameV1.Entities
         public Inventory Inventory { get; set; }
         public List<CreatureSpeciesCategory> HostileTowards { get; set; }
         public bool IsDead { get { return Health <= 0; } }
+        public WeaponSlot MainHand { get; set; }
+        public WeaponSlot OffHand { get; set; }
+        public ArmorSlot Chest { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
@@ -31,8 +34,11 @@ namespace GameV1.Entities
 
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
-            Inventory = new Inventory(-1, 12);
+            Inventory = new Inventory(16, -1, 0);
             HostileTowards = new List<CreatureSpeciesCategory>();
+            MainHand = new WeaponSlot();
+            OffHand = new WeaponSlot();
+            Chest = new ArmorSlot();
         }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
@@ -42,8 +48,11 @@ namespace GameV1.Entities
 
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
-            Inventory = new Inventory(-1, 12);
+            Inventory = new Inventory(16, -1, 12);
             HostileTowards = new List<CreatureSpeciesCategory>();
+            MainHand = new WeaponSlot();
+            OffHand = new WeaponSlot();
+            Chest = new ArmorSlot();
         }
 
         public void TakeDamage(int damage)

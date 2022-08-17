@@ -7,41 +7,56 @@ using System.Linq;
 
 namespace GameV1.Entities
 {
-    public abstract class Container : Item, IContainer
+    public abstract class Container<T> : Item, IContainer<T>
     {
         public int MaxSlots { get; }
-        public List<Slot> Slots { get; set; }
+        public List<T> Slots { get; set; }
 
-        public Container(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
+        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
-            Slots = new List<Slot>();
+            MaxSlots = maxSlots;
+            Slots = new List<T>();
         }
 
-        bool IContainer.AddItemToSlot(Item item, Slot slot)
-        {
-            return slot.AddItem(item);
-        }
+        public abstract bool AddItemToSlot(Item item, T slot);
 
-        Item? IContainer.RemoveItemFromSlot(Item item, Slot slot)
-        {
-            return slot.RemoveItem();
-        }
+        public abstract Item? RemoveItemFromSlot(T slot);
 
     }
 
-    public class Inventory : Container
+    public class Inventory : Container<InventorySlot>
     {
-        public Inventory(int durability, int maxValue) 
-            : base(durability, maxValue, "Inventory", new Coords2D(1,1), Color.WHITE)
+        public Inventory(int maxSlots, int durability, int maxValue) 
+            : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1,1), Color.WHITE)
         {
+        }
+
+        public override bool AddItemToSlot(Item item, InventorySlot slot)
+        {
+            return slot.Add(item);
+        }
+
+        public override Item? RemoveItemFromSlot(InventorySlot slot)
+        {
+            return slot.Remove();
         }
     }
 
-    public class QuickSlot : Container
+    public class QuickInventory : Container<QuickSlot>
     {
-        public QuickSlot(int durability, int maxValue)
-            : base(durability, maxValue, "QuickSlot", new Coords2D(1, 1), Color.WHITE)
+        public QuickInventory(int maxSlots, int durability, int maxValue)
+            : base(maxSlots, durability, maxValue, "QuickSlot", new Coords2D(1, 1), Color.WHITE)
         {
+        }
+
+        public override bool AddItemToSlot(Item item, QuickSlot slot)
+        {
+            return slot.Add(item);
+        }
+
+        public override Item? RemoveItemFromSlot(QuickSlot slot)
+        {
+            return slot.Remove();
         }
     }
 }

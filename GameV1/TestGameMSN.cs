@@ -14,6 +14,12 @@ internal class TestGameMSN : IGame
 {
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private Creature monster = new Creature("Garglebloth", 100, 1000, new Coords2D(13, 0));
+
+    private Weapon weapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
+
+    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
+
     private HashSet<Vector2> forest = new HashSet<Vector2>();
 
     public void Initialize()
@@ -28,7 +34,15 @@ internal class TestGameMSN : IGame
 
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
+        player.MainHand.Add(weapon);
+        
         _scene?.Add(player);
+
+        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        player.Position = new Vector2(128, 192);
+        monster.Chest.Add(armor);
+
+        _scene?.Add(monster);
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 

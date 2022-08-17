@@ -24,7 +24,7 @@ namespace GameV1
         public void SolveAttack()
         {
             int damage = Attacker.Strength + AttackWeapon.Damage;
-            //int damageModifier = 100 / (100 + (Defender. * (1 - (PercentPenetration / 100)) - Flat penetration)).
+            //int damageModifier = 100 / (100 + (Defender. * (1 - (Attacker.MainHand.Item. / 100)) - Flat penetration)).
         }
     }
 }
