@@ -43,12 +43,10 @@ namespace GameV1.Entities
 
         public override void Initialize()
         {
-            //throw new NotImplementedException();
         }
 
         public override void Update(float deltaTime)
         {
-            //throw new NotImplementedException();
         }
     }
 }

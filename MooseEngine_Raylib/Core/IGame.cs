@@ -1,4 +1,6 @@
-﻿namespace MooseEngine.Core;
+﻿using MooseEngine.Scenes;
+
+namespace MooseEngine.Core;
 
 public interface IGame
 {

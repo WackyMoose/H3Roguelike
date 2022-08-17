@@ -28,23 +28,16 @@ public class Scene : Disposeable
         }
 
         var camera = _entities.SingleOrDefault(x => x.GetType() == typeof(Camera));
-        Throw.IfNull(camera, "Scene does not contain a Camera entity!");
-        
-        Renderer.Begin((Camera)camera!);
-
-        for (int i = _entities.Count - 1; i >= 0; i--)
+        if (camera != null)
         {
-            var entity = _entities[i];
-            Renderer.RenderEntity(entity);
+            Renderer.Begin((Camera)camera!);
+            for (int i = _entities.Count - 1; i >= 0; i--)
+            {
+                var entity = _entities[i];
+                Renderer.RenderEntity(entity);
+            }
+            Renderer.End();
         }
-
-        Raylib.EndMode2D();
-
-        // Draw crosshair
-        Raylib.DrawLine(0, Application.Instance.Window.Height/2, Application.Instance.Window.Width, Application.Instance.Window.Height / 2, Color.GREEN);
-        Raylib.DrawLine(Application.Instance.Window.Width / 2, 0, Application.Instance.Window.Width / 2, Application.Instance.Window.Height, Color.GREEN);
-
-        Renderer.End();
     }
 
     public void Add(Entity entity)

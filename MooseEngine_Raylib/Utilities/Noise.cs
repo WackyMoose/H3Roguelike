@@ -1,9 +1,9 @@
 ﻿namespace MooseEngine.Utilities;
 
-public static class Noise
+public static class Noise<T>
 {
-    public static float[,] PerlinNoise2D()
+    public static T[,] PerlinNoise2D()
     {
-        return new float[0, 0];
+        return new T[0, 0];
     }
 }
