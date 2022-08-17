@@ -4,19 +4,19 @@ using Raylib_cs;
 
 namespace GameV1.Entities
 {
-    public abstract class Container<T> : Item, IContainer<T>
+    public abstract class Container<TSlot> : Item, IContainer<TSlot>
     {
         public int MaxSlots { get; }
-        public List<T> Slots { get; set; }
+        public List<TSlot> Slots { get; set; }
 
         public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             MaxSlots = maxSlots;
-            Slots = new List<T>();
+            Slots = new List<TSlot>();
         }
 
-        public abstract bool AddItemToSlot(Item item, T slot);
+        public abstract bool AddItemToSlot(Item item, TSlot slot);
 
-        public abstract Item? RemoveItemFromSlot(T slot);
+        public abstract Item? RemoveItemFromSlot(TSlot slot);
     }
 }
