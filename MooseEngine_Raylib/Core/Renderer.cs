@@ -14,9 +14,7 @@ namespace MooseEngine.Core
         private static int _spriteSize;
         private static int _offSet;
         private static int _padding;
-        public static Camera2D camera;
 
-        // TODO: Remove hard-coded values
         public static void Initialize(string spriteSheetPath, int offSet = 1, int padding = 1, int spriteSize = 9)
         {
             _offSet = offSet;

@@ -29,6 +29,7 @@ https://en.wikipedia.org/wiki/Roguelike
 * MongoDB https://www.mongodb.com/
 * Kenney Assets https://kenney.nl/assets/micro-roguelike
 * 8-bit Portrait Pack https://itchabop.itch.io/8bit-portrait-pack
+* Tiled map editor https://www.mapeditor.org/
 
 
 <details open><summary><span style="color:#E74C3C ">Game Design Document</span></summary>
