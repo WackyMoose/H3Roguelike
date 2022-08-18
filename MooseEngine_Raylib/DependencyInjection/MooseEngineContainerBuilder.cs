@@ -28,12 +28,6 @@ public class MooseEngineContainerBuilder : IMooseEngineContainerBuilder
         return new MooseEngineContainerBuilder();
     }
 
-    public void RegisterFactory<TFactory>()
-        where TFactory : FactoryBase, IFactory
-    {
-        ContainerBuilder.RegisterFactory<TFactory>();
-    }
-
     public void Register<TInterface, TImplementation>()
         where TInterface : class
         where TImplementation : class, TInterface

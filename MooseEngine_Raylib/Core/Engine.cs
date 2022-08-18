@@ -25,7 +25,7 @@ public static class Engine
     {
         var containerBuilder = MooseEngineContainerBuilder.Create();
 
-        containerBuilder.RegisterApplication<TApplication>(applicationSpecification);
+        containerBuilder.RegisterModule(new ApplicationModule(applicationSpecification));
         containerBuilder.Register<IGame, TGame>();
 
         var container = containerBuilder.Build();
@@ -37,7 +37,8 @@ public static class Engine
             return serviceProvider;
         })
             .As<IServiceProvider>()
-            .SingleInstance();
+            .SingleInstance()
+            .InstancePerLifetimeScope();
 
         var scope = container.BeginLifetimeScope();
 
