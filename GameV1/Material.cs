@@ -1,13 +1,9 @@
 ﻿using GameV1.Categories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GameV1.Interfaces;
 
 namespace GameV1
 {
-    public class Material
+    public class Material : IMaterial
     {
         public Material(MaterialCategory category, string name, double strength = 0, double value = 0)
         {

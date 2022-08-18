@@ -31,9 +31,9 @@
         public static List<CreatureSpeciesCategory> List()
         {
             // Added extra Humans to balance out
-            return new List<CreatureSpeciesCategory> 
-            { 
-                Ork, Elf, Human 
+            return new List<CreatureSpeciesCategory>
+            {
+                Ork, Elf, Human
             };
         }
     }

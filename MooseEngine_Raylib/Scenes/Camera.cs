@@ -23,7 +23,7 @@ public class Camera : Entity
     }
 
     public Camera2D RaylibCamera { get { return _raylibCamera; } }
-    
+
     public override void Initialize()
     {
     }

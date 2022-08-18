@@ -2,6 +2,7 @@
 using GameV1.WorldGeneration;
 using MooseEngine;
 using MooseEngine.Core;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
@@ -13,7 +14,7 @@ internal class NoiseTest : IGame
 {
     private Scene? _scene;
     private Texture2D _texture;
-    private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
+    private Tile tile = new Tile("Tree01", false, new Coords2D(5, 0));
     private HashSet<Vector2> forest = new HashSet<Vector2>();
 
     public void Initialize()

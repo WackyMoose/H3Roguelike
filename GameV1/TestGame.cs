@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
 using MooseEngine.Core;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;

@@ -1,15 +1,11 @@
-﻿using MooseEngine.Scenes;
+﻿using GameV1.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
-    public class Tile : Entity
+    public class Tile : Entity, ITile
     {
         public bool Walkable { get; set; }
 

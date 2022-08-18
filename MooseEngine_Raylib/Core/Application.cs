@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Interfaces;
 using Raylib_cs;
 
 namespace MooseEngine.Core;
@@ -40,7 +41,7 @@ public class Application : Disposeable
 
         _window = new Window(specification);
         _window.Initialize();
-        
+
         Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
     }
 
@@ -61,7 +62,7 @@ public class Application : Disposeable
 
         _game?.Initialize();
 
-        while(!Raylib.WindowShouldClose())
+        while (!Raylib.WindowShouldClose())
         {
             var deltaTime = Raylib.GetFrameTime();
             _game?.Update(deltaTime);
@@ -74,7 +75,7 @@ public class Application : Disposeable
         where TGame : IGame
     {
         var game = Activator.CreateInstance(typeof(TGame)) as IGame;
-        if(game == default)
+        if (game == default)
         {
             throw new InvalidOperationException();
         }

@@ -1,6 +1,6 @@
-﻿using System.Numerics;
-using MooseEngine;
+﻿using MooseEngine;
 using SimplexNoise;
+using System.Numerics;
 
 namespace GameV1.WorldGeneration
 {
@@ -11,21 +11,21 @@ namespace GameV1.WorldGeneration
         //TODO Add WFC to generate castles etc...
         //TODO Use Cellular to generate Dungeons...
 
-        private static void GenerateOverworld(int width, int height, int tileSize) 
+        private static void GenerateOverworld(int width, int height, int tileSize)
         {
             Dictionary<Vector2, float> overworld = new Dictionary<Vector2, float>();
 
             for (int x = 0; x < width; x++)
-			{
+            {
                 for (int y = 0; y < height; y++)
-			    {
-                    overworld.Add(new Vector2(x,y), Noise.CalcPixel2D(x, y, tileSize));
-			    }
-			}
+                {
+                    overworld.Add(new Vector2(x, y), Noise.CalcPixel2D(x, y, tileSize));
+                }
+            }
 
         }
 
-        public static HashSet<Vector2> GenerateForest(int iterations, int walkLength, Vector2 position) 
+        public static HashSet<Vector2> GenerateForest(int iterations, int walkLength, Vector2 position)
         {
             HashSet<Vector2> treePositions = new HashSet<Vector2>();
 
@@ -38,7 +38,7 @@ namespace GameV1.WorldGeneration
             return treePositions;
         }
 
-        private static HashSet<Vector2> SimpleRandomWalk(Vector2 startPosition, int walkLength) 
+        private static HashSet<Vector2> SimpleRandomWalk(Vector2 startPosition, int walkLength)
         {
             HashSet<Vector2> path = new HashSet<Vector2>();
 
@@ -55,7 +55,7 @@ namespace GameV1.WorldGeneration
             return path;
         }
 
-        private static class Direction2D 
+        private static class Direction2D
         {
             public static List<Vector2> CardinalDirectionList = new List<Vector2>
             {
@@ -65,7 +65,7 @@ namespace GameV1.WorldGeneration
                 new Vector2(-1,0), //Left
             };
 
-            public static Vector2 GetRandomCardinalDirection() 
+            public static Vector2 GetRandomCardinalDirection()
             {
                 Random rnd = new Random();
                 return CardinalDirectionList[rnd.Next(CardinalDirectionList.Count)];
@@ -75,6 +75,6 @@ namespace GameV1.WorldGeneration
 
     public enum ForestSize
     {
-        small,medium,large
+        small, medium, large
     }
 }

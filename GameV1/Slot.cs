@@ -1,18 +1,17 @@
-﻿using GameV1.Entities;
-using GameV1.Interfaces;
+﻿using GameV1.Interfaces;
 
 namespace GameV1
 {
-    public class Slot<T> : ISlot<T>
+    public class Slot<TItem> : ISlot<TItem> where TItem : IItem
     {
-        public T? Item { get; set; }
+        public TItem? Item { get; set; }
 
         public bool IsEmpty()
         {
             return Item == null;
         }
 
-        public bool Add(T item)
+        public bool Add(TItem item)
         {
             if (IsEmpty())
             {
@@ -22,11 +21,11 @@ namespace GameV1
             return false;
         }
 
-        public T? Remove()
+        public TItem? Remove()
         {
             if (!IsEmpty())
             {
-                T? tempItem = Item;
+                TItem? tempItem = Item;
                 Item = default;
                 return tempItem;
             }
