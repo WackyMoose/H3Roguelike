@@ -61,4 +61,30 @@ public class Coord2DTest
         var y = result.Y == expected.Y;
         Assert.IsTrue(x && y);
     }
+
+    [TestMethod]
+    public void Coord2D_10_Multiply_Negative10_Multiply_Operator()
+    {
+        var coord1 = new Coords2D(10, -10);
+        var expected = new Coords2D(-100, 100);
+
+        var result = coord1 * -10;
+
+        var x = result.X == expected.X;
+        var y = result.Y == expected.Y;
+        Assert.IsTrue(x && y);
+    }
+
+    [TestMethod]
+    public void Coord2D_10_Multiply_10_Multiply_Operator()
+    {
+        var coord1 = new Coords2D(10, 10);
+        var expected = new Coords2D(100, 100);
+
+        var result = coord1 * 10;
+
+        var x = result.X == expected.X;
+        var y = result.Y == expected.Y;
+        Assert.IsTrue(x && y);
+    }
 }
