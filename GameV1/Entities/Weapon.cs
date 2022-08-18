@@ -4,7 +4,7 @@ using Raylib_cs;
 
 namespace GameV1.Entities
 {
-    public class Weapon : Item, IQuickSlottable
+    public class Weapon : Item, IWeapon, IQuickSlottable
     {
         #region Properties
         public int Range { get; set; }
