@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.Extensions.Auto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.UnitTesting", "Game.UnitTesting\Game.UnitTesting.csproj", "{C2C18DF5-478F-410A-BCE4-227DCF8C4694}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.UnitTesting.NUnit", "Game.UnitTesting.NUnit\Game.UnitTesting.NUnit.csproj", "{4883AE4D-8AA3-47EC-97D1-70CEA995540A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C2C18DF5-478F-410A-BCE4-227DCF8C4694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C18DF5-478F-410A-BCE4-227DCF8C4694}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C18DF5-478F-410A-BCE4-227DCF8C4694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4883AE4D-8AA3-47EC-97D1-70CEA995540A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4883AE4D-8AA3-47EC-97D1-70CEA995540A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4883AE4D-8AA3-47EC-97D1-70CEA995540A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4883AE4D-8AA3-47EC-97D1-70CEA995540A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
