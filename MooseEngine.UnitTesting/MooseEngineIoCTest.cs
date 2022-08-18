@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MooseEngine.Core;
 using MooseEngine.DependencyInjection;
 using MooseEngine.UnitTesting.TestData;

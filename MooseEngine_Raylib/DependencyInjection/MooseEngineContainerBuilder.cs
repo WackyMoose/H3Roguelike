@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.DependencyInjection;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MooseEngine.Utilities;
+﻿using MooseEngine.Utilities;
 
 namespace MooseEngine.UnitTesting;
 
