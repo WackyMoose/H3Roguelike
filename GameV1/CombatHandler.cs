@@ -12,7 +12,7 @@ namespace GameV1
         public static void SolveAttack(Creature attacker, Creature defender, Weapon attackWeapon)
         {
             int damage = attacker.Strength + attackWeapon.Damage;
-            double damageModifier = 100.0 / (100.0 + ((double)defender.Chest.Item.DamageReduction * (1.0 - ((double)attackWeapon.ArmorPenetrationPercent / 100.0)) - (double)attackWeapon.ArmorPenetrationFlat));
+            double damageModifier = 100.0f / (100.0f + ((double)defender.Chest.Item.DamageReduction * (1.0f - ((double)attackWeapon.ArmorPenetrationPercent / 100.0f)) - (double)attackWeapon.ArmorPenetrationFlat));
             defender.Health -= (int)(damage * damageModifier);
         }
     }

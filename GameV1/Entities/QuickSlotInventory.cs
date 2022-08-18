@@ -13,7 +13,7 @@ namespace GameV1.Entities
 
         public override bool AddItemToSlot(IQuickSlottable item, Slot<IQuickSlottable> slot)
         {
-            return slot.Add((IQuickSlottable)item);
+            return slot.Add(item);
         }
 
         public override IQuickSlottable? RemoveItemFromSlot(Slot<IQuickSlottable> slot)
