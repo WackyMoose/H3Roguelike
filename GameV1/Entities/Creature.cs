@@ -23,7 +23,7 @@ namespace GameV1.Entities
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
             Stats = new CreatureStats();
-            Inventory = new Inventory(16, -1, 0);
+            Inventory = new Inventory(16, 0, 0);
             HostileTowards = new List<CreatureSpeciesCategory>();
             MainHand = new Slot<Weapon>();
             OffHand = new Slot<Weapon>();
@@ -38,7 +38,7 @@ namespace GameV1.Entities
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
             Stats = new CreatureStats();
-            Inventory = new Inventory(16, -1, 12);
+            Inventory = new Inventory(16, 0, 0);
             HostileTowards = new List<CreatureSpeciesCategory>();
             MainHand = new Slot<Weapon>();
             OffHand = new Slot<Weapon>();

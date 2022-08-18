@@ -6,14 +6,11 @@ namespace GameV1
     {
         public TItem? Item { get; set; }
 
-        public bool IsEmpty()
-        {
-            return Item == null;
-        }
+        public bool IsEmpty { get { return Item == null; } }
 
         public bool Add(TItem item)
         {
-            if (IsEmpty())
+            if (IsEmpty)
             {
                 Item = item;
                 return true;
@@ -23,7 +20,7 @@ namespace GameV1
 
         public TItem? Remove()
         {
-            if (!IsEmpty())
+            if (!IsEmpty)
             {
                 TItem? tempItem = Item;
                 Item = default;

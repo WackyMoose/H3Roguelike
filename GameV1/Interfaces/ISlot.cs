@@ -4,7 +4,7 @@
     {
         TItem? Item { get; set; }
 
-        bool IsEmpty();
+        bool IsEmpty { get; }
         bool Add(TItem item);
         TItem? Remove();
     }
