@@ -2,17 +2,29 @@
 
 namespace MooseEngine.Core;
 
-public class Window
+public interface IWindow
+{
+    int Width { get; }
+    int Height { get; }
+    bool IsRunning { get; }
+
+    void Initialize();
+    void Shutdown();
+}
+
+internal class Window : IWindow
 {
     private WindowSpecification _specification;
 
-    public int Width { get { return _specification.Width; } }
-    public int Height { get { return _specification.Height; } }
 
     public Window(WindowSpecification specification)
     {
         _specification = specification;
     }
+
+    public int Width => _specification.Width;
+    public int Height => _specification.Height; 
+    public bool IsRunning => !Raylib.WindowShouldClose();
 
     public void Initialize()
     {
@@ -22,10 +34,5 @@ public class Window
     public void Shutdown()
     {
         Raylib.CloseWindow();
-    }
-
-    public void Update()
-    {
-        Raylib.SwapScreenBuffer();
     }
 }

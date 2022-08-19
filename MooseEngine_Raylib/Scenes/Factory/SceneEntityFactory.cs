@@ -1,10 +1,12 @@
-﻿namespace MooseEngine.Scenes.Factory;
+﻿using MooseEngine.Core.Factories;
+
+namespace MooseEngine.Scenes.Factory;
 
 public interface ISceneEntityFactory : IFactory
 {
 }
 
-public class SceneEntityFactory : FactoryBase, ISceneEntityFactory
+public class SceneEntityFactory : ISceneEntityFactory
 {
     public SceneEntityFactory(ISceneFactory sceneFactory)
     {

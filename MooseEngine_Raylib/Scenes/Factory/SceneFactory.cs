@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Core;
+using MooseEngine.Core.Factories;
 using System.Numerics;
 
 namespace MooseEngine.Scenes.Factory;
@@ -10,13 +11,13 @@ public interface ISceneFactory : IFactory
     Camera CreateCenteredCamera(Entity target);
 }
 
-public class SceneFactory : FactoryBase, ISceneFactory
+public class SceneFactory : ISceneFactory
 {
-    private readonly IApplication application;
+    private readonly IWindow _window;
 
-    public SceneFactory(IApplication application)
+    public SceneFactory(IWindow window)
     {
-        this.application = application;
+        _window = window;
     }
 
     public Scene? Scene { get; private set; }
@@ -28,9 +29,7 @@ public class SceneFactory : FactoryBase, ISceneFactory
 
     public Camera CreateCenteredCamera(Entity target)
     {
-        var window = application.Window;
-
-        var camera = new Camera(target, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var camera = new Camera(target, new Vector2(_window.Width / 2.0f, _window.Height / 2.0f));
 
         Scene?.Add(camera);
 

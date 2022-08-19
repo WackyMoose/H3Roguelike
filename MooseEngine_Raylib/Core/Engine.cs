@@ -26,7 +26,9 @@ public static class Engine
     {
         var containerBuilder = MooseEngineContainerBuilder.Create();
 
+        containerBuilder.RegisterModule<FactoryModule>();
         containerBuilder.RegisterModule(new ApplicationModule(applicationSpecification));
+        containerBuilder.RegisterModule(new WindowModule(applicationSpecification));
         containerBuilder.Register<IGame, TGame>();
 
         var container = containerBuilder.Build();

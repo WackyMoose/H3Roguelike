@@ -7,7 +7,7 @@ namespace MooseEngine.Core;
 
 public interface IApplication : IDisposable
 {
-    Window Window { get; }
+    IWindow Window { get; }
 
     void Initialize();
     void Run();
@@ -18,30 +18,31 @@ public sealed class Application : Disposeable, IApplication
     private static Application? s_Instance;
     public static Application? Instance { get { return s_Instance; } }
 
-    private ApplicationSpecification _specification;
-    private Window? _window = null;
+    private readonly ApplicationSpecification _specification;
 
-    public Application(ApplicationSpecification specification, IGame game)
+    public Application(ApplicationSpecification specification, IGame game, IWindow window, ISceneFactory sceneFactory)
     {
         Throw.IfSingletonExists(Instance, "Application already exists!");
         s_Instance = this;
 
         Game = game;
+        Window = window;
 
         _specification = specification;
 
-        SceneFactory = new SceneFactory(this);
+        SceneFactory = sceneFactory;
     }
 
     public IGame Game { get; }
+    public IWindow Window { get; }
     public ISceneFactory SceneFactory { get; }
-
-    public Window Window { get { return _window ?? throw new InvalidOperationException("Window is not initialized!"); } }
 
     public void Initialize()
     {
-        _window = new Window(_specification);
-        _window.Initialize();
+        Throw.IfNull(Window, "No Window instance.");
+        Throw.IfNull(Game, "No Game instance has been set.");
+
+        Window.Initialize();
 
         Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
     }
@@ -50,18 +51,14 @@ public sealed class Application : Disposeable, IApplication
     {
         Renderer.Shutdown();
 
-        _window?.Shutdown();
-        _window = null;
+        Window?.Shutdown();
     }
 
     public void Run()
     {
-        Throw.IfNull(_window, "No Window instance.");
-        Throw.IfNull(Game, "No Game instance has been set.");
-
         Game?.Initialize();
 
-        while (!Raylib.WindowShouldClose())
+        while (Window.IsRunning)
         {
             var deltaTime = Raylib.GetFrameTime();
             Game?.Update(deltaTime);

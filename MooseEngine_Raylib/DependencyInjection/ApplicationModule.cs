@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using MooseEngine.Core;
+using MooseEngine.Core.Factories;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.DependencyInjection;
@@ -20,14 +22,14 @@ internal class ApplicationModule : Module
 
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<ApplicationFactory>()
-            .As<IApplicationFactory>()
-            .InstancePerLifetimeScope();
-
         builder.Register(cc =>
         {
             var applicationFactory = cc.Resolve<IApplicationFactory>();
-            return applicationFactory.CreateApplication(_applicationSpecification);
+            var game = cc.Resolve<IGame>();
+            var window = cc.Resolve<IWindow>();
+            var sceneFactory = cc.Resolve<ISceneFactory>();
+
+            return applicationFactory.CreateApplication(_applicationSpecification, game, window, sceneFactory);
         })
             .As<IApplication>()
             .SingleInstance()
