@@ -1,15 +1,11 @@
-﻿using MooseEngine.Scenes;
+﻿using GameV1.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
-    public class Item : Entity
+    public abstract class Item : Entity, IItem
     {
         public int Durability { get; set; }
         public int MaxValue { get; set; }

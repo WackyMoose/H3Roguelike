@@ -5,7 +5,7 @@ public struct WindowSpecification
     public string Title { get; init; }
     public int Width { get; init; }
     public int Height { get; init; }
-    
+
     public WindowSpecification()
         : this("MooseEngine Raylib", 1600, 900)
     {

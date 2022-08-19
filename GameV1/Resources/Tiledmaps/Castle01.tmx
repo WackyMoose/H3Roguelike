@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="10" height="14" tilewidth="8" tileheight="8" infinite="0" nextlayerid="3" nextobjectid="4">
+ <editorsettings>
+  <export format="csv"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../../../../RaylibPlayground/ClassyClash/Textures/Tilemap_Modified.tsx"/>
+ <tileset firstgid="785" source="../../../../RaylibPlayground/ClassyClash/Textures/colored_tilemap_packed.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="10" height="14">
+  <data encoding="csv">
+785,786,786,786,786,849,786,786,786,850,
+801,802,842,802,802,801,802,842,802,804,
+801,802,802,802,802,801,802,802,802,804,
+801,802,802,30,802,801,802,802,802,804,
+801,802,802,802,802,801,802,802,802,804,
+801,802,802,802,802,849,786,819,786,850,
+801,802,802,802,30,801,802,802,30,804,
+801,802,802,802,802,801,802,802,802,804,
+801,802,802,802,802,801,802,802,802,804,
+801,802,802,802,802,801,802,802,802,804,
+801,802,802,802,802,817,786,819,786,850,
+801,802,802,802,802,802,802,802,802,804,
+801,802,802,802,802,802,802,802,802,804,
+817,786,786,786,819,786,786,786,786,820
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="2" template="SpawnPoint.tx" x="16" y="24"/>
+  <object id="3" template="SpawnPoint.tx" x="56" y="24"/>
+ </objectgroup>
+</map>

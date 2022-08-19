@@ -1,44 +1,56 @@
 ﻿using GameV1.Categories;
+using GameV1.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
 
 namespace GameV1.Entities
 {
-    public class Creature : Entity
+    public class Creature : Entity, ICreature
     {
-        public CreatureSpeciesCategory Species { get; set; } = new CreatureSpeciesCategory();
-        public CreatureOccupationCategory Occupation { get; set; } = new CreatureOccupationCategory();
-        public List <CreatureSkillCategory> Skills { get; set; } = new List<CreatureSkillCategory> ();
-        public int Fatigue { get; set; }
-        public int FatigueDrecrease { get; set; }
-        public int Strength { get; set; }
-        public int Agility { get; set; }
-        public int Toughness { get; set; }
-        public int Perception { get; set; }
-        public int Charisma { get; set; }
-        public int MovementPoints { get; set; }
-        public int Health { get; set; }
-        public int Stamina { get; set; }
-        public Inventory Inventory { get; set; } = new Inventory(-1, 12);
-        public List<CreatureSpeciesCategory> HostileTowards { get; set; } = new List<CreatureSpeciesCategory> ();
-        public bool IsDead { get { return Health <= 0; } }
+        public CreatureSpeciesCategory Species { get; set; }
+        public List<Skill> Skills { get; set; }
+        public CreatureStats Stats { get; set; }
+        public Inventory Inventory { get; set; }
+        public List<CreatureSpeciesCategory> HostileTowards { get; set; }
+        public bool IsDead { get { return Stats.Health <= 0; } }
+        public Slot<Weapon> MainHand { get; set; }
+        public Slot<Weapon> OffHand { get; set; }
+        public Slot<Armor> Chest { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
-            MovementPoints = movementPoints;
-            Health = health;
+            Species = new CreatureSpeciesCategory();
+            Skills = new List<Skill>();
+            Stats = new CreatureStats();
+            Inventory = new Inventory(16, 0, 0);
+            HostileTowards = new List<CreatureSpeciesCategory>();
+            MainHand = new Slot<Weapon>();
+            OffHand = new Slot<Weapon>();
+            Chest = new Slot<Armor>();
+
+            Stats.MovementPoints = movementPoints;
+            Stats.Health = health;
         }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
         {
-            MovementPoints = movementPoints;
-            Health = health;
+            Species = new CreatureSpeciesCategory();
+            Skills = new List<Skill>();
+            Stats = new CreatureStats();
+            Inventory = new Inventory(16, 0, 0);
+            HostileTowards = new List<CreatureSpeciesCategory>();
+            MainHand = new Slot<Weapon>();
+            OffHand = new Slot<Weapon>();
+            Chest = new Slot<Armor>();
+
+            Stats.MovementPoints = movementPoints;
+            Stats.Health = health;
         }
 
         public void TakeDamage(int damage)
         {
-            Health -= damage;
+            Stats.Health -= damage;
         }
 
         public override void Initialize()

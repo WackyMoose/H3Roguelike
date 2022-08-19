@@ -1,7 +1,7 @@
 ﻿using GameV1;
 using MooseEngine.Core;
 
-Engine.Start<TestGame>(); 
+Engine.Start<TestGameMSN>(); 
 
 //builder =>
 //builder.Register<IPlayerFactory, PlayerFactory>();

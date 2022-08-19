@@ -7,8 +7,8 @@ namespace MooseEngine.Core
 
         public static void Add(Command? command)
         {
-            if (command is not null) 
-            { 
+            if (command is not null)
+            {
                 Commands.Enqueue(command);
             }
         }

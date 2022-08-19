@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="8" tileheight="8" infinite="0" nextlayerid="3" nextobjectid="6">
+ <editorsettings>
+  <export target="../CastleCSV/Castle02.csv" format="csv"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../../../../RaylibPlayground/ClassyClash/Textures/Tilemap_Modified.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="15" height="15">
+  <data encoding="csv">
+1,115,2,2,2,116,2,2,115,116,2,2,88,0,0,
+29,30,30,30,30,30,30,30,30,30,30,30,143,4,0,
+29,1,2,2,2,113,2,2,2,2,4,118,30,32,0,
+29,29,94,30,30,29,30,30,30,94,85,4,30,32,0,
+29,29,30,30,30,29,30,30,30,30,30,32,30,32,0,
+29,29,30,30,30,29,30,30,30,30,30,32,30,32,0,
+29,29,30,30,30,29,30,30,30,30,30,32,30,32,0,
+29,141,2,59,2,86,30,30,30,30,30,32,30,32,0,
+29,29,30,30,30,30,30,30,30,30,30,32,30,32,0,
+29,57,88,30,30,30,30,30,87,59,88,32,30,32,0,
+29,30,143,2,2,2,2,2,144,30,57,60,30,32,0,
+29,30,30,30,30,30,30,30,30,30,30,30,117,32,0,
+57,88,118,30,30,30,30,30,30,30,30,30,30,32,0,
+0,57,2,115,2,2,59,2,2,2,116,2,2,60,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="3" template="SpawnPoint.tx" class="Spawn" x="24" y="40"/>
+  <object id="4" template="SpawnPoint.tx" class="Spawn" x="72" y="40" visible="1"/>
+  <object id="5" template="SpawnPoint.tx" x="48" y="64"/>
+ </objectgroup>
+</map>
