@@ -13,24 +13,12 @@ namespace MooseEngine.Core
             }
         }
 
-        private static void Dequeue()
-        {
-            while (Commands.Count > 0)
-            {
-                Commands.Dequeue();
-            }
-        }
-
         public static void Execute()
         {
             if (Commands.Count > 0)
             {
-                foreach (Command command in Commands)
-                {
-                    command.Execute();
-                }
-
-                Dequeue();
+                var command = Commands.Dequeue();
+                command.Execute();
             }
         }
     }
