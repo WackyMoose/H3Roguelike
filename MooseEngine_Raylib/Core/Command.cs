@@ -6,9 +6,11 @@ namespace MooseEngine.Core
     {
 
         public Entity Entity { get; set; }
+        public Scene Scene { get; set; }
 
-        public Command(Entity entity)
+        public Command(Scene scene, Entity entity)
         {
+            Scene = scene;
             Entity = entity;
         }
 

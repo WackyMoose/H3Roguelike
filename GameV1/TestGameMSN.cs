@@ -16,7 +16,7 @@ internal class TestGameMSN : IGame
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
-    private Weapon weapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
+    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
 
     private HashSet<Vector2> forest = new HashSet<Vector2>();
@@ -31,39 +31,45 @@ internal class TestGameMSN : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        weapon.MinDamage = 50;
-        weapon.MaxDamage = 200;
-        weapon.ArmorPenetrationFlat = 50;
-        weapon.ArmorPenetrationPercent = 20;
+        sword.MinDamage = 50;
+        sword.MaxDamage = 200;
+        sword.ArmorPenetrationFlat = 50;
+        sword.ArmorPenetrationPercent = 20;
 
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
 
+        // Spawn player
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
-        player.MainHand.Add(weapon);
+        player.MainHand.Add(sword);
+        player.OffHand.Add(sword);
 
         _scene?.Add(player);
 
+        // Spawn monster
         monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(128, 192);
+        monster.Position = new Vector2(0, 0);
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
 
         Console.WriteLine(monster.Stats.Health);
 
-        CombatHandler.SolveAttack(player, monster, weapon);
+        CombatHandler.SolveAttack(player, monster, sword);
 
         Console.WriteLine(monster.Stats.Health);
+
+        Console.WriteLine(player.StrongestWeapon().Damage);
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
 
         // Bind key press action to key value
-        Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
-        Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
-        Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
-        Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
+        Keyboard.KeyIdle = KeyboardKey.KEY_SPACE;
+        Keyboard.KeyMoveUp = KeyboardKey.KEY_UP;
+        Keyboard.KeyMoveDown = KeyboardKey.KEY_DOWN;
+        Keyboard.KeyMoveLeft = KeyboardKey.KEY_LEFT;
+        Keyboard.KeyMoveRight = KeyboardKey.KEY_RIGHT;
         Keyboard.KeyInteract = KeyboardKey.KEY_E;
         Keyboard.KeyInventory = KeyboardKey.KEY_I;
         Keyboard.KeyCharacter = KeyboardKey.KEY_C;
@@ -74,16 +80,18 @@ internal class TestGameMSN : IGame
         Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
 
         // Bind key press action to command
-        InputHandler._key_up = new MoveUpCommand(player);
-        InputHandler._key_down = new MoveDownCommand(player);
-        InputHandler._key_left = new MoveLeftCommand(player);
-        InputHandler._key_right = new MoveRightCommand(player);
+        InputHandler._key_idle = new IdleCommand(_scene, player);
+        InputHandler._key_up = new MoveUpCommand(_scene, player);
+        InputHandler._key_down = new MoveDownCommand(_scene, player);
+        InputHandler._key_left = new MoveLeftCommand(_scene, player);
+        InputHandler._key_right = new MoveRightCommand(_scene, player);
 
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
             tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
             tile.Position = pos;
+            tile.IsWalkable = false;
             _scene?.Add(tile);
         }
     }
@@ -96,7 +104,21 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
+        Console.WriteLine("New turn!");
+        
+
+        
+
+        // Player controls
+        //while(CommandHandler.IsEmpty)
+        //{
+            
         CommandHandler.Add(InputHandler.HandleInput());
+        Console.WriteLine(CommandHandler.IsEmpty);
+        //}
+
+        // AI NPC controls
+
         CommandHandler.Execute();
 
         _scene?.UpdateRuntime(deltaTime);

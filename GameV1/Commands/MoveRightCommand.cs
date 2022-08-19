@@ -7,7 +7,7 @@ namespace GameV1.Commands
 {
     public class MoveRightCommand : Command
     {
-        public MoveRightCommand(Entity entity) : base(entity)
+        public MoveRightCommand(Scene scene, Entity entity) : base(scene, entity)
         {
         }
 

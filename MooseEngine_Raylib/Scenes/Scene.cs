@@ -1,6 +1,7 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
 using Raylib_cs;
+using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
@@ -11,6 +12,11 @@ public class Scene : Disposeable
     public Scene()
     {
         _entities = new List<Entity>();
+    }
+
+    public List<Entity>? EntitiesAtPosition(Vector2 tilePosition)
+    {
+        return _entities.Where(x => x.Position == tilePosition).ToList();
     }
 
     protected override void DisposeManagedState()

@@ -4,6 +4,7 @@ namespace MooseEngine.Core
 {
     public static class Keyboard
     {
+        public static KeyboardKey KeyIdle { get; set; }
         public static KeyboardKey KeyMoveUp { get; set; }
         public static KeyboardKey KeyMoveDown { get; set; }
         public static KeyboardKey KeyMoveLeft { get; set; }
