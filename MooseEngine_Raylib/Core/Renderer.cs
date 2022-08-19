@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
@@ -31,13 +32,13 @@ namespace MooseEngine.Core
         {
         }
 
-        public static void Begin(Camera camera)
+        public static void Begin(ISceneCamera sceneCamera)
         {
             Raylib.BeginDrawing();
 
             Raylib.ClearBackground(Color.BLACK);
 
-            Raylib.BeginMode2D(camera.RaylibCamera);
+            Raylib.BeginMode2D(sceneCamera.RaylibCamera);
         }
 
         public static void End()

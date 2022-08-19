@@ -1,10 +1,11 @@
-﻿using MooseEngine.Utilities;
+﻿using MooseEngine.Interfaces;
+using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
-public class Camera : Entity
+public class Camera : Entity, ISceneCamera
 {
     private Camera2D _raylibCamera;
     private readonly Entity _targetEntity;
