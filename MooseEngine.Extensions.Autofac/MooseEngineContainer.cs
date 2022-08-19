@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace MooseEngine.DependencyInjection;
+namespace MooseEngine.Extensions.DependencyInjection;
 
 public interface IMooseEngineContainer : IDisposable
 {
