@@ -1,13 +1,11 @@
-﻿using GameV1.Entities;
-
-namespace GameV1.Interfaces
+﻿namespace GameV1.Interfaces
 {
-    public interface IContainer
+    public interface IContainer<TSlot, TItem> : IItem
     {
-        int MaxItems { get; }
-        List<Item?>? Items { get; }
+        int MaxSlots { get; }
+        List<TSlot> Slots { get; set; }
 
-        bool AddItem(Item item);
-        bool RemoveItem(Item item);
+        bool AddItemToSlot(TItem item, TSlot slot);
+        TItem? RemoveItemFromSlot(TSlot slot);
     }
 }

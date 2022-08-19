@@ -2,13 +2,13 @@
 {
     public struct CreatureOccupationCategory
     {
-        private CreatureOccupationCategory(string name) 
-        { 
-            Name = name; 
+        private CreatureOccupationCategory(string name)
+        {
+            Name = name;
         }
 
         public string Name { get; }
-        
+
 
         // NPC game-critical occupations
         public static CreatureOccupationCategory Blacksmith { get { return new CreatureOccupationCategory("Blacksmith"); } }
@@ -36,8 +36,8 @@
 
         public static List<CreatureOccupationCategory> List()
         {
-            return new List<CreatureOccupationCategory> 
-            { 
+            return new List<CreatureOccupationCategory>
+            {
                 Peasant, Miller, Blacksmith, Merchant, InnKeeper, Thief, Robber, Rogue, Marauder, Alchemist,
                 Torturer, Warlock, Warrior, Knight, Mercenary, Assasin, Archer, Priest, Druid
             };

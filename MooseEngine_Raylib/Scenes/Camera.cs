@@ -23,14 +23,13 @@ public class Camera : Entity
     }
 
     public Camera2D RaylibCamera { get { return _raylibCamera; } }
-    
+
     public override void Initialize()
     {
     }
 
     public override void Update(float deltaTime)
     {
-        // _raylibCamera.target = _targetEntity.Position;
-        _raylibCamera.target = _targetEntity.Position;// + new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2);
+        _raylibCamera.target = _targetEntity.Position;
     }
 }

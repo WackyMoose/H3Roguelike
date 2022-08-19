@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MooseEngine.Extensions.Autofac\MooseEngine.Extensions.Autofac.csproj" />
     <ProjectReference Include="..\MooseEngine.Extensions.Runtime\MooseEngine.Extensions.Runtime.csproj" />
   </ItemGroup>
 

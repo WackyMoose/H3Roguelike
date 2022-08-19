@@ -1,4 +1,4 @@
-﻿namespace MooseEngine.Core;
+﻿namespace MooseEngine.Interfaces;
 
 public interface IGame
 {

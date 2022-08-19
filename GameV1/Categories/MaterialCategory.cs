@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameV1.Categories
+﻿namespace GameV1.Categories
 {
     public struct MaterialCategory
     {
         public string Name { get; }
 
-        private MaterialCategory(string name) 
-        { 
-            Name = name; 
+        private MaterialCategory(string name)
+        {
+            Name = name;
         }
 
         public static MaterialCategory Metal { get { return new MaterialCategory("metal"); } }

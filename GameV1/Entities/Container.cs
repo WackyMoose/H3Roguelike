@@ -1,48 +1,22 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Utilities;
 using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GameV1.Entities
 {
-    public abstract class Container : Item, IContainer
+    public abstract class Container<TSlot, TItem> : Item, IContainer<TSlot, TItem>
     {
-        public int MaxItems { get; }
-        public List<Item?>? Items { get; }
+        public int MaxSlots { get; }
+        public List<TSlot> Slots { get; set; }
 
-        public Container(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
+        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
+            MaxSlots = maxSlots;
+            Slots = new List<TSlot>();
         }
 
-        public bool AddItem(Item item)
-        {
-            if(Items.Count < MaxItems)
-            {
-                Items.Add(item);
-                return true;
-            }
-            return false;
-        }
+        public abstract bool AddItemToSlot(TItem item, TSlot slot);
 
-        public bool RemoveItem(Item item)
-        {
-            if (Items.Contains(item))
-            {
-                Items.Remove(item);
-                return true;
-            }
-            return false;
-        }
-
-    }
-
-    public class Chest : Container
-    {
-        public Chest(int durability, int maxValue) 
-            : base(durability, maxValue, "Chest", new Coords2D(1,1), Color.WHITE)
-        {
-        }
+        public abstract TItem? RemoveItemFromSlot(TSlot slot);
     }
 }

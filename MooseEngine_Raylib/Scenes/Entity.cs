@@ -1,11 +1,11 @@
-﻿using MooseEngine.Core;
+﻿using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
-public abstract class Entity
+public abstract class Entity : IEntity
 {
     // TODO: Add Coords2D struct instead of Vector2
     public Vector2 Position { get; set; }

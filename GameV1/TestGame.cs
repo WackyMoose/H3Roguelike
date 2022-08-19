@@ -1,7 +1,8 @@
-﻿using GameV1.Entities;
+﻿using GameV1.Entities.Factory;
 using MooseEngine.Core;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
-using MooseEngine.Utilities;
+using MooseEngine.Scenes.Factory;
 using Raylib_cs;
 using System.Numerics;
 
@@ -9,48 +10,39 @@ namespace GameV1;
 
 internal class TestGame : IGame
 {
-    private Scene? _scene;
     private Texture2D _texture;
-    private Player entity = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private Scene? _scene;
 
     public void Initialize()
     {
+        var sceneFactory = Application.Instance?.SceneFactory;
 
-        _scene = new Scene();
+        _scene = sceneFactory!.CreateScene();
 
-        var window = Application.Instance.Window;
-        var camera = new Camera(entity, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        _scene?.Add(camera);
+        var playerFactory = new PlayerFactory(sceneFactory);
 
-        entity.Scale = new Vector2(64, 64);
-        entity.Position = new Vector2(128, 192);
+        var player = playerFactory.CreatePlayer();
+        player.Scale = new Vector2(64, 64);
+        player.Position = new Vector2(128, 192);
 
+        sceneFactory.CreateCenteredCamera(player);
 
+        //var player = PlayerFactory.CreatePlayer();
 
-        //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
-        //var image = Raylib.GenImageCellular(500, 500, 100);
+        //var window = Application.Instance?.Window;
+        //var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
 
-        //var app = Application.Instance;
-        //var window = app.Window;
-
-        //var image = Raylib.GenImageWhiteNoise(window.Width, window.Height, 0.1f);
-        //_texture = Raylib.LoadTextureFromImage(image);
-
-        _scene?.Add(entity);
+        //Scene?.Add(player);
+        //Scene?.Add(camera);
     }
 
     public void Uninitialize()
     {
         _scene?.Dispose();
-        _scene = null;
     }
 
     public void Update(float deltaTime)
     {
-        Renderer.camera.target = entity.Position;
-        //Renderer.Begin();
-        //Renderer.RenderTexture(_texture, 100, 100);
-        //Renderer.End();
         _scene?.UpdateRuntime(deltaTime);
     }
 }

@@ -1,7 +1,5 @@
-﻿using MooseEngine;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Scenes;
-using System.Numerics;
 
 
 namespace GameV1.Commands
@@ -16,7 +14,7 @@ namespace GameV1.Commands
 
         public override void Execute()
         {
-            
+
         }
     }
 }
