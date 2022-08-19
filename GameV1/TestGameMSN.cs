@@ -19,7 +19,7 @@ internal class TestGameMSN : IGame
     private Weapon weapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
 
-    private HashSet<Vector2> forest = new HashSet<Vector2>();
+    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
@@ -57,7 +57,7 @@ internal class TestGameMSN : IGame
 
         Console.WriteLine(monster.Stats.Health);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(128, 192));
 
         // Bind key press action to key value
         Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
@@ -83,7 +83,7 @@ internal class TestGameMSN : IGame
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
             tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = pos;
+            tile.Position = new Vector2(pos.X,pos.Y);
             _scene?.Add(tile);
         }
     }
