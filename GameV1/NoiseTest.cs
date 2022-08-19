@@ -1,4 +1,5 @@
-﻿using GameV1.Entities;
+﻿using GameV1.Commands;
+using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine;
 using MooseEngine.Core;
@@ -12,29 +13,49 @@ namespace GameV1;
 internal class NoiseTest : IGame
 {
     private Scene? _scene;
-    private Texture2D _texture;
+    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
     private HashSet<Coords2D> _forest = new HashSet<Coords2D>();
     private HashSet<Coords2D> _forests = new HashSet<Coords2D>();
     private Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
-    private const float _worldScale = 32;
 
     public void Initialize()
     {
-        
         _scene = new Scene();
 
         var window = Application.Instance.Window;
 
-        tile.Scale = new Vector2(_worldScale, _worldScale);
-        tile.Position = new Vector2(128, 192);
+        //Bind inputs
+        // Bind key press action to key value
+        Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
+        Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
+        Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
+        Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
+        Keyboard.KeyInteract = KeyboardKey.KEY_E;
+        Keyboard.KeyInventory = KeyboardKey.KEY_I;
+        Keyboard.KeyCharacter = KeyboardKey.KEY_C;
+        Keyboard.KeyMenu = KeyboardKey.KEY_M;
+        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
+        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
+        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
+        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
 
-        _scene?.Add(tile);
+        // Bind key press action to command
+        InputHandler._key_up = new MoveUpCommand(player);
+        InputHandler._key_down = new MoveDownCommand(player);
+        InputHandler._key_left = new MoveLeftCommand(player);
+        InputHandler._key_right = new MoveRightCommand(player);
 
+        //Generate creatures...
+        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        player.Position = new Vector2(128, 192);
+        _scene?.Add(player);
+
+        //Generate world...
         var camera = new Camera(tile, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        _overWorld = ProceduralAlgorithms.GenerateOverworld(100, 100, 8, _worldScale);
+        _overWorld = ProceduralAlgorithms.GenerateOverworld(100, 100, 8, Constants.DEFAULT_ENTITY_SIZE);
 
         foreach (var tile in _overWorld)
         {
@@ -53,21 +74,12 @@ internal class NoiseTest : IGame
         foreach (var pos in _forests)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(_worldScale, _worldScale);
+            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
             tile.Position = new Vector2(pos.X, pos.Y);
             _scene?.Add(tile);
         }
 
         Console.WriteLine($"We have {_forests.Count} forest tiles");
-
-        //var noise = SimplexNoise.Noise.Calc2D(100, 100, 1.0f);
-        //var image = Raylib.GenImageCellular(500, 500, 100);
-
-        //var app = Application.Instance;
-        //var window = app.Window;
-
-        //var image = Raylib.GenImageWhiteNoise(window.Width, window.Height, 0.1f);
-        //_texture = Raylib.LoadTextureFromImage(image);
     }
 
     public void Uninitialize()
@@ -78,43 +90,13 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        //Renderer.Begin();
-        //Renderer.RenderTexture(_texture, 100, 100);
-        //Renderer.End();
+        //Renderer.camera.target = player.Position;
+        InputHandler.HandleInput();
+        Command command = InputHandler.HandleInput();
+        //command?.Execute();
+        CommandHandler.Add(command);
+
+        CommandHandler.Execute();
         _scene?.UpdateRuntime(deltaTime);
     }
 }
-
-//public class TestGame : IGame
-//{
-//    public TestGame()
-//    {
-//    }
-
-//    TestEntity testEntity;
-
-//    public void Start()
-//    {
-//        //throw new NotImplementedException();
-//        var spriteCoords = new Coords2D(4, 0);
-
-//        testEntity = new TestEntity(spriteCoords);
-//        testEntity.Scale = new Vector2(64, 64);
-
-//        testEntity.Position = new Vector2(100, 100);
-
-//    }
-
-//    public void Update(float deltaTime)
-//    {
-//        //throw new NotImplementedException();
-//    }
-
-//    public void Render()
-//    {
-//        //throw new NotImplementedException();
-
-//        testEntity.Render();
-
-//    }
-//}

@@ -14,7 +14,7 @@ internal class TestGameMSN : IGame
 {
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private HashSet<Vector2> forest = new HashSet<Vector2>();
+    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
@@ -30,7 +30,7 @@ internal class TestGameMSN : IGame
         player.Position = new Vector2(128, 192);
         _scene?.Add(player);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(128, 192));
 
         // Bind key press action to key value
         Keyboard.KeyMoveUp     = KeyboardKey.KEY_W;
@@ -56,7 +56,7 @@ internal class TestGameMSN : IGame
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
             tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = pos;
+            tile.Position = new Vector2(pos.X,pos.Y);
             _scene?.Add(tile);
         }
     }
