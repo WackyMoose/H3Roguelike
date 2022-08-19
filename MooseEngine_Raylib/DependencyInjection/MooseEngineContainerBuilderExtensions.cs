@@ -1,26 +1,23 @@
 ﻿using Autofac;
-using MooseEngine.Core;
-using MooseEngine.Scenes.Factory;
+using Autofac.Core;
 
 namespace MooseEngine.DependencyInjection;
 
 public static class MooseEngineContainerBuilderExtensions
 {
-    public static IMooseEngineContainerBuilder RegisterApplication<TApplication>(this IMooseEngineContainerBuilder builder, ApplicationSpecification applicationSpecification)
-        where TApplication : IApplication
+    public static IMooseEngineContainerBuilder RegisterModule<TModule>(this IMooseEngineContainerBuilder builder)
+         where TModule : IModule, new()
     {
-        builder.ContainerBuilder.RegisterType<ApplicationFactory>()
-            .As<IApplicationFactory>()
-            .InstancePerLifetimeScope();
+        builder.ContainerBuilder.RegisterModule<TModule>();
 
-        builder.ContainerBuilder.Register(cc =>
-        {
-            var applicationFactory = cc.Resolve<IApplicationFactory>();
-            return applicationFactory.CreateApplication(applicationSpecification);
-        })
-            .As<IApplication>()
-            .SingleInstance();
-        
+        return builder;
+    }
+
+    public static IMooseEngineContainerBuilder RegisterModule<TModule>(this IMooseEngineContainerBuilder builder, TModule module)
+         where TModule : IModule
+    {
+        builder.ContainerBuilder.RegisterModule(module);
+
         return builder;
     }
 }
