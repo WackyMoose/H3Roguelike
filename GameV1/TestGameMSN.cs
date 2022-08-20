@@ -104,22 +104,24 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        Console.WriteLine("New turn!");
-        
-
-        
-
         // Player controls
-        //while(CommandHandler.IsEmpty)
-        //{
-            
         CommandHandler.Add(InputHandler.HandleInput());
-        Console.WriteLine(CommandHandler.IsEmpty);
-        //}
 
-        // AI NPC controls
+        // Execute Player commands
+        if (!CommandHandler.IsEmpty)
+        {
+            Console.WriteLine("Players turn!");
+            CommandHandler.Execute();
+        }
 
-        CommandHandler.Execute();
+        // AI NPC / Monster / Critter controls
+
+        // Execute AI commands
+        if (!CommandHandler.IsEmpty)
+        {
+            Console.WriteLine("AI's turn!");
+            CommandHandler.Execute();
+        }
 
         _scene?.UpdateRuntime(deltaTime);
     }
