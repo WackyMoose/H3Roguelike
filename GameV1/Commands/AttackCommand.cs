@@ -29,7 +29,7 @@ namespace GameV1.Commands
 
             Weapon testWeapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
 
-            CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon());
+            CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
 
             Console.WriteLine(attacked.Stats.Health);
         }

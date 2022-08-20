@@ -14,17 +14,11 @@ namespace GameV1.Entities
         public Inventory Inventory { get; set; }
         public List<CreatureSpeciesCategory> EnemySpecies { get; set; }
         public List<Creature> EnemyCreatures { get; set; }
-        public bool IsDead { get { return Stats.Health <= 0; } }
+        public override bool IsDead { get { return Stats.Health <= 0; } }
         public Slot<Weapon> MainHand { get; set; }
         public Slot<Weapon> OffHand { get; set; }
         public Slot<Armor> Chest { get; set; }
-        //public Weapon? StrongestWeapon => MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
-
-
-        public Weapon? StrongestWeapon()
-        {
-            return MainHand.Item; // > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
-        }
+        public Weapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

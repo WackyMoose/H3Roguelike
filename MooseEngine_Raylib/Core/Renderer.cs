@@ -54,6 +54,8 @@ namespace MooseEngine.Core
 
         public static void RenderEntity(Entity entity)
         {
+            //if(entity.IsDead) { return; }
+
             Coords2D spritePosition = entity.SpriteCoords;
 
             Rectangle source = new Rectangle(

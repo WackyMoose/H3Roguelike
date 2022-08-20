@@ -41,7 +41,7 @@ internal class TestGameMSN : IGame
 
         // Spawn player
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(128, 192);
+        player.Position = new Vector2(192, 192);
         player.MainHand.Add(sword);
         player.OffHand.Add(sword);
 
@@ -49,7 +49,7 @@ internal class TestGameMSN : IGame
 
         // Spawn monster
         monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        monster.Position = new Vector2(0, 0);
+        monster.Position = new Vector2(-96, -96);
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
@@ -60,9 +60,9 @@ internal class TestGameMSN : IGame
 
         Console.WriteLine(monster.Stats.Health);
 
-        Console.WriteLine(player.StrongestWeapon().Damage);
+        Console.WriteLine(player.StrongestWeapon.Damage);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(128, 192));
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(0, 0));
 
         // Bind key press action to key value
         Keyboard.KeyIdle = KeyboardKey.KEY_SPACE;
@@ -117,12 +117,10 @@ internal class TestGameMSN : IGame
         // AI NPC / Monster / Critter controls
 
         // Execute AI commands
-        if (!CommandHandler.IsEmpty)
-        {
-            Console.WriteLine("AI's turn!");
-            CommandHandler.Execute();
-        }
 
         _scene?.UpdateRuntime(deltaTime);
+
+        //Task.Delay(2000);
+        //Thread.Sleep(500);
     }
 }
