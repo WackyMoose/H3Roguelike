@@ -1,6 +1,7 @@
 ﻿using MooseEngine.Extensions.Runtime;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
+using MooseEngine.Scenes.Extensions;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
@@ -58,16 +59,12 @@ internal class RaylibRenderer : IRaylibRenderer
             RendererOptions.SpriteSize,
             RendererOptions.SpriteSize);
 
-        Rectangle dest = new Rectangle(
-            entity.Position.X,
-            entity.Position.Y,
-            entity.Scale.X,
-            entity.Scale.Y);
+        var destination = entity.ToTextureDestination();
 
         Raylib.DrawTexturePro(
             _spriteSheet,
             source,
-            dest,
+            destination,
             new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2), // Vector2.Zero
             0.0f,
             entity.ColorTint);
