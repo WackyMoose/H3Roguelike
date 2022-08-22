@@ -1,4 +1,4 @@
-﻿using GameV1.Entities.Factory;
+﻿using GameV1.Entities.Factories;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;

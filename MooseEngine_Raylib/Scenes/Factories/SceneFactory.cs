@@ -3,7 +3,7 @@ using MooseEngine.Core.Factories;
 using MooseEngine.Graphics;
 using System.Numerics;
 
-namespace MooseEngine.Scenes.Factory;
+namespace MooseEngine.Scenes.Factories;
 
 public interface ISceneFactory : IFactory
 {

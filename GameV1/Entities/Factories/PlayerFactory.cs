@@ -1,9 +1,7 @@
-﻿using MooseEngine.Core;
-using MooseEngine.Scenes;
-using MooseEngine.Scenes.Factory;
+﻿using MooseEngine.Scenes.Factories;
 using MooseEngine.Utilities;
 
-namespace GameV1.Entities.Factory;
+namespace GameV1.Entities.Factories;
 
 public interface IPlayerFactory : ISceneEntityFactory
 {
@@ -21,7 +19,7 @@ public class PlayerFactory : SceneEntityFactory, IPlayerFactory
     {
         var player = new Player("Player", 120, 1000, new Coords2D(4, 0));
 
-        Scene.Add(player);
+        AddToScene(player);
 
         return player;
     }
