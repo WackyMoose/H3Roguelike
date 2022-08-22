@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.DependencyInjection;
 
@@ -26,12 +25,6 @@ public class MooseEngineContainerBuilder : IMooseEngineContainerBuilder
     public static MooseEngineContainerBuilder Create()
     {
         return new MooseEngineContainerBuilder();
-    }
-
-    public void RegisterFactory<TFactory>()
-        where TFactory : FactoryBase, IFactory
-    {
-        ContainerBuilder.RegisterFactory<TFactory>();
     }
 
     public void Register<TInterface, TImplementation>()
