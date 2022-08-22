@@ -3,7 +3,7 @@ using MooseEngine.Core;
 using MooseEngine.Core.Factories;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes.Factory;
+using MooseEngine.Scenes.Factories;
 
 namespace MooseEngine.DependencyInjection;
 

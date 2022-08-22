@@ -1,7 +1,7 @@
 ﻿using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes.Factory;
+using MooseEngine.Scenes.Factories;
 using Raylib_cs;
 
 namespace MooseEngine.Core;
