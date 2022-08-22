@@ -1,4 +1,6 @@
 ﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
@@ -30,7 +32,7 @@ internal class RaylibRenderer : IRaylibRenderer
         Raylib.UnloadTexture(_spriteSheet);
     }
 
-    public void Begin(Interfaces.ISceneCamera sceneCamera)
+    public void Begin(ISceneCamera sceneCamera)
     {
         Raylib.BeginDrawing();
 
@@ -46,7 +48,7 @@ internal class RaylibRenderer : IRaylibRenderer
         Raylib.EndDrawing();
     }
 
-    public void Render(Scenes.Entity entity)
+    public void Render(Entity entity)
     {
         Coords2D spritePosition = entity.SpriteCoords;
 

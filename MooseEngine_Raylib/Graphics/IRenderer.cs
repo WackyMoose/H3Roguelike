@@ -1,12 +1,15 @@
-﻿namespace MooseEngine.Graphics;
+﻿using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
+
+namespace MooseEngine.Graphics;
 
 public interface IRenderer
 {
     void Initialize();
     void Shutdown();
 
-    void Begin(Interfaces.ISceneCamera sceneCamera);
+    void Begin(ISceneCamera sceneCamera);
     void End();
 
-    void Render(Scenes.Entity entity);
+    void Render(Entity entity);
 }
