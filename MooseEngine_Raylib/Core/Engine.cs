@@ -9,7 +9,7 @@ namespace MooseEngine.Core;
 
 public static class Engine
 {
-    private static RaylibRendererOptions DefaultRaylibRendererOptions = new RaylibRendererOptions
+    private static readonly RaylibRendererOptions DefaultRaylibRendererOptions = new()
     {
         ClearColor = new Raylib_cs.Color(34, 35, 35, 255),
         TargetFPS = 60,
