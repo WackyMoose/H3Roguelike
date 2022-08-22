@@ -43,7 +43,7 @@ public sealed class Application : Disposeable, IApplication
         _window = new Window(_specification);
         _window.Initialize();
 
-        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
+        Renderer.Initialize(@"..\..\..\Resources\Textures\Tilemap_Modified.png", 0, 1, 8);
     }
 
     protected override void DisposeManagedState()

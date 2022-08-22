@@ -1,7 +1,7 @@
 ﻿using GameV1;
 using MooseEngine.Core;
 
-Engine.Start<TestGameMSN>(); 
+Engine.Start<NoiseTest>(); 
 
 //builder =>
 //builder.Register<IPlayerFactory, PlayerFactory>();

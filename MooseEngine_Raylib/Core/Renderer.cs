@@ -35,7 +35,7 @@ namespace MooseEngine.Core
         {
             Raylib.BeginDrawing();
 
-            Raylib.ClearBackground(Color.BLACK);
+            Raylib.ClearBackground(new Color(34,35,35,255));
 
             Raylib.BeginMode2D(camera.RaylibCamera);
         }

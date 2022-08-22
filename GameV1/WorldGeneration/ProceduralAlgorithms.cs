@@ -1,18 +1,25 @@
 ﻿using MooseEngine.Utilities;
-using SimplexNoise;
+using DotnetNoise;
 
 namespace GameV1.WorldGeneration
 {
     internal static class ProceduralAlgorithms
     {
-        //TODO Change Vector2 to Coords2D...
         //TODO Add overworld generation...
-        //TODO Add WFC to generate castles etc...
-        //TODO Use Cellular to generate Dungeons...
+        /*
+         * Rivers and lakes
+         * Roads
+         * Forests
+         * Castles
+         * Graveyards
+         * Villages
+         */
 
-        public static Dictionary<Coords2D, float> GenerateOverworld(int width, int height, int tileSize, float worldScale) 
+        public static Dictionary<Coords2D, float> GenerateOverworld(int width, int height, int tileSize, float worldScale, int seed) 
         {
             Dictionary<Coords2D, float> overworld = new Dictionary<Coords2D, float>();
+            FastNoise noise = new FastNoise(seed);
+            noise.UsedNoiseType = FastNoise.NoiseType.Perlin;
 
             for (int x = 0; x < width; x++)
 			{
@@ -21,7 +28,7 @@ namespace GameV1.WorldGeneration
 			    {
                     var yCord = y * (int)worldScale;
 
-                    overworld.Add(new Coords2D(xCord, yCord), SimplexNoise.Noise.CalcPixel2D(xCord, yCord, tileSize));
+                    overworld.Add(new Coords2D(xCord, yCord), noise.GetPerlin(xCord,yCord));
 			    }
 			}
 

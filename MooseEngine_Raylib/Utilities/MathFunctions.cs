@@ -6,4 +6,9 @@ public static class MathFunctions
     {
         return minValue + n * (maxValue - minValue);
     }
+
+    public static float InverseLerp(float minValue, float maxValue, float v) 
+    {
+        return ( v - minValue) / (maxValue - minValue);
+    }
 }

@@ -15,10 +15,6 @@ internal class NoiseTest : IGame
 {
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
-    private HashSet<Coords2D> _forest = new HashSet<Coords2D>();
-    private HashSet<Coords2D> _forests = new HashSet<Coords2D>();
-    private Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
 
     public void Initialize()
     {
@@ -53,34 +49,11 @@ internal class NoiseTest : IGame
         _scene?.Add(player);
 
         //Generate world...
-        var camera = new Camera(tile, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
+        WorldGenerator.GenerateWorld(1337,ref _scene);
+
         _scene?.Add(camera);
-
-        _overWorld = ProceduralAlgorithms.GenerateOverworld(100, 100, 8, Constants.DEFAULT_ENTITY_SIZE);
-
-        foreach (var tile in _overWorld)
-        {
-            Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
-
-            if (tile.Value > 220 && tile.Value < 225)
-            {
-                _forest = ProceduralAlgorithms.GenerateForest(50, 8, tile.Key);
-                foreach (var tree in _forest)
-                {
-                    _forests.Add(tree);
-                }
-            }
-        }
-
-        foreach (var pos in _forests)
-        {
-            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = new Vector2(pos.X, pos.Y);
-            _scene?.Add(tile);
-        }
-
-        Console.WriteLine($"We have {_forests.Count} forest tiles");
     }
 
     public void Uninitialize()
