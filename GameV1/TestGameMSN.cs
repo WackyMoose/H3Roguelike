@@ -23,8 +23,8 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-
-        _scene = new Scene();
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
 
         var window = Application.Instance.Window;
 

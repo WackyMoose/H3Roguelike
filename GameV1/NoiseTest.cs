@@ -13,7 +13,7 @@ namespace GameV1;
 
 internal class NoiseTest : IGame
 {
-    private Scene? _scene;
+    private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
     private HashSet<Coords2D> _forest = new HashSet<Coords2D>();
@@ -22,7 +22,8 @@ internal class NoiseTest : IGame
 
     public void Initialize()
     {
-        _scene = new Scene();
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
 
         var window = Application.Instance.Window;
 

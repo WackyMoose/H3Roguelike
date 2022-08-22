@@ -11,7 +11,7 @@ public interface IScene : IDisposable
     void Remove(Entity entity);
 }
 
-public class Scene : Disposeable, IScene
+internal class Scene : Disposeable, IScene
 {
     private readonly List<Entity> _entities;
 
