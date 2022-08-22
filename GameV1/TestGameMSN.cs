@@ -8,6 +8,7 @@ using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
+using Color = MooseEngine.Graphics.Color;
 
 namespace GameV1;
 
@@ -16,8 +17,8 @@ internal class TestGameMSN : IGame
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
-    private Weapon weapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
+    private Weapon weapon = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
