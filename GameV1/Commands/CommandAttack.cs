@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class AttackCommand : Command
+    internal class CommandAttack : Command
     {
         public Entity Attacked { get; set; }
 
-        public AttackCommand(Scene scene, Entity attacker, Entity attacked) : base(scene, attacker)
+        public CommandAttack(Scene scene, Entity attacker, Entity attacked) : base(scene, attacker)
         {
             Attacked = attacked;
         }

@@ -1,4 +1,5 @@
 ﻿using GameV1.Commands;
+using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine;
@@ -65,26 +66,12 @@ internal class TestGameMSN : IGame
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(0, 0));
 
         // Bind key press action to key value
-        Keyboard.KeyIdle = KeyboardKey.KEY_SPACE;
-        Keyboard.KeyMoveUp = KeyboardKey.KEY_UP;
-        Keyboard.KeyMoveDown = KeyboardKey.KEY_DOWN;
-        Keyboard.KeyMoveLeft = KeyboardKey.KEY_LEFT;
-        Keyboard.KeyMoveRight = KeyboardKey.KEY_RIGHT;
-        Keyboard.KeyInteract = KeyboardKey.KEY_E;
-        Keyboard.KeyInventory = KeyboardKey.KEY_I;
-        Keyboard.KeyCharacter = KeyboardKey.KEY_C;
-        Keyboard.KeyMenu = KeyboardKey.KEY_M;
-        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
-        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
-        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
-        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
-
-        // Bind key press action to command
-        InputHandler._key_idle = new IdleCommand(_scene, player);
-        InputHandler._key_up = new MoveUpCommand(_scene, player);
-        InputHandler._key_down = new MoveDownCommand(_scene, player);
-        InputHandler._key_left = new MoveLeftCommand(_scene, player);
-        InputHandler._key_right = new MoveRightCommand(_scene, player);
+        // Bind key value to input value. Can be reconfigured at runtine
+        InputHandler.Add(KeyboardKey.KEY_UP, Input.Up);
+        InputHandler.Add(KeyboardKey.KEY_DOWN, Input.Down);
+        InputHandler.Add(KeyboardKey.KEY_LEFT, Input.Left);
+        InputHandler.Add(KeyboardKey.KEY_RIGHT, Input.Right);
+        InputHandler.Add(KeyboardKey.KEY_SPACE, Input.Idle);
 
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
@@ -106,18 +93,18 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        //
+        // Player
+        Input? input = InputHandler.Handle();
 
+        Command command = CommandFactory.Create(input, _scene, player);
 
-
-        // Player controls
-        CommandHandler.Add(InputHandler.HandleInput());
+        CommandQueue.Add(command);
 
         // Execute Player commands
-        if (!CommandHandler.IsEmpty)
+        if (!CommandQueue.IsEmpty)
         {
             Console.WriteLine("Players turn!");
-            CommandHandler.Execute();
+            CommandQueue.Execute();
         }
 
         // AI NPC / Monster / Critter controls

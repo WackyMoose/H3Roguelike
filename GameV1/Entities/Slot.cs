@@ -1,6 +1,6 @@
 ﻿using GameV1.Interfaces;
 
-namespace GameV1
+namespace GameV1.Entities
 {
     public class Slot<TItem> : ISlot<TItem> where TItem : IItem
     {

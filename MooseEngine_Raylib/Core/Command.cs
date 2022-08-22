@@ -1,10 +1,10 @@
-﻿using MooseEngine.Scenes;
+﻿using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {
-    public abstract class Command
+    public abstract class Command : ICommand
     {
-
         public Entity Entity { get; set; }
         public Scene Scene { get; set; }
 

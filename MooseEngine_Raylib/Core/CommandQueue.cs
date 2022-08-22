@@ -3,7 +3,7 @@ using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {
-    public static class CommandHandler
+    public static class CommandQueue
     {
         private static Queue<Command> Commands = new Queue<Command>();
 
