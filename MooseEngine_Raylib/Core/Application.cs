@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factory;
 using Raylib_cs;
@@ -18,23 +19,24 @@ public sealed class Application : Disposeable, IApplication
     private static Application? s_Instance;
     public static Application? Instance { get { return s_Instance; } }
 
-    private readonly ApplicationSpecification _specification;
+    private readonly ApplicationOptions _options;
 
-    public Application(ApplicationSpecification specification, IGame game, IWindow window, ISceneFactory sceneFactory)
+    public Application(ApplicationOptions options, IGame game, IWindow window, IRenderer renderer, ISceneFactory sceneFactory)
     {
         Throw.IfSingletonExists(Instance, "Application already exists!");
         s_Instance = this;
 
         Game = game;
         Window = window;
-
-        _specification = specification;
+        Renderer = renderer;
+        _options = options;
 
         SceneFactory = sceneFactory;
     }
 
     public IGame Game { get; }
     public IWindow Window { get; }
+    public IRenderer Renderer { get; }
     public ISceneFactory SceneFactory { get; }
 
     public void Initialize()
@@ -44,7 +46,7 @@ public sealed class Application : Disposeable, IApplication
 
         Window.Initialize();
 
-        Renderer.Initialize(@"..\..\..\Resources\Textures\colored_tilemap.png", 0, 1, 8);
+        Renderer.Initialize();
     }
 
     protected override void DisposeManagedState()

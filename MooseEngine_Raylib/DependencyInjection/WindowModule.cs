@@ -6,9 +6,9 @@ namespace MooseEngine.DependencyInjection;
 
 internal class WindowModule : Module
 {
-    private readonly WindowSpecification _windowSpecification;
+    private readonly WindowOptions _windowSpecification;
 
-    public WindowModule(WindowSpecification windowSpecification)
+    public WindowModule(WindowOptions windowSpecification)
     {
         _windowSpecification = windowSpecification;
     }

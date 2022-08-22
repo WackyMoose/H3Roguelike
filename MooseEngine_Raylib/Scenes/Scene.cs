@@ -1,5 +1,6 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 
 namespace MooseEngine.Scenes;
@@ -15,10 +16,13 @@ internal class Scene : Disposeable, IScene
 {
     private readonly List<Entity> _entities;
 
-    public Scene()
+    public Scene(IRenderer renderer)
     {
         _entities = new List<Entity>();
+        Renderer = renderer;
     }
+
+    public IRenderer Renderer { get; }
 
     protected override void DisposeManagedState()
     {
@@ -41,7 +45,7 @@ internal class Scene : Disposeable, IScene
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
                 var entity = _entities[i];
-                Renderer.RenderEntity(entity);
+                Renderer.Render(entity);
             }
             Renderer.End();
         }

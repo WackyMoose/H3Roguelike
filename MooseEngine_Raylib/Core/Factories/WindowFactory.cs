@@ -2,12 +2,12 @@
 
 public interface IWindowFactory : IFactory
 {
-    IWindow CreateWindow(WindowSpecification windowSpecification);
+    IWindow CreateWindow(WindowOptions windowSpecification);
 }
 
 internal class WindowFactory : IWindowFactory
 {
-    public IWindow CreateWindow(WindowSpecification windowSpecification)
+    public IWindow CreateWindow(WindowOptions windowSpecification)
     {
         return new Window(windowSpecification);
     }

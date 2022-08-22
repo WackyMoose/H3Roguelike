@@ -1,17 +1,18 @@
-﻿using MooseEngine.Interfaces;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factory;
 
 namespace MooseEngine.Core.Factories;
 
 public interface IApplicationFactory : IFactory
 {
-    IApplication CreateApplication(ApplicationSpecification applicationSpecification, IGame game, IWindow window, ISceneFactory sceneFactory);
+    IApplication CreateApplication(ApplicationOptions applicationSpecification, IGame game, IWindow window, IRenderer renderer, ISceneFactory sceneFactory);
 }
 
 internal class ApplicationFactory : IApplicationFactory
 {
-    public IApplication CreateApplication(ApplicationSpecification applicationSpecification, IGame game, IWindow window, ISceneFactory sceneFactory)
+    public IApplication CreateApplication(ApplicationOptions applicationSpecification, IGame game, IWindow window, IRenderer renderer, ISceneFactory sceneFactory)
     {
-        return new Application(applicationSpecification, game, window, sceneFactory);
+        return new Application(applicationSpecification, game, window, renderer, sceneFactory);
     }
 }

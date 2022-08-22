@@ -14,10 +14,10 @@ public interface IWindow
 
 internal class Window : IWindow
 {
-    private WindowSpecification _specification;
+    private WindowOptions _specification;
 
 
-    public Window(WindowSpecification specification)
+    public Window(WindowOptions specification)
     {
         _specification = specification;
     }
