@@ -86,6 +86,8 @@ internal class TestGameMSN : IGame
         InputHandler._key_left = new MoveLeftCommand(_scene, player);
         InputHandler._key_right = new MoveRightCommand(_scene, player);
 
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
@@ -104,6 +106,10 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
+        //
+
+
+
         // Player controls
         CommandHandler.Add(InputHandler.HandleInput());
 
@@ -119,8 +125,5 @@ internal class TestGameMSN : IGame
         // Execute AI commands
 
         _scene?.UpdateRuntime(deltaTime);
-
-        //Task.Delay(2000);
-        //Thread.Sleep(500);
     }
 }
