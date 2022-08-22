@@ -1,5 +1,6 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.Scenes;
 
@@ -36,7 +37,7 @@ public class Scene : Disposeable, IScene
         var camera = _entities.SingleOrDefault(x => x.GetType() == typeof(Camera));
         if (camera != null)
         {
-            Renderer.Begin((Camera)camera!);
+            Renderer.Begin((ISceneCamera)camera!);
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
                 var entity = _entities[i];
