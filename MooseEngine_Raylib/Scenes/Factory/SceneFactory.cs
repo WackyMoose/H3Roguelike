@@ -6,8 +6,8 @@ namespace MooseEngine.Scenes.Factory;
 
 public interface ISceneFactory : IFactory
 {
-    Scene? Scene { get; }
-    Scene CreateScene();
+    IScene? Scene { get; }
+    IScene CreateScene();
     Camera CreateCenteredCamera(Entity target);
 }
 
@@ -20,9 +20,9 @@ public class SceneFactory : ISceneFactory
         _window = window;
     }
 
-    public Scene? Scene { get; private set; }
+    public IScene? Scene { get; private set; }
 
-    public Scene CreateScene()
+    public IScene CreateScene()
     {
         return Scene ??= new Scene();
     }

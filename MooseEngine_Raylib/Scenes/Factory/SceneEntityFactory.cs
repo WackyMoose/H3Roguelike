@@ -13,5 +13,5 @@ public class SceneEntityFactory : ISceneEntityFactory
         Scene = sceneFactory.Scene;
     }
 
-    protected Scene Scene { get; }
+    protected IScene Scene { get; }
 }

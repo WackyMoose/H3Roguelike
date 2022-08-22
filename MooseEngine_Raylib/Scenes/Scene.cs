@@ -1,10 +1,16 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Extensions.Runtime;
-using Raylib_cs;
 
 namespace MooseEngine.Scenes;
 
-public class Scene : Disposeable
+public interface IScene : IDisposable
+{
+    void UpdateRuntime(float deltaTime);
+    void Add(Entity entity);
+    void Remove(Entity entity);
+}
+
+public class Scene : Disposeable, IScene
 {
     private readonly List<Entity> _entities;
 

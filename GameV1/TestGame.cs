@@ -11,7 +11,7 @@ namespace GameV1;
 internal class TestGame : IGame
 {
     private Texture2D _texture;
-    private Scene? _scene;
+    private IScene? _scene;
 
     public void Initialize()
     {
