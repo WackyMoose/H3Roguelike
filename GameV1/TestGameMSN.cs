@@ -87,7 +87,7 @@ internal class TestGameMSN : IGame
         // Player
         InputOptions? input = InputHandler.Handle();
 
-        Command command = CommandFactory.Create(input, _scene, player);
+        ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 

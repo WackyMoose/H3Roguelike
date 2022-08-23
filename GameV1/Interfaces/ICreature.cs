@@ -17,6 +17,7 @@ namespace GameV1.Interfaces
         Slot<Weapon> MainHand { get; set; }
         Slot<Weapon> OffHand { get; set; }
         Slot<Armor> Chest { get; set; }
+        Weapon? StrongestWeapon { get; }
 
         void TakeDamage(int damage);
     }
