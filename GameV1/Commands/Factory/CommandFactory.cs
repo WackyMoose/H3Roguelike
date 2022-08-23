@@ -13,7 +13,7 @@ namespace GameV1.Commands.Factory
     {
 
         // All player behavior-related business logic goes here
-        public static Command? Create(InputOptions? input, IScene scene, Entity entity)
+        public static ICommand? Create(InputOptions? input, IScene scene, Entity entity)
         {
             if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
             {
@@ -46,9 +46,6 @@ namespace GameV1.Commands.Factory
                     if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Creature))
                     {
                         Console.WriteLine("We are attacking!");
-
-                        Creature attacker = (Creature)entity;
-                        Creature attacked = (Creature)targetEntity;
 
                         //CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
                         return new CommandAttack(scene, entity, targetEntity);

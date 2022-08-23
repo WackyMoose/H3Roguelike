@@ -11,7 +11,8 @@ public interface IScene : IDisposable
     void UpdateRuntime(float deltaTime);
     void Add(Entity entity);
     void Remove(Entity entity);
-    List<Entity>? EntitiesAtPosition(Vector2 tilePosition);
+    List<Entity>? EntitiesAtPosition(Vector2 position);
+    List<Entity>? EntitiesWithinDistanceFromPosition(Vector2 position, int distance);
 }
 
 internal class Scene : Disposeable, IScene
@@ -27,10 +28,16 @@ internal class Scene : Disposeable, IScene
     }
 
     public IRenderer Renderer { get; }
+    public List<Entity> Entities => _entities;
 
-    public List<Entity>? EntitiesAtPosition(Vector2 tilePosition)
+    public List<Entity>? EntitiesAtPosition(Vector2 position)
     {
-        return _entities.Where(x => x.Position == tilePosition).ToList();
+        return _entities.Where(x => x.Position == position).ToList();
+    }
+
+    public List<Entity>? EntitiesWithinDistanceFromPosition(Vector2 position, int distance)
+    {
+        return _entities.Where(x => MathFunctions.DistanceBetween(position, x.Position) <= distance).ToList();
     }
 
     protected override void DisposeManagedState()

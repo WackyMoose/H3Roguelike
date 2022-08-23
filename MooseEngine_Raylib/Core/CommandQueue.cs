@@ -1,16 +1,17 @@
 ﻿
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {
     public static class CommandQueue
     {
-        private static Queue<Command> Commands = new Queue<Command>();
+        private static Queue<ICommand> Commands = new Queue<ICommand>();
 
         public static bool IsEmpty { get { return Commands.Count() == 0; } }
 
 
-        public static void Add(Command? command)
+        public static void Add(ICommand? command)
         {
             if (command is not null)
             {

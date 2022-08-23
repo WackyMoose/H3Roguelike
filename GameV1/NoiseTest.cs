@@ -72,8 +72,6 @@ internal class NoiseTest : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
-
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
@@ -95,7 +93,7 @@ internal class NoiseTest : IGame
         // Player
         InputOptions? input = InputHandler.Handle();
 
-        Command command = CommandFactory.Create(input, _scene, player);
+        ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 
@@ -104,11 +102,11 @@ internal class NoiseTest : IGame
         {
             Console.WriteLine("Players turn!");
             CommandQueue.Execute();
+
+            // AI NPC / Monster / Critter controls
+
+            // Execute AI commands
         }
-
-        // AI NPC / Monster / Critter controls
-
-        // Execute AI commands
 
         _scene?.UpdateRuntime(deltaTime);
     }
