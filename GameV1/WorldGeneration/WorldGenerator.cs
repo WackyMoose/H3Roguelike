@@ -25,7 +25,7 @@ namespace GameV1.WorldGeneration
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref Scene scene) 
+        public static bool GenerateWorld(int seed, ref IScene scene) 
         {
             var world = new World(51,51,seed,new Coords2D(26*Constants.DEFAULT_ENTITY_SIZE,26 * Constants.DEFAULT_ENTITY_SIZE));
             

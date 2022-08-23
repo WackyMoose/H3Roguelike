@@ -28,21 +28,10 @@ internal class NoiseTest : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        sword.MinDamage = 50;
-        sword.MaxDamage = 200;
-        sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
-
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
-
         // Spawn player
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(26, 26) * player.Scale;
         _scene?.Add(player);
-
-        //Generate world...
-        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         WorldGenerator.GenerateWorld(80085,ref _scene);
 
