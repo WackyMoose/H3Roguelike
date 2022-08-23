@@ -13,7 +13,7 @@ namespace GameV1.Commands.Factory
     {
 
         // All player behavior-related business logic goes here
-        public static Command? Create(InputOptions? input, Scene scene, Entity entity)
+        public static Command? Create(InputOptions? input, IScene scene, Entity entity)
         {
             if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
             {

@@ -1,8 +1,8 @@
 ﻿using GameV1.Categories;
 using GameV1.Interfaces;
+using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Raylib_cs;
 
 namespace GameV1.Entities
 {

@@ -1,12 +1,10 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Core
+﻿namespace MooseEngine.Core
 {
     public static class InputHandler
     {
-        private static Dictionary<KeyboardKey, InputOptions> KeyInput = new Dictionary<KeyboardKey, InputOptions>();
+        private static Dictionary<Keycode, InputOptions> KeyInput = new Dictionary<Keycode, InputOptions>();
 
-        public static void Add(KeyboardKey key, InputOptions input)
+        public static void Add(Keycode key, InputOptions input)
         {
             KeyInput.Add(key, input);
         }
@@ -15,7 +13,7 @@ namespace MooseEngine.Core
         {
             foreach (var pair in KeyInput)
             {
-                if (Raylib.IsKeyPressed(pair.Key)) { return pair.Value; }
+                if (Input.IsKeyPressed(pair.Key)) { return pair.Value; }
             }
 
             return null;

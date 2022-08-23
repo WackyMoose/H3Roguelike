@@ -2,7 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MooseEngine.DependencyInjection;
+namespace MooseEngine.Extensions.DependencyInjection;
 
 public interface IMooseEngineContainerBuilder
 {

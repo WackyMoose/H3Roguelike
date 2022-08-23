@@ -7,7 +7,7 @@ namespace GameV1.Commands
 {
     public class CommandMoveDown : Command
     {
-        public CommandMoveDown(Scene scene, Entity entity) : base(scene, entity)
+        public CommandMoveDown(IScene scene, Entity entity) : base(scene, entity)
         {
         }
 

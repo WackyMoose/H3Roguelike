@@ -9,7 +9,7 @@ namespace GameV1.Commands
     public class CommandMoveUp : Command
     {
 
-        public CommandMoveUp(Scene scene, Entity entity) : base(scene, entity)
+        public CommandMoveUp(IScene scene, Entity entity) : base(scene, entity)
         {
         }
 

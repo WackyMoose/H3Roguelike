@@ -1,13 +1,12 @@
-﻿using MooseEngine.Interfaces;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-using Raylib_cs;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
 public abstract class Entity : IEntity
 {
-    // TODO: Add Coords2D struct instead of Vector2
     public Vector2 Position { get; set; }
     public Vector2 Scale { get; set; }
     public Coords2D SpriteCoords { get; init; }
@@ -16,7 +15,7 @@ public abstract class Entity : IEntity
     public int Id { get; set; }
     public virtual bool IsDead { get; set; } = false;
 
-    public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.WHITE)
+    public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.White)
     {
     }
 

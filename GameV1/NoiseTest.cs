@@ -3,28 +3,28 @@ using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Raylib_cs;
 using System.Numerics;
 
 namespace GameV1;
 
 internal class NoiseTest : IGame
 {
-    private Scene? _scene;
+    private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
+    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
-
-        _scene = new Scene();
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
 
         var window = Application.Instance.Window;
 
@@ -66,11 +66,11 @@ internal class NoiseTest : IGame
 
         // Bind key press action to key value
         // Bind key value to input value. Can be reconfigured at runtine
-        InputHandler.Add(KeyboardKey.KEY_UP, InputOptions.Up);
-        InputHandler.Add(KeyboardKey.KEY_DOWN, InputOptions.Down);
-        InputHandler.Add(KeyboardKey.KEY_LEFT, InputOptions.Left);
-        InputHandler.Add(KeyboardKey.KEY_RIGHT, InputOptions.Right);
-        InputHandler.Add(KeyboardKey.KEY_SPACE, InputOptions.Idle);
+        InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
+        InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
+        InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
+        InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
+        InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 

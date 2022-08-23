@@ -1,12 +1,12 @@
-﻿using MooseEngine.Utilities;
-using Raylib_cs;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
     public class Inventory : Container<Slot<Item>, Item>
     {
         public Inventory(int maxSlots, int durability, int maxValue)
-            : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.WHITE)
+            : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.White)
         {
         }
 

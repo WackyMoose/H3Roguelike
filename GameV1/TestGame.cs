@@ -1,17 +1,14 @@
-﻿using GameV1.Entities.Factory;
+﻿using GameV1.Entities.Factories;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
-using MooseEngine.Scenes.Factory;
-using Raylib_cs;
 using System.Numerics;
 
 namespace GameV1;
 
 internal class TestGame : IGame
 {
-    private Texture2D _texture;
-    private Scene? _scene;
+    private IScene? _scene;
 
     public void Initialize()
     {
@@ -22,18 +19,9 @@ internal class TestGame : IGame
         var playerFactory = new PlayerFactory(sceneFactory);
 
         var player = playerFactory.CreatePlayer();
-        player.Scale = new Vector2(64, 64);
         player.Position = new Vector2(128, 192);
 
         sceneFactory.CreateCenteredCamera(player);
-
-        //var player = PlayerFactory.CreatePlayer();
-
-        //var window = Application.Instance?.Window;
-        //var camera = new Camera(player, new Vector2(window!.Width / 2.0f, window!.Height / 2.0f));
-
-        //Scene?.Add(player);
-        //Scene?.Add(camera);
     }
 
     public void Uninitialize()
