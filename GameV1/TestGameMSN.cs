@@ -1,14 +1,12 @@
 ﻿using GameV1.Commands;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
-using MooseEngine;
 using MooseEngine.Core;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Raylib_cs;
 using System.Numerics;
-using Color = MooseEngine.Graphics.Color;
 
 namespace GameV1;
 
@@ -59,18 +57,18 @@ internal class TestGameMSN : IGame
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(128, 192));
 
         // Bind key press action to key value
-        Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
-        Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
-        Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
-        Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
-        Keyboard.KeyInteract = KeyboardKey.KEY_E;
-        Keyboard.KeyInventory = KeyboardKey.KEY_I;
-        Keyboard.KeyCharacter = KeyboardKey.KEY_C;
-        Keyboard.KeyMenu = KeyboardKey.KEY_M;
-        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
-        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
-        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
-        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
+        //Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
+        //Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
+        //Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
+        //Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
+        //Keyboard.KeyInteract = KeyboardKey.KEY_E;
+        //Keyboard.KeyInventory = KeyboardKey.KEY_I;
+        //Keyboard.KeyCharacter = KeyboardKey.KEY_C;
+        //Keyboard.KeyMenu = KeyboardKey.KEY_M;
+        //Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
+        //Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
+        //Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
+        //Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
 
         // Bind key press action to command
         InputHandler._key_up = new MoveUpCommand(player);

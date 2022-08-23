@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using MooseEngine.Core.Input;
+using MooseEngine.Core.Inputs;
 using MooseEngine.DependencyInjection;
 using MooseEngine.Extensions.DependencyInjection;
 using MooseEngine.Graphics;
@@ -23,27 +23,29 @@ public static class Engine
     public static void Start<TGame>()
         where TGame : class, IGame
     {
-        Start<Application, RaylibRenderer, RaylibRendererOptions, TGame>(DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, TGame>(DefaultRaylibRendererOptions);
     }
 
     public static void Start<TGame>(ApplicationOptions applicationOptions)
     where TGame : class, IGame
     {
-        Start<Application, RaylibRenderer, RaylibRendererOptions, TGame>(applicationOptions, DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, TGame>(applicationOptions, DefaultRaylibRendererOptions);
     }
 
-    public static void Start<TApplication, TRenderer, TRendererOptions, TGame>(TRendererOptions rendererOptions)
+    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(TRendererOptions rendererOptions)
         where TApplication : class, IApplication
         where TGame : class, IGame
+        where TInput : class, IInputAPI
         where TRenderer : class, IRenderer
         where TRendererOptions : class, IRendererOptions
     {
-        Start<TApplication, TRenderer, TRendererOptions, TGame>(new(), rendererOptions);
+        Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(new(), rendererOptions);
     }
 
-    public static void Start<TApplication, TRenderer, TRendererOptions, TGame>(ApplicationOptions applicationOptions, TRendererOptions rendererOptions)
+    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(ApplicationOptions applicationOptions, TRendererOptions rendererOptions)
         where TApplication : class, IApplication
         where TGame : class, IGame
+        where TInput : class, IInputAPI
         where TRenderer : class, IRenderer
         where TRendererOptions : class, IRendererOptions
     {
@@ -51,9 +53,9 @@ public static class Engine
 
         containerBuilder.RegisterModule<FactoryModule>();
         containerBuilder.RegisterModule(new ApplicationModule(applicationOptions));
+        containerBuilder.RegisterModule<InputModule<TInput>>();
         containerBuilder.RegisterModule(new WindowModule(applicationOptions));
         containerBuilder.RegisterModule(new GraphicsModule<TRenderer, TRendererOptions>(rendererOptions));
-        containerBuilder.Register<IInput, RaylibInput>();
         containerBuilder.Register<IGame, TGame>();
 
         var container = containerBuilder.Build();

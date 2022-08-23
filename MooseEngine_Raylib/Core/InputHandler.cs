@@ -1,6 +1,4 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Core
+﻿namespace MooseEngine.Core
 {
     public static class InputHandler
     {
@@ -11,10 +9,10 @@ namespace MooseEngine.Core
 
         public static Command? HandleInput()
         {
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveUp)) { return _key_up; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveDown)) { return _key_down; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveLeft)) { return _key_left; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveRight)) { return _key_right; }
+            if (Input.IsKeyPressed(Keycode.KEY_W)) { return _key_up; }
+            if (Input.IsKeyPressed(Keycode.KEY_S)) { return _key_down; }
+            if (Input.IsKeyPressed(Keycode.KEY_A)) { return _key_left; }
+            if (Input.IsKeyPressed(Keycode.KEY_D)) { return _key_right; }
             else return null;
         }
     }

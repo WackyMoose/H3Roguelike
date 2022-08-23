@@ -1,4 +1,5 @@
-﻿using MooseEngine.Extensions.Runtime;
+﻿using MooseEngine.Core.Inputs;
+using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factories;
@@ -26,7 +27,7 @@ public sealed class Application : Disposeable, IApplication
         }
     }
 
-    public Application(ApplicationOptions options, IGame game, IWindow window, IRenderer renderer, ISceneFactory sceneFactory)
+    public Application(ApplicationOptions options, IGame game, IWindow window, IInputAPI inputAPI, IRenderer renderer, ISceneFactory sceneFactory)
     {
         Throw.IfSingletonExists(s_Instance, "Application already exists!");
         s_Instance = this;
@@ -34,12 +35,14 @@ public sealed class Application : Disposeable, IApplication
         Game = game;
         Window = window;
         Renderer = renderer;
+        InputAPI = inputAPI;
         SceneFactory = sceneFactory;
     }
 
     public IGame Game { get; }
     public IWindow Window { get; }
     public IRenderer Renderer { get; }
+    public IInputAPI InputAPI { get; }
     public ISceneFactory SceneFactory { get; }
 
     public void Initialize()
@@ -50,6 +53,7 @@ public sealed class Application : Disposeable, IApplication
 
         Window.Initialize();
         Renderer.Initialize();
+        Input.Initialize(InputAPI);
     }
 
     protected override void DisposeManagedState()

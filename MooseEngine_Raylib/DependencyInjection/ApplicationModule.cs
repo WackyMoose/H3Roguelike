@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using MooseEngine.Core;
 using MooseEngine.Core.Factories;
+using MooseEngine.Core.Inputs;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factories;
@@ -28,10 +29,11 @@ internal class ApplicationModule : Module
             var applicationFactory = cc.Resolve<IApplicationFactory>();
             var game = cc.Resolve<IGame>();
             var window = cc.Resolve<IWindow>();
+            var inputAPI = cc.Resolve<IInputAPI>();
             var renderer = cc.Resolve<IRenderer>();
             var sceneFactory = cc.Resolve<ISceneFactory>();
 
-            return applicationFactory.CreateApplication(_applicationSpecification, game, window, renderer, sceneFactory);
+            return applicationFactory.CreateApplication(_applicationSpecification, game, window, inputAPI, renderer, sceneFactory);
         })
             .As<IApplication>()
             .SingleInstance()
