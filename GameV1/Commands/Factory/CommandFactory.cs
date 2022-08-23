@@ -16,39 +16,67 @@ namespace GameV1.Commands.Factory
         {
             if (input == Input.Up || input == Input.Down || input == Input.Left || input == Input.Right)
             {
-                return new CommandMoveUp(scene, entity);
+                Console.WriteLine("We are attempting to walk!");
+                
+                Vector2 direction = new Vector2();
 
-                //var direction = new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
+                switch (input) 
+                { 
+                    case Input.Up: 
+                        direction = Constants.Up;
+                        break;
+                    case Input.Down:
+                        direction = Constants.Down;
+                        break;
+                    case Input.Left:
+                        direction = Constants.Left;
+                        break;
+                    case Input.Right:
+                        direction = Constants.Right;
+                        break;
+                }
 
-                //// Retrieve list of entities in walk direction
-                //List<Entity>? entitiesInTargetPosition = scene.EntitiesAtPosition(entity.Position + direction);
+                // Retrieve list of entities in walk direction
+                List<Entity>? entitiesInTargetPosition = scene.EntitiesAtPosition(entity.Position + direction);
 
-                //foreach (Entity targetEntity in entitiesInTargetPosition)
-                //{
-                //    // Creature
-                //    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Creature))
-                //    {
-                //        Creature attacker = (Creature)entity;
-                //        Creature attacked = (Creature)targetEntity;
+                foreach (Entity targetEntity in entitiesInTargetPosition)
+                {
+                    // Creature
+                    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Creature))
+                    {
+                        Console.WriteLine("We are attacking!");
 
-                //        //CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
-                //        return new CommandAttack(scene, entity, targetEntity);
-                //    }
+                        Creature attacker = (Creature)entity;
+                        Creature attacked = (Creature)targetEntity;
 
-                //    // Tile
-                //    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Tile))
-                //    {
-                //        Tile tile = (Tile)entity;
+                        //CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
+                        return new CommandAttack(scene, entity, targetEntity);
+                    }
 
-                //        if (!tile.IsWalkable)
-                //        {
-                //            return null;
-                //        }
-                //    }
+                    // Tile
+                    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Tile))
+                    {
+                        Tile tile = (Tile)targetEntity;
 
-                //    //
-                //    return new CommandMoveUp(scene, entity);
-                //}
+                        if (!tile.IsWalkable)
+                        {
+                            Console.WriteLine("Tile in the way!");
+                            return new CommandIdle(scene, entity);
+                        }
+                    }
+                }
+
+                switch (input)
+                {
+                    case Input.Up:
+                        return new CommandMoveUp(scene, entity);
+                    case Input.Down:
+                        return new CommandMoveDown(scene, entity);
+                    case Input.Left:
+                        return new CommandMoveLeft(scene, entity);
+                    case Input.Right:
+                        return new CommandMoveRight(scene, entity);
+                }
 
             }
 
