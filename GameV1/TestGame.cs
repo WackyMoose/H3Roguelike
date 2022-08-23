@@ -2,7 +2,6 @@
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
-using Raylib_cs;
 using System.Numerics;
 
 namespace GameV1;
