@@ -1,4 +1,5 @@
 ﻿using GameV1.Commands;
+using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine;
@@ -15,72 +16,73 @@ internal class NoiseTest : IGame
 {
     private Scene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private Tile tile = new Tile("Tree01",false,new Coords2D(5,0));
-    private HashSet<Coords2D> _forest = new HashSet<Coords2D>();
-    private HashSet<Coords2D> _forests = new HashSet<Coords2D>();
-    private Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
+    private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
+    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
+    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
+
+    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
+
         _scene = new Scene();
 
         var window = Application.Instance.Window;
 
-        //Bind inputs
-        // Bind key press action to key value
-        Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
-        Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
-        Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
-        Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
-        Keyboard.KeyInteract = KeyboardKey.KEY_E;
-        Keyboard.KeyInventory = KeyboardKey.KEY_I;
-        Keyboard.KeyCharacter = KeyboardKey.KEY_C;
-        Keyboard.KeyMenu = KeyboardKey.KEY_M;
-        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
-        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
-        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
-        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
-
-        // Bind key press action to command
-        InputHandler._key_up = new MoveUpCommand(player);
-        InputHandler._key_down = new MoveDownCommand(player);
-        InputHandler._key_left = new MoveLeftCommand(player);
-        InputHandler._key_right = new MoveRightCommand(player);
-
-        //Generate creatures...
-        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(128, 192);
-        _scene?.Add(player);
-
-        //Generate world...
-        var camera = new Camera(tile, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        _overWorld = ProceduralAlgorithms.GenerateOverworld(100, 100, 8, Constants.DEFAULT_ENTITY_SIZE);
+        sword.MinDamage = 50;
+        sword.MaxDamage = 200;
+        sword.ArmorPenetrationFlat = 50;
+        sword.ArmorPenetrationPercent = 20;
 
-        foreach (var tile in _overWorld)
-        {
-            Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
+        armor.MinDamageReduction = 20;
+        armor.MaxDamageReduction = 120;
 
-            if (tile.Value > 220 && tile.Value < 225)
-            {
-                _forest = ProceduralAlgorithms.GenerateForest(50, 8, tile.Key);
-                foreach (var tree in _forest)
-                {
-                    _forests.Add(tree);
-                }
-            }
-        }
+        // Spawn player
+        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        player.Position = new Vector2(192, 192);
+        player.MainHand.Add(sword);
+        player.OffHand.Add(sword);
 
-        foreach (var pos in _forests)
+        _scene?.Add(player);
+
+        // Spawn monster
+        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        monster.Position = new Vector2(-96, -96);
+        monster.Chest.Add(armor);
+
+        _scene?.Add(monster);
+
+        Console.WriteLine(monster.Stats.Health);
+
+        CombatHandler.SolveAttack(player, monster, sword);
+
+        Console.WriteLine(monster.Stats.Health);
+
+        Console.WriteLine(player.StrongestWeapon.Damage);
+
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
+
+        // Bind key press action to key value
+        // Bind key value to input value. Can be reconfigured at runtine
+        InputHandler.Add(KeyboardKey.KEY_UP, Input.Up);
+        InputHandler.Add(KeyboardKey.KEY_DOWN, Input.Down);
+        InputHandler.Add(KeyboardKey.KEY_LEFT, Input.Left);
+        InputHandler.Add(KeyboardKey.KEY_RIGHT, Input.Right);
+        InputHandler.Add(KeyboardKey.KEY_SPACE, Input.Idle);
+
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+
+        foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
             tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = new Vector2(pos.X, pos.Y);
+            tile.Position = pos;
+            tile.IsWalkable = false;
             _scene?.Add(tile);
         }
-
-        Console.WriteLine($"We have {_forests.Count} forest tiles");
     }
 
     public void Uninitialize()
@@ -91,13 +93,24 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        //Renderer.camera.target = player.Position;
-        InputHandler.HandleInput();
-        Command command = InputHandler.HandleInput();
-        //command?.Execute();
-        CommandHandler.Add(command);
+        // Player
+        Input? input = InputHandler.Handle();
 
-        CommandHandler.Execute();
+        Command command = CommandFactory.Create(input, _scene, player);
+
+        CommandQueue.Add(command);
+
+        // Execute Player commands
+        if (!CommandQueue.IsEmpty)
+        {
+            Console.WriteLine("Players turn!");
+            CommandQueue.Execute();
+        }
+
+        // AI NPC / Monster / Critter controls
+
+        // Execute AI commands
+
         _scene?.UpdateRuntime(deltaTime);
     }
 }

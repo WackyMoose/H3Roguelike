@@ -63,7 +63,7 @@ internal class TestGameMSN : IGame
 
         Console.WriteLine(player.StrongestWeapon.Damage);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Vector2(0, 0));
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
 
         // Bind key press action to key value
         // Bind key value to input value. Can be reconfigured at runtine
