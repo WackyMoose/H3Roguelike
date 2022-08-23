@@ -20,7 +20,7 @@ internal class TestGameMSN : IGame
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.WHITE);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.WHITE);
 
-    private HashSet<Vector2> forest = new HashSet<Vector2>();
+    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {

@@ -1,6 +1,5 @@
-﻿using MooseEngine;
+﻿using MooseEngine.Utilities;
 using SimplexNoise;
-using System.Numerics;
 
 namespace GameV1.WorldGeneration
 {
@@ -11,23 +10,27 @@ namespace GameV1.WorldGeneration
         //TODO Add WFC to generate castles etc...
         //TODO Use Cellular to generate Dungeons...
 
-        private static void GenerateOverworld(int width, int height, int tileSize)
+        public static Dictionary<Coords2D, float> GenerateOverworld(int width, int height, int tileSize, float worldScale) 
         {
-            Dictionary<Vector2, float> overworld = new Dictionary<Vector2, float>();
+            Dictionary<Coords2D, float> overworld = new Dictionary<Coords2D, float>();
 
             for (int x = 0; x < width; x++)
-            {
+			{
+                var xCord = x * (int)worldScale;
                 for (int y = 0; y < height; y++)
-                {
-                    overworld.Add(new Vector2(x, y), Noise.CalcPixel2D(x, y, tileSize));
-                }
-            }
+			    {
+                    var yCord = y * (int)worldScale;
 
+                    overworld.Add(new Coords2D(xCord, yCord), SimplexNoise.Noise.CalcPixel2D(xCord, yCord, tileSize));
+			    }
+			}
+
+            return overworld;
         }
 
-        public static HashSet<Vector2> GenerateForest(int iterations, int walkLength, Vector2 position)
+        public static HashSet<Coords2D> GenerateForest(int iterations, int walkLength, Coords2D position) 
         {
-            HashSet<Vector2> treePositions = new HashSet<Vector2>();
+            HashSet<Coords2D> treePositions = new HashSet<Coords2D>();
 
             for (int i = 0; i < iterations; i++)
             {
@@ -38,16 +41,17 @@ namespace GameV1.WorldGeneration
             return treePositions;
         }
 
-        private static HashSet<Vector2> SimpleRandomWalk(Vector2 startPosition, int walkLength)
+        private static HashSet<Coords2D> SimpleRandomWalk(Coords2D startPosition, int walkLength) 
         {
-            HashSet<Vector2> path = new HashSet<Vector2>();
+            HashSet<Coords2D> path = new HashSet<Coords2D>();
 
             path.Add(startPosition);
             var prevPosition = startPosition;
 
             for (int i = 0; i < walkLength; i++)
             {
-                var newPosition = prevPosition + Direction2D.GetRandomCardinalDirection() * Constants.DEFAULT_ENTITY_SIZE;
+                var dir = Direction2D.GetRandomCardinalDirection() * 32;
+                var newPosition = prevPosition + new Coords2D((int)dir.X,(int)dir.Y);
                 path.Add(newPosition);
                 prevPosition = newPosition;
             }
@@ -55,17 +59,17 @@ namespace GameV1.WorldGeneration
             return path;
         }
 
-        private static class Direction2D
+        private static class Direction2D 
         {
-            public static List<Vector2> CardinalDirectionList = new List<Vector2>
+            public static List<Coords2D> CardinalDirectionList = new List<Coords2D>
             {
-                new Vector2(0,1),  //Up
-                new Vector2(1,0),  //Right
-                new Vector2(0,-1), //Down
-                new Vector2(-1,0), //Left
+                new Coords2D(0,1),  //Up
+                new Coords2D(1,0),  //Right
+                new Coords2D(0,-1), //Down
+                new Coords2D(-1,0), //Left
             };
 
-            public static Vector2 GetRandomCardinalDirection()
+            public static Coords2D GetRandomCardinalDirection() 
             {
                 Random rnd = new Random();
                 return CardinalDirectionList[rnd.Next(CardinalDirectionList.Count)];
@@ -75,6 +79,6 @@ namespace GameV1.WorldGeneration
 
     public enum ForestSize
     {
-        small, medium, large
+        small,medium,large
     }
 }
