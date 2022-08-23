@@ -1,21 +1,22 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Core
+﻿namespace MooseEngine.Core
 {
     public static class InputHandler
     {
-        public static Command? _key_up;
-        public static Command? _key_down;
-        public static Command? _key_left;
-        public static Command? _key_right;
+        private static Dictionary<Keycode, InputOptions> KeyInput = new Dictionary<Keycode, InputOptions>();
 
-        public static Command? HandleInput()
+        public static void Add(Keycode key, InputOptions input)
         {
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveUp)) { return _key_up; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveDown)) { return _key_down; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveLeft)) { return _key_left; }
-            if (Raylib.IsKeyPressed(Keyboard.KeyMoveRight)) { return _key_right; }
-            else return null;
+            KeyInput.Add(key, input);
+        }
+
+        public static InputOptions? Handle()
+        {
+            foreach (var pair in KeyInput)
+            {
+                if (Input.IsKeyPressed(pair.Key)) { return pair.Value; }
+            }
+
+            return null;
         }
     }
 }

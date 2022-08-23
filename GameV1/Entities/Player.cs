@@ -1,5 +1,5 @@
-﻿using MooseEngine.Utilities;
-using Raylib_cs;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {

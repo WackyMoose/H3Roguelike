@@ -1,22 +1,22 @@
 ﻿using GameV1.Interfaces;
+using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Raylib_cs;
 
 namespace GameV1.Entities
 {
     public class Tile : Entity, ITile
     {
-        public bool Walkable { get; set; }
+        public bool IsWalkable { get; set; }
 
         public Tile(string name, bool walkable, Coords2D spriteCoords) : base(name, spriteCoords)
         {
-            Walkable = walkable;
+            IsWalkable = walkable;
         }
 
         public Tile(string name, bool walkable, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
-            Walkable = walkable;
+            IsWalkable = walkable;
         }
 
         public override void Initialize()

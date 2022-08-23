@@ -1,49 +1,42 @@
 ﻿using GameV1.Commands;
+using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
-using MooseEngine;
 using MooseEngine.Core;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Raylib_cs;
 using System.Numerics;
 
 namespace GameV1;
 
 internal class NoiseTest : IGame
 {
-    private Scene? _scene;
+    private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+
+    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
-        _scene = new Scene();
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
 
         var window = Application.Instance.Window;
 
-        //Bind inputs
-        // Bind key press action to key value
-        Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
-        Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
-        Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
-        Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
-        Keyboard.KeyInteract = KeyboardKey.KEY_E;
-        Keyboard.KeyInventory = KeyboardKey.KEY_I;
-        Keyboard.KeyCharacter = KeyboardKey.KEY_C;
-        Keyboard.KeyMenu = KeyboardKey.KEY_M;
-        Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
-        Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
-        Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
-        Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
+        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        _scene?.Add(camera);
 
-        // Bind key press action to command
-        InputHandler._key_up = new MoveUpCommand(player);
-        InputHandler._key_down = new MoveDownCommand(player);
-        InputHandler._key_left = new MoveLeftCommand(player);
-        InputHandler._key_right = new MoveRightCommand(player);
+        sword.MinDamage = 50;
+        sword.MaxDamage = 200;
+        sword.ArmorPenetrationFlat = 50;
+        sword.ArmorPenetrationPercent = 20;
 
-        //Generate creatures...
+        armor.MinDamageReduction = 20;
+        armor.MaxDamageReduction = 120;
+
+        // Spawn player
         player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(26, 26) * player.Scale;
         _scene?.Add(player);
@@ -64,13 +57,24 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        //Renderer.camera.target = player.Position;
-        InputHandler.HandleInput();
-        Command command = InputHandler.HandleInput();
-        //command?.Execute();
-        CommandHandler.Add(command);
+        // Player
+        InputOptions? input = InputHandler.Handle();
 
-        CommandHandler.Execute();
+        Command command = CommandFactory.Create(input, _scene, player);
+
+        CommandQueue.Add(command);
+
+        // Execute Player commands
+        if (!CommandQueue.IsEmpty)
+        {
+            Console.WriteLine("Players turn!");
+            CommandQueue.Execute();
+        }
+
+        // AI NPC / Monster / Critter controls
+
+        // Execute AI commands
+
         _scene?.UpdateRuntime(deltaTime);
     }
 }

@@ -42,9 +42,19 @@ namespace MooseEngine.Utilities
             return new Coords2D(a.X - b.X, a.Y - b.Y);
         }
 
-        public static Coords2D operator *(Coords2D a, int b) 
+        public static Coords2D operator *(Coords2D a, int b)
         {
             return new Coords2D(a.X * b, a.Y * b);
+        }
+
+        public static implicit operator Vector2(Coords2D v)
+        {
+            return new Vector2(v.X, v.Y);
+        }
+
+        public static implicit operator Coords2D(Vector2 v)
+        {
+            return new Coords2D((int)v.X, (int)v.Y);
         }
     }
 }
