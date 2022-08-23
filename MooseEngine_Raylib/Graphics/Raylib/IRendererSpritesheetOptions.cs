@@ -1,6 +1,4 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Graphics;
+﻿namespace MooseEngine.Graphics;
 
 public interface IRendererSpritesheetOptions
 {

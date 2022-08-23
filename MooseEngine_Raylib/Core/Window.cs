@@ -23,7 +23,7 @@ internal class Window : IWindow
     }
 
     public int Width => _specification.Width;
-    public int Height => _specification.Height; 
+    public int Height => _specification.Height;
     public bool IsRunning => !Raylib.WindowShouldClose();
 
     public void Initialize()

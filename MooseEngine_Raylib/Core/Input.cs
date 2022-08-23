@@ -3,7 +3,7 @@ using MooseEngine.Extensions.Runtime;
 
 namespace MooseEngine.Core;
 
-public static class Input 
+public static class Input
 {
     private static IInputAPI? InputAPI { get; set; }
 
