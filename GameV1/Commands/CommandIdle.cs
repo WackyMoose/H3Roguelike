@@ -7,7 +7,7 @@ namespace GameV1.Commands
 {
     internal class CommandIdle : Command
     {
-        public CommandIdle(Scene scene, Entity entity) : base(scene, entity)
+        public CommandIdle(IScene scene, Entity entity) : base(scene, entity)
         {
         }
 

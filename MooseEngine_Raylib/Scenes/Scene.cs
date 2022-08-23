@@ -1,6 +1,8 @@
 ﻿using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
+using MooseEngine.Utilities;
+using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
@@ -9,6 +11,7 @@ public interface IScene : IDisposable
     void UpdateRuntime(float deltaTime);
     void Add(Entity entity);
     void Remove(Entity entity);
+    List<Entity>? EntitiesAtPosition(Vector2 tilePosition);
 }
 
 internal class Scene : Disposeable, IScene
