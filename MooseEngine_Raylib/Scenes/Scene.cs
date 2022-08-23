@@ -40,10 +40,10 @@ internal class Scene : Disposeable, IScene
             entity.Update(deltaTime);
         }
 
-        var camera = _entities.SingleOrDefault(x => x.GetType() == typeof(Camera));
-        if (camera != null)
+        var sceneCamera = GetSceneCamera();
+        if (sceneCamera != default)
         {
-            Renderer.Begin((ISceneCamera)camera!);
+            Renderer.Begin(sceneCamera);
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
                 var entity = _entities[i];
@@ -51,6 +51,12 @@ internal class Scene : Disposeable, IScene
             }
             Renderer.End();
         }
+    }
+
+    private ISceneCamera GetSceneCamera()
+    {
+        var sceneCamera = _entities.Where(x => x is ISceneCamera).SingleOrDefault();
+        return (ISceneCamera)sceneCamera!;
     }
 
     public void Add(Entity entity)
