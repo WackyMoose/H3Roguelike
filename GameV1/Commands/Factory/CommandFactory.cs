@@ -38,7 +38,7 @@ namespace GameV1.Commands.Factory
                 }
 
                 // Retrieve list of entities in walk direction
-                List<Entity>? entitiesInTargetPosition = scene.EntitiesAtPosition(entity.Position + direction);
+                List<Entity>? entitiesInTargetPosition = scene.EntitiesAtPosition(scene.Entities, entity.Position + direction);
 
                 foreach (Entity targetEntity in entitiesInTargetPosition)
                 {
