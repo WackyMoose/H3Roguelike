@@ -56,7 +56,7 @@ namespace GameV1.WorldGeneration
 
             for (int i = 0; i < walkLength; i++)
             {
-                var dir = Direction2D.GetRandomCardinalDirection() * 32;
+                var dir = Direction2D.GetRandomCardinalDirection() * Constants.DEFAULT_ENTITY_SIZE;
                 var newPosition = prevPosition + new Coords2D((int)dir.X,(int)dir.Y);
                 path.Add(newPosition);
                 prevPosition = newPosition;
