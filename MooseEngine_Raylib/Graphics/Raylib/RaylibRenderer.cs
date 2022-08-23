@@ -37,7 +37,7 @@ internal class RaylibRenderer : IRaylibRenderer
     {
         Raylib.BeginDrawing();
 
-        Raylib.ClearBackground(RendererOptions.ClearColor);
+        Raylib.ClearBackground(RendererOptions.ClearColor!);
 
         Raylib.BeginMode2D(sceneCamera.RaylibCamera);
     }

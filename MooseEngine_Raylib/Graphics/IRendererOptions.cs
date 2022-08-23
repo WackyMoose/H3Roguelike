@@ -1,8 +1,6 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Graphics;
+﻿namespace MooseEngine.Graphics;
 
 public interface IRendererOptions
 {
-    Color ClearColor { get; set; }
+    Color? ClearColor { get; set; }
 }

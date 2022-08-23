@@ -1,6 +1,4 @@
-﻿using Raylib_cs;
-
-namespace MooseEngine.Graphics;
+﻿namespace MooseEngine.Graphics;
 
 public interface IRaylibRendererOptions : IRendererOptions
 {
@@ -9,7 +7,7 @@ public interface IRaylibRendererOptions : IRendererOptions
 
 public class RaylibRendererOptions : IRaylibRendererOptions, IRendererSpritesheetOptions
 {
-    public Color ClearColor { get; set; }
+    public Color? ClearColor { get; set; }
     public int TargetFPS { get; set; }
 
     public string? SpritesheetPath { get; set; }
