@@ -1,13 +1,15 @@
-﻿using MooseEngine;
+﻿using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class MoveUpCommand : Command
+    public class CommandMoveUp : Command
     {
-        public MoveUpCommand(Entity entity) : base(entity)
+
+        public CommandMoveUp(Scene scene, Entity entity) : base(scene, entity)
         {
         }
 

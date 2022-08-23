@@ -25,6 +25,11 @@ internal class Scene : Disposeable, IScene
 
     public IRenderer Renderer { get; }
 
+    public List<Entity>? EntitiesAtPosition(Vector2 tilePosition)
+    {
+        return _entities.Where(x => x.Position == tilePosition).ToList();
+    }
+
     protected override void DisposeManagedState()
     {
         _entities.Clear();

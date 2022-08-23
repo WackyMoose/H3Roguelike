@@ -4,13 +4,11 @@ using MooseEngine.Scenes;
 
 namespace GameV1.Commands
 {
-    internal class InteractCommand : Command
+    internal class CommandInteract : Command
     {
-        public InteractCommand(Entity entity) : base(entity)
+        public CommandInteract(Scene scene, Entity entity) : base(scene, entity)
         {
         }
-
-        public Entity Entity { get; set; }
 
         public override void Execute()
         {

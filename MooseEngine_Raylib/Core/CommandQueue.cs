@@ -1,9 +1,14 @@
 ﻿
+using MooseEngine.Scenes;
+
 namespace MooseEngine.Core
 {
-    public static class CommandHandler
+    public static class CommandQueue
     {
         private static Queue<Command> Commands = new Queue<Command>();
+
+        public static bool IsEmpty { get { return Commands.Count() == 0; } }
+
 
         public static void Add(Command? command)
         {
@@ -15,10 +20,9 @@ namespace MooseEngine.Core
 
         public static void Execute()
         {
-            if (Commands.Count > 0)
+            while (Commands.Count > 0)
             {
-                var command = Commands.Dequeue();
-                command.Execute();
+                Commands.Dequeue().Execute();
             }
         }
     }

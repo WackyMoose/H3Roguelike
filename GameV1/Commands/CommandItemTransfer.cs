@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameV1.Interfaces
+namespace GameV1.Commands
 {
-    public interface ITile
+    internal class CommandItemTransfer
     {
-        bool IsWalkable { get; set; }
     }
 }

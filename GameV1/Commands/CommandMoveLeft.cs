@@ -1,13 +1,13 @@
-﻿using MooseEngine;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Scenes;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class MoveLeftCommand : Command
+    public class CommandMoveLeft : Command
     {
-        public MoveLeftCommand(Entity entity) : base(entity)
+        public CommandMoveLeft(Scene scene, Entity entity) : base(scene, entity)
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using GameV1.Commands;
+using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
@@ -30,56 +31,53 @@ internal class TestGameMSN : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        weapon.MinDamage = 50;
-        weapon.MaxDamage = 200;
-        weapon.ArmorPenetrationFlat = 50;
-        weapon.ArmorPenetrationPercent = 20;
+        sword.MinDamage = 50;
+        sword.MaxDamage = 200;
+        sword.ArmorPenetrationFlat = 50;
+        sword.ArmorPenetrationPercent = 20;
 
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
 
-        player.Position = new Vector2(128, 192);
-        player.MainHand.Add(weapon);
+        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        player.Position = new Vector2(192, 192);
+        player.MainHand.Add(sword);
+        player.OffHand.Add(sword);
 
         _scene?.Add(player);
 
-        player.Position = new Vector2(128, 192);
+        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+        monster.Position = new Vector2(-96, -96);
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
 
         Console.WriteLine(monster.Stats.Health);
 
-        CombatHandler.SolveAttack(player, monster, weapon);
+        CombatHandler.SolveAttack(player, monster, sword);
 
         Console.WriteLine(monster.Stats.Health);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(128, 192));
+        Console.WriteLine(player.StrongestWeapon.Damage);
+
+        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
 
         // Bind key press action to key value
-        //Keyboard.KeyMoveUp = KeyboardKey.KEY_W;
-        //Keyboard.KeyMoveDown = KeyboardKey.KEY_S;
-        //Keyboard.KeyMoveLeft = KeyboardKey.KEY_A;
-        //Keyboard.KeyMoveRight = KeyboardKey.KEY_D;
-        //Keyboard.KeyInteract = KeyboardKey.KEY_E;
-        //Keyboard.KeyInventory = KeyboardKey.KEY_I;
-        //Keyboard.KeyCharacter = KeyboardKey.KEY_C;
-        //Keyboard.KeyMenu = KeyboardKey.KEY_M;
-        //Keyboard.KeyQuickSlot1 = KeyboardKey.KEY_ONE;
-        //Keyboard.KeyQuickSlot2 = KeyboardKey.KEY_TWO;
-        //Keyboard.KeyQuickSlot3 = KeyboardKey.KEY_THREE;
-        //Keyboard.KeyQuickSlot4 = KeyboardKey.KEY_FOUR;
+        // Bind key value to input value. Can be reconfigured at runtine
+        InputHandler.Add(KeyboardKey.KEY_UP, InputOptions.Up);
+        InputHandler.Add(KeyboardKey.KEY_DOWN, InputOptions.Down);
+        InputHandler.Add(KeyboardKey.KEY_LEFT, InputOptions.Left);
+        InputHandler.Add(KeyboardKey.KEY_RIGHT, InputOptions.Right);
+        InputHandler.Add(KeyboardKey.KEY_SPACE, InputOptions.Idle);
 
-        // Bind key press action to command
-        InputHandler._key_up = new MoveUpCommand(player);
-        InputHandler._key_down = new MoveDownCommand(player);
-        InputHandler._key_left = new MoveLeftCommand(player);
-        InputHandler._key_right = new MoveRightCommand(player);
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Position = new Vector2(pos.X,pos.Y);
+            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
+            tile.Position = pos;
+            tile.IsWalkable = false;
             _scene?.Add(tile);
         }
     }
@@ -92,8 +90,23 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        CommandHandler.Add(InputHandler.HandleInput());
-        CommandHandler.Execute();
+        // Player
+        InputOptions? input = InputHandler.Handle();
+
+        Command command = CommandFactory.Create(input, _scene, player);
+
+        CommandQueue.Add(command);
+
+        // Execute Player commands
+        if (!CommandQueue.IsEmpty)
+        {
+            Console.WriteLine("Players turn!");
+            CommandQueue.Execute();
+        }
+
+        // AI NPC / Monster / Critter controls
+
+        // Execute AI commands
 
         _scene?.UpdateRuntime(deltaTime);
     }

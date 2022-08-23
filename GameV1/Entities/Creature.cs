@@ -12,11 +12,13 @@ namespace GameV1.Entities
         public List<Skill> Skills { get; set; }
         public CreatureStats Stats { get; set; }
         public Inventory Inventory { get; set; }
-        public List<CreatureSpeciesCategory> HostileTowards { get; set; }
-        public bool IsDead { get { return Stats.Health <= 0; } }
+        public List<CreatureSpeciesCategory> EnemySpecies { get; set; }
+        public List<Creature> EnemyCreatures { get; set; }
+        public override bool IsDead { get { return Stats.Health <= 0; } }
         public Slot<Weapon> MainHand { get; set; }
         public Slot<Weapon> OffHand { get; set; }
         public Slot<Armor> Chest { get; set; }
+        public Weapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
@@ -24,7 +26,8 @@ namespace GameV1.Entities
             Skills = new List<Skill>();
             Stats = new CreatureStats();
             Inventory = new Inventory(16, 0, 0);
-            HostileTowards = new List<CreatureSpeciesCategory>();
+            EnemySpecies = new List<CreatureSpeciesCategory>();
+            EnemyCreatures = new List<Creature>();
             MainHand = new Slot<Weapon>();
             OffHand = new Slot<Weapon>();
             Chest = new Slot<Armor>();
@@ -39,7 +42,8 @@ namespace GameV1.Entities
             Skills = new List<Skill>();
             Stats = new CreatureStats();
             Inventory = new Inventory(16, 0, 0);
-            HostileTowards = new List<CreatureSpeciesCategory>();
+            EnemySpecies = new List<CreatureSpeciesCategory>();
+            EnemyCreatures = new List<Creature>();
             MainHand = new Slot<Weapon>();
             OffHand = new Slot<Weapon>();
             Chest = new Slot<Armor>();
