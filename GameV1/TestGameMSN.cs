@@ -47,14 +47,6 @@ internal class TestGameMSN : IGame
 
         _scene?.Add(monster);
 
-        Console.WriteLine(monster.Stats.Health);
-
-        CombatHandler.SolveAttack(player, monster, sword);
-
-        Console.WriteLine(monster.Stats.Health);
-
-        Console.WriteLine(player.StrongestWeapon.Damage);
-
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
 
         // Bind key value to input value. Can be reconfigured at runtine
@@ -102,11 +94,11 @@ internal class TestGameMSN : IGame
         {
             Console.WriteLine("Players turn!");
             CommandQueue.Execute();
+
+            // AI NPC / Monster / Critter controls
+
+            // Execute AI commands
         }
-
-        // AI NPC / Monster / Critter controls
-
-        // Execute AI commands
 
         _scene?.UpdateRuntime(deltaTime);
     }
