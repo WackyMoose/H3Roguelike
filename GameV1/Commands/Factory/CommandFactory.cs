@@ -1,9 +1,9 @@
 ﻿using GameV1.Entities;
 using GameV1.Interfaces;
-using MooseEngine;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 
@@ -12,6 +12,7 @@ namespace GameV1.Commands.Factory
     public static class CommandFactory
     {
 
+        // All player behavior-related business logic goes here
         public static Command? Create(Input? input, Scene scene, Entity entity)
         {
             if (input == Input.Up || input == Input.Down || input == Input.Left || input == Input.Right)
@@ -66,6 +67,7 @@ namespace GameV1.Commands.Factory
                     }
                 }
 
+                Console.WriteLine("We are walking!");
                 switch (input)
                 {
                     case Input.Up:
@@ -82,6 +84,7 @@ namespace GameV1.Commands.Factory
 
             if (input == Input.Idle)
             {
+                Console.WriteLine("We are idling!");
                 return new CommandIdle(scene, entity);
             }
 

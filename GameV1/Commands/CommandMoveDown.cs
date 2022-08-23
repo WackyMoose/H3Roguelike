@@ -1,11 +1,11 @@
-﻿using MooseEngine;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Scenes;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveDown : MoveCommand
+    public class CommandMoveDown : Command
     {
         public CommandMoveDown(Scene scene, Entity entity) : base(scene, entity)
         {

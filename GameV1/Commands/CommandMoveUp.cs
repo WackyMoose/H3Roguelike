@@ -1,7 +1,7 @@
 ﻿using GameV1.Interfaces;
-using MooseEngine;
 using MooseEngine.Core;
 using MooseEngine.Scenes;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
