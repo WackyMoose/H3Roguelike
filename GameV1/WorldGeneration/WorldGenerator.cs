@@ -16,18 +16,22 @@ namespace GameV1.WorldGeneration
         private static HashSet<Coords2D> _forests = new HashSet<Coords2D>();
         private static Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
         private static List<List<Coords2D>> _structure = new List<List<Coords2D>>();
-        private static List<List<Coords2D>> _startVillage = new List<List<Coords2D>>();
+        private static List<List<StructureData>> _startVillage = new List<List<StructureData>>();
 
-        private static Coords2D[] _grassTilesCoords = new Coords2D[3]{new Coords2D(5, 4), 
-                                                                     new Coords2D(4, 10), 
+        private static Coords2D[] _grassTilesCoords = new Coords2D[3]{new Coords2D(5, 4),
+                                                                     new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
+
+        private static int[] walkableIds = new int[]{};
+
+
 
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(51,51,seed,new Coords2D(26*Constants.DEFAULT_ENTITY_SIZE,26 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(501,501,seed,new Coords2D(251*Constants.DEFAULT_ENTITY_SIZE,251 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             _startVillage = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
@@ -41,6 +45,7 @@ namespace GameV1.WorldGeneration
                 {
                     var rand = Randomizer.RandomInt(0, 3);
                     var coord = _grassTilesCoords[rand];
+
                     Tile grass = new Tile("Grass", true, coord);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
@@ -96,7 +101,7 @@ namespace GameV1.WorldGeneration
             {
                 for (int i = 0; i < _startVillage[k].Count; i++)
                 {
-                    Tile spriteTile = new Tile("StartVillage", false, _startVillage[k][i]);
+                    Tile spriteTile = new Tile("StartVillage", _startVillage[k][i].IsWalkable, _startVillage[k][i].SpriteCoords);
                     spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y-(5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
                     Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
