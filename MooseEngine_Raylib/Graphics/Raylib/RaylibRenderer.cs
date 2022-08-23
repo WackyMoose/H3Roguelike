@@ -8,6 +8,10 @@ using System.Numerics;
 
 namespace MooseEngine.Graphics;
 
+public interface IRaylibRenderer : IRenderer
+{
+}
+
 internal class RaylibRenderer : IRaylibRenderer
 {
     private Texture2D _spriteSheet;
@@ -49,7 +53,7 @@ internal class RaylibRenderer : IRaylibRenderer
         Raylib.EndDrawing();
     }
 
-    public void Render(Entity entity)
+    public void Render(Entity entity, float scale)
     {
         Coords2D spritePosition = entity.SpriteCoords;
 
@@ -59,7 +63,7 @@ internal class RaylibRenderer : IRaylibRenderer
             RendererOptions.SpriteSize,
             RendererOptions.SpriteSize);
 
-        var destination = entity.ToTextureDestination();
+        var destination = entity.ToTextureDestination(scale);
 
         Raylib.DrawTexturePro(
             _spriteSheet,
