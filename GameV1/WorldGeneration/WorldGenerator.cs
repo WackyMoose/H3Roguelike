@@ -42,7 +42,6 @@ namespace GameV1.WorldGeneration
                     var rand = Randomizer.RandomInt(0, 3);
                     var coord = _grassTilesCoords[rand];
                     Tile grass = new Tile("Grass", true, coord);
-                    grass.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                     Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y}");
@@ -98,7 +97,6 @@ namespace GameV1.WorldGeneration
                 for (int i = 0; i < _startVillage[k].Count; i++)
                 {
                     Tile spriteTile = new Tile("StartVillage", false, _startVillage[k][i]);
-                    spriteTile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
                     spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y-(5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
                     Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");

@@ -29,13 +29,10 @@ internal class NoiseTest : IGame
         _scene?.Add(camera);
 
         // Spawn player
-        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(26, 26) * player.Scale;
         _scene?.Add(player);
 
         WorldGenerator.GenerateWorld(80085,ref _scene);
-
-        _scene?.Add(camera);
     }
 
     public void Uninitialize()
