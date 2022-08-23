@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using MooseEngine.Core.Input;
 using MooseEngine.DependencyInjection;
 using MooseEngine.Extensions.DependencyInjection;
 using MooseEngine.Graphics;
@@ -11,7 +12,7 @@ public static class Engine
 {
     private static readonly RaylibRendererOptions DefaultRaylibRendererOptions = new()
     {
-        ClearColor = new Raylib_cs.Color(34, 35, 35, 255),
+        ClearColor = new Color(34, 35, 35, 255),
         TargetFPS = 60,
         SpritesheetPath = @"..\..\..\Resources\Textures\colored_tilemap.png",
         SpriteSize = 8,
@@ -52,6 +53,7 @@ public static class Engine
         containerBuilder.RegisterModule(new ApplicationModule(applicationOptions));
         containerBuilder.RegisterModule(new WindowModule(applicationOptions));
         containerBuilder.RegisterModule(new GraphicsModule<TRenderer, TRendererOptions>(rendererOptions));
+        containerBuilder.Register<IInput, RaylibInput>();
         containerBuilder.Register<IGame, TGame>();
 
         var container = containerBuilder.Build();
