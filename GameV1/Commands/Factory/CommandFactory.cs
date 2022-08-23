@@ -13,9 +13,9 @@ namespace GameV1.Commands.Factory
     {
 
         // All player behavior-related business logic goes here
-        public static Command? Create(Input? input, Scene scene, Entity entity)
+        public static Command? Create(InputOptions? input, Scene scene, Entity entity)
         {
-            if (input == Input.Up || input == Input.Down || input == Input.Left || input == Input.Right)
+            if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
             {
                 Console.WriteLine("We are attempting to walk!");
                 
@@ -23,16 +23,16 @@ namespace GameV1.Commands.Factory
 
                 switch (input) 
                 { 
-                    case Input.Up: 
+                    case InputOptions.Up: 
                         direction = Constants.Up;
                         break;
-                    case Input.Down:
+                    case InputOptions.Down:
                         direction = Constants.Down;
                         break;
-                    case Input.Left:
+                    case InputOptions.Left:
                         direction = Constants.Left;
                         break;
-                    case Input.Right:
+                    case InputOptions.Right:
                         direction = Constants.Right;
                         break;
                 }
@@ -70,19 +70,19 @@ namespace GameV1.Commands.Factory
                 Console.WriteLine("We are walking!");
                 switch (input)
                 {
-                    case Input.Up:
+                    case InputOptions.Up:
                         return new CommandMoveUp(scene, entity);
-                    case Input.Down:
+                    case InputOptions.Down:
                         return new CommandMoveDown(scene, entity);
-                    case Input.Left:
+                    case InputOptions.Left:
                         return new CommandMoveLeft(scene, entity);
-                    case Input.Right:
+                    case InputOptions.Right:
                         return new CommandMoveRight(scene, entity);
                 }
 
             }
 
-            if (input == Input.Idle)
+            if (input == InputOptions.Idle)
             {
                 Console.WriteLine("We are idling!");
                 return new CommandIdle(scene, entity);

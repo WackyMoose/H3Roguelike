@@ -66,11 +66,11 @@ internal class TestGameMSN : IGame
 
         // Bind key press action to key value
         // Bind key value to input value. Can be reconfigured at runtine
-        InputHandler.Add(KeyboardKey.KEY_UP, Input.Up);
-        InputHandler.Add(KeyboardKey.KEY_DOWN, Input.Down);
-        InputHandler.Add(KeyboardKey.KEY_LEFT, Input.Left);
-        InputHandler.Add(KeyboardKey.KEY_RIGHT, Input.Right);
-        InputHandler.Add(KeyboardKey.KEY_SPACE, Input.Idle);
+        InputHandler.Add(KeyboardKey.KEY_UP, InputOptions.Up);
+        InputHandler.Add(KeyboardKey.KEY_DOWN, InputOptions.Down);
+        InputHandler.Add(KeyboardKey.KEY_LEFT, InputOptions.Left);
+        InputHandler.Add(KeyboardKey.KEY_RIGHT, InputOptions.Right);
+        InputHandler.Add(KeyboardKey.KEY_SPACE, InputOptions.Idle);
 
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
@@ -93,7 +93,7 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Player
-        Input? input = InputHandler.Handle();
+        InputOptions? input = InputHandler.Handle();
 
         Command command = CommandFactory.Create(input, _scene, player);
 

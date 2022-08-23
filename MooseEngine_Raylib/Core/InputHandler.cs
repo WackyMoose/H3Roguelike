@@ -4,14 +4,14 @@ namespace MooseEngine.Core
 {
     public static class InputHandler
     {
-        private static Dictionary<KeyboardKey, Input> KeyInput = new Dictionary<KeyboardKey, Input>();
+        private static Dictionary<KeyboardKey, InputOptions> KeyInput = new Dictionary<KeyboardKey, InputOptions>();
 
-        public static void Add(KeyboardKey key, Input input)
+        public static void Add(KeyboardKey key, InputOptions input)
         {
             KeyInput.Add(key, input);
         }
 
-        public static Input? Handle()
+        public static InputOptions? Handle()
         {
             foreach (var pair in KeyInput)
             {

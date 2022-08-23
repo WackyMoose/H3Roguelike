@@ -1,6 +1,6 @@
 ﻿namespace MooseEngine.Core
 {
-    public enum Input
+    public enum InputOptions
     {
         Up,
         Down,
