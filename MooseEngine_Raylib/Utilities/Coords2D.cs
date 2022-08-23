@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using System.Numerics;
 
 namespace MooseEngine.Utilities
 {
@@ -23,6 +24,12 @@ namespace MooseEngine.Utilities
         {
             X = (int)rectangle.x;
             Y = (int)rectangle.y;
+        }
+
+        public Coords2D(Vector2 vector)
+        {
+            X = (int)vector.X;
+            Y = (int)vector.Y;
         }
 
         public static Coords2D operator +(Coords2D a, Coords2D b)

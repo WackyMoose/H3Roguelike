@@ -1,10 +1,4 @@
 ﻿using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.WorldGeneration
 {
@@ -25,17 +19,12 @@ namespace GameV1.WorldGeneration
 
                     foreach (var val in values)
                     {
-                        Console.WriteLine(val);
                         var n = int.Parse(val);
                         var coords = GetSpriteCoords(n);
                         coordsList.Add(coords);
-                        Console.WriteLine($"Id: {n} has Coords: {coords.X}:{coords.Y}");
-
                     }
 
                     list.Add(coordsList);
-                   
-                    Console.WriteLine("--------------------------------------------------");
                 }
 
                 return list;

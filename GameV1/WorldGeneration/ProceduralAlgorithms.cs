@@ -15,24 +15,23 @@ namespace GameV1.WorldGeneration
          * Villages
          */
 
-        public static Dictionary<Coords2D, float> GenerateOverworld(int width, int height, int tileSize, float worldScale, int seed) 
+        public static Dictionary<Coords2D, float> GeneratePerlinNoiseMap(int width, int height, float worldScale, int seed) 
         {
-            Dictionary<Coords2D, float> overworld = new Dictionary<Coords2D, float>();
+            Dictionary<Coords2D, float> noiseMap = new Dictionary<Coords2D, float>();
             FastNoise noise = new FastNoise(seed);
             noise.UsedNoiseType = FastNoise.NoiseType.Perlin;
 
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
 			{
-                var xCord = x * (int)worldScale;
-                for (int y = 0; y < height; y++)
+                var yCord = y * (int)worldScale;
+                for (int x = 0; x < width; x++)
 			    {
-                    var yCord = y * (int)worldScale;
-
-                    overworld.Add(new Coords2D(xCord, yCord), noise.GetPerlin(xCord,yCord));
+                    var xCord = x * (int)worldScale;
+                    noiseMap.Add(new Coords2D(xCord, yCord), noise.GetPerlin(xCord,yCord));
 			    }
 			}
 
-            return overworld;
+            return noiseMap;
         }
 
         public static HashSet<Coords2D> GenerateForest(int iterations, int walkLength, Coords2D position) 
