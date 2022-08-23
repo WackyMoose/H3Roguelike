@@ -1,4 +1,5 @@
-﻿namespace MooseEngine.Core
+﻿
+namespace MooseEngine.Core
 {
     public static class InputHandler
     {
@@ -6,7 +7,10 @@
 
         public static void Add(Keycode key, InputOptions input)
         {
-            KeyInput.Add(key, input);
+            if (!KeyInput.ContainsKey(key))
+            {
+                KeyInput.Add(key, input);
+            }
         }
 
         public static InputOptions? Handle()

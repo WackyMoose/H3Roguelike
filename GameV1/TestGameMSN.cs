@@ -57,7 +57,6 @@ internal class TestGameMSN : IGame
 
         forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
 
-        // Bind key press action to key value
         // Bind key value to input value. Can be reconfigured at runtine
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -65,7 +64,14 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+        // Multiple keys kan bind to same input
+        InputHandler.Add(Keycode.KEY_W, InputOptions.Up);
+        InputHandler.Add(Keycode.KEY_S, InputOptions.Down);
+        InputHandler.Add(Keycode.KEY_A, InputOptions.Left);
+        InputHandler.Add(Keycode.KEY_D, InputOptions.Right);
+
+        // Multiple inputs can't bind to same key! (does nothing)
+        InputHandler.Add(Keycode.KEY_W, InputOptions.Down);
 
         foreach (var pos in forest)
         {
