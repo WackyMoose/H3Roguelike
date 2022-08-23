@@ -8,7 +8,7 @@ namespace MooseEngine.Scenes.Factories;
 public interface ISceneFactory : IFactory
 {
     IScene? Scene { get; }
-    IScene CreateScene();
+    IScene CreateScene(float defaultEntityScale = Constants.DEFAULT_ENTITY_SIZE);
     Camera CreateCenteredCamera(Entity target);
 }
 
@@ -24,9 +24,9 @@ public class SceneFactory : ISceneFactory
     public IWindow Window { get; }
     public IRenderer Renderer { get; }
 
-    public IScene CreateScene()
+    public IScene CreateScene(float defaultEntityScale)
     {
-        return Scene ??= new Scene(Renderer);
+        return Scene ??= new Scene(Renderer, defaultEntityScale);
     }
 
     public Camera CreateCenteredCamera(Entity target)

@@ -15,11 +15,13 @@ public interface IScene : IDisposable
 internal class Scene : Disposeable, IScene
 {
     private readonly List<Entity> _entities;
+    private readonly float _defaultEntitySize;
 
-    public Scene(IRenderer renderer)
+    public Scene(IRenderer renderer, float defaultEntitySize = Constants.DEFAULT_ENTITY_SIZE)
     {
         _entities = new List<Entity>();
         Renderer = renderer;
+        _defaultEntitySize = defaultEntitySize;
     }
 
     public IRenderer Renderer { get; }
@@ -45,7 +47,7 @@ internal class Scene : Disposeable, IScene
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
                 var entity = _entities[i];
-                Renderer.Render(entity);
+                Renderer.Render(entity, _defaultEntitySize);
             }
             Renderer.End();
         }

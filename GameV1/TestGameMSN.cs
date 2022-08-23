@@ -40,13 +40,11 @@ internal class TestGameMSN : IGame
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
 
-        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
         player.MainHand.Add(weapon);
 
         _scene?.Add(player);
 
-        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(128, 192);
         monster.Chest.Add(armor);
 
@@ -83,7 +81,6 @@ internal class TestGameMSN : IGame
         foreach (var pos in forest)
         {
             Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
             tile.Position = new Vector2(pos.X,pos.Y);
             _scene?.Add(tile);
         }
