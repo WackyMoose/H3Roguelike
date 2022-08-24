@@ -8,6 +8,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
+using System.Threading;
 
 namespace GameV1;
 
@@ -18,11 +19,21 @@ internal class NoiseTest : IGame
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(255, 64, 32, 255), "Torch", new Coords2D(9, 8));
     private Creature druid = new Creature("Druid", 100, 1000, new Coords2D(9, 0));
     private Creature ork = new Creature("Ork", 100, 1000, new Coords2D(11, 0));
+    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     public void Initialize()
     {
+        sword.MinDamage = 50;
+        sword.MaxDamage = 200;
+        sword.ArmorPenetrationFlat = 50;
+        sword.ArmorPenetrationPercent = 20;
+
+        armor.MinDamageReduction = 20;
+        armor.MaxDamageReduction = 120;
+
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
@@ -33,6 +44,8 @@ internal class NoiseTest : IGame
 
         // Spawn player
         player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        player.MainHand.Add(sword);
+        player.Chest.Add(armor);
         _scene?.Add(player);
 
         WorldGenerator.GenerateWorld(80085,ref _scene);
@@ -41,9 +54,13 @@ internal class NoiseTest : IGame
         _scene?.Add(light);
 
         druid.Position = new Vector2(31, 30) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.MainHand.Add(sword);
+        druid.Chest.Add(armor);
         _scene?.Add(druid);
 
         ork.Position = new Vector2(34, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        ork.MainHand.Add(sword);
+        ork.Chest.Add(armor);
         _scene?.Add(ork);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
