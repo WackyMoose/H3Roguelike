@@ -9,7 +9,7 @@ namespace MooseEngine.Interfaces
 {
     public interface ICommand
     {
-        Entity Entity { get; set; }
+        IEntity Entity { get; set; }
         IScene Scene { get; set; }
 
         void Execute();

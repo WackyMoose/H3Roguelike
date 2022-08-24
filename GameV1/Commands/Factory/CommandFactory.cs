@@ -23,36 +23,26 @@ namespace GameV1.Commands.Factory
 
                 switch (input) 
                 { 
-                    case InputOptions.Up: 
-                        direction = Constants.Up;
-                        break;
-                    case InputOptions.Down:
-                        direction = Constants.Down;
-                        break;
-                    case InputOptions.Left:
-                        direction = Constants.Left;
-                        break;
-                    case InputOptions.Right:
-                        direction = Constants.Right;
-                        break;
+                    case InputOptions.Up :    direction = Constants.Up;    break;
+                    case InputOptions.Down :  direction = Constants.Down;  break;
+                    case InputOptions.Left :  direction = Constants.Left;  break;
+                    case InputOptions.Right : direction = Constants.Right; break;
                 }
 
                 // Retrieve list of entities in walk direction
-                List<Entity>? entitiesInTargetPosition = scene.EntitiesAtPosition(scene.Entities, entity.Position + direction);
+                List<IEntity>? entitiesAtTargetPosition = scene.EntitiesAtPosition(scene.Entities, entity.Position + direction);
 
-                foreach (Entity targetEntity in entitiesInTargetPosition)
+                foreach (Entity targetEntity in entitiesAtTargetPosition)
                 {
                     // Creature
-                    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Creature))
+                    if (entity is Creature && targetEntity is Creature)
                     {
                         Console.WriteLine("We are attacking!");
-
-                        //CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
                         return new CommandAttack(scene, entity, targetEntity);
                     }
 
                     // Tile
-                    if (entity.GetType() == typeof(Player) && targetEntity.GetType() == typeof(Tile))
+                    if (entity is Creature && targetEntity.GetType() == typeof(Tile))
                     {
                         Tile tile = (Tile)targetEntity;
 
@@ -67,14 +57,10 @@ namespace GameV1.Commands.Factory
                 Console.WriteLine("We are walking!");
                 switch (input)
                 {
-                    case InputOptions.Up:
-                        return new CommandMoveUp(scene, entity);
-                    case InputOptions.Down:
-                        return new CommandMoveDown(scene, entity);
-                    case InputOptions.Left:
-                        return new CommandMoveLeft(scene, entity);
-                    case InputOptions.Right:
-                        return new CommandMoveRight(scene, entity);
+                    case InputOptions.Up :    return new CommandMoveUp(scene, entity);
+                    case InputOptions.Down :  return new CommandMoveDown(scene, entity);
+                    case InputOptions.Left :  return new CommandMoveLeft(scene, entity);
+                    case InputOptions.Right : return new CommandMoveRight(scene, entity);
                 }
 
             }
