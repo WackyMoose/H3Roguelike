@@ -11,5 +11,5 @@ public interface IRenderer
     void Begin(ISceneCamera sceneCamera);
     void End();
 
-    void Render(Entity entity, float scale);
+    void Render(IEntity entity, float scale);
 }

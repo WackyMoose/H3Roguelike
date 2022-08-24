@@ -1,10 +1,11 @@
-﻿using Raylib_cs;
+﻿using MooseEngine.Interfaces;
+using Raylib_cs;
 
 namespace MooseEngine.Scenes.Extensions;
 
 public static class EntityExtensions
 {
-    public static Rectangle ToTextureDestination(this Entity entity, float scale)
+    public static Rectangle ToTextureDestination(this IEntity entity, float scale)
     {
         return new Rectangle(
             entity.Position.X,
