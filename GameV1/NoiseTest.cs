@@ -48,8 +48,6 @@ internal class NoiseTest : IGame
         player.Chest.Add(armor);
         _scene?.Add(player);
 
-        WorldGenerator.GenerateWorld(80085,ref _scene);
-
         light.Position = new Vector2(32, 32) * Constants.DEFAULT_ENTITY_SIZE;
         _scene?.Add(light);
 
@@ -62,6 +60,8 @@ internal class NoiseTest : IGame
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         _scene?.Add(ork);
+
+        WorldGenerator.GenerateWorld(80085,ref _scene);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -81,7 +81,7 @@ internal class NoiseTest : IGame
         // Reset all Entity Colortint to a cool nighttime blue
         foreach(IEntity entity in _scene.Entities )
         {
-            entity.ColorTint = new Color(96, 112, 128, 255);
+            entity.ColorTint = new Color(128-32, 128, 128+32, 255);
         }
 
         // Player
@@ -98,12 +98,19 @@ internal class NoiseTest : IGame
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
+            Console.WriteLine("AI's turn!");
+            AI.Execute(_scene);
 
             // Execute AI commands
+            CommandQueue.Execute();
         }
 
         // Dynamically updated light source
         LightSource fire = (LightSource)_scene.Entities.Where(x => x.GetType() == typeof(LightSource)).FirstOrDefault();
+        //Player player = (Player)_scene.Entities.Where(x => x.GetType() == typeof(Player)).FirstOrDefault();
+
+        fire.Position = player.Position;
+        
         fire?.Illuminate(_scene, _scene.Entities);
 
         _scene?.UpdateRuntime(deltaTime);

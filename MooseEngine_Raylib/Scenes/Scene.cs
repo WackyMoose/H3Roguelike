@@ -14,7 +14,7 @@ public interface IScene : IDisposable
     void Remove(IEntity entity);
     IEnumerable<IEntity>? Entities { get; }
     IEnumerable<IEntity>? EntitiesAtPosition(IEnumerable<IEntity> entities, Vector2 position);
-    IEnumerable<IEntity>? EntitiesWithinDistanceOfPosition(IEnumerable<IEntity> entities, Vector2 position, int distance);
+    IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IEnumerable<IEntity> entities, IEntity entity, int distance);
     IEnumerable<IEntity>? EntitiesWithType(IEnumerable<IEntity> entities, Type type);
     IEnumerable<TEntity>? GetEntitiesOfType<TEntity>();
     IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IEnumerable<IEntity> entities);
@@ -41,9 +41,10 @@ internal class Scene : Disposeable, IScene
         return entities.Where(x => x.Position == position).ToList();
     }
 
-    public IEnumerable<IEntity>? EntitiesWithinDistanceOfPosition(IEnumerable<IEntity> entities, Vector2 position, int distance)
+    public IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IEnumerable<IEntity> entities, IEntity entity, int distance)
     {
-        return entities.Where(x => MathFunctions.DistanceBetween(position, x.Position) <= distance).ToList();
+        int distanceSquared = distance * distance;
+        return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
 
     public IEnumerable<IEntity>? EntitiesWithType(IEnumerable<IEntity> entities, Type type)

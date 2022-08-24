@@ -38,10 +38,20 @@ public class Color
 
     public Color(int r, int g, int b, int a)
     {
-        R = Convert.ToByte(r);
-        G = Convert.ToByte(g);
-        B = Convert.ToByte(b);
-        A = Convert.ToByte(a);
+        R = Convert.ToByte(Math.Clamp(r, 0, 255));
+        G = Convert.ToByte(Math.Clamp(g, 0, 255));
+        B = Convert.ToByte(Math.Clamp(b, 0, 255));
+        A = Convert.ToByte(Math.Clamp(a, 0, 255));
+    }
+
+    public static Color operator +(Color lhs, Color rhs)
+    {
+        return new Color(lhs.R + rhs.R, lhs.G + rhs.G, lhs.B + rhs.B, lhs.A + rhs.A);
+    }
+
+    public static Color operator -(Color lhs, Color rhs)
+    {
+        return new Color(lhs.R - rhs.R, lhs.G - rhs.G, lhs.B - rhs.B, lhs.A - rhs.A);
     }
 
     public static implicit operator Raylib_cs.Color(Color color)
