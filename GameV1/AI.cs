@@ -11,6 +11,7 @@ namespace GameV1
     {
         public static void Execute(IScene scene)
         {
+            // TODO: Add Initializer that does player look-up once.
             var player = scene.EntitiesWithType(scene.Entities, typeof(Player));
 
             var creatures = scene.EntitiesWithType(scene.Entities, typeof(Creature));
