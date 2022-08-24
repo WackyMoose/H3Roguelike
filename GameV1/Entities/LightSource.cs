@@ -33,17 +33,19 @@ namespace GameV1.Entities
         {
             var entitiesWithinRange = scene.EntitiesWithinDistanceOfEntity(entities, this, this.Range);
 
+            var maxDistanceSquared = this.Range * this.Range;
+
             foreach (IEntity entity in entitiesWithinRange)
             {
-                var maxDistanceSquared = this.Range * this.Range;
+                // TODO: Implement true inverse distance squared light intensity
                 var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Position);
 
                 var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
-                var lerp = MathFunctions.Lerp(0, 1, inLerp);
+                //var lerp = MathFunctions.Lerp(0, 1, inLerp);
 
-                var r = (int)(lerp * (128 + 32));
-                var g = (int)(lerp * (128 + 16));
-                var b = (int)(lerp * (128 +  0));
+                var r = (int)(inLerp * (128 + 32));
+                var g = (int)(inLerp * (128 + 16));
+                var b = (int)(inLerp * (128 +  0));
 
                 var color = new Color(r, g, b, 255);
 
