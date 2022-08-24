@@ -50,13 +50,13 @@ internal class Scene : Disposeable, IScene
         var sceneCamera = GetSceneCamera();
         if (sceneCamera != default)
         {
-            Renderer.Begin(sceneCamera);
+            Renderer.BeginScene(sceneCamera);
             for (int i = _entities.Count - 1; i >= 0; i--)
             {
                 var entity = _entities[i];
                 Renderer.Render(entity, _defaultEntitySize);
             }
-            Renderer.End();
+            Renderer.EndScene();
         }
     }
 

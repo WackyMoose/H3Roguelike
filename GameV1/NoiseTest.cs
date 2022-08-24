@@ -84,6 +84,11 @@ internal class NoiseTest : IGame
         }
     }
 
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Uninitialize()
     {
         _scene?.Dispose();

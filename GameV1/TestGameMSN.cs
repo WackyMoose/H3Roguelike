@@ -104,4 +104,14 @@ internal class TestGameMSN : IGame
 
         _scene?.UpdateRuntime(deltaTime);
     }
+
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        var windowData = UIRenderer.WindowData;
+
+        UIRenderer.DrawFPS(16, 16);
+
+        var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
+        UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+    }
 }
