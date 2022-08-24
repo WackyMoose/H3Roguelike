@@ -15,9 +15,6 @@ internal class NoiseTest : IGame
 {
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -31,55 +28,17 @@ internal class NoiseTest : IGame
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         _scene?.Add(camera);
 
-        sword.MinDamage = 50;
-        sword.MaxDamage = 200;
-        sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
-
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
-
         // Spawn player
-        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(192, 192);
-        player.MainHand.Add(sword);
-        player.OffHand.Add(sword);
-
+        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         _scene?.Add(player);
 
-        // Spawn monster
-        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        monster.Position = new Vector2(-96, -96);
-        monster.Chest.Add(armor);
+        WorldGenerator.GenerateWorld(80085,ref _scene);
 
-        _scene?.Add(monster);
-
-        Console.WriteLine(monster.Stats.Health);
-
-        CombatHandler.SolveAttack(player, monster, sword);
-
-        Console.WriteLine(monster.Stats.Health);
-
-        Console.WriteLine(player.StrongestWeapon.Damage);
-
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
-
-        // Bind key press action to key value
-        // Bind key value to input value. Can be reconfigured at runtine
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-
-        foreach (var pos in forest)
-        {
-            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = pos;
-            tile.IsWalkable = false;
-            _scene?.Add(tile);
-        }
     }
 
     public void Uninitialize()
