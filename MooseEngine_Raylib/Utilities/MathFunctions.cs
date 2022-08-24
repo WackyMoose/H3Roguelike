@@ -14,11 +14,11 @@ public static class MathFunctions
         return ( v - minValue) / (maxValue - minValue);
     }
 
-    public static int InverseDistanceSquaredBetween(Coords2D positionA, Coords2D positionB)
+    public static float InverseDistanceSquaredBetween(Coords2D positionA, Coords2D positionB)
     {
         Vector2 distance = new Vector2(positionB.X - positionA.X, positionB.Y - positionA.Y);
 
-        return (int)Math.Sqrt(distance.X * distance.X + distance.Y * distance.Y);
+        return (1.0f / (distance.X * distance.X + distance.Y * distance.Y));
     }
 
 

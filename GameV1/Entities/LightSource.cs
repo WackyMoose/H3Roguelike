@@ -3,12 +3,6 @@ using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
@@ -36,12 +30,15 @@ namespace GameV1.Entities
 
         public void Illuminate(IScene scene, IEnumerable<IEntity> entities)
         {
-            //var entitiesWithinRange = scene.EntitiesWithinDistanceOfPosition()
+            var entitiesWithinRange = scene.EntitiesWithinDistanceOfPosition(entities, this.Position, this.Range);
 
-
-            foreach (IEntity entity in entities)
+            foreach (IEntity entity in entitiesWithinRange)
             {
+                var value = MathFunctions.InverseDistanceSquaredBetween(this.Position, entity.Position);
 
+                int rgb = (int)(value * 255);
+
+                entity.ColorTint = new Color(128+64, 128+16, 128, 255);
             }
         }
 

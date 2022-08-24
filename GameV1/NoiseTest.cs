@@ -15,6 +15,9 @@ internal class NoiseTest : IGame
 {
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(255, 64, 32, 255), "Torch", new Coords2D(9, 8));
+    private Creature druid = new Creature("Druid", 100, 1000, new Coords2D(9, 0));
+    private Creature ork = new Creature("Ork", 100, 1000, new Coords2D(11, 0));
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -34,6 +37,15 @@ internal class NoiseTest : IGame
 
         WorldGenerator.GenerateWorld(80085,ref _scene);
 
+        light.Position = new Vector2(32, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        _scene?.Add(light);
+
+        druid.Position = new Vector2(31, 30) * Constants.DEFAULT_ENTITY_SIZE;
+        _scene?.Add(druid);
+
+        ork.Position = new Vector2(34, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        _scene?.Add(ork);
+
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
@@ -49,6 +61,12 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
+        // Reset all Entity Colortint to a cool nighttime blue
+        foreach(IEntity entity in _scene.Entities )
+        {
+            entity.ColorTint = new Color(96, 112, 128, 255);
+        }
+
         // Player
         InputOptions? input = InputHandler.Handle();
 
@@ -66,6 +84,10 @@ internal class NoiseTest : IGame
 
             // Execute AI commands
         }
+
+        // Dynamically updated light source
+        LightSource fire = (LightSource)_scene.Entities.Where(x => x.GetType() == typeof(LightSource)).FirstOrDefault();
+        fire?.Illuminate(_scene, _scene.Entities);
 
         _scene?.UpdateRuntime(deltaTime);
     }
