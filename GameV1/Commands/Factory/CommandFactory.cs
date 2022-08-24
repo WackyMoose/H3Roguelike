@@ -13,7 +13,7 @@ namespace GameV1.Commands.Factory
     {
 
         // All player behavior-related business logic goes here
-        public static ICommand? Create(InputOptions? input, IScene scene, Entity entity)
+        public static ICommand? Create(InputOptions? input, IScene scene, IEntity entity)
         {
             if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
             {
@@ -30,7 +30,7 @@ namespace GameV1.Commands.Factory
                 }
 
                 // Retrieve list of entities in walk direction
-                List<IEntity>? entitiesAtTargetPosition = scene.EntitiesAtPosition(scene.Entities, entity.Position + direction);
+                var entitiesAtTargetPosition = scene.EntitiesAtPosition(scene.Entities, entity.Position + direction);
 
                 foreach (Entity targetEntity in entitiesAtTargetPosition)
                 {

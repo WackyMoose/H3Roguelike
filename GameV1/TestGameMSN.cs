@@ -38,11 +38,15 @@ internal class TestGameMSN : IGame
 
         player.Position = new Vector2(192, 192);
         player.MainHand.Add(sword);
-        player.OffHand.Add(sword);
+        //player.OffHand.Add(sword);
+        player.Chest.Add(armor);
+
+        //Console.WriteLine(player.MainHand.Item.Damage);
 
         _scene?.Add(player);
 
         monster.Position = new Vector2(-96, -96);
+        monster.MainHand.Add(sword);
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
@@ -96,8 +100,10 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
+            AI.Execute(_scene);
 
             // Execute AI commands
+            CommandQueue.Execute();
         }
 
         _scene?.UpdateRuntime(deltaTime);
