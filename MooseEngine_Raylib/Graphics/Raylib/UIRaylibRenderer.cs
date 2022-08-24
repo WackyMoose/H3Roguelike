@@ -5,7 +5,7 @@ namespace MooseEngine.Graphics;
 
 internal class UIRaylibRenderer : IUIRenderer
 {
-    public UIRaylibRenderer(IWindowData windowData)
+    public UIRaylibRenderer(IWindow windowData)
     {
         WindowData = windowData;
     }

@@ -23,31 +23,33 @@ public static class Engine
     public static void Start<TGame>()
         where TGame : class, IGame
     {
-        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, TGame>(DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, UIRaylibRenderer, TGame>(DefaultRaylibRendererOptions);
     }
 
     public static void Start<TGame>(ApplicationOptions applicationOptions)
     where TGame : class, IGame
     {
-        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, TGame>(applicationOptions, DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, UIRaylibRenderer, TGame>(applicationOptions, DefaultRaylibRendererOptions);
     }
 
-    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(TRendererOptions rendererOptions)
+    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TUIRenderer, TGame>(TRendererOptions rendererOptions)
         where TApplication : class, IApplication
         where TGame : class, IGame
         where TInput : class, IInputAPI
         where TRenderer : class, IRenderer
         where TRendererOptions : class, IRendererOptions
+        where TUIRenderer : class, IUIRenderer
     {
-        Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(new(), rendererOptions);
+        Start<TApplication, TInput, TRenderer, TRendererOptions, TUIRenderer, TGame>(new(), rendererOptions);
     }
 
-    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TGame>(ApplicationOptions applicationOptions, TRendererOptions rendererOptions)
+    public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TUIRenderer, TGame>(ApplicationOptions applicationOptions, TRendererOptions rendererOptions)
         where TApplication : class, IApplication
         where TGame : class, IGame
         where TInput : class, IInputAPI
         where TRenderer : class, IRenderer
         where TRendererOptions : class, IRendererOptions
+        where TUIRenderer : class, IUIRenderer
     {
         var containerBuilder = MooseEngineContainerBuilder.Create();
 
@@ -55,7 +57,7 @@ public static class Engine
         containerBuilder.RegisterModule(new ApplicationModule(applicationOptions));
         containerBuilder.RegisterModule<InputModule<TInput>>();
         containerBuilder.RegisterModule(new WindowModule(applicationOptions));
-        containerBuilder.RegisterModule(new GraphicsModule<TRenderer, TRendererOptions>(rendererOptions));
+        containerBuilder.RegisterModule(new GraphicsModule<TRenderer, TRendererOptions, TUIRenderer>(rendererOptions));
         containerBuilder.Register<IGame, TGame>();
 
         var container = containerBuilder.Build();
