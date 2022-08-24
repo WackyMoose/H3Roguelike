@@ -1,11 +1,8 @@
 ﻿using GameV1.Entities;
-using MooseEngine;
 using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Numerics;
 
 namespace GameV1.WorldGeneration
@@ -33,6 +30,7 @@ namespace GameV1.WorldGeneration
             var world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
+            
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
