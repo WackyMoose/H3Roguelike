@@ -10,19 +10,20 @@ namespace GameV1.WorldGeneration
     public static class WorldGenerator
     {
         private static HashSet<Coords2D> _forest = new HashSet<Coords2D>();
-        private static HashSet<Coords2D> _forests = new HashSet<Coords2D>();
         private static Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
-        private static List<List<StructureData>> _castle01Data = new List<List<StructureData>>();
-        private static List<List<StructureData>> _castle02Data = new List<List<StructureData>>();
+        private static List<List<StructureData>> _castleSmallData = new List<List<StructureData>>();
+        private static List<List<StructureData>> _castleMediumData = new List<List<StructureData>>();
+        private static List<List<StructureData>> _castleLargeData = new List<List<StructureData>>();
+        private static List<List<StructureData>> _graveyardMediumData = new List<List<StructureData>>();
+
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
 
         private static Coords2D[] _grassTilesCoords = new Coords2D[3]{new Coords2D(5, 4),
                                                                      new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
 
-        private static int[] walkableIds = new int[]{};
-
-        //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
+        private static int clearDistanceToStarterVillage = 1000;
+        private static int distanceToPOI = 0;
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
@@ -34,11 +35,10 @@ namespace GameV1.WorldGeneration
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
+            #region Generate Grass
             foreach (var tile in _overWorld)
             {
-                //Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
-
-                //Generate grass with perlin noise..
+                //Generate grass with perlin noise...
                 if (tile.Value > -0.3 && tile.Value < 0.3)
                 {
                     var rand = Randomizer.RandomInt(0, 3);
@@ -56,16 +56,15 @@ namespace GameV1.WorldGeneration
                     Tile grass = new Tile("Grass", true, coord, color);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
-                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
             }
             Console.WriteLine("Grass Done");
             Console.WriteLine("--------------------------------");
+            #endregion
 
             foreach (var tile in _overWorld)
             {
-                //Place forests, replacing grass tiles with trees...
-                //Place Castles...
+                //Place forests...
 
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
@@ -84,19 +83,21 @@ namespace GameV1.WorldGeneration
                 Console.WriteLine("Forest Done");
                 Console.WriteLine("--------------------------------");
 
-                //if (tile.Value > 0.1 && tile.Value < 0.101)
-                //{
-                //    for (int k = 0; k < _castle02Data.Count; k++)
-                //    {
-                //        for (int i = 0; i < _castle02Data[k].Count; i++)
-                //        {
-                //            Tile spriteTile = new Tile("Castle", _castle02Data[k][i].IsWalkable, _castle02Data[k][i].SpriteCoords);
-                //            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
-                //            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
-                //        }
-                //    }
-                //}
+                //Place Castles...
+                if (tile.Value > 0.1 && tile.Value < 0.101)
+                {
+                    for (int k = 0; k < _castle02Data.Count; k++)
+                    {
+                        for (int i = 0; i < _castle02Data[k].Count; i++)
+                        {
+                            Tile spriteTile = new Tile("Castle", _castle02Data[k][i].IsWalkable, _castle02Data[k][i].SpriteCoords);
+                            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                        }
+                    }
+                }
 
+                #region Visualize Perlin Noise
                 //Visualize PerlinNoise, used for debugging...
                 //float val = MathFunctions.InverseLerp(-1, 1, tile.Value);
                 //int colorVal = (int)MathFunctions.Lerp(0, 255, val);
@@ -105,6 +106,7 @@ namespace GameV1.WorldGeneration
                 //perlinTile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
                 //perlinTile.Position = new Vector2(tile.Key.X, tile.Key.Y);
                 //scene?.Add(perlinTile);
+                #endregion
             }
 
             //Place Start Village...
@@ -118,9 +120,13 @@ namespace GameV1.WorldGeneration
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
             }
-
             Console.WriteLine("Starter Village Done");
             Console.WriteLine("--------------------------------");
+
+            //Create roads...
+
+            //Create lakes and rivers...?
+
 
             foreach (var tile in world.WorldTiles)
             {
@@ -129,5 +135,13 @@ namespace GameV1.WorldGeneration
 
             return true;
         }
+    }
+
+    public enum POIType
+    {
+        CastleSmall,
+        CastleMedium,
+        CastleLarge,
+        GraveyardMedium,
     }
 }
