@@ -8,6 +8,13 @@ namespace GameV1.Entities
         public Inventory(int maxSlots, int durability, int maxValue)
             : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.White)
         {
+            MaxSlots = maxSlots;
+        }
+
+        public Inventory(int maxSlots, int durability, int maxValue, string name, Coords2D textureCoords)
+            : base(maxSlots, durability, maxValue, name, textureCoords, Color.White)
+        {
+            MaxSlots = maxSlots;
         }
 
         public override bool AddItemToSlot(Item item, Slot<Item> slot)

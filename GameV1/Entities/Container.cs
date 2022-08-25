@@ -6,10 +6,11 @@ namespace GameV1.Entities
 {
     public abstract class Container<TSlot, TItem> : Item, IContainer<TSlot, TItem>
     {
-        public int MaxSlots { get; }
+        public int MaxSlots { get; set; }
         public List<TSlot> Slots { get; set; }
 
-        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
+        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+            : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             MaxSlots = maxSlots;
             Slots = new List<TSlot>();

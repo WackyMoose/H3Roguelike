@@ -44,22 +44,24 @@ internal class Scene : Disposeable, IScene
     public IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IEnumerable<IEntity> entities, IEntity entity, int distance)
     {
         int distanceSquared = distance * distance;
-        return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
+        return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared ).ToList();
+        //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
 
     public IEnumerable<IEntity>? EntitiesWithType(IEnumerable<IEntity> entities, Type type)
     {
-        return entities.Where(x => x.GetType() == type).ToList();
+        return null;
     }
 
     public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>()
     {
-        return (IEnumerable<TEntity>?)_entities.Where(x => x.GetType() == typeof(TEntity));
+        return (IEnumerable<TEntity>?)_entities.Where(x => x is TEntity);
     }
 
     public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IEnumerable<IEntity> entities)
     {
-        return (IEnumerable<TEntity>?)entities.Where(x => x.GetType() == typeof(TEntity));
+        return entities.OfType<TEntity>().ToList();
+        //return (IEnumerable<TEntity>?)entities.Where(x => x.GetType() == typeof(TEntity));
     }
 
     protected override void DisposeManagedState()

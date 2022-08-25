@@ -59,8 +59,8 @@ namespace GameV1.WorldGeneration
                     //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
             }
-            Console.WriteLine("Grass Done");
-            Console.WriteLine("--------------------------------");
+            //Console.WriteLine("Grass Done");
+            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in _overWorld)
             {
@@ -70,19 +70,19 @@ namespace GameV1.WorldGeneration
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
                     _forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
-                    Console.WriteLine($"{_forest.Count} trees in forest");
+                    //Console.WriteLine($"{_forest.Count} trees in forest");
 
                     foreach (var coord in _forest)
                     {
                         Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5));
                         treeTile.Position = new Vector2(coord.X, coord.Y);
-                        Console.WriteLine($"Tree coords: {coord.X},{coord.Y}");
+                        //Console.WriteLine($"Tree coords: {coord.X},{coord.Y}");
                         world.AddTile(coord, treeTile);
                     }
                 }
                 
-                Console.WriteLine("Forest Done");
-                Console.WriteLine("--------------------------------");
+                //Console.WriteLine("Forest Done");
+                //Console.WriteLine("--------------------------------");
 
                 //if (tile.Value > 0.1 && tile.Value < 0.101)
                 //{

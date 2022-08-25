@@ -43,9 +43,13 @@ namespace GameV1.Entities
                 var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
                 //var lerp = MathFunctions.Lerp(0, 1, inLerp);
 
-                var r = (int)(inLerp * (128 + 32));
-                var g = (int)(inLerp * (128 + 16));
-                var b = (int)(inLerp * (128 +  0));
+                //var r = (int)(inLerp * (128 + 32));
+                //var g = (int)(inLerp * (128 + 16));
+                //var b = (int)(inLerp * (128 +  0));
+
+                var r = (int)(inLerp * TintModifier.R);
+                var g = (int)(inLerp * TintModifier.G);
+                var b = (int)(inLerp * TintModifier.B);
 
                 var color = new Color(r, g, b, 255);
 
