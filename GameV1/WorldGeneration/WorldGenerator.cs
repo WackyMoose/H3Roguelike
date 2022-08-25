@@ -9,8 +9,11 @@ namespace GameV1.WorldGeneration
 {
     public static class WorldGenerator
     {
-        private static HashSet<Coords2D> _forest = new HashSet<Coords2D>();
+        private static World? world;
         private static Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
+        private static Dictionary<Coords2D, HashSet<Coords2D>> _forestPositions = new Dictionary<Coords2D, HashSet<Coords2D>>();
+        private static Dictionary<Coords2D, HashSet<Coords2D>> _castlePositions = new Dictionary<Coords2D, HashSet<Coords2D>>();
+
         private static List<List<StructureData>> _castleSmallData = new List<List<StructureData>>();
         private static List<List<StructureData>> _castleMediumData = new List<List<StructureData>>();
         private static List<List<StructureData>> _castleLargeData = new List<List<StructureData>>();
@@ -22,17 +25,16 @@ namespace GameV1.WorldGeneration
                                                                      new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
 
-        private static int clearDistanceToStarterVillage = 1000;
-        private static int distanceToPOI = 0;
+        private static int clearDistanceToStarterVillage = 450;
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
+            world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
-            
-            _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
+
+            _castleMediumData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
             #region Generate Grass
@@ -44,22 +46,20 @@ namespace GameV1.WorldGeneration
                     var rand = Randomizer.RandomInt(0, 3);
                     var coord = _grassTilesCoords[rand];
 
-                    var posA = new Vector2(tile.Key.X, tile.Key.Y);
-                    var posB = new Vector2(world.StartPos.X, world.StartPos.Y);
-
-                    var dist = Vector2.Distance(posB, posA);
-                    var maxDist = Vector2.Distance(new Vector2(0, 0), posB);
-                    var inLerp = MathFunctions.InverseLerp(maxDist, 0, dist);
-                    var lerp = MathFunctions.Lerp(65, 255, inLerp);
-                    var color = new Color((int)lerp, (int)lerp, (int)lerp, 255);
-
-                    Tile grass = new Tile("Grass", true, coord, color);
+                    var tintColor = CalculateTint(tile.Key);
+                    Tile grass = new Tile("Grass", true, coord, tintColor);
+                    grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, grass);
+                }
+                else
+                {
+                    var tintColor = CalculateTint(tile.Key);
+                    Tile grass = new Tile("Grass", true, new Coords2D(1,1), tintColor);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                 }
             }
-            Console.WriteLine("Grass Done");
-            Console.WriteLine("--------------------------------");
+
             #endregion
 
             foreach (var tile in _overWorld)
@@ -68,34 +68,30 @@ namespace GameV1.WorldGeneration
 
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
-                    _forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
-                    Console.WriteLine($"{_forest.Count} trees in forest");
-
-                    foreach (var coord in _forest)
+                    var dist = Vector2.Distance(new Vector2(tile.Key.X, tile.Key.Y),new Vector2(world.StartPos.X,world.StartPos.Y));
+                    if (dist > clearDistanceToStarterVillage)
                     {
-                        Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5));
-                        treeTile.Position = new Vector2(coord.X, coord.Y);
-                        Console.WriteLine($"Tree coords: {coord.X},{coord.Y}");
-                        world.AddTile(coord, treeTile);
+                        var forest = new HashSet<Coords2D>();
+                        forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
+                        _forestPositions.Add(tile.Key, forest);
+
+
                     }
                 }
-                
-                Console.WriteLine("Forest Done");
-                Console.WriteLine("--------------------------------");
 
                 //Place Castles...
-                if (tile.Value > 0.1 && tile.Value < 0.101)
-                {
-                    for (int k = 0; k < _castle02Data.Count; k++)
-                    {
-                        for (int i = 0; i < _castle02Data[k].Count; i++)
-                        {
-                            Tile spriteTile = new Tile("Castle", _castle02Data[k][i].IsWalkable, _castle02Data[k][i].SpriteCoords);
-                            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
-                            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
-                        }
-                    }
-                }
+                //if (tile.Value > 0.1 && tile.Value < 0.101)
+                //{
+                //    for (int k = 0; k < _castleMediumData.Count; k++)
+                //    {
+                //        for (int i = 0; i < _castleMediumData[k].Count; i++)
+                //        {
+                //            Tile spriteTile = new Tile("Castle", _castleMediumData[k][i].IsWalkable, _castleMediumData[k][i].SpriteCoords);
+                //            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                //            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                //        }
+                //    }
+                //}
 
                 #region Visualize Perlin Noise
                 //Visualize PerlinNoise, used for debugging...
@@ -109,6 +105,19 @@ namespace GameV1.WorldGeneration
                 #endregion
             }
 
+            //Generate tiles...
+
+            foreach (var forest in _forestPositions)
+            {
+                foreach(var tree in forest.Value)
+                {
+                    var colorTint = CalculateTint(tree);
+                    Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5), colorTint);
+                    treeTile.Position = new Vector2(tree.X, tree.Y);
+                    world.AddTile(tree, treeTile);
+                }
+            }
+
             //Place Start Village...
             for (int k = 0; k < _startVillageData.Count; k++)
             {
@@ -117,11 +126,8 @@ namespace GameV1.WorldGeneration
                     Tile spriteTile = new Tile("StartVillage", _startVillageData[k][i].IsWalkable, _startVillageData[k][i].SpriteCoords);
                     spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y-(5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
-                    //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
             }
-            Console.WriteLine("Starter Village Done");
-            Console.WriteLine("--------------------------------");
 
             //Create roads...
 
@@ -134,6 +140,17 @@ namespace GameV1.WorldGeneration
             }
 
             return true;
+        }
+
+        private static Color CalculateTint(Coords2D tilePos) 
+        {
+            var posB = new Vector2(world.StartPos.X, world.StartPos.Y);
+
+            var dist = Vector2.Distance(posB, tilePos);
+            var maxDist = Vector2.Distance(new Vector2(0, 0), posB);
+            var inLerp = MathFunctions.InverseLerp(maxDist, 0, dist);
+            var lerp = MathFunctions.Lerp(65, 255, inLerp);
+            return new Color((int)lerp, (int)lerp, (int)lerp, 255);
         }
     }
 
