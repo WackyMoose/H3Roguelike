@@ -36,6 +36,14 @@ public class Color
     public static Color RayWhite = new(245, 245, 245, 255);
     #endregion
 
+    public Color(Raylib_cs.Color color)
+    {
+        R = color.r;
+        G = color.g;
+        B = color.b;
+        A = color.a;
+    }
+
     public Color(int r, int g, int b, int a)
     {
         R = Convert.ToByte(r);
