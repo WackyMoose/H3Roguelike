@@ -18,6 +18,7 @@ internal class TestGameMSN : IGame
     private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private LightSource light = new LightSource(64, new Color(255, 64, 32, 255), "Torch", new Coords2D(8, 9));
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -27,6 +28,8 @@ internal class TestGameMSN : IGame
         _scene = sceneFactory.CreateScene();
 
         sceneFactory.CreateCenteredCamera(player);
+
+
 
         sword.MinDamage = 50;
         sword.MaxDamage = 200;
@@ -38,16 +41,24 @@ internal class TestGameMSN : IGame
 
         player.Position = new Vector2(192, 192);
         player.MainHand.Add(sword);
-        player.OffHand.Add(sword);
+        //player.OffHand.Add(sword);
+        player.Chest.Add(armor);
+
+        //Console.WriteLine(player.MainHand.Item.Damage);
 
         _scene?.Add(player);
 
         monster.Position = new Vector2(-96, -96);
+        monster.MainHand.Add(sword);
         monster.Chest.Add(armor);
 
         _scene?.Add(monster);
 
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
+        light.Position = new Vector2(0, 0);
+        _scene?.Add(light);
+
+
+        //forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
 
         // Bind key value to input value. Can be reconfigured at runtine
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
@@ -72,6 +83,8 @@ internal class TestGameMSN : IGame
             tile.IsWalkable = false;
             _scene?.Add(tile);
         }
+
+
     }
 
     public void Uninitialize()
@@ -96,8 +109,10 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
+            AI.Execute(_scene);
 
             // Execute AI commands
+            CommandQueue.Execute();
         }
 
         _scene?.UpdateRuntime(deltaTime);

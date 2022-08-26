@@ -12,10 +12,12 @@ public interface IScene : IDisposable
     void UpdateRuntime(float deltaTime);
     void Add(IEntity entity);
     void Remove(IEntity entity);
-    List<IEntity>? Entities { get; }
-    List<IEntity>? EntitiesAtPosition(List<IEntity> entities, Vector2 position);
-    List<IEntity>? EntitiesWithinDistanceOfPosition(List<IEntity> entities, Vector2 position, int distance);
-    List<IEntity>? EntitiesWithType(List<IEntity> entities, Type type);
+    IEnumerable<IEntity>? Entities { get; }
+    IEnumerable<IEntity>? EntitiesAtPosition(IEnumerable<IEntity> entities, Vector2 position);
+    IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IEnumerable<IEntity> entities, IEntity entity, int distance);
+    IEnumerable<IEntity>? EntitiesWithType(IEnumerable<IEntity> entities, Type type);
+    IEnumerable<TEntity>? GetEntitiesOfType<TEntity>();
+    IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IEnumerable<IEntity> entities);
 }
 
 internal class Scene : Disposeable, IScene
@@ -32,21 +34,34 @@ internal class Scene : Disposeable, IScene
 
     public IRenderer Renderer { get; }
 
-    public List<IEntity>? Entities { get { return _entities; } }
+    public IEnumerable<IEntity>? Entities { get { return _entities; } }
 
-    public List<IEntity>? EntitiesAtPosition(List<IEntity> entities, Vector2 position)
+    public IEnumerable<IEntity>? EntitiesAtPosition(IEnumerable<IEntity> entities, Vector2 position)
     {
         return entities.Where(x => x.Position == position).ToList();
     }
 
-    public List<IEntity>? EntitiesWithinDistanceOfPosition(List<IEntity> entities, Vector2 position, int distance)
+    public IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IEnumerable<IEntity> entities, IEntity entity, int distance)
     {
-        return entities.Where(x => MathFunctions.DistanceBetween(position, x.Position) <= distance).ToList();
+        int distanceSquared = distance * distance;
+        return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared ).ToList();
+        //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
 
-    public List<IEntity>? EntitiesWithType(List<IEntity> entities, Type type)
+    public IEnumerable<IEntity>? EntitiesWithType(IEnumerable<IEntity> entities, Type type)
     {
-        return entities.Where(x => x.GetType() == type).ToList();
+        return null;
+    }
+
+    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>()
+    {
+        return (IEnumerable<TEntity>?)_entities.Where(x => x is TEntity);
+    }
+
+    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IEnumerable<IEntity> entities)
+    {
+        return entities.OfType<TEntity>().ToList();
+        //return (IEnumerable<TEntity>?)entities.Where(x => x.GetType() == typeof(TEntity));
     }
 
     protected override void DisposeManagedState()
