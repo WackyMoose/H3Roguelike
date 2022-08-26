@@ -82,10 +82,10 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Reset all Entity Colortint to a cool nighttime blue
-        //foreach (var entity in _scene.Entities)
-        //{
-        //    entity.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
-        //}
+        foreach (var entity in _scene.Entities)
+        {
+            entity.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
+        }
 
         // Player
         InputOptions? input = InputHandler.Handle();
@@ -109,10 +109,10 @@ internal class TestGameMSN : IGame
         }
 
         // Dynamically updated light sources
-        //foreach (var light in _scene.Entities.OfType<LightSource>())
-        //{
-        //    light.Illuminate(_scene, _scene.Entities);
-        //}
+        foreach (var light in _scene.Entities.OfType<LightSource>())
+        {
+            light.Illuminate(_scene, _scene.Entities);
+        }
 
         _scene?.UpdateRuntime(deltaTime);
     }
