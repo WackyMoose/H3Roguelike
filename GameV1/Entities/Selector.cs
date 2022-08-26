@@ -6,6 +6,7 @@ using MooseEngine.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace GameV1.Entities
 
         public IEntity SelectedEntity { get; set; }
 
-        public IEnumerable<IEntity>? EntitiesWithinRange(IScene scene, IEnumerable<IEntity> entities, int range)
+        public IEnumerable<IEntity>? EntitiesWithinRange(IScene scene, IDictionary<Vector2, IEntity> entities, int range)
         {
             return scene.EntitiesWithinDistanceOfEntity(entities, SelectedEntity, range);
         }

@@ -39,14 +39,17 @@ internal class TestGameMSN : IGame
 
         var window = Application.Instance.Window;
 
-        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        _scene?.Add(camera);
-
-        // Spawn player
         player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
         _scene?.Add(player);
+
+        //var camera = new
+        //_scene?.Add(camera);
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
+        // Spawn player
+
 
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
         _scene?.Add(light);
@@ -82,10 +85,10 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Reset all Entity Colortint to a cool nighttime blue
-        //foreach (var entity in _scene.Entities)
-        //{
-        //    entity.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
-        //}
+        foreach (var entity in _scene.Entities)
+        {
+            entity.Value.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
+        }
 
         // Player
         InputOptions? input = InputHandler.Handle();
@@ -109,10 +112,10 @@ internal class TestGameMSN : IGame
         }
 
         // Dynamically updated light sources
-        //foreach (var light in _scene.Entities.OfType<LightSource>())
-        //{
-        //    light.Illuminate(_scene, _scene.Entities);
-        //}
+        foreach (var light in _scene.Entities.OfType<LightSource>())
+        {
+            light.Illuminate(_scene, _scene.Entities);
+        }
 
         _scene?.UpdateRuntime(deltaTime);
     }

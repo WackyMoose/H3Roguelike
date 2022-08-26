@@ -1,10 +1,7 @@
 ﻿using MooseEngine.Core.Factories;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.Scenes.Factories;
-
-public interface ISceneEntityFactory : IFactory
-{
-}
 
 public class SceneEntityFactory : ISceneEntityFactory
 {

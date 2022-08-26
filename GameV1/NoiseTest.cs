@@ -43,7 +43,8 @@ internal class NoiseTest : IGame
         var window = Application.Instance.Window;
 
         var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        _scene?.Add(camera);
+        _scene.SceneCamera = camera;
+        //_scene?.Add(camera);
 
         // Spawn player
         player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
@@ -87,7 +88,7 @@ internal class NoiseTest : IGame
         // Reset all Entity Colortint to a cool nighttime blue
         foreach (var entity in _scene.Entities)
         {
-            entity.ColorTint = new Color(128-64, 128, 128+64, 255);
+            entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
         }
 
         // Player

@@ -4,6 +4,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace GameV1.Entities
 {
@@ -29,7 +30,7 @@ namespace GameV1.Entities
             TintModifier = tintModifier;
         }
 
-        public void Illuminate(IScene scene, IEnumerable<IEntity> entities)
+        public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> entities)
         {
             var entitiesWithinRange = scene.EntitiesWithinDistanceOfEntity(entities, this, this.Range);
 
