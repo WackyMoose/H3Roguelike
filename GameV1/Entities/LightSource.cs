@@ -36,10 +36,10 @@ namespace GameV1.Entities
 
             var maxDistanceSquared = this.Range * this.Range;
 
-            foreach (IEntity entity in entitiesWithinRange)
+            foreach (var entity in entitiesWithinRange)
             {
                 // TODO: Implement true inverse distance squared light intensity
-                var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Position);
+                var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);
 
                 var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
                 //var lerp = MathFunctions.Lerp(0, 1, inLerp);
@@ -54,7 +54,7 @@ namespace GameV1.Entities
 
                 var color = new Color(r, g, b, 255);
 
-                entity.ColorTint += color;
+                entity.Value.ColorTint += color;
             }
         }
 

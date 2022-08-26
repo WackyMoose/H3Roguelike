@@ -17,7 +17,7 @@ namespace GameV1.Entities
 
         public IEntity SelectedEntity { get; set; }
 
-        public IEnumerable<IEntity>? EntitiesWithinRange(IScene scene, IDictionary<Vector2, IEntity> entities, int range)
+        public IDictionary<Vector2, IEntity>? EntitiesWithinRange(IScene scene, IDictionary<Vector2, IEntity> entities, int range)
         {
             return scene.EntitiesWithinDistanceOfEntity(entities, SelectedEntity, range);
         }

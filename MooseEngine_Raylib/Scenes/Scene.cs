@@ -31,11 +31,15 @@ internal class Scene : Disposeable, IScene
         return (IEntity?)entities.FirstOrDefault(k => entities.ContainsKey(k.Value.Position)).Value;
     }
 
-    public IEnumerable<IEntity>? EntitiesWithinDistanceOfEntity(IDictionary<Vector2, IEntity> entities, IEntity entity, int distance)
+    public IDictionary<Vector2, IEntity>? EntitiesWithinDistanceOfEntity(IDictionary<Vector2, IEntity> entities, IEntity entity, int distance)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         int distanceSquared = distance * distance;
-        return (IEnumerable<IEntity>?)entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared ).ToList();
+        
+        var entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
+        return (IDictionary<Vector2, IEntity>?)entitiesWithinDist;
+        
+        //return (IEnumerable<IEntity>?)entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Value.Position) <= distanceSquared ).ToList();
         //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
 
@@ -69,7 +73,7 @@ internal class Scene : Disposeable, IScene
         //    entity.Value.Update(deltaTime);
         //}
 
-        _entities.AsParallel().ForAll(e => e.Value.Update(deltaTime));
+        //_entities.AsParallel().ForAll(e => e.Value.Update(deltaTime));
 
         SceneCamera.Update(deltaTime);
 
