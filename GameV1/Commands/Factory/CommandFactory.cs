@@ -17,7 +17,7 @@ namespace GameV1.Commands.Factory
         {
             if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
             {
-                Console.WriteLine("We are attempting to walk!");
+                //Console.WriteLine("We are attempting to walk!");
                 
                 Vector2 direction = new Vector2();
 
@@ -37,7 +37,7 @@ namespace GameV1.Commands.Factory
                     // Creature
                     if (entity is Creature && targetEntity is Creature)
                     {
-                        Console.WriteLine("We are attacking!");
+                        //Console.WriteLine("We are attacking!");
                         return new CommandAttack(scene, entity, targetEntity);
                     }
 
@@ -48,13 +48,13 @@ namespace GameV1.Commands.Factory
 
                         if (!tile.IsWalkable)
                         {
-                            Console.WriteLine("Tile in the way!");
+                            //Console.WriteLine("Tile in the way!");
                             return new CommandIdle(scene, entity);
                         }
                     }
                 }
 
-                Console.WriteLine("We are walking!");
+                //Console.WriteLine("We are walking!");
                 switch (input)
                 {
                     case InputOptions.Up :    return new CommandMoveUp(scene, entity);
@@ -67,7 +67,7 @@ namespace GameV1.Commands.Factory
 
             if (input == InputOptions.Idle)
             {
-                Console.WriteLine("We are idling!");
+                //Console.WriteLine("We are idling!");
                 return new CommandIdle(scene, entity);
             }
 

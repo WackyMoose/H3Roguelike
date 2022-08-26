@@ -27,7 +27,7 @@ namespace GameV1.WorldGeneration
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(251,251,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             
@@ -119,8 +119,8 @@ namespace GameV1.WorldGeneration
                 }
             }
 
-            Console.WriteLine("Starter Village Done");
-            Console.WriteLine("--------------------------------");
+            //Console.WriteLine("Starter Village Done");
+            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in world.WorldTiles)
             {
