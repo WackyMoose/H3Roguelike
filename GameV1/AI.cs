@@ -25,10 +25,11 @@ namespace GameV1
                 // Check if enemies are in sight
                 // If yes: Walk towards or attack enemy
 
-                // Bring out yer' dead!
-                ICommand maintenanceCommand = new CommandReplaceDeadCreaturesWithCorpseItem(scene, npc);
+                // Check for dead creatures
+                ICommand maintenanceCommand = new CommandSwapDeadCreaturesWithCorpse(scene, npc);
                 CommandQueue.Add(maintenanceCommand);
 
+                // Generate random walk command
                 var input = GenerateRandomInput();
 
                 ICommand command = CommandFactory.Create(input, scene, npc);

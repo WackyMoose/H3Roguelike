@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class CommandReplaceDeadCreaturesWithCorpseItem : Command
+    internal class CommandSwapDeadCreaturesWithCorpse : Command
     {
-        public CommandReplaceDeadCreaturesWithCorpseItem(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandSwapDeadCreaturesWithCorpse(IScene scene, IEntity entity) : base(scene, entity)
         {
         }
 
