@@ -32,27 +32,24 @@ namespace GameV1.Commands.Factory
                 // Retrieve list of entities in walk direction
                 var entitiesAtTargetPosition = scene.EntityAtPosition(scene.Entities, entity.Position + direction);
 
-                //foreach (Entity targetEntity in entitiesAtTargetPosition)
-                //{
-                //    // Creature
-                //    if (entity is Creature && targetEntity is Creature)
-                //    {
-                //        //Console.WriteLine("We are attacking!");
-                //        return new CommandAttack(scene, entity, targetEntity);
-                //    }
+                    //// Creature
+                    //if (entity is Creature && targetEntity is Creature)
+                    //{
+                    //    //Console.WriteLine("We are attacking!");
+                    //    return new CommandAttack(scene, entity, targetEntity);
+                    //}
 
-                //    // Tile
-                //    if (entity is Creature && targetEntity.GetType() == typeof(Tile))
-                //    {
-                //        Tile tile = (Tile)targetEntity;
+                    // Tile
+                    if (entity is Creature && entitiesAtTargetPosition.GetType() == typeof(Tile))
+                    {
+                        Tile tile = (Tile)entitiesAtTargetPosition;
 
-                //        if (!tile.IsWalkable)
-                //        {
-                //            //Console.WriteLine("Tile in the way!");
-                //            return new CommandIdle(scene, entity);
-                //        }
-                //    }
-                //}
+                        if (!tile.IsWalkable)
+                        {
+                            //Console.WriteLine("Tile in the way!");
+                            return new CommandIdle(scene, entity);
+                        }
+                    }
 
                 //Console.WriteLine("We are walking!");
                 switch (input)

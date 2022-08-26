@@ -2,7 +2,7 @@
 
 namespace MooseEngine.Interfaces;
 
-public interface ISceneCamera
+public interface ISceneCamera : IEntity
 {
     Camera2D RaylibCamera { get; }
 }

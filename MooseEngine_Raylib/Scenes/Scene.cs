@@ -57,20 +57,38 @@ internal class Scene : Disposeable, IScene
 
     public void UpdateRuntime(float deltaTime)
     {
-        for (int i = _entities.Count - 1; i >= 0; i--)
-        {
-            var entity = _entities.ElementAt(i);
-            entity.Value.Update(deltaTime);
-        }
+        //for (int i = _entities.Count - 1; i >= 0; i--)
+        //{
+        //    var entity = _entities.ElementAt(i);
+        //    entity.Value.Update(deltaTime);
+        //}
+
+        //foreach (var entity in _entities)
+        //{
+        //    // do something with entry.Value or entry.Key
+        //    entity.Value.Update(deltaTime);
+        //}
+
+        _entities.AsParallel().ForAll(e => e.Value.Update(deltaTime));
+
+        SceneCamera.Update(deltaTime);
 
         if (SceneCamera != default)
         {
             Renderer.Begin(SceneCamera);
-            for (int i = _entities.Count - 1; i >= 0; i--)
+            //for (int i = _entities.Count - 1; i >= 0; i--)
+            //{
+            //    var entity = _entities.ElementAt(i);
+            //    Renderer.Render(entity.Value, _defaultEntitySize);
+            //}
+
+            foreach (var entity in _entities)
             {
-                var entity = _entities.ElementAt(i);
                 Renderer.Render(entity.Value, _defaultEntitySize);
             }
+
+            //_entities.AsParallel().ForAll(e => Renderer.Render(e.Value, _defaultEntitySize));
+
             Renderer.End();
         }
     }
