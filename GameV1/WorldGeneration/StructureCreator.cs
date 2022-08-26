@@ -4,7 +4,7 @@ namespace GameV1.WorldGeneration
 {
     public static class StructureCreator
     {
-        private static int[] walkableIDs = new int[] {-1, 2, 29, 58, 116, 117, 257, 260, 284, 285};
+        private static int[] walkableIDs = new int[] {-1, 2, 29, 58, 116, 117, 254, 257, 260, 284, 285};
 
         public static List<List<StructureData>> LoadStructure(string path) 
         {

@@ -2,7 +2,6 @@
 using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-
 using System.Numerics;
 
 namespace GameV1.WorldGeneration
@@ -12,7 +11,7 @@ namespace GameV1.WorldGeneration
         private static World? world;
         private static Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
         private static Dictionary<Coords2D, HashSet<Coords2D>> _forestPositions = new Dictionary<Coords2D, HashSet<Coords2D>>();
-        private static Dictionary<Coords2D, HashSet<Coords2D>> _castlePositions = new Dictionary<Coords2D, HashSet<Coords2D>>();
+        private static Dictionary<Coords2D, int> _castlePositions = new Dictionary<Coords2D, int>();
 
         private static List<List<StructureData>> _castleSmallData = new List<List<StructureData>>();
         private static List<List<StructureData>> _castleMediumData = new List<List<StructureData>>();
@@ -25,16 +24,20 @@ namespace GameV1.WorldGeneration
                                                                      new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
 
-        private static int clearDistanceToStarterVillage = 450;
+        private static int _clearDistanceToStarterVillage = 450;
+        private static bool _placePOI = true;
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
+            world = new World(1001,1001,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
 
+            _castleSmallData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle01.csv");
             _castleMediumData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
+            _castleLargeData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle03.csv");
+
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
             #region Generate Grass
@@ -59,7 +62,6 @@ namespace GameV1.WorldGeneration
                     world.AddTile(tile.Key, grass);
                 }
             }
-
             #endregion
 
             foreach (var tile in _overWorld)
@@ -69,29 +71,33 @@ namespace GameV1.WorldGeneration
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
                     var dist = Vector2.Distance(new Vector2(tile.Key.X, tile.Key.Y),new Vector2(world.StartPos.X,world.StartPos.Y));
-                    if (dist > clearDistanceToStarterVillage)
+                    if (dist > _clearDistanceToStarterVillage)
                     {
                         var forest = new HashSet<Coords2D>();
                         forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
                         _forestPositions.Add(tile.Key, forest);
-
-
                     }
                 }
 
                 //Place Castles...
-                //if (tile.Value > 0.1 && tile.Value < 0.101)
-                //{
-                //    for (int k = 0; k < _castleMediumData.Count; k++)
-                //    {
-                //        for (int i = 0; i < _castleMediumData[k].Count; i++)
-                //        {
-                //            Tile spriteTile = new Tile("Castle", _castleMediumData[k][i].IsWalkable, _castleMediumData[k][i].SpriteCoords);
-                //            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
-                //            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
-                //        }
-                //    }
-                //}
+                if (tile.Value > -0.2 && tile.Value < 0.2)
+                {
+                    foreach (var castles in _castlePositions)
+                    {
+                        var dist = Vector2.Distance(new Vector2(castles.Key.X, castles.Key.Y), new Vector2(tile.Key.X,tile.Key.Y));
+                        if (dist < 1500)
+                        {
+                            _placePOI = false;
+                        }
+                    }
+
+                    if (_placePOI == true)
+                    {
+                        _castlePositions.Add(tile.Key, Randomizer.RandomInt(0,3));
+                    }
+
+                    _placePOI = true;
+                }
 
                 #region Visualize Perlin Noise
                 //Visualize PerlinNoise, used for debugging...
@@ -115,6 +121,33 @@ namespace GameV1.WorldGeneration
                     Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5), colorTint);
                     treeTile.Position = new Vector2(tree.X, tree.Y);
                     world.AddTile(tree, treeTile);
+                }
+            }
+
+            //Creating tiles for castles...
+            foreach (var castle in _castlePositions)
+            {
+                var castlePosition = castle.Key;
+                var castleIndex = castle.Value;
+                var castleData = new List<List<StructureData>>();
+
+                switch (castleIndex)
+                {
+                    case 0: castleData = _castleSmallData;  break;
+                    case 1: castleData = _castleMediumData; break;
+                    case 2: castleData = _castleLargeData;  break;
+                    default: castleData = _castleSmallData; break;
+                }
+
+                for (int k = 0; k < castleData.Count; k++)
+                {
+                    for (int i = 0; i < castleData[k].Count; i++)
+                    {
+                        var colorTint = CalculateTint(castleData[k][i].SpriteCoords);
+                        Tile spriteTile = new Tile("Castle", castleData[k][i].IsWalkable, castleData[k][i].SpriteCoords, colorTint);
+                        spriteTile.Position = new Vector2(castlePosition.X + i * Constants.DEFAULT_ENTITY_SIZE, castlePosition.Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                        world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                    }
                 }
             }
 
