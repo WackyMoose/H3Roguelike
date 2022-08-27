@@ -10,6 +10,7 @@ namespace MooseEngine.Scenes;
 internal class Scene : Disposeable, IScene
 {
     private IDictionary<Vector2, IEntity>? _entities;
+    private IDictionary<Vector2, IEntity>? _dynamicEntities;
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
@@ -35,9 +36,9 @@ internal class Scene : Disposeable, IScene
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         int distanceSquared = distance * distance;
-        
-        var entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
-        return (IDictionary<Vector2, IEntity>?)entitiesWithinDist;
+
+        Dictionary<Vector2, IEntity> entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
+        return entitiesWithinDist;
         
         //return (IEnumerable<IEntity>?)entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Value.Position) <= distanceSquared ).ToList();
         //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
@@ -90,6 +91,14 @@ internal class Scene : Disposeable, IScene
             {
                 Renderer.Render(entity.Value, _defaultEntitySize);
             }
+
+            //for (int y = 10 - 1; y >= 0; y--)
+            //{
+            //    for (int x = 10 - 1; x >= 0; x--)
+            //    {
+            //        Renderer.Render(_entities[new Vector2(x, y)], _defaultEntitySize);
+            //    }
+            //}
 
             //_entities.AsParallel().ForAll(e => Renderer.Render(e.Value, _defaultEntitySize));
 
