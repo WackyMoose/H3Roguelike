@@ -101,11 +101,11 @@ internal class NoiseTest : IGame
         // Execute Player commands
         if (!CommandQueue.IsEmpty)
         {
-            Console.WriteLine("Players turn!");
+            //Console.WriteLine("Players turn!");
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            Console.WriteLine("AI's turn!");
+            //Console.WriteLine("AI's turn!");
             AI.Execute(_scene);
 
             // Execute AI commands

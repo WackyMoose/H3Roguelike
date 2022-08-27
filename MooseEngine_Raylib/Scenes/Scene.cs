@@ -37,9 +37,34 @@ internal class Scene : Disposeable, IScene
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         int distanceSquared = distance * distance;
 
-        Dictionary<Vector2, IEntity> entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
+        //Dictionary<Vector2, IEntity> entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
+        //return entitiesWithinDist;
+        Dictionary<Vector2, IEntity> entitiesWithinDist = new Dictionary<Vector2, IEntity>();
+
+        var EntityPosition = entity.Position;
+        var v = new Vector2();
+
+        for (v.Y = EntityPosition.Y - distance; 
+             v.Y <= EntityPosition.Y + distance; 
+             v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        {
+            for (v.X = EntityPosition.X - distance;
+                 v.X <= EntityPosition.X + distance; 
+                 v.X += Constants.DEFAULT_ENTITY_SIZE)
+            {
+                if (_entities.ContainsKey(v))
+                {
+                    if (MathFunctions.DistanceSquaredBetween(entity.Position, v) <= distanceSquared)
+                    {
+                        entitiesWithinDist.Add(v, _entities[v]);
+                    }
+                }
+
+            }
+        }
+
         return entitiesWithinDist;
-        
+
         //return (IEnumerable<IEntity>?)entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Value.Position) <= distanceSquared ).ToList();
         //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
@@ -87,18 +112,31 @@ internal class Scene : Disposeable, IScene
             //    Renderer.Render(entity.Value, _defaultEntitySize);
             //}
 
-            foreach (var entity in _entities)
-            {
-                Renderer.Render(entity.Value, _defaultEntitySize);
-            }
-
-            //for (int y = 10 - 1; y >= 0; y--)
+            //foreach (var entity in _entities)
             //{
-            //    for (int x = 10 - 1; x >= 0; x--)
-            //    {
-            //        Renderer.Render(_entities[new Vector2(x, y)], _defaultEntitySize);
-            //    }
+            //    Renderer.Render(entity.Value, _defaultEntitySize);
             //}
+            var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
+            var v = new Vector2();
+            //IEntity e = new Entity();
+
+            for (v.Y = 0; v.Y <= 10000; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+            {
+                for (v.X = 0; v.X <= 10000; v.X += Constants.DEFAULT_ENTITY_SIZE)
+                {
+                    //v.X = x;
+                    //v.Y = y;
+
+                    if (_entities.ContainsKey(v))
+                    {
+                        Renderer.Render(_entities[v], _defaultEntitySize);
+                        _entities[v].ColorTint = defaultTint;
+                    }
+
+                    //_entities.TryGetValue(v, out e);
+                    //Renderer.Render(e, _defaultEntitySize);
+                }
+            }
 
             //_entities.AsParallel().ForAll(e => Renderer.Render(e.Value, _defaultEntitySize));
 

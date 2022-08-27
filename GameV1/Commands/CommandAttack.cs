@@ -24,7 +24,7 @@ namespace GameV1.Commands
 
             CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
 
-            Console.WriteLine(attacked.Stats.Health);
+            //Console.WriteLine(attacked.Stats.Health);
         }
     }
 }

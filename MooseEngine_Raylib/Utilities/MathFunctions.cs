@@ -23,7 +23,7 @@ public static class MathFunctions
 
     public static float DistanceSquaredBetween(Coords2D positionA, Coords2D positionB)
     {
-        Vector2 distance = new Vector2(positionB.X - positionA.X, positionB.Y - positionA.Y);
+        Coords2D distance = new Coords2D(positionB.X - positionA.X, positionB.Y - positionA.Y);
 
         return distance.X * distance.X + distance.Y * distance.Y;
     }

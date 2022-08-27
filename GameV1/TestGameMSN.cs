@@ -44,7 +44,7 @@ internal class TestGameMSN : IGame
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         // Spawn player
-        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        player.Position = new Vector2(-1, -1) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
         _scene?.Add(player);
@@ -72,6 +72,11 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+
+        //foreach (var entity in _scene.Entities)
+        //{
+        //    Console.WriteLine(entity.Key);
+        //}
     }
 
     public void Uninitialize()
@@ -83,10 +88,23 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Reset all Entity Colortint to a cool nighttime blue
-        foreach (var entity in _scene.Entities)
-        {
-            entity.Value.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
-        }
+        //foreach (var entity in _scene.Entities)
+        //{
+        //    entity.Value.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
+        //}
+
+        //for (int y = 0; y <= 10000; y += Constants.DEFAULT_ENTITY_SIZE)
+        //{
+        //    for (int x = 0; x <= 10000; x += Constants.DEFAULT_ENTITY_SIZE)
+        //    {
+        //        var v = new Vector2(x, y);
+        //        if (_scene.Entities.ContainsKey(v))
+        //        {
+        //            _scene.Entities[v].ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
+        //        }
+        //    }
+            
+        //}
 
         // Player
         InputOptions? input = InputHandler.Handle();
@@ -98,11 +116,11 @@ internal class TestGameMSN : IGame
         // Execute Player commands
         if (!CommandQueue.IsEmpty)
         {
-            Console.WriteLine("Players turn!");
+            //Console.WriteLine("Players turn!");
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            Console.WriteLine("AI's turn!");
+            //Console.WriteLine("AI's turn!");
             AI.Execute(_scene);
 
             // Execute AI commands
@@ -112,8 +130,8 @@ internal class TestGameMSN : IGame
         // Dynamically updated light sources
         //foreach (var light in _scene.Entities.OfType<LightSource>())
         //{
-            townLights.Illuminate(_scene, _scene.Entities);
-            light.Illuminate(_scene, _scene.Entities);
+        townLights.Illuminate(_scene, _scene.Entities);
+        light.Illuminate(_scene, _scene.Entities);
         //}
 
         _scene?.UpdateRuntime(deltaTime);
