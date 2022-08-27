@@ -28,7 +28,7 @@ namespace GameV1.WorldGeneration
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(501,501,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(201,201,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             
@@ -59,6 +59,16 @@ namespace GameV1.WorldGeneration
                     world.AddTile(tile.Key, grass);
                     //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
+
+                //Generate water with perlin noise..
+                //if (tile.Value < -0.2)
+                //{
+
+                //    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
+                //    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                //    world.AddTile(tile.Key, water);
+                //    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
+                //}
             }
             //Console.WriteLine("Grass Done");
             //Console.WriteLine("--------------------------------");
