@@ -32,7 +32,7 @@ internal class Scene : Disposeable, IScene
         return (IEntity?)entities.FirstOrDefault(k => entities.ContainsKey(k.Value.Position)).Value;
     }
 
-    public IDictionary<Vector2, IEntity>? EntitiesWithinDistanceOfEntity(IDictionary<Vector2, IEntity> entities, IEntity entity, int distance)
+    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         int distanceSquared = distance * distance;
@@ -41,22 +41,19 @@ internal class Scene : Disposeable, IScene
         //return entitiesWithinDist;
         Dictionary<Vector2, IEntity> entitiesWithinDist = new Dictionary<Vector2, IEntity>();
 
-        var EntityPosition = entity.Position;
+        var topLft = new Vector2(position.X - distance, position.Y - distance);
+        var btmRgt = new Vector2(position.X + distance, position.Y + distance);
         var v = new Vector2();
 
-        for (v.Y = EntityPosition.Y - distance; 
-             v.Y <= EntityPosition.Y + distance; 
-             v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
         {
-            for (v.X = EntityPosition.X - distance;
-                 v.X <= EntityPosition.X + distance; 
-                 v.X += Constants.DEFAULT_ENTITY_SIZE)
+            for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
             {
-                if (_entities.ContainsKey(v))
+                if (entities.ContainsKey(v))
                 {
-                    if (MathFunctions.DistanceSquaredBetween(entity.Position, v) <= distanceSquared)
+                    if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
                     {
-                        entitiesWithinDist.Add(v, _entities[v]);
+                        entitiesWithinDist.Add(v, entities[v]);
                     }
                 }
 

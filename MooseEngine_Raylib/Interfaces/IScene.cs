@@ -13,7 +13,7 @@ namespace MooseEngine.Interfaces
         IDictionary<Vector2, IEntity>? Entities { get; }
         ISceneCamera SceneCamera { get; set; }
         IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position);
-        IDictionary<Vector2, IEntity>? EntitiesWithinDistanceOfEntity(IDictionary<Vector2, IEntity> entities, IEntity entity, int distance);
+        IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance);
         IEnumerable<TEntity>? GetEntitiesOfType<TEntity>();
         IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IDictionary<Vector2, IEntity> entities);
 

@@ -32,7 +32,7 @@ namespace GameV1.Entities
 
         public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> entities)
         {
-            var entitiesWithinRange = scene.EntitiesWithinDistanceOfEntity(entities, this, this.Range);
+            var entitiesWithinRange = scene.GetEntitiesWithinRange(entities, this.Position, this.Range);
 
             var maxDistanceSquared = this.Range * this.Range;
 
@@ -43,10 +43,6 @@ namespace GameV1.Entities
 
                 var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
                 //var lerp = MathFunctions.Lerp(0, 1, inLerp);
-
-                //var r = (int)(inLerp * (128 + 32));
-                //var g = (int)(inLerp * (128 + 16));
-                //var b = (int)(inLerp * (128 +  0));
 
                 var r = (int)(inLerp * TintModifier.R);
                 var g = (int)(inLerp * TintModifier.G);

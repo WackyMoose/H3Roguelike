@@ -17,10 +17,10 @@ namespace GameV1.Entities
 
         public IEntity SelectedEntity { get; set; }
 
-        public IDictionary<Vector2, IEntity>? EntitiesWithinRange(IScene scene, IDictionary<Vector2, IEntity> entities, int range)
-        {
-            return scene.EntitiesWithinDistanceOfEntity(entities, SelectedEntity, range);
-        }
+        //public IDictionary<Vector2, IEntity>? EntitiesWithinRange(IScene scene, IDictionary<Vector2, IEntity> entities, int range)
+        //{
+        //    return scene.GetEntitiesWithinRange(entities, SelectedEntity, range);
+        //}
 
         public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)
         {

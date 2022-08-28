@@ -15,8 +15,8 @@ internal class TestGameMSN : IGame
 {
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private LightSource light = new LightSource(5 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
-    private LightSource townLights = new LightSource(16 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
+    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
     private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
