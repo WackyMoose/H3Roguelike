@@ -73,10 +73,8 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        //foreach (var entity in _scene.Tiles)
-        //{
-        //    Console.WriteLine(entity.Key);
-        //}
+        Console.WriteLine((int)(Application.Instance.Window.Width - Application.Instance.Window.Width % Constants.DEFAULT_ENTITY_SIZE));
+        Console.WriteLine((int)(Application.Instance.Window.Height - Application.Instance.Window.Height % Constants.DEFAULT_ENTITY_SIZE));
     }
 
     public void Uninitialize()

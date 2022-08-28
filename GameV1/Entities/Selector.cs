@@ -19,7 +19,7 @@ namespace GameV1.Entities
 
         //public IDictionary<Vector2, IEntity>? TilesWithinRange(IScene scene, IDictionary<Vector2, IEntity> Tiles, int range)
         //{
-        //    return scene.GetTilesWithinRange(Tiles, SelectedEntity, range);
+        //    return scene.GetEntitiesWithinRange(Tiles, SelectedEntity, range);
         //}
 
         public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)

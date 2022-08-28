@@ -32,7 +32,7 @@ namespace GameV1.Entities
 
         public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> Tiles)
         {
-            var TilesWithinRange = scene.GetTilesWithinRange(Tiles, this.Position, this.Range);
+            var TilesWithinRange = scene.GetEntitiesWithinRange(Tiles, this.Position, this.Range);
 
             var maxDistanceSquared = this.Range * this.Range;
 

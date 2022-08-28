@@ -19,7 +19,7 @@ namespace GameV1.Commands
 
         public override void Execute()
         {
-            var creatures = Scene.GetTilesOfType<Creature>(Scene.Tiles);
+            var creatures = Scene.GetEntitiesOfType<Creature>(Scene.Tiles);
 
             foreach (var npc in creatures)
             {

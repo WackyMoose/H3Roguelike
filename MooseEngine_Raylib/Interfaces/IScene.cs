@@ -13,9 +13,9 @@ namespace MooseEngine.Interfaces
         IDictionary<Vector2, IEntity>? Tiles { get; }
         ISceneCamera SceneCamera { get; set; }
         IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);
-        IDictionary<Vector2, IEntity>? GetTilesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance);
-        IEnumerable<TEntity>? GetTilesOfType<TEntity>();
-        IEnumerable<TEntity>? GetTilesOfType<TEntity>(IDictionary<Vector2, IEntity> Tiles);
+        IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance);
+        IEnumerable<TEntity>? GetEntitiesOfType<TEntity>();
+        IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IDictionary<Vector2, IEntity> Tiles);
 
         void UpdateRuntime(float deltaTime);
         void Add(IEntity entity);

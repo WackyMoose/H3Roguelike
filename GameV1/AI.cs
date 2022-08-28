@@ -13,8 +13,8 @@ namespace GameV1
         public static void Execute(IScene scene)
         {
             // TODO: Add Initializer that does player look-up once.
-            var player = scene.GetTilesOfType<Player>(scene.Tiles).FirstOrDefault();
-            //var npcs = scene.GetTilesOfType<Npc>(scene.Tiles).ToList();
+            var player = scene.GetEntitiesOfType<Player>(scene.Tiles).FirstOrDefault();
+            //var npcs = scene.GetEntitiesOfType<Npc>(scene.Tiles).ToList();
 
             foreach (var npc in scene.Tiles.OfType<Npc>())
             {
