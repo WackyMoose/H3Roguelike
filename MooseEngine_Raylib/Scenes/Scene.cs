@@ -9,37 +9,43 @@ namespace MooseEngine.Scenes;
 
 internal class Scene : Disposeable, IScene
 {
-    private IDictionary<Vector2, IEntity>? _entities;
-    private IDictionary<Vector2, IEntity>? _dynamicEntities;
+    private IDictionary<Vector2, IEntity>? _tiles;
+    private IDictionary<Vector2, IEntity>? _creatures;
+    private IDictionary<Vector2, IEntity>? _items;
+    
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
     public Scene(IRenderer renderer, float defaultEntitySize = Constants.DEFAULT_ENTITY_SIZE)
     {
-        _entities = new Dictionary<Vector2, IEntity>();
+        _tiles = new Dictionary<Vector2, IEntity>();
+        _creatures = new Dictionary<Vector2, IEntity>();
+        _items = new Dictionary<Vector2, IEntity>();
+        
         Renderer = renderer;
         _defaultEntitySize = defaultEntitySize;
     }
 
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
+    public IDictionary<Vector2, IEntity>? Tiles { get { return _tiles; } }
+    public IDictionary<Vector2, IEntity>? Creatures { get { return _creatures; } }
+    public IDictionary<Vector2, IEntity>? Items { get { return _items; } }
 
-    public IDictionary<Vector2, IEntity>? Entities { get { return _entities; } }
-    
-    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
+    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
-        return (IEntity?)entities.FirstOrDefault(k => entities.ContainsKey(k.Value.Position)).Value;
+        return (IEntity?)Tiles.FirstOrDefault(k => Tiles.ContainsKey(k.Value.Position)).Value;
     }
 
-    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
+    public IDictionary<Vector2, IEntity>? GetTilesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         int distanceSquared = distance * distance;
 
-        //Dictionary<Vector2, IEntity> entitiesWithinDist = entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
-        //return entitiesWithinDist;
-        Dictionary<Vector2, IEntity> entitiesWithinDist = new Dictionary<Vector2, IEntity>();
+        //Dictionary<Vector2, IEntity> TilesWithinDist = Tiles.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Key) <= distanceSquared).ToDictionary(entity => entity.Value.Position, entity => entity.Value);
+        //return TilesWithinDist;
+        Dictionary<Vector2, IEntity> TilesWithinDist = new Dictionary<Vector2, IEntity>();
 
         var topLft = new Vector2(position.X - distance, position.Y - distance);
         var btmRgt = new Vector2(position.X + distance, position.Y + distance);
@@ -49,93 +55,94 @@ internal class Scene : Disposeable, IScene
         {
             for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
             {
-                if (entities.ContainsKey(v))
+                if (Tiles.ContainsKey(v))
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
                     {
-                        entitiesWithinDist.Add(v, entities[v]);
+                        TilesWithinDist.Add(v, Tiles[v]);
                     }
                 }
 
             }
         }
 
-        return entitiesWithinDist;
+        return TilesWithinDist;
 
-        //return (IEnumerable<IEntity>?)entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Value.Position) <= distanceSquared ).ToList();
-        //return entities.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
+        //return (IEnumerable<IEntity>?)Tiles.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Value.Position) <= distanceSquared ).ToList();
+        //return Tiles.Where(x => MathFunctions.DistanceSquaredBetween(entity.Position, x.Position) <= distanceSquared && x != entity).ToList();
     }
 
-    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IDictionary<Vector2, IEntity> entities )
+    public IEnumerable<TEntity>? GetTilesOfType<TEntity>(IDictionary<Vector2, IEntity> Tiles )
     {
-        return (IEnumerable<TEntity>?)entities.OfType<TEntity>().ToList();
+        return (IEnumerable<TEntity>?)Tiles.OfType<TEntity>().ToList();
     }
 
-    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>()
+    public IEnumerable<TEntity>? GetTilesOfType<TEntity>()
     {
-        return (IEnumerable<TEntity>?)_entities.OfType<TEntity>().ToList();
+        return (IEnumerable<TEntity>?)_tiles.OfType<TEntity>().ToList();
     }
 
     protected override void DisposeManagedState()
     {
-        _entities.Clear();
-        _entities.GetEnumerator().Dispose();
+        _tiles.Clear();
+        _tiles.GetEnumerator().Dispose();
     }
 
     public void UpdateRuntime(float deltaTime)
     {
-        //for (int i = _entities.Count - 1; i >= 0; i--)
+        //for (int i = _tiles.Count - 1; i >= 0; i--)
         //{
-        //    var entity = _entities.ElementAt(i);
+        //    var entity = _tiles.ElementAt(i);
         //    entity.Value.Update(deltaTime);
         //}
 
-        //foreach (var entity in _entities)
+        //foreach (var entity in _tiles)
         //{
         //    // do something with entry.Value or entry.Key
         //    entity.Value.Update(deltaTime);
         //}
 
-        //_entities.AsParallel().ForAll(e => e.Value.Update(deltaTime));
+        //_tiles.AsParallel().ForAll(e => e.Value.Update(deltaTime));
 
         SceneCamera.Update(deltaTime);
 
         if (SceneCamera != default)
         {
             Renderer.Begin(SceneCamera);
-            //for (int i = _entities.Count - 1; i >= 0; i--)
+            //for (int i = _tiles.Count - 1; i >= 0; i--)
             //{
-            //    var entity = _entities.ElementAt(i);
+            //    var entity = _tiles.ElementAt(i);
             //    Renderer.Render(entity.Value, _defaultEntitySize);
             //}
 
-            //foreach (var entity in _entities)
+            //foreach (var entity in _tiles)
             //{
             //    Renderer.Render(entity.Value, _defaultEntitySize);
             //}
             var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
+            var topLft = new Vector2(SceneCamera.RaylibCamera.target.X - 16 * Constants.DEFAULT_ENTITY_SIZE, SceneCamera.RaylibCamera.target.Y - 16 * Constants.DEFAULT_ENTITY_SIZE);
+            var btmRgt = new Vector2(SceneCamera.RaylibCamera.target.X + 16 * Constants.DEFAULT_ENTITY_SIZE, SceneCamera.RaylibCamera.target.Y + 16 * Constants.DEFAULT_ENTITY_SIZE);
             var v = new Vector2();
-            //IEntity e = new Entity();
 
-            for (v.Y = 0; v.Y <= 10000; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+            for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
             {
-                for (v.X = 0; v.X <= 10000; v.X += Constants.DEFAULT_ENTITY_SIZE)
+                for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
                 {
                     //v.X = x;
                     //v.Y = y;
 
-                    if (_entities.ContainsKey(v))
+                    if (_tiles.ContainsKey(v))
                     {
-                        Renderer.Render(_entities[v], _defaultEntitySize);
-                        _entities[v].ColorTint = defaultTint;
+                        Renderer.Render(_tiles[v], _defaultEntitySize);
+                        _tiles[v].ColorTint = defaultTint;
                     }
 
-                    //_entities.TryGetValue(v, out e);
+                    //_tiles.TryGetValue(v, out e);
                     //Renderer.Render(e, _defaultEntitySize);
                 }
             }
 
-            //_entities.AsParallel().ForAll(e => Renderer.Render(e.Value, _defaultEntitySize));
+            //_tiles.AsParallel().ForAll(e => Renderer.Render(e.Value, _defaultEntitySize));
 
             Renderer.End();
         }
@@ -143,11 +150,11 @@ internal class Scene : Disposeable, IScene
 
     public void Add(IEntity entity)
     {
-        _entities.TryAdd(entity.Position, entity);
+        _tiles.TryAdd(entity.Position, entity);
     }
 
     public void Remove(IEntity entity)
     {
-        _entities.Remove(entity.Position);
+        _tiles.Remove(entity.Position);
     }
 }

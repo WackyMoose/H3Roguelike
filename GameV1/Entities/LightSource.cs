@@ -30,13 +30,13 @@ namespace GameV1.Entities
             TintModifier = tintModifier;
         }
 
-        public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> entities)
+        public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> Tiles)
         {
-            var entitiesWithinRange = scene.GetEntitiesWithinRange(entities, this.Position, this.Range);
+            var TilesWithinRange = scene.GetTilesWithinRange(Tiles, this.Position, this.Range);
 
             var maxDistanceSquared = this.Range * this.Range;
 
-            foreach (var entity in entitiesWithinRange)
+            foreach (var entity in TilesWithinRange)
             {
                 // TODO: Implement true inverse distance squared light intensity
                 var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);

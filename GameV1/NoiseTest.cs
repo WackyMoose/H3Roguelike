@@ -86,7 +86,7 @@ internal class NoiseTest : IGame
     public void Update(float deltaTime)
     {
         // Reset all Entity Colortint to a cool nighttime blue
-        foreach (var entity in _scene.Entities)
+        foreach (var entity in _scene.Tiles)
         {
             entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
         }
@@ -113,9 +113,9 @@ internal class NoiseTest : IGame
         }
 
         // Dynamically updated light sources
-        foreach (var light in _scene.Entities.OfType<LightSource>())
+        foreach (var light in _scene.Tiles.OfType<LightSource>())
         {
-            light.Illuminate(_scene, _scene.Entities);
+            light.Illuminate(_scene, _scene.Tiles);
         }
 
         _scene?.UpdateRuntime(deltaTime);

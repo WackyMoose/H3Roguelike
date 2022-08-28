@@ -29,8 +29,8 @@ namespace GameV1.Commands.Factory
                     case InputOptions.Right : direction = Constants.Right; break;
                 }
 
-                // Retrieve list of entities in walk direction
-                var entitiesAtTargetPosition = scene.EntityAtPosition(scene.Entities, entity.Position + direction);
+                // Retrieve list of Tiles in walk direction
+                var TilesAtTargetPosition = scene.EntityAtPosition(scene.Tiles, entity.Position + direction);
 
                     //// Creature
                     //if (entity is Creature && targetEntity is Creature)
@@ -40,9 +40,9 @@ namespace GameV1.Commands.Factory
                     //}
 
                     // Tile
-                    if (entity is Creature && entitiesAtTargetPosition.GetType() == typeof(Tile))
+                    if (entity is Creature && TilesAtTargetPosition.GetType() == typeof(Tile))
                     {
-                        Tile tile = (Tile)entitiesAtTargetPosition;
+                        Tile tile = (Tile)TilesAtTargetPosition;
 
                         if (!tile.IsWalkable)
                         {

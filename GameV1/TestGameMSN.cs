@@ -73,7 +73,7 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        //foreach (var entity in _scene.Entities)
+        //foreach (var entity in _scene.Tiles)
         //{
         //    Console.WriteLine(entity.Key);
         //}
@@ -88,7 +88,7 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Reset all Entity Colortint to a cool nighttime blue
-        //foreach (var entity in _scene.Entities)
+        //foreach (var entity in _scene.Tiles)
         //{
         //    entity.Value.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
         //}
@@ -98,9 +98,9 @@ internal class TestGameMSN : IGame
         //    for (int x = 0; x <= 10000; x += Constants.DEFAULT_ENTITY_SIZE)
         //    {
         //        var v = new Vector2(x, y);
-        //        if (_scene.Entities.ContainsKey(v))
+        //        if (_scene.Tiles.ContainsKey(v))
         //        {
-        //            _scene.Entities[v].ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
+        //            _scene.Tiles[v].ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
         //        }
         //    }
             
@@ -128,10 +128,10 @@ internal class TestGameMSN : IGame
         }
 
         // Dynamically updated light sources
-        //foreach (var light in _scene.Entities.OfType<LightSource>())
+        //foreach (var light in _scene.Tiles.OfType<LightSource>())
         //{
-        townLights.Illuminate(_scene, _scene.Entities);
-        light.Illuminate(_scene, _scene.Entities);
+        townLights.Illuminate(_scene, _scene.Tiles);
+        light.Illuminate(_scene, _scene.Tiles);
         //}
 
         _scene?.UpdateRuntime(deltaTime);
