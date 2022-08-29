@@ -94,11 +94,6 @@ internal class Scene : Disposeable, IScene
         {
             var entities = _entityLayers[layer].Entities;
 
-            if (SceneCamera == default)
-            {
-                continue;
-            }
-
             var v = new Vector2();
 
             for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
