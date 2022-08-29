@@ -26,6 +26,12 @@ namespace MooseEngine.Utilities
             Y = (int)rectangle.y;
         }
 
+        public Coords2D(Vector2 vector)
+        {
+            X = (int)vector.X;
+            Y = (int)vector.Y;
+        }
+
         public static Coords2D operator +(Coords2D a, Coords2D b)
         {
             return new Coords2D(a.X + b.X, a.Y + b.Y);

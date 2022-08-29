@@ -12,11 +12,31 @@ using System.Numerics;
 
 namespace GameV1;
 
+public enum Layer : int
+{
+    Tiles,
+    Creatures,
+    Items,
+    UI
+}
+
+public static class SceneExtensions
+{
+    public static IEntityLayer<TEntity> AddLayer<TEntity>(this IScene scene, Layer layer)
+        where TEntity : class, IEntity
+    {
+        return scene.AddLayer<TEntity>((int)layer);
+    }
+}
+
 internal class TestGameMSN : IGame
 {
     private IScene? _scene;
-    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
+    private Npc player = new Npc("Hero", 120, 1000, new Coords2D(5, 0));
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
+    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
+    private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
+    private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
@@ -26,11 +46,6 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-        var sceneFactory = Application.Instance.SceneFactory;
-        _scene = sceneFactory.CreateScene();
-
-        sceneFactory.CreateCenteredCamera(player);
-
         sword.MinDamage = 50;
         sword.MaxDamage = 200;
         sword.ArmorPenetrationFlat = 50;
@@ -39,35 +54,46 @@ internal class TestGameMSN : IGame
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
 
-        player.Position = new Vector2(192, 192);
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
+
+        var tileLayer = _scene.AddLayer<Tile>(Layer.Tiles);
+        var itemLayer = _scene.AddLayer<LightSource>(Layer.Items);
+        var creatureLayer = _scene.AddLayer<Creature>(Layer.Creatures);
+
+        var window = Application.Instance.Window;
+
+        // Spawn player
+        player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
-        player.OffHand.Add(sword);
+        player.Chest.Add(armor);
+        creatureLayer?.Add(player);
 
-        _scene?.Add(player);
+        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(light);
 
-        monster.Position = new Vector2(-96, -96);
-        monster.Chest.Add(armor);
+        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(townLights);
 
-        _scene?.Add(monster);
+        druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.MainHand.Add(sword);
+        druid.Chest.Add(armor);
+        creatureLayer?.Add(druid);
 
-        Console.WriteLine(monster.Stats.Health);
+        ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        ork.MainHand.Add(sword);
+        ork.Chest.Add(armor);
+        creatureLayer?.Add(ork);
 
-        CombatHandler.SolveAttack(player, monster, sword);
+        WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
-        Console.WriteLine(monster.Stats.Health);
-
-        Console.WriteLine(player.StrongestWeapon.Damage);
-
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
-
-        // Bind key press action to key value
-        // Bind key value to input value. Can be reconfigured at runtine
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
         foreach (var pos in forest)
@@ -97,20 +123,30 @@ internal class TestGameMSN : IGame
         // Player
         InputOptions? input = InputHandler.Handle();
 
-        Command command = CommandFactory.Create(input, _scene, player);
+        ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 
         // Execute Player commands
         if (!CommandQueue.IsEmpty)
         {
-            Console.WriteLine("Players turn!");
+            //Console.WriteLine("Players turn!");
+            CommandQueue.Execute();
+
+            // AI NPC / Monster / Critter controls
+            //Console.WriteLine("AI's turn!");
+            AI.Execute(_scene);
+
+            // Execute AI commands
             CommandQueue.Execute();
         }
 
-        // AI NPC / Monster / Critter controls
-
-        // Execute AI commands
+        // Dynamically updated light sources
+        //foreach (var light in _scene.Tiles.OfType<LightSource>())
+        //{
+        townLights.Illuminate(_scene);
+        light.Illuminate(_scene);
+        //}
 
         _scene?.UpdateRuntime(deltaTime);
     }

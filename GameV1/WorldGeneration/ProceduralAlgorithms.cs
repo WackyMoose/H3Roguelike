@@ -1,31 +1,37 @@
 ﻿using MooseEngine.Utilities;
-using SimplexNoise;
+using DotnetNoise;
 
 namespace GameV1.WorldGeneration
 {
     internal static class ProceduralAlgorithms
     {
-        //TODO Change Vector2 to Coords2D...
         //TODO Add overworld generation...
-        //TODO Add WFC to generate castles etc...
-        //TODO Use Cellular to generate Dungeons...
+        /*
+         * Rivers and lakes
+         * Roads
+         * Forests
+         * Castles
+         * Graveyards
+         * Villages
+         */
 
-        public static Dictionary<Coords2D, float> GenerateOverworld(int width, int height, int tileSize, float worldScale) 
+        public static Dictionary<Coords2D, float> GeneratePerlinNoiseMap(int width, int height, float worldScale, int seed) 
         {
-            Dictionary<Coords2D, float> overworld = new Dictionary<Coords2D, float>();
+            Dictionary<Coords2D, float> noiseMap = new Dictionary<Coords2D, float>();
+            FastNoise noise = new FastNoise(seed);
+            noise.UsedNoiseType = FastNoise.NoiseType.Perlin;
 
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
 			{
-                var xCord = x * (int)worldScale;
-                for (int y = 0; y < height; y++)
+                var yCord = y * (int)worldScale;
+                for (int x = 0; x < width; x++)
 			    {
-                    var yCord = y * (int)worldScale;
-
-                    overworld.Add(new Coords2D(xCord, yCord), SimplexNoise.Noise.CalcPixel2D(xCord, yCord, tileSize));
+                    var xCord = x * (int)worldScale;
+                    noiseMap.Add(new Coords2D(xCord, yCord), noise.GetPerlin(xCord,yCord));
 			    }
 			}
 
-            return overworld;
+            return noiseMap;
         }
 
         public static HashSet<Coords2D> GenerateForest(int iterations, int walkLength, Coords2D position) 
@@ -50,7 +56,7 @@ namespace GameV1.WorldGeneration
 
             for (int i = 0; i < walkLength; i++)
             {
-                var dir = Direction2D.GetRandomCardinalDirection() * 32;
+                var dir = Direction2D.GetRandomCardinalDirection() * Constants.DEFAULT_ENTITY_SIZE;
                 var newPosition = prevPosition + new Coords2D((int)dir.X,(int)dir.Y);
                 path.Add(newPosition);
                 prevPosition = newPosition;

@@ -5,13 +5,12 @@ namespace MooseEngine.Core
 {
     public abstract class Command : ICommand
     {
-        public Entity Entity { get; set; }
-        public IScene Scene { get; set; }
-
-        public Command(IScene scene, Entity entity)
+        public IEntity Entity { get; set; }
+        public IEntityLayer EntityLayer { get; set; }
+        public Command(IEntityLayer entityLayer, IEntity entity)
         {
-            Scene = scene;
             Entity = entity;
+            EntityLayer = entityLayer;
         }
 
         public abstract void Execute();

@@ -7,7 +7,10 @@ using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
+using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
+using System.Threading;
 
 namespace GameV1;
 
@@ -15,7 +18,10 @@ internal class NoiseTest : IGame
 {
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private Creature monster = new Creature("Beholder", 100, 1000, new Coords2D(13, 0));
+    private LightSource light = new LightSource(5 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128-48, 128-96, 255), "Torch", new Coords2D(9, 8));
+    private LightSource townLights = new LightSource(16 * Constants.DEFAULT_ENTITY_SIZE, new Color(128+32, 128+16, 128, 255), "Town lights", new Coords2D(9, 8));
+    private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
+    private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
@@ -23,14 +29,6 @@ internal class NoiseTest : IGame
 
     public void Initialize()
     {
-        var sceneFactory = Application.Instance.SceneFactory;
-        _scene = sceneFactory.CreateScene();
-
-        var window = Application.Instance.Window;
-
-        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        _scene?.Add(camera);
-
         sword.MinDamage = 50;
         sword.MaxDamage = 200;
         sword.ArmorPenetrationFlat = 50;
@@ -39,49 +37,44 @@ internal class NoiseTest : IGame
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
 
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
+
+        var window = Application.Instance.Window;
+
+        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        _scene.SceneCamera = camera;
+        //_scene?.Add(camera);
+
         // Spawn player
-        player.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(192, 192);
-        player.MainHand.Add(sword);
-        player.OffHand.Add(sword);
+        //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        //player.MainHand.Add(sword);
+        //player.Chest.Add(armor);
+        //_scene?.Add(player);
 
-        _scene?.Add(player);
+        //light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(light);
 
-        // Spawn monster
-        monster.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-        monster.Position = new Vector2(-96, -96);
-        monster.Chest.Add(armor);
+        //townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(townLights);
 
-        _scene?.Add(monster);
+        //druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        //druid.MainHand.Add(sword);
+        //druid.Chest.Add(armor);
+        //_scene?.Add(druid);
 
-        Console.WriteLine(monster.Stats.Health);
+        //ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        //ork.MainHand.Add(sword);
+        //ork.Chest.Add(armor);
+        //_scene?.Add(ork);
 
-        CombatHandler.SolveAttack(player, monster, sword);
+       // WorldGenerator.GenerateWorld(80085,ref tile);
 
-        Console.WriteLine(monster.Stats.Health);
-
-        Console.WriteLine(player.StrongestWeapon.Damage);
-
-        forest = ProceduralAlgorithms.GenerateForest(5, 30, new Coords2D(0, 0));
-
-        // Bind key press action to key value
-        // Bind key value to input value. Can be reconfigured at runtine
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
-
-        foreach (var pos in forest)
-        {
-            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-            tile.Position = pos;
-            tile.IsWalkable = false;
-            _scene?.Add(tile);
-        }
     }
 
     public void UIRender(IUIRenderer UIRenderer)
@@ -97,24 +90,39 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        // Player
-        InputOptions? input = InputHandler.Handle();
+        //// Reset all Entity Colortint to a cool nighttime blue
+        //foreach (var entity in _scene.Tiles)
+        //{
+        //    entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
+        //}
 
-        Command command = CommandFactory.Create(input, _scene, player);
+        //// Player
+        //InputOptions? input = InputHandler.Handle();
 
-        CommandQueue.Add(command);
+        //ICommand command = CommandFactory.Create(input, _scene, player);
 
-        // Execute Player commands
-        if (!CommandQueue.IsEmpty)
-        {
-            Console.WriteLine("Players turn!");
-            CommandQueue.Execute();
-        }
+        //CommandQueue.Add(command);
 
-        // AI NPC / Monster / Critter controls
+        //// Execute Player commands
+        //if (!CommandQueue.IsEmpty)
+        //{
+        //    //Console.WriteLine("Players turn!");
+        //    CommandQueue.Execute();
 
-        // Execute AI commands
+        //    // AI NPC / Monster / Critter controls
+        //    //Console.WriteLine("AI's turn!");
+        //    AI.Execute(_scene);
 
-        _scene?.UpdateRuntime(deltaTime);
+        //    // Execute AI commands
+        //    CommandQueue.Execute();
+        //}
+
+        //// Dynamically updated light sources
+        //foreach (var light in _scene.Tiles.OfType<LightSource>())
+        //{
+        //    light.Illuminate(_scene, _scene.Tiles);
+        //}
+
+        //_scene?.UpdateRuntime(deltaTime);
     }
 }

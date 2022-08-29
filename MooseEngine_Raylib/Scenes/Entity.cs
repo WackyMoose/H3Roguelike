@@ -12,7 +12,6 @@ public abstract class Entity : IEntity
     public Coords2D SpriteCoords { get; init; }
     public Color ColorTint { get; set; }
     public string Name { get; set; }
-    public int Id { get; set; }
     public virtual bool IsDead { get; set; } = false;
 
     public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.White)

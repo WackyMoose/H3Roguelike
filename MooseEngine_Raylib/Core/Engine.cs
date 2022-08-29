@@ -12,9 +12,9 @@ public static class Engine
 {
     private static readonly RaylibRendererOptions DefaultRaylibRendererOptions = new()
     {
-        ClearColor = new Color(34, 35, 35, 255),
+        ClearColor = new Color(0, 0, 0, 255), // Color(34, 35, 35, 255)
         TargetFPS = 60,
-        SpritesheetPath = @"..\..\..\Resources\Textures\colored_tilemap.png",
+        SpritesheetPath = @"..\..\..\Resources\Textures\Tilemap_Modified.png",
         SpriteSize = 8,
         Padding = 1,
         Offset = 0

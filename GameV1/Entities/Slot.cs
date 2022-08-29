@@ -5,7 +5,6 @@ namespace GameV1.Entities
     public class Slot<TItem> : ISlot<TItem> where TItem : IItem
     {
         public TItem? Item { get; set; }
-
         public bool IsEmpty { get { return Item == null; } }
 
         public bool Add(TItem item)
@@ -17,7 +16,6 @@ namespace GameV1.Entities
             }
             return false;
         }
-
         public TItem? Remove()
         {
             if (!IsEmpty)

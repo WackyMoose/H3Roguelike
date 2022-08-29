@@ -10,7 +10,7 @@ public class Camera : Entity, ISceneCamera
     private Camera2D _raylibCamera;
     private readonly Entity _targetEntity;
 
-    public Camera(Entity target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D())
+    public Camera(Entity target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D(27,27))
     {
         _targetEntity = target;
 
@@ -32,5 +32,6 @@ public class Camera : Entity, ISceneCamera
     public override void Update(float deltaTime)
     {
         _raylibCamera.target = _targetEntity.Position;
+        Position = _targetEntity.Position;
     }
 }

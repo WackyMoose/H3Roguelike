@@ -5,6 +5,7 @@ using MooseEngine.Scenes.Extensions;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace MooseEngine.Graphics;
 
@@ -59,7 +60,7 @@ internal class RaylibRenderer : IRaylibRenderer
         Raylib.EndMode2D();
     }
 
-    public void Render(Entity entity, float scale)
+    public void Render(IEntity entity, float scale)
     {
         Coords2D spritePosition = entity.SpriteCoords;
 

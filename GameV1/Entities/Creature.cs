@@ -1,6 +1,7 @@
 ﻿using GameV1.Categories;
 using GameV1.Interfaces;
 using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 
@@ -18,7 +19,8 @@ namespace GameV1.Entities
         public Slot<Weapon> MainHand { get; set; }
         public Slot<Weapon> OffHand { get; set; }
         public Slot<Armor> Chest { get; set; }
-        public Weapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
+        public IWeapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
+        public IEntity? TargetEntity { get; set; }
 
         public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
