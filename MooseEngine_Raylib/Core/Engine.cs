@@ -23,13 +23,13 @@ public static class Engine
     public static void Start<TGame>()
         where TGame : class, IGame
     {
-        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, UIRaylibRenderer, TGame>(DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, RaylibUIRenderer, TGame>(DefaultRaylibRendererOptions);
     }
 
     public static void Start<TGame>(ApplicationOptions applicationOptions)
     where TGame : class, IGame
     {
-        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, UIRaylibRenderer, TGame>(applicationOptions, DefaultRaylibRendererOptions);
+        Start<Application, RaylibInput, RaylibRenderer, RaylibRendererOptions, RaylibUIRenderer, TGame>(applicationOptions, DefaultRaylibRendererOptions);
     }
 
     public static void Start<TApplication, TInput, TRenderer, TRendererOptions, TUIRenderer, TGame>(TRendererOptions rendererOptions)

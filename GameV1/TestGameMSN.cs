@@ -4,6 +4,7 @@ using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -20,6 +21,8 @@ internal class TestGameMSN : IGame
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
+
+    private ConsolePanel _consolePanel;
 
     public void Initialize()
     {
@@ -74,6 +77,13 @@ internal class TestGameMSN : IGame
             tile.IsWalkable = false;
             _scene?.Add(tile);
         }
+
+        var app = Application.Instance;
+
+        var size = new Coords2D(app.Window.Width, 300);
+        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y); 
+
+        _consolePanel = new ConsolePanel(position, size);
     }
 
     public void Uninitialize()
@@ -107,11 +117,11 @@ internal class TestGameMSN : IGame
 
     public void UIRender(IUIRenderer UIRenderer)
     {
-        var windowData = UIRenderer.WindowData;
-
         UIRenderer.DrawFPS(16, 16);
 
-        var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
-        UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+        //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
+        //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+
+        _consolePanel.OnGUI(UIRenderer);
     }
 }
