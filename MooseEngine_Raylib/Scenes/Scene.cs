@@ -10,6 +10,8 @@ namespace MooseEngine.Scenes;
 public interface IEntityLayer
 {
     IDictionary<Vector2, IEntity> Entities { get; }
+
+    IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity;
 }
 
 public interface IEntityLayer<TEntity> : IEntityLayer
@@ -23,6 +25,11 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
     where TEntity : class, IEntity
 {
     public IDictionary<Vector2, IEntity> Entities { get; } = new Dictionary<Vector2, IEntity>();
+
+    public IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity
+    {
+        return Entities.Values.OfType<TEntityType>();
+    }
 
     public void Add(TEntity entity)
     {
@@ -161,12 +168,6 @@ internal class Scene : Disposeable, IScene
             }
 
             var v = new Vector2();
-
-            //foreach (IEntity entity in _entityLayers[layer].Entities.Values )
-            //{
-            //    Renderer.Render(entity, Constants.DEFAULT_ENTITY_SIZE);
-            //    entity.ColorTint = defaultTint;
-            //}
 
             for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
             {

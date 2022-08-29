@@ -11,7 +11,7 @@ using System.Numerics;
 
 namespace GameV1;
 
-public enum Layer : int
+public enum EntityLayer : int
 {
     Tiles,
     Creatures,
@@ -19,19 +19,10 @@ public enum Layer : int
     UI
 }
 
-public static class SceneExtensions
-{
-    public static IEntityLayer<TEntity> AddLayer<TEntity>(this IScene scene, Layer layer)
-        where TEntity : class, IEntity
-    {
-        return scene.AddLayer<TEntity>((int)layer);
-    }
-}
-
 internal class TestGameMSN : IGame
 {
     private IScene? _scene;
-    private Npc player = new Npc("Hero", 120, 1000, new Coords2D(5, 0));
+    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
@@ -54,9 +45,9 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
-        var tileLayer = _scene.AddLayer<Tile>(Layer.Tiles);
-        var itemLayer = _scene.AddLayer<LightSource>(Layer.Items);
-        var creatureLayer = _scene.AddLayer<Creature>(Layer.Creatures);
+        var tileLayer = _scene.AddLayer<Tile>(EntityLayer.Tiles);
+        var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
+        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         var window = Application.Instance.Window;
 
