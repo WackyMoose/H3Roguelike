@@ -12,13 +12,13 @@ public class SceneEntityFactory : ISceneEntityFactory
         _scene = sceneFactory.Scene;
     }
 
-    protected void AddToScene(Entity entity)
-    {
-        if (entity == default)
-        {
-            return;
-        }
+    //protected void AddToScene(Entity entity)
+    //{
+    //    if (entity == default)
+    //    {
+    //        return;
+    //    }
 
-        _scene?.Add(entity);
-    }
+    //    _scene?.Add(entity);
+    //}
 }

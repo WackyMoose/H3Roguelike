@@ -20,7 +20,7 @@ public class PlayerFactory : SceneEntityFactory, IPlayerFactory
     {
         var player = new Player("Player", 120, 1000, new Coords2D(4, 0));
 
-        AddToScene(player);
+        //AddToScene(player);
 
         return player;
     }

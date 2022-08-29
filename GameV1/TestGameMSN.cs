@@ -11,10 +11,27 @@ using System.Numerics;
 
 namespace GameV1;
 
+public enum Layer : int
+{
+    Tiles,
+    Creatures,
+    Items,
+    UI
+}
+
+public static class SceneExtensions
+{
+    public static IEntityLayer<TEntity> AddLayer<TEntity>(this IScene scene, Layer layer)
+        where TEntity : class, IEntity
+    {
+        return scene.AddLayer<TEntity>((int)layer);
+    }
+}
+
 internal class TestGameMSN : IGame
 {
     private IScene? _scene;
-    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private Npc player = new Npc("Hero", 120, 1000, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
@@ -37,35 +54,34 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
+        var tileLayer = _scene.AddLayer<Tile>(Layer.Tiles);
+        var creatureLayer = _scene.AddLayer<Creature>(Layer.Creatures);
+
         var window = Application.Instance.Window;
 
-        //var camera = new
-        //_scene?.Add(camera);
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-
         // Spawn player
-        player.Position = new Vector2(-1, -1) * Constants.DEFAULT_ENTITY_SIZE;
+        player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
-        _scene?.Add(player);
+        creatureLayer?.Add(player);
 
-        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        _scene?.Add(light);
+        //light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(light);
 
-        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        _scene?.Add(townLights);
+        //townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(townLights);
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
-        _scene?.Add(druid);
+        creatureLayer?.Add(druid);
 
         ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
-        _scene?.Add(ork);
+        creatureLayer?.Add(ork);
 
-        WorldGenerator.GenerateWorld(80085, ref _scene);
+        WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -73,8 +89,7 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        Console.WriteLine((int)(Application.Instance.Window.Width - Application.Instance.Window.Width % Constants.DEFAULT_ENTITY_SIZE));
-        Console.WriteLine((int)(Application.Instance.Window.Height - Application.Instance.Window.Height % Constants.DEFAULT_ENTITY_SIZE));
+        _scene.SceneCamera = new Camera(ork, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
     }
 
     public void Uninitialize()
@@ -85,29 +100,10 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        // Reset all Entity Colortint to a cool nighttime blue
-        //foreach (var entity in _scene.Tiles)
-        //{
-        //    entity.Value.ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
-        //}
-
-        //for (int y = 0; y <= 10000; y += Constants.DEFAULT_ENTITY_SIZE)
-        //{
-        //    for (int x = 0; x <= 10000; x += Constants.DEFAULT_ENTITY_SIZE)
-        //    {
-        //        var v = new Vector2(x, y);
-        //        if (_scene.Tiles.ContainsKey(v))
-        //        {
-        //            _scene.Tiles[v].ColorTint = new Color(128 - 64, 128, 128 + 64, 255);
-        //        }
-        //    }
-            
-        //}
-
         // Player
         InputOptions? input = InputHandler.Handle();
 
-        ICommand command = CommandFactory.Create(input, _scene, player);
+        ICommand command = CommandFactory.Create(input, _scene, ork);
 
         CommandQueue.Add(command);
 
@@ -128,8 +124,8 @@ internal class TestGameMSN : IGame
         // Dynamically updated light sources
         //foreach (var light in _scene.Tiles.OfType<LightSource>())
         //{
-        townLights.Illuminate(_scene, _scene.Tiles);
-        light.Illuminate(_scene, _scene.Tiles);
+        //townLights.Illuminate(_scene, _scene.Tiles);
+        //light.Illuminate(_scene, _scene.Tiles);
         //}
 
         _scene?.UpdateRuntime(deltaTime);

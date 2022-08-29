@@ -13,28 +13,28 @@ namespace GameV1
         public static void Execute(IScene scene)
         {
             // TODO: Add Initializer that does player look-up once.
-            var player = scene.GetEntitiesOfType<Player>(scene.Tiles).FirstOrDefault();
+            //var player = scene.GetEntitiesOfType<Player>(scene.Tiles).FirstOrDefault();
             //var npcs = scene.GetEntitiesOfType<Npc>(scene.Tiles).ToList();
 
-            foreach (var npc in scene.Tiles.OfType<Npc>())
-            {
-                // Check if loot or lootables are in sight
-                // If yes: Walk towards, Pick up loot, or loot lootable.
+            //foreach (var npc in scene.Tiles.OfType<Npc>())
+            //{
+            //    // Check if loot or lootables are in sight
+            //    // If yes: Walk towards, Pick up loot, or loot lootable.
 
 
-                // Check if enemies are in sight
-                // If yes: Walk towards or attack enemy
+            //    // Check if enemies are in sight
+            //    // If yes: Walk towards or attack enemy
 
-                // Check for dead creatures
-                ICommand maintenanceCommand = new CommandSwapDeadCreaturesWithCorpse(scene, npc);
-                CommandQueue.Add(maintenanceCommand);
+            //    // Check for dead creatures
+            //    ICommand maintenanceCommand = new CommandSwapDeadCreaturesWithCorpse(scene, npc);
+            //    CommandQueue.Add(maintenanceCommand);
 
-                // Generate random walk command
-                var input = GenerateRandomInput();
+            //    // Generate random walk command
+            //    var input = GenerateRandomInput();
 
-                ICommand command = CommandFactory.Create(input, scene, npc);
-                CommandQueue.Add(command);
-            }
+            //    ICommand command = CommandFactory.Create(input, scene, npc);
+            //    CommandQueue.Add(command);
+            //}
         }
 
         public static InputOptions GenerateRandomInput()

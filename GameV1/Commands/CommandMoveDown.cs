@@ -8,13 +8,17 @@ namespace GameV1.Commands
 {
     public class CommandMoveDown : Command
     {
-        public CommandMoveDown(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandMoveDown(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 
         public override void Execute()
         {
-            Entity.Position += new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
+            var newPosition = new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
+
+            EntityLayer.Entities.Remove(Entity.Position);
+            Entity.Position += newPosition;
+            EntityLayer.Entities.Add(Entity.Position, Entity);
         }
     }
 }

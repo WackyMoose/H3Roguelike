@@ -7,30 +7,74 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
+public interface IEntityLayer
+{
+    IDictionary<Vector2, IEntity> Entities { get; }
+}
+
+public interface IEntityLayer<TEntity> : IEntityLayer
+    where TEntity : class, IEntity
+{
+    void Add(TEntity entity);
+    void Remove(TEntity entity);
+}
+
+public class EntityLayer<TEntity> : IEntityLayer<TEntity>
+    where TEntity : class, IEntity
+{
+    public IDictionary<Vector2, IEntity> Entities { get; } = new Dictionary<Vector2, IEntity>();
+
+    public void Add(TEntity entity)
+    {
+        Entities.Add(entity.Position, entity);
+    }
+
+    public void Remove(TEntity entity)
+    {
+        Entities.Remove(entity.Position);
+    }
+}
 
 internal class Scene : Disposeable, IScene
 {
-    private IDictionary<Vector2, IEntity>? _entities;
-    
+    private IDictionary<int, IEntityLayer> _entityLayers;
+
+    public IEntityLayer<TEntity> AddLayer<TEntity>(int layer)
+        where TEntity : class, IEntity
+    {
+        var entityLayer = new EntityLayer<TEntity>();
+        _entityLayers.Add(layer, entityLayer);
+        return entityLayer;
+    }
+
+    public IEntityLayer GetLayer(int layer)
+    {
+        return _entityLayers[layer];
+    }
+
+    //private IDictionary<Vector2, IEntity>? _entities;
+
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
     public Scene(IRenderer renderer, float defaultEntitySize = Constants.DEFAULT_ENTITY_SIZE)
     {
-        _entities = new Dictionary<Vector2, IEntity>();
-        
+        //_entities = new Dictionary<Vector2, IEntity>();
+        _entityLayers = new Dictionary<int, IEntityLayer>();
+
         Renderer = renderer;
         _defaultEntitySize = defaultEntitySize;
     }
 
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
-    public IDictionary<Vector2, IEntity>? Tiles { get { return _entities; } }
+    //
+    //public IDictionary<Vector2, IEntity>? Tiles { get { return _entities; } }
 
-    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position)
+    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
-        return (IEntity?)Tiles.FirstOrDefault(k => Tiles.ContainsKey(k.Value.Position)).Value;
+        return entities.ContainsKey(position) ? entities[position] : default;
     }
 
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance)
@@ -61,61 +105,81 @@ internal class Scene : Disposeable, IScene
         return TilesWithinDist;
     }
 
-    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>(IDictionary<Vector2, IEntity> Tiles )
-    {
-        // TODO
-        return (IEnumerable<TEntity>?)Tiles.OfType<TEntity>().ToList();
-    }
-
-    public IEnumerable<TEntity>? GetEntitiesOfType<TEntity>()
-    {
-        // TODO
-        return (IEnumerable<TEntity>?)_entities.OfType<TEntity>().ToList();
-    }
 
     protected override void DisposeManagedState()
     {
-        _entities.Clear();
-        _entities.GetEnumerator().Dispose();
+        _entityLayers.Clear();
+        _entityLayers.GetEnumerator().Dispose();
     }
 
     public void UpdateRuntime(float deltaTime)
     {
         SceneCamera.Update(deltaTime);
 
-        if (SceneCamera != default)
-        {
-            Renderer.Begin(SceneCamera);
+        //if (SceneCamera != default)
+        //{
+        //    Renderer.Begin(SceneCamera);
 
-            var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
-            var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE), (int)(Application.Instance.Window.Height * 0.5 - Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE) );
-            var topLft = new Vector2(SceneCamera.RaylibCamera.target.X - windowSize.X, SceneCamera.RaylibCamera.target.Y - windowSize.Y);
-            var btmRgt = new Vector2(SceneCamera.RaylibCamera.target.X + windowSize.X, SceneCamera.RaylibCamera.target.Y + windowSize.Y);
+        //    var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
+        //    var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE), (int)(Application.Instance.Window.Height * 0.5 - Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE) );
+        //    var topLft = new Vector2(SceneCamera.RaylibCamera.target.X - windowSize.X, SceneCamera.RaylibCamera.target.Y - windowSize.Y);
+        //    var btmRgt = new Vector2(SceneCamera.RaylibCamera.target.X + windowSize.X, SceneCamera.RaylibCamera.target.Y + windowSize.Y);
+        //    var v = new Vector2();
+
+        //    for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        //    {
+        //        for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+        //        {
+        //            if (_entities.ContainsKey(v))
+        //            {
+        //                Renderer.Render(_entities[v], _defaultEntitySize);
+        //                _entities[v].ColorTint = defaultTint;
+        //            }
+        //        }
+        //    }
+
+        //    Renderer.End();
+        //}
+
+        // TODO: Replace render with this
+        var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
+
+        var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
+        var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
+        var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
+
+        var layers = _entityLayers.Keys;
+        Renderer.Begin(SceneCamera);
+        foreach (var layer in layers)
+        {
+            var entities = _entityLayers[layer].Entities;
+
+            if (SceneCamera == default)
+            {
+                continue;
+            }
+
             var v = new Vector2();
+
+            //foreach (IEntity entity in _entityLayers[layer].Entities.Values )
+            //{
+            //    Renderer.Render(entity, Constants.DEFAULT_ENTITY_SIZE);
+            //    entity.ColorTint = defaultTint;
+            //}
 
             for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
             {
                 for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
                 {
-                    if (_entities.ContainsKey(v))
+                    if (entities.ContainsKey(v))
                     {
-                        Renderer.Render(_entities[v], _defaultEntitySize);
-                        _entities[v].ColorTint = defaultTint;
+                        Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
+                        entities[v].ColorTint = defaultTint;
                     }
+
                 }
             }
-
-            Renderer.End();
         }
-    }
-
-    public void Add(IEntity entity)
-    {
-        _entities.TryAdd(entity.Position, entity);
-    }
-
-    public void Remove(IEntity entity)
-    {
-        _entities.Remove(entity.Position);
+        Renderer.End();
     }
 }

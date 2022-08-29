@@ -47,28 +47,28 @@ internal class NoiseTest : IGame
         //_scene?.Add(camera);
 
         // Spawn player
-        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        player.MainHand.Add(sword);
-        player.Chest.Add(armor);
-        _scene?.Add(player);
+        //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        //player.MainHand.Add(sword);
+        //player.Chest.Add(armor);
+        //_scene?.Add(player);
 
-        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        _scene?.Add(light);
+        //light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(light);
 
-        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        _scene?.Add(townLights);
+        //townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        //_scene?.Add(townLights);
 
-        druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.MainHand.Add(sword);
-        druid.Chest.Add(armor);
-        _scene?.Add(druid);
+        //druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        //druid.MainHand.Add(sword);
+        //druid.Chest.Add(armor);
+        //_scene?.Add(druid);
 
-        ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
-        ork.MainHand.Add(sword);
-        ork.Chest.Add(armor);
-        _scene?.Add(ork);
+        //ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        //ork.MainHand.Add(sword);
+        //ork.Chest.Add(armor);
+        //_scene?.Add(ork);
 
-        WorldGenerator.GenerateWorld(80085,ref _scene);
+       // WorldGenerator.GenerateWorld(80085,ref tile);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -85,39 +85,39 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        // Reset all Entity Colortint to a cool nighttime blue
-        foreach (var entity in _scene.Tiles)
-        {
-            entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
-        }
+        //// Reset all Entity Colortint to a cool nighttime blue
+        //foreach (var entity in _scene.Tiles)
+        //{
+        //    entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
+        //}
 
-        // Player
-        InputOptions? input = InputHandler.Handle();
+        //// Player
+        //InputOptions? input = InputHandler.Handle();
 
-        ICommand command = CommandFactory.Create(input, _scene, player);
+        //ICommand command = CommandFactory.Create(input, _scene, player);
 
-        CommandQueue.Add(command);
+        //CommandQueue.Add(command);
 
-        // Execute Player commands
-        if (!CommandQueue.IsEmpty)
-        {
-            //Console.WriteLine("Players turn!");
-            CommandQueue.Execute();
+        //// Execute Player commands
+        //if (!CommandQueue.IsEmpty)
+        //{
+        //    //Console.WriteLine("Players turn!");
+        //    CommandQueue.Execute();
 
-            // AI NPC / Monster / Critter controls
-            //Console.WriteLine("AI's turn!");
-            AI.Execute(_scene);
+        //    // AI NPC / Monster / Critter controls
+        //    //Console.WriteLine("AI's turn!");
+        //    AI.Execute(_scene);
 
-            // Execute AI commands
-            CommandQueue.Execute();
-        }
+        //    // Execute AI commands
+        //    CommandQueue.Execute();
+        //}
 
-        // Dynamically updated light sources
-        foreach (var light in _scene.Tiles.OfType<LightSource>())
-        {
-            light.Illuminate(_scene, _scene.Tiles);
-        }
+        //// Dynamically updated light sources
+        //foreach (var light in _scene.Tiles.OfType<LightSource>())
+        //{
+        //    light.Illuminate(_scene, _scene.Tiles);
+        //}
 
-        _scene?.UpdateRuntime(deltaTime);
+        //_scene?.UpdateRuntime(deltaTime);
     }
 }
