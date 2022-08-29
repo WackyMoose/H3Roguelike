@@ -124,31 +124,6 @@ internal class Scene : Disposeable, IScene
     {
         SceneCamera.Update(deltaTime);
 
-        //if (SceneCamera != default)
-        //{
-        //    Renderer.Begin(SceneCamera);
-
-        //    var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
-        //    var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE), (int)(Application.Instance.Window.Height * 0.5 - Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE) );
-        //    var topLft = new Vector2(SceneCamera.RaylibCamera.target.X - windowSize.X, SceneCamera.RaylibCamera.target.Y - windowSize.Y);
-        //    var btmRgt = new Vector2(SceneCamera.RaylibCamera.target.X + windowSize.X, SceneCamera.RaylibCamera.target.Y + windowSize.Y);
-        //    var v = new Vector2();
-
-        //    for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
-        //    {
-        //        for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
-        //        {
-        //            if (_entities.ContainsKey(v))
-        //            {
-        //                Renderer.Render(_entities[v], _defaultEntitySize);
-        //                _entities[v].ColorTint = defaultTint;
-        //            }
-        //        }
-        //    }
-
-        //    Renderer.End();
-        //}
-
         // TODO: Replace render with this
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
 
@@ -157,7 +132,9 @@ internal class Scene : Disposeable, IScene
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
 
         var layers = _entityLayers.Keys;
+
         Renderer.Begin(SceneCamera);
+
         foreach (var layer in layers)
         {
             var entities = _entityLayers[layer].Entities;
@@ -178,10 +155,10 @@ internal class Scene : Disposeable, IScene
                         Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
                         entities[v].ColorTint = defaultTint;
                     }
-
                 }
             }
         }
+
         Renderer.End();
     }
 }

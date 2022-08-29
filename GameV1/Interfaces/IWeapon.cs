@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Interfaces
 {
-    public interface IWeapon
+    public interface IWeapon : IItem
     {
         int Range { get; set; }
         int Damage { get; }

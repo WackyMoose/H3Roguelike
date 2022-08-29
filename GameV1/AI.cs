@@ -27,13 +27,14 @@ namespace GameV1
                 // Check if loot or lootables are in sight
                 // If yes: Walk towards, Pick up loot, or loot lootable.
 
-
                 // Check if enemies are in sight
                 // If yes: Walk towards or attack enemy
 
+
+                // TODO: Refactor. This doesn't belong here and can't be implemented with single layer
                 // Check for dead creatures
-                ICommand maintenanceCommand = new CommandSwapDeadCreaturesWithCorpse(creatureLayer, npc);
-                CommandQueue.Add(maintenanceCommand);
+                //ICommand maintenanceCommand = new CommandSwapDeadCreaturesWithCorpse(creatureLayer, npc);
+                //CommandQueue.Add(maintenanceCommand);
 
                 // Generate random walk command
                 var input = GenerateRandomInput();

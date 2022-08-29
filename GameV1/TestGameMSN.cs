@@ -24,8 +24,8 @@ internal class TestGameMSN : IGame
 {
     private IScene? _scene;
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
-    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
-    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
+    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
     private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
@@ -52,6 +52,8 @@ internal class TestGameMSN : IGame
 
         var window = Application.Instance.Window;
 
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
@@ -63,6 +65,13 @@ internal class TestGameMSN : IGame
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
+
+        for (int i = 0; i < 64; i++)
+        {
+            var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+            itemLayer?.Add(light);
+        }
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
@@ -81,8 +90,6 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
     }
 
     public void Uninitialize()
