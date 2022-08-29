@@ -18,7 +18,7 @@ namespace GameV1
 
             var creatureLayer = scene.GetLayer((int)EntityLayer.Creatures);
 
-            Player ? player = creatureLayer.GetEntitiesOfType<Player>().FirstOrDefault();
+            Player? player = creatureLayer.GetEntitiesOfType<Player>().FirstOrDefault();
 
             var npcs = creatureLayer.GetEntitiesOfType<Npc>();
 

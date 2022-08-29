@@ -8,6 +8,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1;
 
@@ -113,12 +114,15 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
         }
 
+        // TODO: Wrap in method
         // Dynamically updated light sources
-        //foreach (var light in _scene.Tiles.OfType<LightSource>())
-        //{
-        townLights.Illuminate(_scene);
-        light.Illuminate(_scene);
-        //}
+        var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
+        
+        foreach (var lightSource in lightSources)
+        {
+            lightSource.Illuminate(_scene);
+        }
 
         _scene?.UpdateRuntime(deltaTime);
     }
