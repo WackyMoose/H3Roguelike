@@ -55,6 +55,7 @@ internal class TestGameMSN : IGame
         _scene = sceneFactory.CreateScene();
 
         var tileLayer = _scene.AddLayer<Tile>(Layer.Tiles);
+        var itemLayer = _scene.AddLayer<LightSource>(Layer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(Layer.Creatures);
 
         var window = Application.Instance.Window;
@@ -65,11 +66,11 @@ internal class TestGameMSN : IGame
         player.Chest.Add(armor);
         creatureLayer?.Add(player);
 
-        //light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        //_scene?.Add(light);
+        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(light);
 
-        //townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        //_scene?.Add(townLights);
+        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(townLights);
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
@@ -89,7 +90,7 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
-        _scene.SceneCamera = new Camera(ork, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
     }
 
     public void Uninitialize()
@@ -103,7 +104,7 @@ internal class TestGameMSN : IGame
         // Player
         InputOptions? input = InputHandler.Handle();
 
-        ICommand command = CommandFactory.Create(input, _scene, ork);
+        ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 
@@ -124,8 +125,8 @@ internal class TestGameMSN : IGame
         // Dynamically updated light sources
         //foreach (var light in _scene.Tiles.OfType<LightSource>())
         //{
-        //townLights.Illuminate(_scene, _scene.Tiles);
-        //light.Illuminate(_scene, _scene.Tiles);
+        townLights.Illuminate(_scene);
+        light.Illuminate(_scene);
         //}
 
         _scene?.UpdateRuntime(deltaTime);

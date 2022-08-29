@@ -30,27 +30,37 @@ namespace GameV1.Entities
             TintModifier = tintModifier;
         }
 
-        public void Illuminate(IScene scene, IDictionary<Vector2, IEntity> Tiles)
+        public void Illuminate(IScene scene)
         {
-            var TilesWithinRange = scene.GetEntitiesWithinRange(Tiles, this.Position, this.Range);
 
-            var maxDistanceSquared = this.Range * this.Range;
+            //_scene.GetLayer((int)Layer.Tiles).Entities
 
-            foreach (var entity in TilesWithinRange)
+            var layers = scene.EntityLayers.Keys;
+
+            foreach (var layer in layers)
             {
-                // TODO: Implement true inverse distance squared light intensity
-                var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);
+                var entities = scene.EntityLayers[layer].Entities;
 
-                var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
-                //var lerp = MathFunctions.Lerp(0, 1, inLerp);
+                var TilesWithinRange = scene.GetEntitiesWithinRange(entities, this.Position, this.Range);
 
-                var r = (int)(inLerp * TintModifier.R);
-                var g = (int)(inLerp * TintModifier.G);
-                var b = (int)(inLerp * TintModifier.B);
+                var maxDistanceSquared = this.Range * this.Range;
 
-                var color = new Color(r, g, b, 255);
+                foreach (var entity in TilesWithinRange)
+                {
+                    // TODO: Implement true inverse distance squared light intensity
+                    var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);
 
-                entity.Value.ColorTint += color;
+                    var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
+                    //var lerp = MathFunctions.Lerp(0, 1, inLerp);
+
+                    var r = (int)(inLerp * TintModifier.R);
+                    var g = (int)(inLerp * TintModifier.G);
+                    var b = (int)(inLerp * TintModifier.B);
+
+                    var color = new Color(r, g, b, 255);
+
+                    entity.Value.ColorTint += color;
+                }
             }
         }
 

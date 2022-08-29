@@ -68,6 +68,7 @@ internal class Scene : Disposeable, IScene
 
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
+    public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
     //
     //public IDictionary<Vector2, IEntity>? Tiles { get { return _entities; } }
 

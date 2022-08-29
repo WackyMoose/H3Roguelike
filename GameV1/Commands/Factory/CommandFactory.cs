@@ -37,7 +37,7 @@ namespace GameV1.Commands.Factory
                 var TilesAtTargetPosition = scene.EntityAtPosition(tiles.Entities, entity.Position + direction);
                 var CreaturesAtTargetPosition = scene.EntityAtPosition(creatures.Entities, entity.Position + direction);
 
-                //// Creature
+                // Creature
                 if (entity is Creature && CreaturesAtTargetPosition is not null)
                 {
                     //Console.WriteLine("We are attacking!");
