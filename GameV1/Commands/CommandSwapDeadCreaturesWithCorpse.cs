@@ -13,7 +13,7 @@ namespace GameV1.Commands
 {
     internal class CommandSwapDeadCreaturesWithCorpse : Command
     {
-        public CommandSwapDeadCreaturesWithCorpse(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandSwapDeadCreaturesWithCorpse(EntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

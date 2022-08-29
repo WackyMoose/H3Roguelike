@@ -1,5 +1,4 @@
-﻿using GameV1.Commands;
-using GameV1.Commands.Factory;
+﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
@@ -96,17 +95,9 @@ internal class TestGameMSN : IGame
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
-        foreach (var pos in forest)
-        {
-            Tile tile = new Tile("Tree01", false, new Coords2D(4, 5));
-            tile.Position = pos;
-            tile.IsWalkable = false;
-            _scene?.Add(tile);
-        }
-
         var app = Application.Instance;
 
-        var size = new Coords2D(app.Window.Width, 300);
+        var size = new Coords2D(app.Window.Width, 200);
         var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y); 
 
         _consolePanel = new ConsolePanel(position, size);

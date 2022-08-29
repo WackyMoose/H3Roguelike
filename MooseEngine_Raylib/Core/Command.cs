@@ -6,8 +6,8 @@ namespace MooseEngine.Core
     public abstract class Command : ICommand
     {
         public IEntity Entity { get; set; }
-        public IEntityLayer EntityLayer { get; set; }
-        public Command(IEntityLayer entityLayer, IEntity entity)
+        public EntityLayer EntityLayer { get; set; }
+        public Command(EntityLayer entityLayer, IEntity entity)
         {
             Entity = entity;
             EntityLayer = entityLayer;

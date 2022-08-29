@@ -8,7 +8,7 @@ namespace GameV1.Commands
 {
     public class CommandMoveDown : Command
     {
-        public CommandMoveDown(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandMoveDown(EntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 
