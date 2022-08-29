@@ -15,8 +15,7 @@ public enum Layer : int
 {
     Tiles,
     Creatures,
-    Items,
-    UI
+    Items
 }
 
 public static class SceneExtensions
