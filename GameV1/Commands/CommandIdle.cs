@@ -8,7 +8,7 @@ namespace GameV1.Commands
 {
     internal class CommandIdle : Command
     {
-        public CommandIdle(EntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandIdle(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

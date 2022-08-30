@@ -8,7 +8,7 @@ namespace GameV1.Commands
 {
     public class CommandMoveLeft : Command
     {
-        public CommandMoveLeft(EntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandMoveLeft(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

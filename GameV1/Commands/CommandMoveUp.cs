@@ -11,7 +11,7 @@ namespace GameV1.Commands
     public class CommandMoveUp : Command
     {
 
-        public CommandMoveUp(EntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandMoveUp(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

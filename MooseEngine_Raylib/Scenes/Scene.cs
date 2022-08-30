@@ -9,7 +9,7 @@ namespace MooseEngine.Scenes;
 
 internal class Scene : Disposeable, IScene
 {
-    private IDictionary<int, EntityLayer> _entityLayers;
+    private IDictionary<int, IEntityLayer> _entityLayers;
 
     public IEntityLayer<TEntity> AddLayer<TEntity>(int layer)
         where TEntity : class, IEntity
@@ -19,7 +19,7 @@ internal class Scene : Disposeable, IScene
         return entityLayer;
     }
 
-    public EntityLayer GetLayer(int layer)
+    public IEntityLayer GetLayer(int layer)
     {
         return _entityLayers[layer];
     }
@@ -29,7 +29,7 @@ internal class Scene : Disposeable, IScene
 
     public Scene(IRenderer renderer, float defaultEntitySize = Constants.DEFAULT_ENTITY_SIZE)
     {
-        _entityLayers = new Dictionary<int, EntityLayer>();
+        _entityLayers = new Dictionary<int, IEntityLayer>();
 
         Renderer = renderer;
         _defaultEntitySize = defaultEntitySize;
@@ -37,7 +37,7 @@ internal class Scene : Disposeable, IScene
 
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
-    public IDictionary<int, EntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
+    public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
 
     public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
     {

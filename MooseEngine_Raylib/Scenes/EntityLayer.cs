@@ -3,12 +3,14 @@ using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
-public interface EntityLayer
+public interface IEntityLayer
 {
     IDictionary<Vector2, IEntity> Entities { get; }
+
+    IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity;
 }
 
-public interface IEntityLayer<TEntity> : EntityLayer
+public interface IEntityLayer<TEntity> : IEntityLayer
     where TEntity : class, IEntity
 {
     void Add(TEntity entity);
@@ -23,6 +25,11 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
     public void Add(TEntity entity)
     {
         Entities.Add(entity.Position, entity);
+    }
+
+    public IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity
+    {
+        return Entities.Values.OfType<TEntityType>();
     }
 
     public void Remove(TEntity entity)
