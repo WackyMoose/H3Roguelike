@@ -21,7 +21,7 @@ namespace GameV1.Commands
             
             EntityLayer.Entities.Remove(Entity.Position);
             Entity.Position += newPosition;
-            EntityLayer.Entities.Add(Entity.Position, Entity);
+            EntityLayer.Entities.Add(Entity.Position, Entity); // TODO: TryAdd()
         }
     }
 }
