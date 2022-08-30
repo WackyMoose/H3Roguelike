@@ -7,7 +7,7 @@ public static class Randomizer
 
     public static int RandomInt(int minVal, int maxVal)
     {
-        return _generator.Next(minVal, maxVal + 1);
+        return _generator.Next(minVal, maxVal);
     }
 
     public static int RandomPercent()

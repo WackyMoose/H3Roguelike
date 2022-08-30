@@ -8,6 +8,6 @@ namespace GameV1.Interfaces
 {
     public interface ITile
     {
-        bool Walkable { get; set; }
+        bool IsWalkable { get; set; }
     }
 }

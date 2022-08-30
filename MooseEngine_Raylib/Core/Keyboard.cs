@@ -1,9 +1,13 @@
-﻿using Raylib_cs;
+﻿ using Raylib_cs;
 
 namespace MooseEngine.Core
 {
     public static class Keyboard
     {
+
+        public static Dictionary<KeyboardKey, Command>? Key = new Dictionary<KeyboardKey, Command>();
+
+        public static KeyboardKey KeyIdle { get; set; }
         public static KeyboardKey KeyMoveUp { get; set; }
         public static KeyboardKey KeyMoveDown { get; set; }
         public static KeyboardKey KeyMoveLeft { get; set; }

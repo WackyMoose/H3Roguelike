@@ -1,5 +1,5 @@
-﻿using MooseEngine.Utilities;
-using Raylib_cs;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace MooseEngine.Interfaces
@@ -11,7 +11,7 @@ namespace MooseEngine.Interfaces
         Coords2D SpriteCoords { get; init; }
         Color ColorTint { get; set; }
         string Name { get; set; }
-        int Id { get; set; }
+        bool IsDead { get; set; }
 
         void Initialize();
         void Update(float deltaTime);

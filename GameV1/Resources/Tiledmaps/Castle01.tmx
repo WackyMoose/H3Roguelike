@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="10" height="14" tilewidth="8" tileheight="8" infinite="0" nextlayerid="3" nextobjectid="4">
+ <editorsettings>
+  <export target="../CastleCSV/Castle01.csv" format="csv"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../../../../RaylibPlayground/ClassyClash/Textures/Tilemap_Modified.tsx"/>
+ <tileset firstgid="785" source="../../../../RaylibPlayground/ClassyClash/Textures/colored_tilemap_packed.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="10" height="14">
+  <data encoding="csv">
+1,115,2,58,2,113,2,2,2,4,
+29,0,94,0,0,29,0,94,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,141,116,59,2,142,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,29,0,0,0,32,
+29,0,0,0,0,57,2,59,2,142,
+29,0,0,0,0,0,0,0,0,32,
+29,0,0,0,0,0,0,0,0,32,
+143,2,115,2,59,2,2,116,2,60
+</data>
+ </layer>
+</map>
