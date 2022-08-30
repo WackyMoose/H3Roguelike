@@ -14,6 +14,10 @@ public abstract class Entity : IEntity
     public string Name { get; set; }
     public virtual bool IsDead { get; set; } = false;
 
+    public Entity()
+    {
+    }
+
     public Entity(string name, Coords2D spriteCoords) : this(name, spriteCoords, Color.White)
     {
     }

@@ -8,31 +8,23 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1;
 
-public enum Layer : int
+public enum EntityLayer : int
 {
     Tiles,
     Creatures,
     Items
 }
 
-public static class SceneExtensions
-{
-    public static IEntityLayer<TEntity> AddLayer<TEntity>(this IScene scene, Layer layer)
-        where TEntity : class, IEntity
-    {
-        return scene.AddLayer<TEntity>((int)layer);
-    }
-}
-
 internal class TestGameMSN : IGame
 {
     private IScene? _scene;
-    private Npc player = new Npc("Hero", 120, 1000, new Coords2D(5, 0));
-    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), "Torch", new Coords2D(9, 8));
-    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), "Town lights", new Coords2D(9, 8));
+    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
+    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
     private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
@@ -55,11 +47,13 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
-        var tileLayer = _scene.AddLayer<Tile>(Layer.Tiles);
-        var itemLayer = _scene.AddLayer<LightSource>(Layer.Items);
-        var creatureLayer = _scene.AddLayer<Creature>(Layer.Creatures);
+        var tileLayer = _scene.AddLayer<Tile>(EntityLayer.Tiles);
+        var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
+        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         var window = Application.Instance.Window;
+
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
@@ -72,6 +66,13 @@ internal class TestGameMSN : IGame
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
+
+        for (int i = 0; i < 64; i++)
+        {
+            var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+            itemLayer?.Add(light);
+        }
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
@@ -131,12 +132,15 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
         }
 
+        // TODO: Wrap in method
         // Dynamically updated light sources
-        //foreach (var light in _scene.Tiles.OfType<LightSource>())
-        //{
-        townLights.Illuminate(_scene);
-        light.Illuminate(_scene);
-        //}
+        var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
+        
+        foreach (var lightSource in lightSources)
+        {
+            lightSource.Illuminate(_scene);
+        }
 
         _scene?.UpdateRuntime(deltaTime);
     }

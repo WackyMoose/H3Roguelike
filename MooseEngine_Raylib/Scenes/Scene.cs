@@ -90,6 +90,7 @@ internal class Scene : Disposeable, IScene
 
         var layers = _entityLayers.Keys;
         Renderer.BeginScene(SceneCamera);
+
         foreach (var layer in layers)
         {
             var entities = _entityLayers[layer].Entities;
@@ -105,7 +106,6 @@ internal class Scene : Disposeable, IScene
                         Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
                         entities[v].ColorTint = defaultTint;
                     }
-
                 }
             }
         }

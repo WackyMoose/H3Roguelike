@@ -17,11 +17,15 @@ namespace GameV1.Commands
 
         public override void Execute()
         {
-            var newPosition = new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
-            
-            EntityLayer.Entities.Remove(Entity.Position);
-            Entity.Position += newPosition;
-            EntityLayer.Entities.Add(Entity.Position, Entity);
+            var newPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
+
+            var isKeyAvailable = EntityLayer.Entities.TryAdd(newPosition, Entity);
+
+            if (isKeyAvailable)
+            {
+                EntityLayer.Entities.Remove(Entity.Position);
+                Entity.Position = newPosition;
+            }
         }
     }
 }
