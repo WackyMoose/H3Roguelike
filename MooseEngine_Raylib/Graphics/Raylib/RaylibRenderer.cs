@@ -38,20 +38,26 @@ internal class RaylibRenderer : IRaylibRenderer
         Raylib.UnloadTexture(_spriteSheet);
     }
 
-    public void Begin(ISceneCamera sceneCamera)
+    public void BeginFrame()
     {
         Raylib.BeginDrawing();
+    }
 
+    public void EndFrame()
+    {
+        Raylib.EndDrawing();
+    }
+
+    public void BeginScene(ISceneCamera sceneCamera)
+    {
         Raylib.ClearBackground(RendererOptions.ClearColor!);
 
         Raylib.BeginMode2D(sceneCamera.RaylibCamera);
     }
 
-    public void End()
+    public void EndScene()
     {
         Raylib.EndMode2D();
-
-        Raylib.EndDrawing();
     }
 
     public void Render(IEntity entity, float scale)

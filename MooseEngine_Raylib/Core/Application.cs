@@ -27,7 +27,7 @@ public sealed class Application : Disposeable, IApplication
         }
     }
 
-    public Application(ApplicationOptions options, IGame game, IWindow window, IInputAPI inputAPI, IRenderer renderer, ISceneFactory sceneFactory)
+    public Application(ApplicationOptions options, IGame game, IWindow window, IInputAPI inputAPI, IRenderer renderer, IUIRenderer uiRenderer, ISceneFactory sceneFactory)
     {
         Throw.IfSingletonExists(s_Instance, "Application already exists!");
         s_Instance = this;
@@ -35,14 +35,16 @@ public sealed class Application : Disposeable, IApplication
         Game = game;
         Window = window;
         Renderer = renderer;
+        UIRenderer = uiRenderer;
         InputAPI = inputAPI;
         SceneFactory = sceneFactory;
     }
 
     public IGame Game { get; }
     public IWindow Window { get; }
-    public IRenderer Renderer { get; }
     public IInputAPI InputAPI { get; }
+    public IRenderer Renderer { get; }
+    public IUIRenderer UIRenderer { get; }
     public ISceneFactory SceneFactory { get; }
 
     public void Initialize()
@@ -68,8 +70,14 @@ public sealed class Application : Disposeable, IApplication
 
         while (Window.IsRunning)
         {
+            Renderer.BeginFrame();
+
             var deltaTime = Raylib.GetFrameTime();
             Game.Update(deltaTime);
+
+            Game.UIRender(UIRenderer);
+
+            Renderer.EndFrame();
         }
 
         Game.Uninitialize();

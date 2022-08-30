@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities.Factories;
 using MooseEngine.Core;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using System.Numerics;
@@ -22,6 +23,11 @@ internal class TestGame : IGame
         player.Position = new Vector2(128, 192);
 
         sceneFactory.CreateCenteredCamera(player);
+    }
+
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        throw new NotImplementedException();
     }
 
     public void Uninitialize()

@@ -1,9 +1,9 @@
-﻿using GameV1.Commands;
-using GameV1.Commands.Factory;
+﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -16,8 +16,7 @@ public enum EntityLayer : int
 {
     Tiles,
     Creatures,
-    Items,
-    UI
+    Items
 }
 
 internal class TestGameMSN : IGame
@@ -32,6 +31,8 @@ internal class TestGameMSN : IGame
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
+
+    private ConsolePanel _consolePanel;
 
     public void Initialize()
     {
@@ -90,6 +91,16 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+
+        var app = Application.Instance;
+
+        var size = new Coords2D(app.Window.Width, 200);
+        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y); 
+
+        _consolePanel = new ConsolePanel(position, size);
     }
 
     public void Uninitialize()
@@ -132,5 +143,15 @@ internal class TestGameMSN : IGame
         }
 
         _scene?.UpdateRuntime(deltaTime);
+    }
+
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        UIRenderer.DrawFPS(16, 16);
+
+        //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
+        //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+
+        _consolePanel.OnGUI(UIRenderer);
     }
 }

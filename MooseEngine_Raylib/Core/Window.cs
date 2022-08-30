@@ -2,10 +2,15 @@
 
 namespace MooseEngine.Core;
 
-public interface IWindow
+public interface IWindowData
 {
+    string Title { get; }
     int Width { get; }
     int Height { get; }
+}
+
+public interface IWindow : IWindowData
+{
     bool IsRunning { get; }
 
     void Initialize();
@@ -22,6 +27,7 @@ internal class Window : IWindow
         _specification = specification;
     }
 
+    public string Title => _specification.Title;
     public int Width => _specification.Width;
     public int Height => _specification.Height;
     public bool IsRunning => !Raylib.WindowShouldClose();

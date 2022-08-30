@@ -16,4 +16,8 @@ internal class UnitTestGame : IGame
     public void Update(float deltaTime)
     {
     }
+
+    public void UIRender(IWindowData windowData)
+    {
+    }
 }

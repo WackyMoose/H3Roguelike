@@ -77,6 +77,11 @@ internal class NoiseTest : IGame
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
     }
 
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Uninitialize()
     {
         _scene?.Dispose();

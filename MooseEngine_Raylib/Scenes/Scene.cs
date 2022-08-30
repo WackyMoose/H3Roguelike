@@ -3,44 +3,9 @@ using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
-public interface IEntityLayer
-{
-    IDictionary<Vector2, IEntity> Entities { get; }
-
-    IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity;
-}
-
-public interface IEntityLayer<TEntity> : IEntityLayer
-    where TEntity : class, IEntity
-{
-    void Add(TEntity entity);
-    void Remove(TEntity entity);
-}
-
-public class EntityLayer<TEntity> : IEntityLayer<TEntity>
-    where TEntity : class, IEntity
-{
-    public IDictionary<Vector2, IEntity> Entities { get; } = new Dictionary<Vector2, IEntity>();
-
-    public IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity
-    {
-        return Entities.Values.OfType<TEntityType>();
-    }
-
-    public void Add(TEntity entity)
-    {
-        Entities.Add(entity.Position, entity);
-    }
-
-    public void Remove(TEntity entity)
-    {
-        Entities.Remove(entity.Position);
-    }
-}
 
 internal class Scene : Disposeable, IScene
 {
@@ -59,14 +24,11 @@ internal class Scene : Disposeable, IScene
         return _entityLayers[layer];
     }
 
-    //private IDictionary<Vector2, IEntity>? _entities;
-
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
     public Scene(IRenderer renderer, float defaultEntitySize = Constants.DEFAULT_ENTITY_SIZE)
     {
-        //_entities = new Dictionary<Vector2, IEntity>();
         _entityLayers = new Dictionary<int, IEntityLayer>();
 
         Renderer = renderer;
@@ -76,8 +38,6 @@ internal class Scene : Disposeable, IScene
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
-    //
-    //public IDictionary<Vector2, IEntity>? Tiles { get { return _entities; } }
 
     public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
     {
@@ -106,13 +66,11 @@ internal class Scene : Disposeable, IScene
                         TilesWithinDist.Add(v, Tiles[v]);
                     }
                 }
-
             }
         }
 
         return TilesWithinDist;
     }
-
 
     protected override void DisposeManagedState()
     {
@@ -124,7 +82,6 @@ internal class Scene : Disposeable, IScene
     {
         SceneCamera.Update(deltaTime);
 
-        // TODO: Replace render with this
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
 
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
@@ -132,17 +89,11 @@ internal class Scene : Disposeable, IScene
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
 
         var layers = _entityLayers.Keys;
-
-        Renderer.Begin(SceneCamera);
+        Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)
         {
             var entities = _entityLayers[layer].Entities;
-
-            if (SceneCamera == default)
-            {
-                continue;
-            }
 
             var v = new Vector2();
 
@@ -158,7 +109,6 @@ internal class Scene : Disposeable, IScene
                 }
             }
         }
-
-        Renderer.End();
+        Renderer.EndScene();
     }
 }
