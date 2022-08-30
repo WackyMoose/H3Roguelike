@@ -61,14 +61,14 @@ namespace GameV1.WorldGeneration
                 }
 
                 //Generate water with perlin noise..
-                //if (tile.Value < -0.2)
-                //{
+                if (tile.Value > 0.8)
+                {
 
-                //    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
-                //    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
-                //    world.AddTile(tile.Key, water);
-                //    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
-                //}
+                    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
+                    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, water);
+                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
+                }
             }
             //Console.WriteLine("Grass Done");
             //Console.WriteLine("--------------------------------");
