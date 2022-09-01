@@ -58,9 +58,15 @@ namespace GameV1.WorldGeneration
                     world.AddTile(tile.Key, grass);
                     //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
+                else
+                {
+                    var tintColor = CalculateTint(tile.Key);
+                    Tile grass = new Tile("Dirt", true, new Coords2D(1,1), tintColor);
+                    grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, grass);
+                }
             }
-            //Console.WriteLine("Grass Done");
-            //Console.WriteLine("--------------------------------");
+            #endregion
 
             foreach (var tile in _overWorld)
             {
