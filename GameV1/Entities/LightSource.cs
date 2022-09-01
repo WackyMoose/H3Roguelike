@@ -4,67 +4,61 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace GameV1.Entities
 {
-    public class LightSource : Entity, ILightSource
+    public class LightSource : Item, ILightSource
     {
         public int Range { get; set; }
         public Color TintModifier { get; set; }
 
-        public int Durability { get; set; }
-        public int MaxValue { get; set; }
-        public List<Material> Materials { get; set; }
-        public bool IsBroken => throw new NotImplementedException();
-
-        public LightSource(int range, Color tintModifier, string name, Coords2D spriteCoords) : base(name, spriteCoords)
+        public LightSource(int range, Color tintModifier, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+            : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             Range = range;
             TintModifier = tintModifier;
         }
 
-        public LightSource(int range, Color tintModifier, string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public void Illuminate(IScene scene)
         {
-            Range = range;
-            TintModifier = tintModifier;
-        }
 
-        public void Illuminate(IScene scene, IEnumerable<IEntity> entities)
-        {
-            var entitiesWithinRange = scene.EntitiesWithinDistanceOfEntity(entities, this, this.Range);
+            var layers = scene.EntityLayers.Keys;
 
-            var maxDistanceSquared = this.Range * this.Range;
-
-            foreach (IEntity entity in entitiesWithinRange)
+            foreach (var layer in layers)
             {
-                // TODO: Implement true inverse distance squared light intensity
-                var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Position);
+                var entities = scene.EntityLayers[layer].Entities;
 
-                var inLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
-                //var lerp = MathFunctions.Lerp(0, 1, inLerp);
+                var entitiesWithinRange = scene.GetEntitiesWithinRange(entities, this.Position, this.Range);
 
-                //var r = (int)(inLerp * (128 + 32));
-                //var g = (int)(inLerp * (128 + 16));
-                //var b = (int)(inLerp * (128 +  0));
+                var maxDistanceSquared = this.Range * this.Range;
 
-                var r = (int)(inLerp * TintModifier.R);
-                var g = (int)(inLerp * TintModifier.G);
-                var b = (int)(inLerp * TintModifier.B);
+                foreach (var entity in entitiesWithinRange)
+                {
+                    // TODO: Implement true inverse distance squared light intensity
+                    // TODO: Optimize algorithm, and cache result for reuse.
+                    var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);
 
-                var color = new Color(r, g, b, 255);
+                    var invLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
+                    //var lerp = MathFunctions.Lerp(0, 1, inLerp);
 
-                entity.ColorTint += color;
+                    var r = (int)(invLerp * TintModifier.R);
+                    var g = (int)(invLerp * TintModifier.G);
+                    var b = (int)(invLerp * TintModifier.B);
+
+                    var color = new Color(r, g, b, 255);
+
+                    entity.Value.ColorTint += color;
+                }
             }
         }
 
         public override void Initialize()
         {
-            
         }
 
         public override void Update(float deltaTime)
         {
-            
         }
     }
 }

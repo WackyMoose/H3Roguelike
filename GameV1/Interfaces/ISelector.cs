@@ -1,11 +1,12 @@
 ﻿using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
+using System.Numerics;
 
 namespace GameV1.Interfaces
 {
     public interface ISelector
     {
         IEntity SelectedEntity { get; set; }
-        IEnumerable<IEntity>? EntitiesWithinRange(IScene scene, IEnumerable<IEntity> entities, int range);
+        //IDictionary<Vector2, IEntity>? TilesWithinRange(IScene scene, IDictionary<Vector2, IEntity> Tiles, int range);
     }
 }

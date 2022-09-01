@@ -8,13 +8,21 @@ namespace GameV1.Commands
 {
     public class CommandMoveLeft : Command
     {
-        public CommandMoveLeft(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandMoveLeft(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 
         public override void Execute()
         {
-            Entity.Position += new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
+            var newPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
+
+            var isKeyAvailable = EntityLayer.Entities.TryAdd(newPosition, Entity);
+
+            if (isKeyAvailable)
+            {
+                EntityLayer.Entities.Remove(Entity.Position);
+                Entity.Position = newPosition;
+            }
         }
     }
 }

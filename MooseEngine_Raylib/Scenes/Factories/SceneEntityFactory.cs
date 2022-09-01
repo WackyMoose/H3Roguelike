@@ -1,10 +1,7 @@
 ﻿using MooseEngine.Core.Factories;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.Scenes.Factories;
-
-public interface ISceneEntityFactory : IFactory
-{
-}
 
 public class SceneEntityFactory : ISceneEntityFactory
 {
@@ -15,13 +12,13 @@ public class SceneEntityFactory : ISceneEntityFactory
         _scene = sceneFactory.Scene;
     }
 
-    protected void AddToScene(Entity entity)
-    {
-        if (entity == default)
-        {
-            return;
-        }
+    //protected void AddToScene(Entity entity)
+    //{
+    //    if (entity == default)
+    //    {
+    //        return;
+    //    }
 
-        _scene?.Add(entity);
-    }
+    //    _scene?.Add(entity);
+    //}
 }

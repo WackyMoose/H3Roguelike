@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.Extensions.Runt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.Extensions.Autofac", "MooseEngine.Extensions.Autofac\MooseEngine.Extensions.Autofac.csproj", "{046E2E7A-4C75-4CB6-B574-11D12C867652}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MooseEngine.UnitTesting", "MooseEngine.UnitTesting\MooseEngine.UnitTesting.csproj", "{19125683-AD36-4F0C-B60F-99D7F97DC5CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.UnitTesting", "MooseEngine.UnitTesting\MooseEngine.UnitTesting.csproj", "{19125683-AD36-4F0C-B60F-99D7F97DC5CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

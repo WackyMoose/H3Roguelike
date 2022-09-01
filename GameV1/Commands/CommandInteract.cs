@@ -7,7 +7,7 @@ namespace GameV1.Commands
 {
     internal class CommandInteract : Command
     {
-        public CommandInteract(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandInteract(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

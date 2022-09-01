@@ -1,4 +1,6 @@
 ﻿
+using MooseEngine.Graphics.UI;
+
 namespace MooseEngine.Core
 {
     public static class InputHandler
@@ -17,7 +19,11 @@ namespace MooseEngine.Core
         {
             foreach (var pair in KeyInput)
             {
-                if (Input.IsKeyPressed(pair.Key)) { return pair.Value; }
+                if (Input.IsKeyPressed(pair.Key))
+                {
+                    ConsolePanel.Add(Enum.GetName(pair.Key));
+                    return pair.Value;
+                }
             }
 
             return null;

@@ -11,7 +11,7 @@ namespace GameV1.Commands
 {
     internal class CommandItemPickUp : Command
     {
-        public CommandItemPickUp(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandItemPickUp(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
         {
         }
 

@@ -32,5 +32,6 @@ public class Camera : Entity, ISceneCamera
     public override void Update(float deltaTime)
     {
         _raylibCamera.target = _targetEntity.Position;
+        Position = _targetEntity.Position;
     }
 }

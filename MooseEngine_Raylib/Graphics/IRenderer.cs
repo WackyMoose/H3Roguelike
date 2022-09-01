@@ -8,8 +8,11 @@ public interface IRenderer
     void Initialize();
     void Shutdown();
 
-    void Begin(ISceneCamera sceneCamera);
-    void End();
+    void BeginFrame();
+    void EndFrame();
+
+    void BeginScene(ISceneCamera sceneCamera);
+    void EndScene();
 
     void Render(IEntity entity, float scale);
 }

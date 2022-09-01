@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
 using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 
@@ -25,9 +26,9 @@ namespace GameV1.WorldGeneration
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref IScene scene) 
+        public static bool GenerateWorld(int seed, ref IEntityLayer<Tile> tileLayer) 
         {
-            var world = new World(101,101,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE,51 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(501,501,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
             
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             
@@ -58,15 +59,19 @@ namespace GameV1.WorldGeneration
                     world.AddTile(tile.Key, grass);
                     //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
-                else
+
+                //Generate water with perlin noise..
+                if (tile.Value > 0.8)
                 {
-                    var tintColor = CalculateTint(tile.Key);
-                    Tile grass = new Tile("Dirt", true, new Coords2D(1,1), tintColor);
-                    grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
-                    world.AddTile(tile.Key, grass);
+
+                    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
+                    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, water);
+                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
             }
-            #endregion
+            //Console.WriteLine("Grass Done");
+            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in _overWorld)
             {
@@ -125,12 +130,12 @@ namespace GameV1.WorldGeneration
                 }
             }
 
-            Console.WriteLine("Starter Village Done");
-            Console.WriteLine("--------------------------------");
+            //Console.WriteLine("Starter Village Done");
+            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in world.WorldTiles)
             {
-                scene?.Add(tile.Value);
+                tileLayer?.Add(tile.Value);
             }
 
             return true;

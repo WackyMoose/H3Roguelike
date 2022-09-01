@@ -31,9 +31,10 @@ internal class ApplicationModule : Module
             var window = cc.Resolve<IWindow>();
             var inputAPI = cc.Resolve<IInputAPI>();
             var renderer = cc.Resolve<IRenderer>();
+            var uiRenderer = cc.Resolve<IUIRenderer>();
             var sceneFactory = cc.Resolve<ISceneFactory>();
 
-            return applicationFactory.CreateApplication(_applicationSpecification, game, window, inputAPI, renderer, sceneFactory);
+            return applicationFactory.CreateApplication(_applicationSpecification, game, window, inputAPI, renderer, uiRenderer, sceneFactory);
         })
             .As<IApplication>()
             .SingleInstance()
