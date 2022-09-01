@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿using MooseEngine.Scenes;
+using System.Numerics;
 
 namespace MooseEngine.Utilities
 {
-    public class PathNode
+    public class PathNode : Entity
     {
         public Coords2D Position;
         public float G;
@@ -10,7 +11,7 @@ namespace MooseEngine.Utilities
         public float F;
         public PathNode? Parent;
 
-        public PathNode(Coords2D position, float g, float h, float f, PathNode? parent)
+        public PathNode(Coords2D position, float g, float h, float f, PathNode? parent) : base()
         {
             Position = position;
             G = g;
@@ -18,5 +19,9 @@ namespace MooseEngine.Utilities
             F = f;
             Parent = parent;
         }
+
+        public override void Initialize(){}
+
+        public override void Update(float deltaTime){}
     }
 }
