@@ -14,7 +14,7 @@ internal class RaylibUIRenderer : IUIRenderer
         STATE_DISABLED,
     }
 
-    GuiState state;
+    GuiState _guiState = GuiState.STATE_NORMAL;
 
     public RaylibUIRenderer(IWindow windowData)
     {
@@ -30,23 +30,27 @@ internal class RaylibUIRenderer : IUIRenderer
         Raylib.DrawFPS(x, y);
     }
 
-    public void DrawText(string text, int x, int y, int fontScale, Color background, Color fontColor)
+    public void DrawLabel(int x, int y, string text)
     {
-        var textWidth = Raylib.MeasureText(text, fontScale);
-
-        Raylib.DrawRectangle(x - 4, y, textWidth + 8, fontScale + 4, background);
-        Raylib.DrawText(text, x, y, fontScale, fontColor);
+        // Draw control
+        //--------------------------------------------------------------------
+        var bounds = new Rectangle(x, y, 0.0f, 0.0f);
+        GuiDrawText(text, GetTextBounds(bounds), GetTextColorByState(_guiState));
+        //--------------------------------------------------------------------
     }
 
-    public bool DrawButton(int x, int y, string text, bool enabled = true)
+    public bool DrawButton(int x, int y, string text)
     {
+        var state = _guiState;
+        var buttonOptions = UIRendererOptions.ButtonOptions;
+
         var bounds = new Rectangle(x, y, 0, 0);
 
         bool pressed = false;
 
         // Update control
         //--------------------------------------------------------------------
-        if (enabled)
+        if (state != GuiState.STATE_DISABLED)
         {
             Vector2 mousePoint = Raylib.GetMousePosition();
 
@@ -63,27 +67,19 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, UIRendererOptions.BorderColor, UIRendererOptions.BaseColor);
-        GuiDrawText(text, GetTextBounds(bounds), UIRendererOptions.TextColor);
-        //------------------------------------------------------------------
+        GuiDrawRectangle(bounds, buttonOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
+        GuiDrawText(text, GetTextBounds(bounds), GetTextColorByState(state));
+        //--------------------------------------------------------------------
 
         return pressed;
     }
 
-    public void DrawLabel(int x, int y, string text)
-    {
-        // Draw control
-        //--------------------------------------------------------------------
-        var textColor = UIRendererOptions.TextColor;
-
-        var bounds = new Rectangle(x, y, 0.0f, 0.0f);
-        GuiDrawText(text, GetTextBounds(bounds), textColor);
-        //--------------------------------------------------------------------
-    }
-
     public void DrawLine(int x, int y, int width, int height, string text)
     {
-        var lineColor = UIRendererOptions.LineColor;
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
+
+        var lineColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.LineColor;
         var bounds = new Rectangle(x, y, width, height);
 
         // Draw control
@@ -94,8 +90,10 @@ internal class RaylibUIRenderer : IUIRenderer
 
     const int RAYGUI_PANEL_BORDER_WIDTH = 1;
     const int RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT = 24;
-    public void DrawPanel(int x, int y, int width, int height, string title, bool enabled = true)
+    public void DrawPanel(int x, int y, int width, int height, string title)
     {
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
         var statusBarRectangle = new Rectangle(x, y, width, (float)RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT);
 
         // Text will be drawn as a header bar (if provided)
@@ -115,47 +113,50 @@ internal class RaylibUIRenderer : IUIRenderer
         //--------------------------------------------------------------------
         if (!string.IsNullOrWhiteSpace(title))
         {
-            GuiStatusBar(statusBarRectangle, title, enabled);  // Draw panel header as status bar
+            GuiStatusBar(statusBarRectangle, title);  // Draw panel header as status bar
         }
 
-        var borderColor = enabled ? UIRendererOptions.BorderColor : UIRendererOptions.BorderColor;
-        var backgroundColor = enabled ? UIRendererOptions.BackgroundColor : UIRendererOptions.BackgroundColor;
-
         var panelRectangle = new Rectangle(x, y, width, height);
-        GuiDrawRectangle(panelRectangle, RAYGUI_PANEL_BORDER_WIDTH, borderColor, backgroundColor);
+        var lineColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.LineColor;
+        var backgroundColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.BackgroundColor;
+
+        GuiDrawRectangle(panelRectangle, RAYGUI_PANEL_BORDER_WIDTH, lineColor, backgroundColor);
         //--------------------------------------------------------------------
     }
 
     // List View control
-    public int DrawListView(Rectangle bounds, string text, ref int scrollIndex, int active, bool enabled = true)
+    public int DrawListView(Rectangle bounds, string text, ref int scrollIndex, int active)
     {
         throw new NotImplementedException();
     }
 
     // List View control with extended parameters
-    public int DrawListViewEx(Rectangle bounds, string[] text, int count, ref int focus, ref int scrollIndex, int active, bool stickToBottom = false, bool enabled = true)
+    public int DrawListViewEx(Rectangle bounds, string[] text, int count, ref int focus, ref int scrollIndex, int active, bool stickToBottom = false)
     {
-        var options = UIRendererOptions.ListViewOptions;
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
+        var listViewOptions = UIRendererOptions.ListViewOptions;
+        var scrollbarOptions = UIRendererOptions.ScrollbarOptions;
 
         int itemFocused = (focus == 0) ? -1 : focus;
         int itemSelected = active;
 
-        var useScrollBar = (options.ItemHeight + options.ItemSpacing) * count > bounds.height;
+        var useScrollBar = (listViewOptions.ItemHeight + listViewOptions.ItemSpacing) * count > bounds.height;
 
         var itemBounds = new Rectangle
         {
-            x = bounds.x + options.ItemSpacing,
-            y = bounds.y + options.ItemSpacing + UIRendererOptions.BorderWidth,
-            width = bounds.width - 2 * options.ItemSpacing - UIRendererOptions.BorderWidth,
-            height = (float)options.ItemHeight
+            x = bounds.x + listViewOptions.ItemSpacing,
+            y = bounds.y + listViewOptions.ItemSpacing + UIRendererOptions.BorderWidth,
+            width = bounds.width - 2 * listViewOptions.ItemSpacing - UIRendererOptions.BorderWidth,
+            height = (float)listViewOptions.ItemHeight
         };
 
         if (useScrollBar)
         {
-            itemBounds.width -= options.ScrollbarWidth;
+            itemBounds.width -= listViewOptions.ScrollbarWidth;
         }
 
-        int visibleItems = (int)bounds.height / (options.ItemHeight + options.ItemSpacing);
+        int visibleItems = (int)bounds.height / (listViewOptions.ItemHeight + listViewOptions.ItemSpacing);
         if (visibleItems > count)
         {
             visibleItems = count;
@@ -170,13 +171,15 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Update control
         //--------------------------------------------------------------------
-        if (enabled)
+        if (state != GuiState.STATE_DISABLED)
         {
             Vector2 mousePoint = Raylib.GetMousePosition();
 
             // Check mouse inside list view
             if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
             {
+                state = GuiState.STATE_FOCUSED;
+
                 // Check focused and selected item
                 for (int i = 0; i < visibleItems; i++)
                 {
@@ -192,7 +195,7 @@ internal class RaylibUIRenderer : IUIRenderer
                     }
 
                     // Update item rectangle y position for next item
-                    itemBounds.y += options.ItemHeight + options.ItemSpacing;
+                    itemBounds.y += listViewOptions.ItemHeight + listViewOptions.ItemSpacing;
                 }
 
                 if (useScrollBar)
@@ -216,58 +219,58 @@ internal class RaylibUIRenderer : IUIRenderer
             else itemFocused = -1;
 
             // Reset item rectangle y to [0]
-            itemBounds.y = bounds.y + options.ItemSpacing + UIRendererOptions.BorderWidth;
+            itemBounds.y = bounds.y + listViewOptions.ItemSpacing + UIRendererOptions.BorderWidth;
         }
         //--------------------------------------------------------------------
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, options.BorderNormalColor, UIRendererOptions.BackgroundColor);     // Draw background
+        GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, GetBorderColorByState(state), colors.BackgroundColor);     // Draw background
 
         // Draw visible items
         for (int i = 0; ((i < visibleItems) && (text.Length > 0)); i++)
         {
-            if (enabled)
+            if (state == GuiState.STATE_DISABLED)
             {
                 if ((startIndex + i) == itemSelected)
                 {
-                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, options.BorderDisabledColor, options.DisabledColor);
+                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, listViewOptions.BorderDisabledColor, listViewOptions.DisabledColor);
                 }
 
-                GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), options.TextDisabledColor);
+                GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), listViewOptions.TextDisabledColor);
             }
             else
             {
                 if ((startIndex + i) == itemSelected)
                 {
                     // Draw item selected
-                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, options.BorderPressedColor, options.PressedColor);
-                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), options.TextPressedColor);
+                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, listViewOptions.BorderPressedColor, listViewOptions.PressedColor);
+                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), listViewOptions.TextPressedColor);
                 }
                 else if ((startIndex + i) == itemFocused)
                 {
                     // Draw item focused
-                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, options.BorderFocusedColor, options.FocusedColor);
-                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), options.TextFocusedColor);
+                    GuiDrawRectangle(itemBounds, UIRendererOptions.BorderWidth, listViewOptions.BorderFocusedColor, listViewOptions.FocusedColor);
+                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), listViewOptions.TextFocusedColor);
                 }
                 else
                 {
                     // Draw item normal
-                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), options.TextNormalColor);
+                    GuiDrawText(text[startIndex + i], GetTextBounds(itemBounds), listViewOptions.TextNormalColor);
                 }
             }
 
             // Update item rectangle y position for next item
-            itemBounds.y += (options.ItemHeight + options.ItemSpacing);
+            itemBounds.y += (listViewOptions.ItemHeight + listViewOptions.ItemSpacing);
         }
 
         if (useScrollBar)
         {
             var scrollBarBounds = new Rectangle
             {
-                x = bounds.x + bounds.width - UIRendererOptions.BorderWidth - options.ScrollbarWidth,
+                x = bounds.x + bounds.width - UIRendererOptions.BorderWidth - listViewOptions.ScrollbarWidth,
                 y = bounds.y + UIRendererOptions.BorderWidth,
-                width = (float)options.ScrollbarWidth,
+                width = (float)listViewOptions.ScrollbarWidth,
                 height = bounds.height - 2 * UIRendererOptions.BorderWidth
             };
 
@@ -275,10 +278,10 @@ internal class RaylibUIRenderer : IUIRenderer
             float percentVisible = (float)(endIndex - startIndex) / count;
             float sliderSize = bounds.height * percentVisible;
 
-            int prevSliderSize = UIRendererOptions.ScrollbarScrollSliderSize;   // Save default slider size
-            int prevScrollSpeed = UIRendererOptions.ScrollbarScrollSpeed; // Save default scroll speed
-            UIRendererOptions.ScrollbarScrollSliderSize = (int)sliderSize; // Change slider size
-            UIRendererOptions.ScrollbarScrollSpeed = count - visibleItems; // Change scroll speed
+            int prevSliderSize = scrollbarOptions.ScrollSliderSize;   // Save default slider size
+            int prevScrollSpeed = scrollbarOptions.ScrollSpeed; // Save default scroll speed
+            scrollbarOptions.ScrollSliderSize = (int)sliderSize; // Change slider size
+            scrollbarOptions.ScrollSpeed = count - visibleItems; // Change scroll speed
 
             if (stickToBottom)
             {
@@ -289,8 +292,8 @@ internal class RaylibUIRenderer : IUIRenderer
                 startIndex = GuiScrollBar(scrollBarBounds, startIndex, 0, count - visibleItems);
             }
 
-            UIRendererOptions.ScrollbarScrollSpeed = prevScrollSpeed; // Reset scroll speed to default
-            UIRendererOptions.ScrollbarScrollSliderSize = prevSliderSize; // Reset slider size to default
+            scrollbarOptions.ScrollSpeed = prevScrollSpeed; // Reset scroll speed to default
+            scrollbarOptions.ScrollSliderSize = prevSliderSize; // Reset slider size to default
         }
         //--------------------------------------------------------------------
 
@@ -311,7 +314,9 @@ internal class RaylibUIRenderer : IUIRenderer
     // Scroll Panel control
     public void DrawScrollPanel(Rectangle bounds, string text, Rectangle content, ref Vector2 scroll, bool enabled = true)
     {
+        var colors = UIRendererOptions.Colors;
         var listViewOptions = UIRendererOptions.ListViewOptions;
+        var scrollbarOptions = UIRendererOptions.ScrollbarOptions;
 
         Vector2 scrollPos = new Vector2(0.0f, 0.0f);
 
@@ -386,11 +391,11 @@ internal class RaylibUIRenderer : IUIRenderer
             {
                 if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON))
                 {
-                    state = GuiState.STATE_PRESSED;
+                    _guiState = GuiState.STATE_PRESSED;
                 }
                 else
                 {
-                    state = GuiState.STATE_FOCUSED;
+                    _guiState = GuiState.STATE_FOCUSED;
                 }
 
 #if SUPPORT_SCROLLBAR_KEY_INPUT
@@ -425,16 +430,16 @@ internal class RaylibUIRenderer : IUIRenderer
         //--------------------------------------------------------------------
         if (!string.IsNullOrWhiteSpace(text)) GuiStatusBar(statusBar, text);  // Draw panel header as status bar
 
-        GuiDrawRectangle(bounds, 0, Color.Blank, UIRendererOptions.BackgroundColor);        // Draw background
+        GuiDrawRectangle(bounds, 0, Color.Blank, colors.BackgroundColor);        // Draw background
 
         // Save size of the scrollbar slider
-        int slider = UIRendererOptions.ScrollbarScrollSliderSize;
+        int slider = scrollbarOptions.ScrollSliderSize;
 
         // Draw horizontal scrollbar if visible
         if (hasHorizontalScrollBar)
         {
             // Change scrollbar slider size to show the diff in size between the content width and the widget width
-            UIRendererOptions.ScrollbarScrollSliderSize = (int)(((bounds.width - 2 * UIRendererOptions.BorderWidth - verticalScrollBarWidth) / (int)content.width) * ((int)bounds.width - 2 * UIRendererOptions.BorderWidth - verticalScrollBarWidth));
+            scrollbarOptions.ScrollSliderSize = (int)(((bounds.width - 2 * UIRendererOptions.BorderWidth - verticalScrollBarWidth) / (int)content.width) * ((int)bounds.width - 2 * UIRendererOptions.BorderWidth - verticalScrollBarWidth));
             scrollPos.X = (float)-GuiScrollBar(horizontalScrollBar, (int)-scrollPos.X, (int)horizontalMin, (int)horizontalMax);
         }
         else scrollPos.X = 0.0f;
@@ -443,7 +448,7 @@ internal class RaylibUIRenderer : IUIRenderer
         if (hasVerticalScrollBar)
         {
             // Change scrollbar slider size to show the diff in size between the content height and the widget height
-            UIRendererOptions.ScrollbarScrollSliderSize = (int)(((bounds.height - 2 * UIRendererOptions.BorderWidth - horizontalScrollBarWidth) / (int)content.height) * ((int)bounds.height - 2 * UIRendererOptions.BorderWidth - horizontalScrollBarWidth));
+            scrollbarOptions.ScrollSliderSize = (int)(((bounds.height - 2 * UIRendererOptions.BorderWidth - horizontalScrollBarWidth) / (int)content.height) * ((int)bounds.height - 2 * UIRendererOptions.BorderWidth - horizontalScrollBarWidth));
             scrollPos.Y = (float)-GuiScrollBar(verticalScrollBar, (int)-scrollPos.Y, (int)verticalMin, (int)verticalMax);
         }
         else scrollPos.Y = 0.0f;
@@ -462,7 +467,7 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Set scrollbar slider size back to the way it was before
 
-        UIRendererOptions.ScrollbarScrollSliderSize = slider;
+        scrollbarOptions.ScrollSliderSize = slider;
         //--------------------------------------------------------------------
 
         if (scroll != default)
@@ -476,14 +481,18 @@ internal class RaylibUIRenderer : IUIRenderer
     // Scroll bar control (used by GuiScrollPanel())
     private int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue)
     {
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
+        var scrollbarOptions = UIRendererOptions.ScrollbarOptions;
+
         // Is the scrollbar horizontal or vertical?
         bool isVertical = (bounds.width > bounds.height) ? false : true;
 
         // The size (width or height depending on scrollbar type) of the spinner buttons
-        int spinnerSize = UIRendererOptions.ScrollbarArrowsVisible
+        int spinnerSize = scrollbarOptions.ArrowsVisible
             ? (isVertical
-                ? (int)bounds.width - 2 * UIRendererOptions.ScrollbarBorderWidth
-                : (int)bounds.height - 2 * UIRendererOptions.ScrollbarBorderWidth)
+                ? (int)bounds.width - 2 * scrollbarOptions.BorderWidth
+                : (int)bounds.height - 2 * scrollbarOptions.BorderWidth)
             : 0;
 
         // Arrow buttons [<] [>] [∧] [∨]
@@ -501,53 +510,53 @@ internal class RaylibUIRenderer : IUIRenderer
         if (value < minValue) value = minValue;
 
         int range = maxValue - minValue;
-        int sliderSize = UIRendererOptions.ScrollbarScrollSliderSize;
+        int sliderSize = scrollbarOptions.ScrollSliderSize;
 
         // Calculate rectangles for all of the components
         arrowUpLeft = new Rectangle(
-            (float)bounds.x + UIRendererOptions.ScrollbarBorderWidth,
-            (float)bounds.y + UIRendererOptions.ScrollbarBorderWidth,
+            (float)bounds.x + scrollbarOptions.BorderWidth,
+            (float)bounds.y + scrollbarOptions.BorderWidth,
             (float)spinnerSize, (float)spinnerSize);
 
         if (isVertical)
         {
             arrowDownRight = new Rectangle(
-                (float)bounds.x + UIRendererOptions.ScrollbarBorderWidth,
-                (float)bounds.y + bounds.height - spinnerSize - UIRendererOptions.ScrollbarBorderWidth,
+                (float)bounds.x + scrollbarOptions.BorderWidth,
+                (float)bounds.y + bounds.height - spinnerSize - scrollbarOptions.BorderWidth,
                 (float)spinnerSize, (float)spinnerSize);
 
             scrollbar = new Rectangle(
-                bounds.x + UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding,
+                bounds.x + scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding,
                 arrowUpLeft.y + arrowUpLeft.height,
-                bounds.width - 2 * (UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding),
-                bounds.height - arrowUpLeft.height - arrowDownRight.height - 2 * UIRendererOptions.ScrollbarBorderWidth);
+                bounds.width - 2 * (scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding),
+                bounds.height - arrowUpLeft.height - arrowDownRight.height - 2 * scrollbarOptions.BorderWidth);
 
             sliderSize = (sliderSize >= scrollbar.height) ? ((int)scrollbar.height - 2) : sliderSize;     // Make sure the slider won't get outside of the scrollbar
             slider = new Rectangle(
-                (float)bounds.x + UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding,
+                (float)bounds.x + scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding,
                 (float)scrollbar.y + (int)(((float)(value - minValue) / range) * (scrollbar.height - sliderSize)),
-                (float)bounds.width - 2 * (UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding),
+                (float)bounds.width - 2 * (scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding),
                 (float)sliderSize);
         }
         else
         {
             arrowDownRight = new Rectangle(
-                (float)bounds.x + bounds.width - spinnerSize - UIRendererOptions.ScrollbarBorderWidth,
-                (float)bounds.y + UIRendererOptions.ScrollbarBorderWidth,
+                (float)bounds.x + bounds.width - spinnerSize - scrollbarOptions.BorderWidth,
+                (float)bounds.y + scrollbarOptions.BorderWidth,
                 (float)spinnerSize, (float)spinnerSize);
 
             scrollbar = new Rectangle(
                 arrowUpLeft.x + arrowUpLeft.width,
-                bounds.y + UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding,
-                bounds.width - arrowUpLeft.width - arrowDownRight.width - 2 * UIRendererOptions.ScrollbarBorderWidth,
-                bounds.height - 2 * (UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding));
+                bounds.y + scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding,
+                bounds.width - arrowUpLeft.width - arrowDownRight.width - 2 * scrollbarOptions.BorderWidth,
+                bounds.height - 2 * (scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding));
 
             sliderSize = (sliderSize >= scrollbar.width) ? ((int)scrollbar.width - 2) : sliderSize;       // Make sure the slider won't get outside of the scrollbar
             slider = new Rectangle(
                 (float)scrollbar.x + (int)(((float)(value - minValue) / range) * (scrollbar.width - sliderSize)),
-                (float)bounds.y + UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding,
+                (float)bounds.y + scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding,
                 (float)sliderSize,
-                (float)bounds.height - 2 * (UIRendererOptions.ScrollbarBorderWidth + UIRendererOptions.ScrollbarScrollPadding));
+                (float)bounds.height - 2 * (scrollbarOptions.BorderWidth + scrollbarOptions.ScrollPadding));
         }
 
         // Update control
@@ -566,8 +575,8 @@ internal class RaylibUIRenderer : IUIRenderer
 
                 if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                 {
-                    if (Raylib.CheckCollisionPointRec(mousePoint, arrowUpLeft)) value -= range / UIRendererOptions.ScrollbarScrollSpeed;
-                    else if (Raylib.CheckCollisionPointRec(mousePoint, arrowDownRight)) value += range / UIRendererOptions.ScrollbarScrollSpeed;
+                    if (Raylib.CheckCollisionPointRec(mousePoint, arrowUpLeft)) value -= range / scrollbarOptions.ScrollSpeed;
+                    else if (Raylib.CheckCollisionPointRec(mousePoint, arrowDownRight)) value += range / scrollbarOptions.ScrollSpeed;
 
                     state = GuiState.STATE_PRESSED;
                 }
@@ -579,7 +588,7 @@ internal class RaylibUIRenderer : IUIRenderer
                             arrowUpLeft.x + arrowUpLeft.width,
                             arrowUpLeft.y,
                             scrollbar.width,
-                            bounds.height - 2 * UIRendererOptions.ScrollbarBorderWidth);
+                            bounds.height - 2 * scrollbarOptions.BorderWidth);
                         if (Raylib.CheckCollisionPointRec(mousePoint, scrollArea))
                         {
                             value = (int)(((float)(mousePoint.X - scrollArea.x - slider.width / 2) * range) / (scrollArea.width - slider.width) + minValue);
@@ -590,7 +599,7 @@ internal class RaylibUIRenderer : IUIRenderer
                         Rectangle scrollArea = new Rectangle(
                             arrowUpLeft.x,
                             arrowUpLeft.y + arrowUpLeft.height,
-                            bounds.width - 2 * UIRendererOptions.ScrollbarBorderWidth,
+                            bounds.width - 2 * scrollbarOptions.BorderWidth,
                             scrollbar.height);
                         if (Raylib.CheckCollisionPointRec(mousePoint, scrollArea))
                         {
@@ -608,19 +617,19 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, UIRendererOptions.ScrollbarBorderWidth, UIRendererOptions.BorderColor, UIRendererOptions.BorderDisabledColor);   // Draw the background
+        GuiDrawRectangle(bounds, scrollbarOptions.BorderWidth, GetBorderColorByState(state), colors.BorderDisabledColor);   // Draw the background
 
-        GuiDrawRectangle(scrollbar, 0, Color.Blank, UIRendererOptions.BaseColor);     // Draw the scrollbar active area background
-        GuiDrawRectangle(slider, 0, Color.Blank, UIRendererOptions.BorderColor);         // Draw the slider bar
+        GuiDrawRectangle(scrollbar, 0, Color.Blank, colors.NormalColor);     // Draw the scrollbar active area background
+        GuiDrawRectangle(slider, 0, Color.Blank, GetBorderColorByState(state));         // Draw the slider bar
 
         // Draw arrows (using icon if available)
-        if (UIRendererOptions.ScrollbarArrowsVisible)
+        if (scrollbarOptions.ArrowsVisible)
         {
             var r1 = new Rectangle(arrowUpLeft.x, arrowUpLeft.y, isVertical ? bounds.width : bounds.height, isVertical ? bounds.width : bounds.height);
             var r2 = new Rectangle(arrowDownRight.x, arrowDownRight.y, isVertical ? bounds.width : bounds.height, isVertical ? bounds.width : bounds.height);
 
-            GuiDrawText(isVertical ? "^" : "<", r1, UIRendererOptions.DropdownBorderColor);
-            GuiDrawText(isVertical ? "v" : ">", r2, UIRendererOptions.DropdownBorderColor);
+            GuiDrawText(isVertical ? "^" : "<", r1, GetTextColorByState(state));
+            GuiDrawText(isVertical ? "v" : ">", r2, GetTextColorByState(state));
         }
         //--------------------------------------------------------------------
 
@@ -628,14 +637,17 @@ internal class RaylibUIRenderer : IUIRenderer
     }
 
     // Status Bar control
-    private void GuiStatusBar(Rectangle bounds, string text, bool enabled = true)
+    private void GuiStatusBar(Rectangle bounds, string text)
     {
-        var borderColor = enabled ? UIRendererOptions.BorderColor : UIRendererOptions.BorderColor;
-        var baseColor = enabled ? UIRendererOptions.BaseColor : UIRendererOptions.BaseColor;
-        var textColor = enabled ? UIRendererOptions.TextColor : UIRendererOptions.TextColor;
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
 
         // Draw control
         //--------------------------------------------------------------------
+        var borderColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.BorderNormalColor;
+        var baseColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.NormalColor;
+        var textColor = state == GuiState.STATE_DISABLED ? colors.TextDisabledColor : colors.TextNormalColor;
+
         GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, borderColor, baseColor);
         GuiDrawText(text, GetTextBounds(bounds), textColor);
         //--------------------------------------------------------------------
@@ -665,6 +677,42 @@ internal class RaylibUIRenderer : IUIRenderer
             Raylib.DrawRectangle((int)rec.x + (int)rec.width - borderWidth, (int)rec.y + borderWidth, borderWidth, (int)rec.height - 2 * borderWidth, borderColor);
             Raylib.DrawRectangle((int)rec.x, (int)rec.y + (int)rec.height - borderWidth, (int)rec.width, borderWidth, borderColor);
         }
+    }
+
+    private Color GetBaseColorByState(GuiState state)
+    {
+        var colors = UIRendererOptions.Colors;
+        return state switch
+        {
+            GuiState.STATE_FOCUSED => colors.FocusedColor,
+            GuiState.STATE_PRESSED => colors.PressedColor,
+            GuiState.STATE_DISABLED => colors.DisabledColor,
+            _ => colors.NormalColor,
+        };
+    }
+
+    private Color GetBorderColorByState(GuiState state)
+    {
+        var colors = UIRendererOptions.Colors;
+        return state switch
+        {
+            GuiState.STATE_FOCUSED => colors.BorderFocusedColor,
+            GuiState.STATE_PRESSED => colors.BorderPressedColor,
+            GuiState.STATE_DISABLED => colors.BorderDisabledColor,
+            _ => colors.BorderNormalColor,
+        };
+    }
+
+    private Color GetTextColorByState(GuiState state)
+    {
+        var colors = UIRendererOptions.Colors;
+        return state switch
+        {
+            GuiState.STATE_FOCUSED => colors.TextFocusedColor,
+            GuiState.STATE_PRESSED => colors.TextPressedColor,
+            GuiState.STATE_DISABLED => colors.TextDisabledColor,
+            _ => colors.TextNormalColor,
+        };
     }
 
     private Rectangle GetTextBounds(Rectangle bounds)
