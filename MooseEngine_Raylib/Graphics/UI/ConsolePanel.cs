@@ -37,12 +37,17 @@ public class ConsolePanel
         _active = UIRenderer.DrawListViewEx(rect, _history.ToArray(), _history.Count, ref _focus, ref _scrollIndex, _active, _stickToBottom);
     }
 
+    private void AddToList(string msg)
+    {
+        if (_history.Count >= _history.Capacity)
+        {
+            _history.RemoveAt(0);
+        }
+        _history.Add(msg);
+    }
+
     public static void Add(string msg)
     {
-        if(s_Instance._history.Count >= s_Instance._history.Capacity)
-        {
-            s_Instance._history.RemoveAt(0);
-        }
-        s_Instance._history.Add(msg);
+        s_Instance.AddToList(msg);
     }
 }

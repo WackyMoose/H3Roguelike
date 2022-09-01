@@ -97,7 +97,7 @@ internal class TestGameMSN : IGame
 
         var app = Application.Instance;
 
-        var size = new Coords2D(app.Window.Width, 200);
+        var size = new Coords2D(app.Window.Width, 240);
         var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
 
         _consolePanel = new ConsolePanel(position, size);
