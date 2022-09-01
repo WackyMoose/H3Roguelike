@@ -98,9 +98,11 @@ internal class TestGameMSN : IGame
         var app = Application.Instance;
 
         var size = new Coords2D(app.Window.Width, 200);
-        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y); 
+        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
 
         _consolePanel = new ConsolePanel(position, size);
+
+        scrollView = new Vector2(0, 0);
     }
 
     public void Uninitialize()
@@ -136,7 +138,7 @@ internal class TestGameMSN : IGame
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
         var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
-        
+
         foreach (var lightSource in lightSources)
         {
             lightSource.Illuminate(_scene);
@@ -145,12 +147,18 @@ internal class TestGameMSN : IGame
         _scene?.UpdateRuntime(deltaTime);
     }
 
+    static Vector2 scrollView;
+    int focus = -1;
+    int scrollIndex = 2;
+    int active = 2;
     public void UIRender(IUIRenderer UIRenderer)
     {
         UIRenderer.DrawFPS(16, 16);
 
         //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
         //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+
+        //UIRenderer.DrawScrollPanel(new Raylib_cs.Rectangle(560, 25, 100, 160), "Charmander;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey", new Raylib_cs.Rectangle(560, 25, 200, 400), ref scrollView);
 
         _consolePanel.OnGUI(UIRenderer);
     }
