@@ -27,6 +27,9 @@ internal class NoiseTest : IGame
 
     private ConsolePanel _consolePanel;
 
+    private Pathfinder _pathfinder;
+    private IEntityLayer<Tile> _pathLayer;
+
     public void Initialize()
     {
         sword.MinDamage = 50;
@@ -44,7 +47,7 @@ internal class NoiseTest : IGame
         var nonWalkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
         var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
-        var pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
+        _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
         var window = Application.Instance.Window;
 
@@ -80,17 +83,7 @@ internal class NoiseTest : IGame
         creatureLayer?.Add(ork);
 
         WorldGenerator.GenerateWorld(80085, ref _scene);
-        var pathfinder = new Pathfinder();
-        var walkableTiles = _scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
-        var path = pathfinder.GetPath(player.Position, ork.Position, walkableTiles);
-
-        foreach (var node in path)
-        {
-            var pathPoint = new Tile("PathPoint", true, new Coords2D(0, 7), Color.White);
-            pathPoint.Position = node.Position;
-
-            pathLayer.Add(pathPoint);
-        }
+        _pathfinder = new Pathfinder();
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -136,6 +129,19 @@ internal class NoiseTest : IGame
 
             // Execute AI commands
             CommandQueue.Execute();
+
+            _pathLayer.RemoveAll();
+
+            var walkableTiles = _scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+            var path = _pathfinder.GetPath(player.Position, ork.Position, walkableTiles);
+
+            foreach (var node in path)
+            {
+                var pathPoint = new Tile("PathPoint", true, new Coords2D(0, 7), Color.White);
+                pathPoint.Position = node.Position;
+
+                _pathLayer.Add(pathPoint);
+            }
         }
 
         // TODO: Wrap in method

@@ -45,21 +45,16 @@ namespace GameV1.WorldGeneration
                     var rand = Randomizer.RandomInt(0, 3);
                     var coord = _grassTilesCoords[rand];
 
-                    var posA = new Vector2(tile.Key.X, tile.Key.Y);
-                    var posB = new Vector2(world.StartPos.X, world.StartPos.Y);
-
-                    var dist = Vector2.Distance(posB, posA);
-                    var maxDist = Vector2.Distance(new Vector2(0, 0), posB);
-                    var inLerp = MathFunctions.InverseLerp(maxDist, 0, dist);
-                    var lerp = MathFunctions.Lerp(65, 255, inLerp);
-                    var color = new Color((int)lerp, (int)lerp, (int)lerp, 255);
-
-                    Tile grass = new Tile("Grass", true, coord, color);
+                    Tile grass = new Tile("Grass", true, coord, Color.White);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
-                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
-
+                else
+                {
+                    Tile grass = new Tile("Grass", true, new Coords2D(1, 1), Color.White);
+                    grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, grass);
+                }
                 //Generate water with perlin noise..
                 if (tile.Value > 0.8)
                 {
