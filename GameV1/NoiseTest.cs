@@ -1,16 +1,14 @@
-﻿using GameV1.Commands;
-using GameV1.Commands.Factory;
+﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Threading;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1;
 
@@ -27,6 +25,8 @@ internal class NoiseTest : IGame
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
+    private ConsolePanel _consolePanel;
+
     public void Initialize()
     {
         sword.MinDamage = 50;
@@ -40,46 +40,73 @@ internal class NoiseTest : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
+        var walkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
+        var nonWalkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
+        var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
+        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+        var pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
+
         var window = Application.Instance.Window;
 
-        var camera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        _scene.SceneCamera = camera;
-        //_scene?.Add(camera);
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         // Spawn player
-        //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        //player.MainHand.Add(sword);
-        //player.Chest.Add(armor);
-        //_scene?.Add(player);
+        player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        player.MainHand.Add(sword);
+        player.Chest.Add(armor);
+        creatureLayer?.Add(player);
 
-        //light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        //_scene?.Add(light);
+        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(light);
 
-        //townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        //_scene?.Add(townLights);
+        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(townLights);
 
-        //druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
-        //druid.MainHand.Add(sword);
-        //druid.Chest.Add(armor);
-        //_scene?.Add(druid);
+        for (int i = 0; i < 64; i++)
+        {
+            var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+            itemLayer?.Add(light);
+        }
 
-        //ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
-        //ork.MainHand.Add(sword);
-        //ork.Chest.Add(armor);
-        //_scene?.Add(ork);
+        druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.MainHand.Add(sword);
+        druid.Chest.Add(armor);
+        creatureLayer?.Add(druid);
 
-       // WorldGenerator.GenerateWorld(80085,ref tile);
+        ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        ork.MainHand.Add(sword);
+        ork.Chest.Add(armor);
+        creatureLayer?.Add(ork);
+
+        WorldGenerator.GenerateWorld(80085, ref _scene);
+        var pathfinder = new Pathfinder();
+        var walkableTiles = _scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+        var path = pathfinder.GetPath(player.Position, ork.Position, walkableTiles);
+
+        foreach (var node in path)
+        {
+            var pathPoint = new Tile("PathPoint", true, new Coords2D(0, 7), Color.White);
+            pathPoint.Position = node.Position;
+
+            pathLayer.Add(pathPoint);
+        }
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-    }
 
-    public void UIRender(IUIRenderer UIRenderer)
-    {
-        throw new NotImplementedException();
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+
+        var app = Application.Instance;
+
+        var size = new Coords2D(app.Window.Width, 200);
+        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
+
+        _consolePanel = new ConsolePanel(position, size);
     }
 
     public void Uninitialize()
@@ -90,39 +117,47 @@ internal class NoiseTest : IGame
 
     public void Update(float deltaTime)
     {
-        //// Reset all Entity Colortint to a cool nighttime blue
-        //foreach (var entity in _scene.Tiles)
-        //{
-        //    entity.Value.ColorTint = new Color(128-64, 128, 128+64, 255);
-        //}
+        // Player
+        InputOptions? input = InputHandler.Handle();
 
-        //// Player
-        //InputOptions? input = InputHandler.Handle();
+        ICommand command = CommandFactory.Create(input, _scene, player);
 
-        //ICommand command = CommandFactory.Create(input, _scene, player);
+        CommandQueue.Add(command);
 
-        //CommandQueue.Add(command);
+        // Execute Player commands
+        if (!CommandQueue.IsEmpty)
+        {
+            //Console.WriteLine("Players turn!");
+            CommandQueue.Execute();
 
-        //// Execute Player commands
-        //if (!CommandQueue.IsEmpty)
-        //{
-        //    //Console.WriteLine("Players turn!");
-        //    CommandQueue.Execute();
+            // AI NPC / Monster / Critter controls
+            //Console.WriteLine("AI's turn!");
+            AI.Execute(_scene);
 
-        //    // AI NPC / Monster / Critter controls
-        //    //Console.WriteLine("AI's turn!");
-        //    AI.Execute(_scene);
+            // Execute AI commands
+            CommandQueue.Execute();
+        }
 
-        //    // Execute AI commands
-        //    CommandQueue.Execute();
-        //}
+        // TODO: Wrap in method
+        // Dynamically updated light sources
+        var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
 
-        //// Dynamically updated light sources
-        //foreach (var light in _scene.Tiles.OfType<LightSource>())
-        //{
-        //    light.Illuminate(_scene, _scene.Tiles);
-        //}
+        foreach (var lightSource in lightSources)
+        {
+            lightSource.Illuminate(_scene);
+        }
 
-        //_scene?.UpdateRuntime(deltaTime);
+        _scene?.UpdateRuntime(deltaTime);
+    }
+
+    public void UIRender(IUIRenderer UIRenderer)
+    {
+        UIRenderer.DrawFPS(16, 16);
+
+        //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
+        //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
+
+        _consolePanel.OnGUI(UIRenderer);
     }
 }

@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
-internal class Scene : Disposeable, IScene
+public class Scene : Disposeable, IScene
 {
     private IDictionary<int, IEntityLayer> _entityLayers;
 

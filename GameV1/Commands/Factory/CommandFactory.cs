@@ -17,7 +17,7 @@ namespace GameV1.Commands.Factory
         public static ICommand? Create(InputOptions? input, IScene scene, IEntity entity)
         {
             // Retrieve list of Tiles in walk direction
-            var tiles = scene.GetLayer((int)EntityLayer.Tiles);
+            var tiles = scene.GetLayer((int)EntityLayer.NonWalkableTiles);
             var creatures = scene.GetLayer((int)EntityLayer.Creatures);
 
             if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)

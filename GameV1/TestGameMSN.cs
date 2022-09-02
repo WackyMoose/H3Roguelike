@@ -14,9 +14,11 @@ namespace GameV1;
 
 public enum EntityLayer : int
 {
-    Tiles,
+    WalkableTiles,
+    NonWalkableTiles,
     Creatures,
-    Items
+    Items,
+    Path
 }
 
 internal class TestGameMSN : IGame
@@ -47,7 +49,7 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
-        var tileLayer = _scene.AddLayer<Tile>(EntityLayer.Tiles);
+        var tileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
         var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
@@ -84,7 +86,7 @@ internal class TestGameMSN : IGame
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
 
-        WorldGenerator.GenerateWorld(80085, ref tileLayer);
+        WorldGenerator.GenerateWorld(80085, ref _scene);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
