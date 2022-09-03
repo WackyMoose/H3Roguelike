@@ -1,16 +1,14 @@
 ﻿using GameV1.BehaviorTree.Interfaces;
-using System.ComponentModel;
 
-namespace GameV1.BehaviorTree.RogueLike
+namespace GameV1.BehaviorTree
 {
-    public class BehaviorTree : IBehaviorTree
+    public class BTree : IBehaviorTree
     {
         public NodeStates State { get; set; }
         public INode? RootNode { get; set; }
         public Dictionary<string, object> Blackboard { get; set; }
 
-
-        public BehaviorTree() 
+        public BTree() 
         {
             State = NodeStates.Failure; // TODO: Define default state at construction
             Blackboard = new Dictionary<string, object>();

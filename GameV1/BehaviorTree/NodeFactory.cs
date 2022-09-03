@@ -26,6 +26,11 @@ namespace GameV1.BehaviorTree
             return new Inverter();
         }
 
+        public static INode Limiter(int numRepeats)
+        {
+            return new Limiter(numRepeats);
+        }
+
         public static INode Repeater(int numRepeats)
         {
             return new Repeater(numRepeats);
