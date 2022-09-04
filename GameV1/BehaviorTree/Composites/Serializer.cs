@@ -1,11 +1,5 @@
 ﻿using GameV1.BehaviorTree.Base;
-using GameV1.BehaviorTree.Interfaces;
 using MooseEngine.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.BehaviorTree.Composites
 {
@@ -16,7 +10,7 @@ namespace GameV1.BehaviorTree.Composites
     {
         int m_currentNode;
 
-        public Serializer() 
+        public Serializer()
         {
             Reset();
         }

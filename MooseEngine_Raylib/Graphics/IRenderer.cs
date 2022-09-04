@@ -1,5 +1,4 @@
 ﻿using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 namespace MooseEngine.Graphics;
 

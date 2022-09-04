@@ -1,16 +1,10 @@
-﻿using GameV1.Commands;
-using GameV1.Commands.Factory;
-using GameV1.Entities;
-using GameV1.WorldGeneration;
+﻿using GameV1.Entities;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Threading;
 
 namespace GameV1;
 
@@ -68,7 +62,7 @@ internal class NoiseTest : IGame
         //ork.Chest.Add(armor);
         //_scene?.Add(ork);
 
-       // WorldGenerator.GenerateWorld(80085,ref tile);
+        // WorldGenerator.GenerateWorld(80085,ref tile);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);

@@ -1,5 +1,5 @@
 ﻿using GameV1.BehaviorTree;
-using static GameV1.BehaviorTree.NodeFactory;
+using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
@@ -10,7 +10,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using GameV1.Commands;
+using static GameV1.BehaviorTree.NodeFactory;
 
 namespace GameV1;
 
@@ -97,11 +97,16 @@ internal class TestGameMSN : IGame
                         .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
                         .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
                         .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                //.Add(Action(new CommandMoveToEntity(_scene, ork, player)))
                     )
-                );
+               );
 
         btrees.Add(sentryTree);
+
+        var druidTree = new BTree(druid);
+
+        druidTree.Add(Action(new CommandMoveToEntity(_scene, druid, player)));
+
+        btrees.Add(druidTree);
 
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
@@ -117,7 +122,7 @@ internal class TestGameMSN : IGame
         var app = Application.Instance;
 
         var size = new Coords2D(app.Window.Width, 200);
-        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y); 
+        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
 
         _consolePanel = new ConsolePanel(position, size);
     }
@@ -146,7 +151,7 @@ internal class TestGameMSN : IGame
             // AI NPC / Monster / Critter controls
             //Console.WriteLine("AI's turn!");
             //AI.Execute(_scene);
-            foreach(BTree btree in btrees)
+            foreach (BTree btree in btrees)
             {
                 btree.Evaluate();
 
@@ -159,7 +164,7 @@ internal class TestGameMSN : IGame
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
         var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
-        
+
         foreach (var lightSource in lightSources)
         {
             lightSource.Illuminate(_scene);

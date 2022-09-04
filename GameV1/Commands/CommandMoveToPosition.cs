@@ -1,13 +1,7 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
@@ -29,9 +23,9 @@ namespace GameV1.Commands
             }
 
             // No, then attempt to move
-            Vector2 nextPosition; 
-            
-            if(Entity.Position.Y > m_position.Y)
+            Vector2 nextPosition;
+
+            if (Entity.Position.Y > m_position.Y)
             {
                 nextPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
             }
@@ -51,7 +45,7 @@ namespace GameV1.Commands
             {
                 nextPosition = Entity.Position;
             }
-            
+
             var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(nextPosition, Entity);
 
             if (isKeyAvailable)

@@ -1,10 +1,7 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace GameV1.Entities
 {
@@ -13,7 +10,7 @@ namespace GameV1.Entities
         public int Range { get; set; }
         public Color TintModifier { get; set; }
 
-        public LightSource(int range, Color tintModifier, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public LightSource(int range, Color tintModifier, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             Range = range;

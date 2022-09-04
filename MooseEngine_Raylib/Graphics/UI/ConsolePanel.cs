@@ -29,13 +29,13 @@ public class ConsolePanel
 
         for (int i = 0; i < 5; i++)
         {
-            if(i >= _history.Count)
+            if (i >= _history.Count)
             {
                 continue;
             }
 
             var message = _history[i];
-            if(string.IsNullOrWhiteSpace(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
                 continue;
             }

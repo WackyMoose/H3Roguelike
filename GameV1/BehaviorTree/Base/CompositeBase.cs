@@ -25,6 +25,5 @@ namespace GameV1.BehaviorTree.Base
         {
             return base.ToString() + $"";
         }
-
     }
 }

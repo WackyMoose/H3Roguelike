@@ -1,6 +1,4 @@
 ﻿using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
-using System.Numerics;
 
 namespace GameV1.Interfaces
 {

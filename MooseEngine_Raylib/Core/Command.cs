@@ -1,5 +1,4 @@
 ﻿using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {
@@ -7,7 +6,7 @@ namespace MooseEngine.Core
     {
         public IEntity Entity { get; set; }
         public IScene Scene { get; set; }
-        public Command(IScene scene , IEntity entity)
+        public Command(IScene scene, IEntity entity)
         {
             Entity = entity;
             Scene = scene;

@@ -17,13 +17,13 @@ namespace GameV1.BehaviorTree.Base
             if (Root.Blackboard.ContainsKey(key) == false)
             {
                 return Root.Blackboard.TryAdd(key, value);
-            }     
+            }
             return false;
         }
 
         public object LoadData(string key)
         {
-            if (Root.Blackboard.Count != 0 && 
+            if (Root.Blackboard.Count != 0 &&
                 Root.Blackboard.ContainsKey(key) == true)
             {
                 return Root.Blackboard[key];
@@ -33,7 +33,7 @@ namespace GameV1.BehaviorTree.Base
 
         public bool DeleteData(string key)
         {
-            if (Root.Blackboard.Count != 0 && 
+            if (Root.Blackboard.Count != 0 &&
                 Root.Blackboard.ContainsKey(key) == true)
             {
                 return Root.Blackboard.Remove(key);

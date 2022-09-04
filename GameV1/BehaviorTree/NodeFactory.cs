@@ -2,9 +2,7 @@
 using GameV1.BehaviorTree.Composites;
 using GameV1.BehaviorTree.Decorators;
 using GameV1.BehaviorTree.Interfaces;
-using GameV1.Commands;
 using MooseEngine.Core;
-using MooseEngine.Interfaces;
 
 namespace GameV1.BehaviorTree
 {
@@ -14,7 +12,7 @@ namespace GameV1.BehaviorTree
         //{
         //    return new ActionNode(@delegate);
         //}
-        
+
         public static INode Action(Command command)
         {
             return new ActionNode(command);

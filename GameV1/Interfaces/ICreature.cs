@@ -1,7 +1,6 @@
 ﻿using GameV1.Categories;
 using GameV1.Entities;
 using MooseEngine.Interfaces;
-using MooseEngine.Utilities;
 
 namespace GameV1.Interfaces
 {

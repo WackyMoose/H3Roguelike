@@ -1,6 +1,5 @@
 ﻿
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {

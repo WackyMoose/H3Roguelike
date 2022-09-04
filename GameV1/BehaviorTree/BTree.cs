@@ -11,7 +11,7 @@ namespace GameV1.BehaviorTree
         public INode? RootNode { get; set; }
         public Dictionary<string, object> Blackboard { get; set; }
 
-        public BTree(IEntity entity) 
+        public BTree(IEntity entity)
         {
             Entity = entity;
             State = NodeStates.Failure; // TODO: Define default state at construction

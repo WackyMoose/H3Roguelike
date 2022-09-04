@@ -9,9 +9,6 @@ namespace GameV1.BehaviorTree.Decorators
 
         public override NodeStates Evaluate()
         {
-
-            Console.WriteLine("Inverter evaluating...");
-
             switch (Child?.Evaluate())
             {
                 case NodeStates.Failure:

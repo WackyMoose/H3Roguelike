@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Runtime.Intrinsics;
 
 namespace MooseEngine.Utilities;
 
@@ -9,9 +8,9 @@ public static class MathFunctions
     {
         return minValue + n * (maxValue - minValue);
     }
-    public static float InverseLerp(float minValue, float maxValue, float v) 
+    public static float InverseLerp(float minValue, float maxValue, float v)
     {
-        return ( v - minValue) / (maxValue - minValue);
+        return (v - minValue) / (maxValue - minValue);
     }
 
     public static float InverseDistanceSquaredBetween(Coords2D positionA, Coords2D positionB)
