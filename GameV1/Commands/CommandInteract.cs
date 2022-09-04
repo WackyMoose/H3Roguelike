@@ -11,9 +11,9 @@ namespace GameV1.Commands
         {
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
-
+            return NodeStates.Success;
         }
     }
 }

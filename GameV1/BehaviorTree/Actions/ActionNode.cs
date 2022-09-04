@@ -1,23 +1,38 @@
 ﻿using GameV1.BehaviorTree.Base;
+using MooseEngine.Core;
+using MooseEngine.Interfaces;
 
 namespace GameV1.BehaviorTree.Actions
 {
-    public delegate NodeStates ActionDelegate();
+    //public delegate NodeStates ActionDelegate();
+    //public delegate NodeStates MoveDelegate(IScene scene, IEntity entity);
 
     public class ActionNode : ActionBase
     {
-        private ActionDelegate m_action;
+        //private ActionDelegate m_action;
+        //private MoveDelegate m_move;
 
-        public ActionNode(ActionDelegate action)
+        Command m_command;
+
+        //public ActionNode(ActionDelegate action)
+        //{
+        //    m_action = action;
+        //}
+
+        //public ActionNode(MoveDelegate move)
+        //{
+        //    m_move = move;
+        //}
+
+        public ActionNode(Command command)
         {
-            m_action = action;
+            m_command = command;
         }
 
         public override NodeStates Evaluate()
         {
-            Console.WriteLine("ActionNode evaluating...");
-
-            State = m_action();
+            State = m_command.Execute();
+            Console.WriteLine($"ActionNode returns {State} ");
             return State;
         }
     }

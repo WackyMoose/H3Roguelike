@@ -1,4 +1,4 @@
-﻿namespace GameV1.BehaviorTree
+﻿namespace MooseEngine.Core
 {
     public enum NodeStates
     {

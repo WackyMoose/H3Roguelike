@@ -12,7 +12,7 @@ namespace GameV1.Commands
         {
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
             var npcs = Scene.GetLayer((int)EntityLayer.Creatures).GetEntitiesOfType<Creature>();
 
@@ -27,8 +27,10 @@ namespace GameV1.Commands
 
                     Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(npc.Position);
                     //Scene.Add(corpse);
+
                 }
             }
+            return NodeStates.Success;
         }
     }
 }

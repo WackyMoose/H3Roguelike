@@ -12,7 +12,7 @@ namespace GameV1.Commands
         {
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
             var newPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
 
@@ -22,7 +22,9 @@ namespace GameV1.Commands
             {
                 Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
                 Entity.Position = newPosition;
+                return NodeStates.Success;
             }
+            return NodeStates.Failure;
         }
     }
 }

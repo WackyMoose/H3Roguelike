@@ -13,6 +13,6 @@ namespace MooseEngine.Core
             Scene = scene;
         }
 
-        public abstract void Execute();
+        public abstract NodeStates Execute();
     }
 }

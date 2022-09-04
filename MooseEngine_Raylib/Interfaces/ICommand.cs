@@ -1,4 +1,5 @@
-﻿using MooseEngine.Scenes;
+﻿using MooseEngine.Core;
+using MooseEngine.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace MooseEngine.Interfaces
         IEntity Entity { get; set; }
         IScene Scene { get; set; }
 
-        void Execute();
+        NodeStates Execute();
     }
 }

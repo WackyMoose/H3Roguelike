@@ -1,5 +1,5 @@
 ﻿using GameV1.BehaviorTree;
-using GameV1.BehaviorTree.Interfaces;
+using static GameV1.BehaviorTree.NodeFactory;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
@@ -10,7 +10,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using static System.Formats.Asn1.AsnWriter;
+using GameV1.Commands;
 
 namespace GameV1;
 
@@ -25,17 +25,17 @@ internal class TestGameMSN : IGame
 {
     private IScene? _scene;
 
-    private IBehaviorTree _behaviorTree = new BTree();
-
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
-    private Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
+    public Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
+
+    private List<BTree> btrees = new List<BTree>();
 
     private ConsolePanel _consolePanel;
 
@@ -72,7 +72,7 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 32; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
@@ -84,10 +84,20 @@ internal class TestGameMSN : IGame
         druid.Chest.Add(armor);
         creatureLayer?.Add(druid);
 
-        ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
+        ork.Position = new Vector2(51, 42) * Constants.DEFAULT_ENTITY_SIZE;
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
+
+        var orkTree = new BTree(ork);
+
+        orkTree.Add(Stepper()
+                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position + new Vector2(-6, -2) * Constants.DEFAULT_ENTITY_SIZE)))
+                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position + new Vector2(-6, +4) * Constants.DEFAULT_ENTITY_SIZE)))
+                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position)))
+            );
+
+        btrees.Add(orkTree);
 
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
@@ -131,7 +141,11 @@ internal class TestGameMSN : IGame
 
             // AI NPC / Monster / Critter controls
             //Console.WriteLine("AI's turn!");
-            AI.Execute(_scene);
+            //AI.Execute(_scene);
+            foreach(BTree btree in btrees)
+            {
+                btree.Evaluate();
+            }
 
             // Execute AI commands
             CommandQueue.Execute();

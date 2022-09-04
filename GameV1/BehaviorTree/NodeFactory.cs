@@ -2,14 +2,27 @@
 using GameV1.BehaviorTree.Composites;
 using GameV1.BehaviorTree.Decorators;
 using GameV1.BehaviorTree.Interfaces;
+using GameV1.Commands;
+using MooseEngine.Core;
+using MooseEngine.Interfaces;
 
 namespace GameV1.BehaviorTree
 {
     public static class NodeFactory
     {
-        public static INode Action(ActionDelegate @delegate)
+        //public static INode Action(ActionDelegate @delegate)
+        //{
+        //    return new ActionNode(@delegate);
+        //}
+
+        //public static INode Action(MoveDelegate @delegate)
+        //{
+        //    return new ActionNode(@delegate);
+        //}
+
+        public static INode Action(Command command)
         {
-            return new ActionNode(@delegate);
+            return new ActionNode(command);
         }
 
         public static INode Breakpoint(string message)
@@ -44,6 +57,10 @@ namespace GameV1.BehaviorTree
         public static INode Sequence()
         {
             return new Sequence();
+        }
+        public static INode Stepper()
+        {
+            return new Serializer();
         }
     }
 }

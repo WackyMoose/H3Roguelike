@@ -17,12 +17,14 @@ namespace GameV1.Commands
             Attacked = attacked;
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
             ICreature attacker = (ICreature)Entity;
             ICreature attacked = (ICreature)Attacked;
 
             CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
+
+            return NodeStates.Success;
 
             //Console.WriteLine(attacked.Stats.Health);
         }
