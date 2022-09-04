@@ -12,7 +12,7 @@ namespace GameV1.Commands
     {
         public IEntity Attacked { get; set; }
 
-        public CommandAttack(IEntityLayer entityLayer, IEntity attacker, IEntity attacked) : base(entityLayer, attacker)
+        public CommandAttack(IScene scene, IEntity attacker, IEntity attacked) : base(scene, attacker)
         {
             Attacked = attacked;
         }

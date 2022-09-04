@@ -8,13 +8,13 @@ namespace GameV1.Commands
 {
     internal class CommandSwapDeadCreaturesWithCorpse : Command
     {
-        public CommandSwapDeadCreaturesWithCorpse(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandSwapDeadCreaturesWithCorpse(IScene scene, IEntity entity) : base(scene, entity)
         {
         }
 
         public override void Execute()
         {
-            var npcs = EntityLayer.GetEntitiesOfType<Creature>();
+            var npcs = Scene.GetLayer((int)EntityLayer.Creatures).GetEntitiesOfType<Creature>();
 
             foreach (var npc in npcs)
             {
@@ -25,7 +25,7 @@ namespace GameV1.Commands
                     corpse = npc.Inventory;
                     corpse.Position = npc.Position;
 
-                    EntityLayer.Entities.Remove(npc.Position);
+                    Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(npc.Position);
                     //Scene.Add(corpse);
                 }
             }

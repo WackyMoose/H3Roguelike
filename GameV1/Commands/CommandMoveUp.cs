@@ -10,7 +10,7 @@ namespace GameV1.Commands
     public class CommandMoveUp : Command
     {
 
-        public CommandMoveUp(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandMoveUp(IScene scene, IEntity entity) : base(scene, entity)
         {
         }
 
@@ -18,11 +18,11 @@ namespace GameV1.Commands
         {
             var newPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
 
-            var isKeyAvailable = EntityLayer.Entities.TryAdd(newPosition, Entity);
+            var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(newPosition, Entity);
 
             if (isKeyAvailable)
             {
-                EntityLayer.Entities.Remove(Entity.Position);
+                Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
                 Entity.Position = newPosition;
             }
         }
