@@ -29,7 +29,7 @@ internal class TestGameMSN : IGame
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
-    public Npc ork = new Npc("Ork", 100, 1000, new Coords2D(11, 0));
+    public Npc sentry = new Npc("Ork", 100, 1000, new Coords2D(5, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
@@ -84,24 +84,24 @@ internal class TestGameMSN : IGame
         druid.Chest.Add(armor);
         creatureLayer?.Add(druid);
 
-        ork.Position = new Vector2(59, 30) * Constants.DEFAULT_ENTITY_SIZE;
-        ork.MainHand.Add(sword);
-        ork.Chest.Add(armor);
-        creatureLayer?.Add(ork);
+        sentry.Position = new Vector2(59, 30) * Constants.DEFAULT_ENTITY_SIZE;
+        sentry.MainHand.Add(sword);
+        sentry.Chest.Add(armor);
+        creatureLayer?.Add(sentry);
 
-        var orkTree = new BTree(ork);
+        var sentryTree = new BTree(sentry);
 
-        orkTree.Add(Repeater(-1)
+        sentryTree.Add(Repeater(-1)
                     .Add(Serializer()
-                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
                 //.Add(Action(new CommandMoveToEntity(_scene, ork, player)))
                     )
                 );
 
-        btrees.Add(orkTree);
+        btrees.Add(sentryTree);
 
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
 

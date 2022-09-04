@@ -14,12 +14,7 @@ namespace GameV1.BehaviorTree
         //{
         //    return new ActionNode(@delegate);
         //}
-
-        //public static INode Action(MoveDelegate @delegate)
-        //{
-        //    return new ActionNode(@delegate);
-        //}
-
+        
         public static INode Action(Command command)
         {
             return new ActionNode(command);
