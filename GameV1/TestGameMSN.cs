@@ -91,13 +91,15 @@ internal class TestGameMSN : IGame
 
         var orkTree = new BTree(ork);
 
-        orkTree.Add(Serializer()
-                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandMoveToEntity(_scene, ork, player)))
-        );
+        orkTree.Add(Repeater(-1)
+                    .Add(Serializer()
+                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                //.Add(Action(new CommandMoveToEntity(_scene, ork, player)))
+                    )
+                );
 
         btrees.Add(orkTree);
 
@@ -147,10 +149,10 @@ internal class TestGameMSN : IGame
             foreach(BTree btree in btrees)
             {
                 btree.Evaluate();
-            }
 
-            // Execute AI commands
-            CommandQueue.Execute();
+                // Execute AI commands
+                CommandQueue.Execute();
+            }
         }
 
         // TODO: Wrap in method

@@ -29,6 +29,7 @@ namespace GameV1.BehaviorTree.Composites
                 {
                     State = NodeStates.Success;
                     Console.WriteLine($"Serializer returns {State} ");
+                    Reset();
                     return State;
                 }
 
