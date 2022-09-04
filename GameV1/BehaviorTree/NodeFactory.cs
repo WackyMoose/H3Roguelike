@@ -58,7 +58,7 @@ namespace GameV1.BehaviorTree
         {
             return new Sequence();
         }
-        public static INode Stepper()
+        public static INode Serializer()
         {
             return new Serializer();
         }

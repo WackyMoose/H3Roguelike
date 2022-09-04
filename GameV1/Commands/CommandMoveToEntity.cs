@@ -1,6 +1,5 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -11,39 +10,38 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class CommandMoveToPosition : Command
+    public class CommandMoveToEntity : Command
     {
-        Vector2 m_position;
+        IEntity m_targetEntity;
 
-        public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position) : base(scene, entity)
+        public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity) : base(scene, entity)
         {
-            m_position = position;
+            m_targetEntity = targetEntity;
         }
 
         public override NodeStates Execute()
         {
             // Are we there yet?
-            if (Entity.Position == m_position)
+            if (Entity.Position == m_targetEntity.Position)
             {
                 return NodeStates.Success;
             }
-
             // No, then attempt to move
-            Vector2 nextPosition; 
-            
-            if(Entity.Position.Y > m_position.Y)
+            Vector2 nextPosition;
+
+            if (Entity.Position.Y > m_targetEntity.Position.Y)
             {
                 nextPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
             }
-            else if (Entity.Position.Y < m_position.Y)
+            else if (Entity.Position.Y < m_targetEntity.Position.Y)
             {
                 nextPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
             }
-            else if (Entity.Position.X < m_position.X)
+            else if (Entity.Position.X < m_targetEntity.Position.X)
             {
                 nextPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
             }
-            else if (Entity.Position.X > m_position.X)
+            else if (Entity.Position.X > m_targetEntity.Position.X)
             {
                 nextPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
             }
@@ -51,7 +49,7 @@ namespace GameV1.Commands
             {
                 nextPosition = Entity.Position;
             }
-            
+
             var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(nextPosition, Entity);
 
             if (isKeyAvailable)

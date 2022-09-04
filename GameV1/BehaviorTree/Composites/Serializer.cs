@@ -28,6 +28,7 @@ namespace GameV1.BehaviorTree.Composites
                 if (m_currentNode == Children.Count)
                 {
                     State = NodeStates.Success;
+                    Console.WriteLine($"Serializer returns {State} ");
                     return State;
                 }
 
@@ -36,17 +37,21 @@ namespace GameV1.BehaviorTree.Composites
                     case NodeStates.Success:
                         m_currentNode++;
                         State = NodeStates.Running;
+                        Console.WriteLine($"Serializer returns {State} ");
                         return State;
                     case NodeStates.Running:
                         State = NodeStates.Running;
+                        Console.WriteLine($"Serializer returns {State} ");
                         return State;
                     case NodeStates.Failure:
                         State = NodeStates.Failure;
+                        Console.WriteLine($"Serializer returns {State} ");
                         return State;
 
                 }
             }
             State = NodeStates.Failure;
+            Console.WriteLine($"Serializer returns {State} ");
             return State;
         }
 

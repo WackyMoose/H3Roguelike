@@ -72,30 +72,32 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 32; i++)
-        {
-            var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
-        }
+        //for (int i = 0; i < 32; i++)
+        //{
+        //    var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+        //    light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+        //    itemLayer?.Add(light);
+        //}
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
         creatureLayer?.Add(druid);
 
-        ork.Position = new Vector2(51, 42) * Constants.DEFAULT_ENTITY_SIZE;
+        ork.Position = new Vector2(59, 30) * Constants.DEFAULT_ENTITY_SIZE;
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
 
         var orkTree = new BTree(ork);
 
-        orkTree.Add(Stepper()
-                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position + new Vector2(-6, -2) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position + new Vector2(-6, +4) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandMoveToPosition(_scene, ork, ork.Position)))
-            );
+        orkTree.Add(Serializer()
+                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                //.Add(Action(new CommandMoveToPosition(_scene, ork, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                .Add(Action(new CommandMoveToEntity(_scene, ork, player)))
+        );
 
         btrees.Add(orkTree);
 
