@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Graphics.UI.Options;
+using Raylib_cs;
 using System.Drawing;
 
 namespace MooseEngine.Graphics;
@@ -19,6 +20,7 @@ public enum ScrollbarSide
 public interface IRaylibUIRendererOptions
 {
     int FontSize { get; set; }
+    Font Font { get; set; }
 
     int BorderWidth { get; set; }
     int TextPadding { get; set; }
@@ -31,7 +33,7 @@ public interface IRaylibUIRendererOptions
     ButtonOptions ButtonOptions { get; set; }
     ListViewOptions ListViewOptions { get; set; }
     ScrollbarOptions ScrollbarOptions { get; set; }
-    SliderOptions SliderOptions { get; set; }
+    SliderOptionsDep SliderOptions { get; set; }
 
     TextAlignment LabelTextAlignment { get; set; }
     TextAlignment StatusBarTextAlignment { get; set; }
@@ -40,6 +42,7 @@ public interface IRaylibUIRendererOptions
 internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
 {
     public int FontSize { get; set; }
+    public Font Font { get; set; }
 
     public int BorderWidth { get; set; }
     public int TextPadding { get; set; }
@@ -52,7 +55,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
     public ButtonOptions ButtonOptions { get; set; }
     public ListViewOptions ListViewOptions { get; set; }
     public ScrollbarOptions ScrollbarOptions { get; set; }
-    public SliderOptions SliderOptions { get; set; }
+    public SliderOptionsDep SliderOptions { get; set; }
 
     public TextAlignment StatusBarTextAlignment { get; set; }
     public TextAlignment LabelTextAlignment { get; set; }
@@ -60,6 +63,10 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
     public RaylibUIRendererOptions(int fontSize)
     {
         FontSize = fontSize;
+
+        var path = @"..\..\..\Resources\Fonts\Retro_Gaming.ttf";
+
+        Font = File.Exists(path) ? Raylib.LoadFont(path) : Raylib.GetFontDefault();
 
         BorderWidth = 1;
         TextPadding = 4;
@@ -72,7 +79,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
         ButtonOptions = new ButtonOptions();
         ListViewOptions = new ListViewOptions();
         ScrollbarOptions = new ScrollbarOptions();
-        SliderOptions = new SliderOptions();
+        SliderOptions = new SliderOptionsDep();
 
         StatusBarTextAlignment = TextAlignment.Left;
         LabelTextAlignment = TextAlignment.Left;

@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Core;
+using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
@@ -10,7 +11,7 @@ internal class RaylibUIRenderer : IUIRenderer
     enum GuiState : uint
     {
         STATE_NORMAL = 0,
-        STATE_FOCUSED,
+        STATE_HOVERED,
         STATE_PRESSED,
         STATE_DISABLED,
     }
@@ -19,11 +20,15 @@ internal class RaylibUIRenderer : IUIRenderer
 
     public RaylibUIRenderer(IWindow windowData)
     {
-        UIRendererOptions = new RaylibUIRendererOptions(24);
         WindowData = windowData;
     }
 
-    public IRaylibUIRendererOptions UIRendererOptions { get; }
+    public void Initialize()
+    {
+        UIRendererOptions = new RaylibUIRendererOptions(24);
+    }
+
+    public IRaylibUIRendererOptions UIRendererOptions { get; internal set; }
     public IWindowData WindowData { get; }
 
     public void DrawFPS(int x, int y)
@@ -59,7 +64,7 @@ internal class RaylibUIRenderer : IUIRenderer
             if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
             {
                 if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON)) state = GuiState.STATE_PRESSED;
-                else state = GuiState.STATE_FOCUSED;
+                else state = GuiState.STATE_HOVERED;
 
                 if (Raylib.IsMouseButtonReleased(MouseButton.MOUSE_LEFT_BUTTON)) pressed = true;
             }
@@ -196,7 +201,7 @@ internal class RaylibUIRenderer : IUIRenderer
             // Check mouse inside list view
             if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
             {
-                state = GuiState.STATE_FOCUSED;
+                state = GuiState.STATE_HOVERED;
 
                 // Check focused and selected item
                 for (int i = 0; i < visibleItems; i++)
@@ -335,6 +340,68 @@ internal class RaylibUIRenderer : IUIRenderer
         return itemSelected;
     }
 
+    public float DrawSliderBar(SliderOptions sliderOptions)
+    {
+        var state = _guiState;
+        var sliderRectangle = sliderOptions.GetSliderRectangle();
+        var bounds = sliderOptions.GetBounds();
+
+        int value = sliderOptions.Value;
+
+        // Update control
+        //--------------------------------------------------------------------
+        if (sliderOptions.Interactable)
+        {
+            Vector2 mousePoint = Raylib.GetMousePosition();
+
+            if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
+            {
+                if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON))
+                {
+                    state = GuiState.STATE_PRESSED;
+
+                    // Get equivalent value and slider position from mousePoint.x
+                    value = (int)(((sliderOptions.MaxValue - sliderOptions.MinValue) * (mousePoint.X - (bounds.x / 2.0f)) / bounds.width) + sliderOptions.MinValue);
+
+                    sliderRectangle.width = value;
+                }
+                else state = GuiState.STATE_HOVERED;
+            }
+        }
+        else
+        {
+            sliderRectangle.width = value;
+        }
+        sliderOptions.ClampValue();
+
+        if (sliderRectangle.width > bounds.width)
+        {
+            sliderRectangle.width = bounds.width - 2 * sliderOptions.BorderWidth;
+        }
+        //--------------------------------------------------------------------
+
+        // Draw control
+        //--------------------------------------------------------------------
+        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
+
+        // Draw slider internal bar (depends on state)
+        if (!sliderOptions.Interactable)
+        {
+            sliderRectangle.width = MathFunctions.Lerp(sliderOptions.MinValue, bounds.width, value / sliderOptions.MaxValue);
+        }
+        GuiDrawRectangle(sliderRectangle, 0, Color.Blank, state == GuiState.STATE_HOVERED ? sliderOptions.TextFocusedColor : sliderOptions.PressedColor);
+
+        if (sliderOptions.TextAlignment != TextAlignmentSlider.None)
+        {
+            var textBounds = sliderOptions.GetTextBounds();
+            GuiDrawText(sliderOptions.Text, textBounds, GetTextColorByState(state));
+        }
+        //--------------------------------------------------------------------
+
+        sliderOptions.Value = value;
+        return sliderOptions.Value;
+    }
+
     // Slider control with pro parameters
     public float DrawSlider(Rectangle bounds, string textLeft, string textRight, float value, float minValue, float maxValue, int sliderWidth)
     {
@@ -379,7 +446,7 @@ internal class RaylibUIRenderer : IUIRenderer
                     if (sliderWidth > 0) sliderRectangle.x = mousePoint.X - sliderRectangle.width / 2;  // Slider
                     else if (sliderWidth == 0) sliderRectangle.width = (float)value;          // SliderBar
                 }
-                else state = GuiState.STATE_FOCUSED;
+                else state = GuiState.STATE_HOVERED;
             }
 
             if (value > maxValue) value = maxValue;
@@ -408,7 +475,7 @@ internal class RaylibUIRenderer : IUIRenderer
             sliderRectangle.width = MathFunctions.Lerp(minValue, bounds.width, value / maxValue);
             GuiDrawRectangle(sliderRectangle, 0, Color.Blank, colors.PressedColor);
         }
-        else if (state == GuiState.STATE_FOCUSED)
+        else if (state == GuiState.STATE_HOVERED)
         {
             GuiDrawRectangle(sliderRectangle, 0, Color.Blank, colors.TextFocusedColor);
         }
@@ -555,7 +622,7 @@ internal class RaylibUIRenderer : IUIRenderer
                 }
                 else
                 {
-                    _guiState = GuiState.STATE_FOCUSED;
+                    _guiState = GuiState.STATE_HOVERED;
                 }
 
 #if SUPPORT_SCROLLBAR_KEY_INPUT
@@ -727,7 +794,7 @@ internal class RaylibUIRenderer : IUIRenderer
 
             if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
             {
-                state = GuiState.STATE_FOCUSED;
+                state = GuiState.STATE_HOVERED;
 
                 // Handle mouse wheel
                 int wheel = (int)Raylib.GetMouseWheelMove();
@@ -816,7 +883,8 @@ internal class RaylibUIRenderer : IUIRenderer
     private void GuiDrawText(string text, Rectangle bounds, Color tint)
     {
         var position = new Vector2(bounds.x, bounds.y);
-        var font = Raylib.GetFontDefault();
+        var font = UIRendererOptions.Font;
+        //var font = Raylib.GetFontDefault();
 
         Raylib.DrawTextEx(font, text, position, UIRendererOptions.FontSize, UIRendererOptions.TextSpacing, tint);
     }
@@ -844,7 +912,7 @@ internal class RaylibUIRenderer : IUIRenderer
         var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_FOCUSED => colors.FocusedColor,
+            GuiState.STATE_HOVERED => colors.FocusedColor,
             GuiState.STATE_PRESSED => colors.PressedColor,
             GuiState.STATE_DISABLED => colors.DisabledColor,
             _ => colors.NormalColor,
@@ -856,7 +924,7 @@ internal class RaylibUIRenderer : IUIRenderer
         var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_FOCUSED => colors.BorderFocusedColor,
+            GuiState.STATE_HOVERED => colors.BorderFocusedColor,
             GuiState.STATE_PRESSED => colors.BorderPressedColor,
             GuiState.STATE_DISABLED => colors.BorderDisabledColor,
             _ => colors.BorderNormalColor,
@@ -868,7 +936,7 @@ internal class RaylibUIRenderer : IUIRenderer
         var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_FOCUSED => colors.TextFocusedColor,
+            GuiState.STATE_HOVERED => colors.TextFocusedColor,
             GuiState.STATE_PRESSED => colors.TextPressedColor,
             GuiState.STATE_DISABLED => colors.TextDisabledColor,
             _ => colors.TextNormalColor,
