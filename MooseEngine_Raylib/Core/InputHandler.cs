@@ -21,7 +21,6 @@ namespace MooseEngine.Core
             {
                 if (Input.IsKeyPressed(pair.Key))
                 {
-                    ConsolePanel.Add(Enum.GetName(pair.Key));
                     return pair.Value;
                 }
             }

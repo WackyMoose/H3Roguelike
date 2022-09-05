@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
 using GameV1.Interfaces;
+using MooseEngine.Graphics.UI;
 
 namespace GameV1
 {
@@ -13,6 +14,7 @@ namespace GameV1
             defender.Stats.Health -= (int)(damage * damageModifier);
 
             //Console.WriteLine($"Damage: {damage}, Damage modifier: {damageModifier}");
+            ConsolePanel.Add($"Damage: {damage}, Damage modifier: {damageModifier} (health left: {defender.Stats.Health})");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
@@ -33,6 +34,7 @@ internal class TestGameMSN : IGame
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
     private ConsolePanel _consolePanel;
+    private StatsPanel _statsPanel;
 
     public void Initialize()
     {
@@ -101,8 +103,7 @@ internal class TestGameMSN : IGame
         var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
 
         _consolePanel = new ConsolePanel(position, size);
-
-        scrollView = new Vector2(0, 0);
+        _statsPanel = new StatsPanel(player);
     }
 
     public void Uninitialize()
@@ -147,19 +148,11 @@ internal class TestGameMSN : IGame
         _scene?.UpdateRuntime(deltaTime);
     }
 
-    static Vector2 scrollView;
-    int focus = -1;
-    int scrollIndex = 2;
-    int active = 2;
     public void UIRender(IUIRenderer UIRenderer)
     {
         UIRenderer.DrawFPS(16, 16);
 
-        //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
-        //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
-
-        //UIRenderer.DrawScrollPanel(new Raylib_cs.Rectangle(560, 25, 100, 160), "Charmander;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey", new Raylib_cs.Rectangle(560, 25, 200, 400), ref scrollView);
-
         _consolePanel.OnGUI(UIRenderer);
+        _statsPanel.OnGUI(UIRenderer);
     }
 }

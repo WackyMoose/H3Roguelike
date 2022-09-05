@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Core;
+using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
 
@@ -44,7 +45,7 @@ internal class RaylibUIRenderer : IUIRenderer
         var state = _guiState;
         var buttonOptions = UIRendererOptions.ButtonOptions;
 
-        var bounds = new Rectangle(x, y, 0, 0);
+        var bounds = new Rectangle(x, y, 100, 50);
 
         bool pressed = false;
 
@@ -125,13 +126,15 @@ internal class RaylibUIRenderer : IUIRenderer
     }
 
     // List View control
-    public int DrawListView(Rectangle bounds, string text, ref int scrollIndex, int active)
+    public int DrawListView(Rectangle bounds, string title, string text, ref int scrollIndex, int active)
     {
-        throw new NotImplementedException();
+        var items = text.Split(";");
+        int focus = 0;
+        return DrawListViewEx(bounds, title, items, items.Length, ref focus, ref scrollIndex, active);
     }
 
     // List View control with extended parameters
-    public int DrawListViewEx(Rectangle bounds, string[] text, int count, ref int focus, ref int scrollIndex, int active, bool stickToBottom = false)
+    public int DrawListViewEx(Rectangle bounds, string title, string[] text, int count, ref int focus, ref int scrollIndex, int active, bool stickToBottom = false)
     {
         var state = _guiState;
         var colors = UIRendererOptions.Colors;
@@ -142,6 +145,21 @@ internal class RaylibUIRenderer : IUIRenderer
         int itemSelected = active;
 
         var useScrollBar = (listViewOptions.ItemHeight + listViewOptions.ItemSpacing) * count > bounds.height;
+
+        var statusBarRectangle = new Rectangle(bounds.x, bounds.y, bounds.width, (float)RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT);
+
+        // Text will be drawn as a header bar (if provided)
+        if (!string.IsNullOrWhiteSpace(title) && (bounds.height < RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT * 2.0f))
+        {
+            bounds.height = RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT * 2;
+        }
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            // Move panel bounds after the header bar
+            bounds.y += RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT - 1;
+            bounds.height -= RAYGUI_WINDOWBOX_STATUSBAR_HEIGHT + 1;
+        }
 
         var itemBounds = new Rectangle
         {
@@ -225,6 +243,12 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            GuiStatusBar(statusBarRectangle, title);  // Draw panel header as status bar
+        }
+
         GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, GetBorderColorByState(state), colors.BackgroundColor);     // Draw background
 
         // Draw visible items
@@ -309,6 +333,142 @@ internal class RaylibUIRenderer : IUIRenderer
         }
 
         return itemSelected;
+    }
+
+    // Slider control with pro parameters
+    public float DrawSlider(Rectangle bounds, string textLeft, string textRight, float value, float minValue, float maxValue, int sliderWidth)
+    {
+        var state = _guiState;
+        var colors = UIRendererOptions.Colors;
+        var sliderOptions = UIRendererOptions.SliderOptions;
+
+        var sliderRectangle = new Rectangle
+        {
+            x = bounds.x,
+            y = bounds.y + sliderOptions.BorderWidth + sliderOptions.Padding,
+            width = 0.0f,
+            height = bounds.height - 2 * sliderOptions.BorderWidth - 2 * sliderOptions.Padding
+        };
+
+        if (sliderWidth > 0)        // Slider
+        {
+            sliderRectangle.x += (value - sliderWidth / 2);
+            sliderRectangle.width = (float)sliderWidth;
+        }
+        else if (sliderWidth == 0)  // SliderBar
+        {
+            sliderRectangle.x += sliderOptions.BorderWidth;
+            sliderRectangle.width = (float)value;
+        }
+
+        // Update control
+        //--------------------------------------------------------------------
+        if (state != GuiState.STATE_DISABLED)
+        {
+            Vector2 mousePoint = Raylib.GetMousePosition();
+
+            if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
+            {
+                if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON))
+                {
+                    state = GuiState.STATE_PRESSED;
+
+                    // Get equivalent value and slider position from mousePoint.x
+                    value = ((maxValue - minValue) * (mousePoint.X - (float)(bounds.x + sliderWidth / 2))) / (float)(bounds.width - sliderWidth) + minValue;
+
+                    if (sliderWidth > 0) sliderRectangle.x = mousePoint.X - sliderRectangle.width / 2;  // Slider
+                    else if (sliderWidth == 0) sliderRectangle.width = (float)value;          // SliderBar
+                }
+                else state = GuiState.STATE_FOCUSED;
+            }
+
+            if (value > maxValue) value = maxValue;
+            else if (value < minValue) value = minValue;
+        }
+
+        // Bar limits check
+        if (sliderWidth > 0)        // Slider
+        {
+            if (sliderRectangle.x <= (bounds.x + sliderOptions.BorderWidth)) sliderRectangle.x = bounds.x + sliderOptions.BorderWidth;
+            else if ((sliderRectangle.x + sliderRectangle.width) >= (bounds.x + bounds.width)) sliderRectangle.x = bounds.x + bounds.width - sliderRectangle.width - sliderOptions.BorderWidth;
+        }
+        else if (sliderWidth == 0)  // SliderBar
+        {
+            if (sliderRectangle.width > bounds.width) sliderRectangle.width = bounds.width - 2 * sliderOptions.BorderWidth;
+        }
+        //--------------------------------------------------------------------
+
+        // Draw control
+        //--------------------------------------------------------------------
+        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
+
+        // Draw slider internal bar (depends on state)
+        if ((state == GuiState.STATE_NORMAL) || (state == GuiState.STATE_PRESSED))
+        {
+            sliderRectangle.width = MathFunctions.Lerp(minValue, bounds.width, value / maxValue);
+            GuiDrawRectangle(sliderRectangle, 0, Color.Blank, colors.PressedColor);
+        }
+        else if (state == GuiState.STATE_FOCUSED)
+        {
+            GuiDrawRectangle(sliderRectangle, 0, Color.Blank, colors.TextFocusedColor);
+        }
+
+        // Draw left/right text if provided
+        if (!string.IsNullOrWhiteSpace(textLeft))
+        {
+            Rectangle textBounds = new(0, 0, 0, 0);
+            textBounds.width = (float)GetTextWidth(textLeft);
+            textBounds.height = (float)UIRendererOptions.FontSize;
+            textBounds.x = bounds.x - textBounds.width - sliderOptions.TextPadding;
+            textBounds.y = bounds.y + bounds.height / 2 - UIRendererOptions.FontSize / 2;
+
+            GuiDrawText(textLeft, textBounds, GetTextColorByState(state));
+        }
+
+        if (!string.IsNullOrWhiteSpace(textRight))
+        {
+            Rectangle textBounds = new(0, 0, 0, 0);
+            textBounds.width = (float)GetTextWidth(textRight);
+            textBounds.height = (float)UIRendererOptions.FontSize;
+            textBounds.x = bounds.x + bounds.width + UIRendererOptions.TextPadding;
+            textBounds.y = bounds.y + bounds.height / 2 - UIRendererOptions.FontSize / 2;
+
+            GuiDrawText(textRight, textBounds, GetTextColorByState(state));
+        }
+        //--------------------------------------------------------------------
+
+        return value;
+    }
+
+    const int ICON_TEXT_PADDING = 4;
+    const int RAYGUI_ICON_SIZE = 16;
+    int GetTextWidth(string text)
+    {
+        Vector2 size = Vector2.Zero;
+        int textIconOffset = 0;
+
+        if ((!string.IsNullOrWhiteSpace(text)) && (text[0] != '\0'))
+        {
+            if (text[0] == '#')
+            {
+                for (int i = 1; (text[i] != '\0') && (i < 5); i++)
+                {
+                    if (text[i] == '#')
+                    {
+                        textIconOffset = i;
+                        break;
+                    }
+                }
+            }
+
+            // Make sure guiFont is set, GuiGetStyle() initializes it lazynessly
+            float fontSize = (float)UIRendererOptions.FontSize;
+
+            size = Raylib.MeasureTextEx(Raylib.GetFontDefault(), text + textIconOffset, fontSize, (float)UIRendererOptions.TextSpacing);
+            if (textIconOffset > 0) size.X += (RAYGUI_ICON_SIZE - ICON_TEXT_PADDING);
+        }
+
+        return (int)size.X;
     }
 
     // Scroll Panel control
