@@ -19,6 +19,7 @@ namespace GameV1.Commands
         private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_currentTargetPosition;
         Vector2 m_nextPosition;
+        private Vector2 m_distance;
 
         public CommandPatrolArea(IScene scene, IEntity entity, Vector2 position, int radius) : base(scene, entity)
         {
@@ -40,21 +41,29 @@ namespace GameV1.Commands
             }
 
             // No, then attempt to move
-            if (Entity.Position.Y > m_currentTargetPosition.Y)
+            m_distance = m_currentTargetPosition - Entity.Position;
+
+            if (Math.Abs(m_distance.Y) >= Math.Abs(m_distance.X))
             {
-                m_nextPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
+                if (Entity.Position.Y > m_currentTargetPosition.Y)
+                {
+                    m_nextPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
+                }
+                else if (Entity.Position.Y < m_currentTargetPosition.Y)
+                {
+                    m_nextPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
+                }
             }
-            else if (Entity.Position.Y < m_currentTargetPosition.Y)
+            else if (Math.Abs(m_distance.Y) < Math.Abs(m_distance.X))
             {
-                m_nextPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
-            }
-            else if (Entity.Position.X < m_currentTargetPosition.X)
-            {
-                m_nextPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
-            }
-            else if (Entity.Position.X > m_currentTargetPosition.X)
-            {
-                m_nextPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
+                if (Entity.Position.X < m_currentTargetPosition.X)
+                {
+                    m_nextPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
+                }
+                else if (Entity.Position.X > m_currentTargetPosition.X)
+                {
+                    m_nextPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
+                }
             }
             else
             {

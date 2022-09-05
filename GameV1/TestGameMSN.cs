@@ -25,11 +25,16 @@ internal class TestGameMSN : IGame
 {
     private IScene? _scene;
 
+    // Creatures
     private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
-    public Npc sentry = new Npc("Ork", 100, 1000, new Coords2D(5, 0));
+    private Npc orc = new Npc("Orc", 100, 1000, new Coords2D(9, 0));
+    public Npc guard_01 = new Npc("City guard", 100, 1000, new Coords2D(5, 0));
+    public Npc guard_02 = new Npc("City guard", 100, 1000, new Coords2D(5, 0));
+
+    // Items
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
@@ -75,46 +80,58 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        //for (int i = 0; i < 32; i++)
-        //{
-        //    var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
-        //    light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-        //    itemLayer?.Add(light);
-        //}
+        for (int i = 0; i < 32; i++)
+        {
+            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+            itemLayer?.Add(light);
+        }
 
+        // Druid chasing player
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
         creatureLayer?.Add(druid);
 
-        sentry.Position = new Vector2(59, 30) * Constants.DEFAULT_ENTITY_SIZE;
-        sentry.MainHand.Add(sword);
-        sentry.Chest.Add(armor);
-        creatureLayer?.Add(sentry);
-
-        var sentryTree = new BTree(sentry);
-
-        //sentryTree.Add(Repeater(-1)
-        //            .Add(Serializer()
-        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-        //            )
-        //       );
-
-        sentryTree.Add(Repeater(-1)
-                    .Add(Action(new CommandPatrolArea(_scene, sentry, sentry.Position, 16*32)))
-                );
-
-        btrees.Add(sentryTree);
-
         var druidTree = new BTree(druid);
 
-        druidTree.Add(Action(new CommandMoveToEntity(_scene, druid, player)));
+        druidTree.Add(Serializer() 
+            .Add(Delay(1).Add(Action(new CommandMoveToEntity(_scene, druid, player)))));
 
         btrees.Add(druidTree);
 
+        // Patrolling guard
+        guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_01.MainHand.Add(sword);
+        guard_01.Chest.Add(armor);
+        creatureLayer?.Add(guard_01);
+
+        var guard_01Tree = new BTree(guard_01);
+
+        guard_01Tree.Add(Repeater(-1)
+                    .Add(Serializer()
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                    )
+               );
+
+        btrees.Add(guard_01Tree);
+
+        // Randomized walk guard
+        guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_02.MainHand.Add(sword);
+        guard_02.Chest.Add(armor);
+        creatureLayer?.Add(guard_02);
+
+        var guard_02Tree = new BTree(guard_02);
+
+        guard_02Tree.Add(Repeater(-1)
+            .Add(Action(new CommandPatrolArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
+        );
+
+        btrees.Add(guard_02Tree);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -123,7 +140,6 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
         var app = Application.Instance;
 
