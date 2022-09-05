@@ -3,6 +3,9 @@ using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
+using MooseEngine.BehaviorTree.Actions;
+using MooseEngine.BehaviorTree.Composites;
+using MooseEngine.BehaviorTree.Decorators;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -18,7 +21,8 @@ public enum EntityLayer : int
 {
     Tiles,
     Creatures,
-    Items
+    Items,
+    LightSources
 }
 
 internal class TestGameMSN : IGame
@@ -37,6 +41,9 @@ internal class TestGameMSN : IGame
     // Items
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private Weapon doubleAxe = new Weapon(100, 100, "Double Axe", new Coords2D(7, 4), Color.White);
+    private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
+    private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -58,7 +65,8 @@ internal class TestGameMSN : IGame
         _scene = sceneFactory.CreateScene();
 
         var tileLayer = _scene.AddLayer<Tile>(EntityLayer.Tiles);
-        var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
+        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
+        var lightSourceLayer = _scene.AddLayer<LightSource>(EntityLayer.LightSources);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         var app = Application.Instance;
@@ -74,23 +82,32 @@ internal class TestGameMSN : IGame
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
+        // Spawn items
+        doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(doubleAxe);
+        crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(crossBow);
+        trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(trident);
+
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
         creatureLayer?.Add(player);
 
+        // Light sources
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(light);
+        lightSourceLayer?.Add(light);
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(townLights);
+        lightSourceLayer?.Add(townLights);
 
         for (int i = 0; i < 32; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
+            lightSourceLayer?.Add(light);
         }
 
         // Druid chasing player
@@ -99,13 +116,11 @@ internal class TestGameMSN : IGame
         druid.Chest.Add(armor);
         creatureLayer?.Add(druid);
 
-        var druidTree = new BTree(druid);
-
-        // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer()
-            .Add(Delay(1).Add(Action(new CommandMoveToEntity(_scene, druid, player)))));
-
-        btrees.Add(druidTree);
+        // Randomized walk guard
+        guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_02.MainHand.Add(sword);
+        guard_02.Chest.Add(armor);
+        creatureLayer?.Add(guard_02);
 
         // Patrolling guard
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
@@ -113,48 +128,60 @@ internal class TestGameMSN : IGame
         guard_01.Chest.Add(armor);
         creatureLayer?.Add(guard_01);
 
-        var guard_01Tree = new BTree(guard_01);
 
-        // March along the city walls
-        guard_01Tree.Add(Repeater(-1)
-                    .Add(Serializer()
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                    )
-               );
-
-        btrees.Add(guard_01Tree);
-
-        // Randomized walk guard
-        guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_02.MainHand.Add(sword);
-        guard_02.Chest.Add(armor);
-        creatureLayer?.Add(guard_02);
-
+        // Randomized walk guard Behavior tree
         var guard_02Tree = new BTree(guard_02);
 
         // Roam around the campfire
         //guard_02Tree.Add(Repeater(-1)
         //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
         //);
+        btrees.Add(guard_02Tree);
 
-        guard_02Tree.Add(Repeater(-1)
-            .Add(Action(new CommandPatrolRectangularArea(
-                _scene,
-                guard_02,
-                light.Position + new Vector2(-8, -2) * Constants.DEFAULT_ENTITY_SIZE,
-                light.Position + new Vector2(8, 2) * Constants.DEFAULT_ENTITY_SIZE)))
+        guard_02Tree.Add(Serializer()
+                .Add(Action(new CommandPatrolRectangularArea(
+                    _scene,
+                    guard_02,
+                    light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
+                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)))
+                .Add(Action(new CommandIdle(_scene, guard_02)))
+                .Add(Action(new CommandIdle(_scene, guard_02)))
             );
 
-        btrees.Add(guard_02Tree);
+        // Druid behavior tree
+        var druidTree = new BTree(druid);
+
+        btrees.Add(druidTree);
+
+        // Follow the player, but only walk every other turn
+        druidTree.Add(Serializer()
+                .Add(Delay(1)
+                    .Add(Action(new CommandMoveToEntity(_scene, druid, player)))
+                )
+            );
+
+
+
+        // Roaming guard behavior tree
+        var guard_01Tree = new BTree(guard_01);
+
+        btrees.Add(guard_01Tree);
+
+        // March along the city walls
+        guard_01Tree.Add(Serializer()
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+               );
+
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+        InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
     }
 
     public void Uninitialize()
@@ -192,10 +219,9 @@ internal class TestGameMSN : IGame
 
         // TODO: Wrap in method
         // Dynamically updated light sources
-        var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
-        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
+        var lightSourceLayer = _scene.GetLayer((int)EntityLayer.LightSources);
 
-        foreach (var lightSource in lightSources)
+        foreach (LightSource lightSource in lightSourceLayer.Entities.Values)
         {
             lightSource.Illuminate(_scene);
         }

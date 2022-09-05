@@ -8,7 +8,6 @@ namespace MooseEngine.BehaviorTree.Base
 
         public DecoratorBase()
         {
-            Parent = null;
         }
 
         public override INode Add(INode node)

@@ -8,15 +8,15 @@ namespace MooseEngine.BehaviorTree.Base
 
         public CompositeBase()
         {
-            Parent = null;
             Children = new List<INode>();
         }
 
         public override INode Add(INode node)
         {
+            Children?.Add(node);
             node.Root = Root;
             node.Parent = this;
-            Children?.Add(node);
+
 
             return this;
         }

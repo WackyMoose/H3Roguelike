@@ -11,6 +11,12 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
+            // TODO: Finish this!
+
+            var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
+
+            IEntity item = Scene.EntityAtPosition(itemLayer.Entities, Entity.Position);
+
             return NodeStates.Success;
         }
     }

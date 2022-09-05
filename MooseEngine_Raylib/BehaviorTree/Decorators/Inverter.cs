@@ -3,7 +3,7 @@ using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {
-    internal class Inverter : DecoratorBase
+    public class Inverter : DecoratorBase
     {
         public Inverter() { }
 

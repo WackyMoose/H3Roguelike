@@ -20,8 +20,11 @@ namespace MooseEngine.BehaviorTree
 
         public INode Add(INode node)
         {
-            node.Root = this;
-            RootNode = node;
+            if(RootNode == null)
+            {
+                RootNode = node;
+                RootNode.Root = this;
+            }
             return RootNode;
         }
 

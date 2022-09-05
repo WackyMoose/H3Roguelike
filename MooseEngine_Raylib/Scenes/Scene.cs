@@ -49,7 +49,7 @@ internal class Scene : Disposeable, IScene
     {
         int distanceSquared = distance * distance;
 
-        Dictionary<Vector2, IEntity> TilesWithinDist = new Dictionary<Vector2, IEntity>();
+        Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
 
         var topLft = new Vector2(position.X - distance, position.Y - distance);
         var btmRgt = new Vector2(position.X + distance, position.Y + distance);
@@ -63,13 +63,13 @@ internal class Scene : Disposeable, IScene
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
                     {
-                        TilesWithinDist.Add(v, entities[v]);
+                        tilesWithinDist.Add(v, entities[v]);
                     }
                 }
             }
         }
 
-        return TilesWithinDist;
+        return tilesWithinDist;
     }
 
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight)
@@ -123,7 +123,7 @@ internal class Scene : Disposeable, IScene
                 {
                     if (entities.ContainsKey(v))
                     {
-                        Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
+                        Renderer.Render(entities[v], Constants.DEFAULT_ENTITY_SIZE);
                         entities[v].ColorTint = defaultTint;
                     }
                 }

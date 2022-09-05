@@ -3,7 +3,7 @@ using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {
-    internal class AlwaysSuccess : DecoratorBase
+    public class AlwaysSuccess : DecoratorBase
     {
         public AlwaysSuccess() { }
 

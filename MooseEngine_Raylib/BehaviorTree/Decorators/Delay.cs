@@ -3,7 +3,7 @@ using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {
-    internal class Delay : DecoratorBase
+    public class Delay : DecoratorBase
     {
         private static int m_currentTurns;
         private int m_numTurns;

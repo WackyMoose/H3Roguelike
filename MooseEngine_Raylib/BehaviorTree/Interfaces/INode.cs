@@ -11,7 +11,7 @@ namespace MooseEngine.BehaviorTree.Interfaces
         object LoadData(string key);
         bool DeleteData(string key);
         INode? Add(INode node);
-        abstract INode? Up();
-        abstract NodeStates Evaluate();
+        INode? Up();
+        NodeStates Evaluate();
     }
 }
