@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Runtime.Intrinsics;
 
 namespace MooseEngine.Utilities;
 
