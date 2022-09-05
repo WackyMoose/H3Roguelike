@@ -30,9 +30,9 @@ internal class TestGameMSN : IGame
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
-    private Npc orc = new Npc("Orc", 100, 1000, new Coords2D(9, 0));
-    public Npc guard_01 = new Npc("City guard", 100, 1000, new Coords2D(5, 0));
-    public Npc guard_02 = new Npc("City guard", 100, 1000, new Coords2D(5, 0));
+    private Npc orc = new Npc("Orc", 100, 1000, new Coords2D(11, 0));
+    public Npc guard_01 = new Npc("City guard", 100, 1000, new Coords2D(6, 0));
+    public Npc guard_02 = new Npc("City guard", 100, 1000, new Coords2D(15, 0));
 
     // Items
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
@@ -95,6 +95,7 @@ internal class TestGameMSN : IGame
 
         var druidTree = new BTree(druid);
 
+        // Follow the player, but only walk every other turn
         druidTree.Add(Serializer() 
             .Add(Delay(1).Add(Action(new CommandMoveToEntity(_scene, druid, player)))));
 
@@ -108,6 +109,7 @@ internal class TestGameMSN : IGame
 
         var guard_01Tree = new BTree(guard_01);
 
+        // March along the city walls
         guard_01Tree.Add(Repeater(-1)
                     .Add(Serializer()
                         .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
@@ -127,6 +129,7 @@ internal class TestGameMSN : IGame
 
         var guard_02Tree = new BTree(guard_02);
 
+        // Roam around the campfire
         guard_02Tree.Add(Repeater(-1)
             .Add(Action(new CommandPatrolArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
         );
