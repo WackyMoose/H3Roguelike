@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    internal class CommandMoveToPosition : Command
+    public class CommandMoveToPosition : Command
     {
         Vector2 m_position;
 

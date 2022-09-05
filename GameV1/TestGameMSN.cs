@@ -60,6 +60,9 @@ internal class TestGameMSN : IGame
 
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
+        // Spawn world
+        WorldGenerator.GenerateWorld(80085, ref tileLayer);
+
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.MainHand.Add(sword);
@@ -91,14 +94,18 @@ internal class TestGameMSN : IGame
 
         var sentryTree = new BTree(sentry);
 
+        //sentryTree.Add(Repeater(-1)
+        //            .Add(Serializer()
+        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+        //            )
+        //       );
+
         sentryTree.Add(Repeater(-1)
-                    .Add(Serializer()
-                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, sentry, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                    )
-               );
+                    .Add(Action(new CommandPatrolArea(_scene, sentry, sentry.Position, 16*32)))
+                );
 
         btrees.Add(sentryTree);
 
@@ -108,7 +115,6 @@ internal class TestGameMSN : IGame
 
         btrees.Add(druidTree);
 
-        WorldGenerator.GenerateWorld(80085, ref tileLayer);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);

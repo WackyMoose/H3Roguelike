@@ -6,7 +6,7 @@ namespace GameV1.Interfaces
     {
         MaterialCategory Category { get; }
         string Name { get; }
-        double StrengthModifier { get; }
-        double ValueModifier { get; }
+        float StrengthModifier { get; }
+        float ValueModifier { get; }
     }
 }

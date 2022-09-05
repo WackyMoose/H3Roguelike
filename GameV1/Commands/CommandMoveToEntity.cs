@@ -21,6 +21,7 @@ namespace GameV1.Commands
             {
                 return NodeStates.Success;
             }
+
             // No, then attempt to move
             Vector2 nextPosition;
 
