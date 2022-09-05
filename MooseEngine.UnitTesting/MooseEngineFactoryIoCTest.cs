@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using MooseEngine.Core.Factories;
 using MooseEngine.DependencyInjection;
+using MooseEngine.Scenes.Factories;
 
 namespace MooseEngine.UnitTesting;
 

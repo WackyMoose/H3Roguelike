@@ -27,7 +27,7 @@ namespace GameV1.Commands
             // No, then attempt to move
             m_distance = m_targetEntity.Position - Entity.Position;
 
-            if(Math.Abs(m_distance.Y) >= Math.Abs(m_distance.X))
+            if (Math.Abs(m_distance.Y) >= Math.Abs(m_distance.X))
             {
                 if (Entity.Position.Y > m_targetEntity.Position.Y)
                 {
@@ -37,7 +37,7 @@ namespace GameV1.Commands
                 {
                     m_nextPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
                 }
-            } 
+            }
             else if (Math.Abs(m_distance.Y) < Math.Abs(m_distance.X))
             {
                 if (Entity.Position.X < m_targetEntity.Position.X)

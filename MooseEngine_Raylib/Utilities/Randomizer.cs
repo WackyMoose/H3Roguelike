@@ -17,7 +17,7 @@ public static class Randomizer
 
     public static int RandomPercent()
     {
-        return _generator.Next(0, 100+1);
+        return _generator.Next(0, 100 + 1);
     }
 
     public static bool CoinFlip()

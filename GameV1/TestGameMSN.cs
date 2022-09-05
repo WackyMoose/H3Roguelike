@@ -1,8 +1,8 @@
-﻿using MooseEngine.BehaviorTree;
-using GameV1.Commands;
+﻿using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -69,7 +69,7 @@ internal class TestGameMSN : IGame
 
         _consolePanel = new ConsolePanel(consolePosition, consoleSize);
 
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height- consoleSize.Y) / 2.0f));
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
@@ -102,7 +102,7 @@ internal class TestGameMSN : IGame
         var druidTree = new BTree(druid);
 
         // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer() 
+        druidTree.Add(Serializer()
             .Add(Delay(1).Add(Action(new CommandMoveToEntity(_scene, druid, player)))));
 
         btrees.Add(druidTree);
@@ -142,8 +142,8 @@ internal class TestGameMSN : IGame
 
         guard_02Tree.Add(Repeater(-1)
             .Add(Action(new CommandPatrolRectangularArea(
-                _scene, 
-                guard_02, 
+                _scene,
+                guard_02,
                 light.Position + new Vector2(-8, -2) * Constants.DEFAULT_ENTITY_SIZE,
                 light.Position + new Vector2(8, 2) * Constants.DEFAULT_ENTITY_SIZE)))
             );
