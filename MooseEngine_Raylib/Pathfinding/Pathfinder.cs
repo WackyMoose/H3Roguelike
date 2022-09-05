@@ -1,52 +1,48 @@
-﻿using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
+using MooseEngine.Utilities;
 
-namespace MooseEngine.Utilities
+namespace MooseEngine.Pathfinding
 {
     public class Pathfinder
     {
-        private Dictionary<Vector2,PathNode> openSet = new Dictionary<Vector2, PathNode>();
-        private Dictionary<Vector2, PathNode> closedSet = new Dictionary<Vector2, PathNode>();
-        private List<PathNode> neighbours = new List<PathNode>();
-        private PathNode lastNode;
+        private Dictionary<Vector2, PathNode> _openSet = new Dictionary<Vector2, PathNode>();
+        private Dictionary<Vector2, PathNode> _closedSet = new Dictionary<Vector2, PathNode>();
+        private List<PathNode> _neighbours = new List<PathNode>();
+        private PathNode _lastNode;
 
-        public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, IDictionary<Vector2,IEntity> nodes) 
+        //TODO Generate map with nodes to be used instead of the currently used walkable tiles...
+        public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, PathMap map)
         {
-            openSet.Clear();
-            closedSet.Clear();
+            _openSet.Clear();
+            _closedSet.Clear();
 
             var start = startPos * Constants.DEFAULT_ENTITY_SIZE;
             var goal = goalPos * Constants.DEFAULT_ENTITY_SIZE;
 
-            var startNode = new PathNode(nodes[startPos].Position, 0, 0, 0, null);
+            var startNode = new PathNode(map.Map[startPos].NodePosition, null);
             startNode.G = Vector2.DistanceSquared(startPos, startPos);
             startNode.H = Vector2.DistanceSquared(goalPos, startPos);
-            startNode.F = startNode.G + startNode.H;
-            var endNode = new PathNode(nodes[goalPos].Position, 0, 0, 0, null);
+            var endNode = new PathNode(map.Map[goalPos].NodePosition, null);
 
-            openSet.Add(startNode.Position,startNode);
-            lastNode = startNode;
+            _openSet.Add(startNode.Position, startNode);
+            _lastNode = startNode;
 
-            while (openSet.Count > 0)
+            while (_openSet.Count > 0)
             {
-                var currentNode = new PathNode(new Vector2(0, 0), 0, 0, int.MaxValue, null);
-                foreach (var node in openSet)
+                var currentNode = new PathNode(new Vector2(0, 0), null);
+                currentNode.G = int.MaxValue;
+
+                foreach (var node in _openSet)
                 {
                     if (node.Value.F < currentNode.F)
                     {
                         currentNode = node.Value;
                     }
-                }
-                int hash = 0;
-                if (currentNode.Parent != null) hash = currentNode.Parent.GetHashCode();
-                Console.WriteLine($"Currentnode: {currentNode.Position} G: {currentNode.G} H: {currentNode.H}  F: {currentNode.F} Parent: {hash}");
 
-                closedSet.Add(currentNode.Position,currentNode);
-                openSet.Remove(currentNode.Position);
+                }
+
+                _closedSet.Add(currentNode.Position, currentNode);
+                _openSet.Remove(currentNode.Position);
 
                 if (currentNode.Position == endNode.Position)
                 {
@@ -61,18 +57,18 @@ namespace MooseEngine.Utilities
                     return temp.ToArray();
                 }
 
-                neighbours.Clear();
+                _neighbours.Clear();
 
                 foreach (var dir in CardinalDirectionList)
                 {
                     var node = new PathNode(dir + currentNode.Position, currentNode);
 
-                    neighbours.Add(node);
+                    _neighbours.Add(node);
                 }
 
-                foreach (var node in neighbours)
+                foreach (var node in _neighbours)
                 {
-                    if (nodes.ContainsKey(node.Position) == false) continue;
+                    if (map.Map.ContainsKey(node.Position) == false) continue;
                     if (currentNode.Position == endNode.Position)
                     {
                         var temp = new List<PathNode>();
@@ -88,11 +84,11 @@ namespace MooseEngine.Utilities
 
                     node.G = Vector2.DistanceSquared(startPos, node.Position) + node.G;
                     node.H = Vector2.DistanceSquared(goalPos, node.Position);
-                    node.F = node.G + node.H;
+                    node.W = map.Map[node.Position].NodeWeight;
 
-                    if (closedSet.ContainsKey(node.Position) == false && openSet.ContainsKey(node.Position) == false)
+                    if (_closedSet.ContainsKey(node.Position) == false && _openSet.ContainsKey(node.Position) == false)
                     {
-                        openSet.Add(node.Position,node);
+                        _openSet.Add(node.Position, node);
                     }
                 }
             }

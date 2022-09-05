@@ -2,7 +2,6 @@
 using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using MooseEngine.Interfaces;
 
 namespace GameV1.Entities
 {

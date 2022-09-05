@@ -1,10 +1,12 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Pathfinding;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
@@ -29,6 +31,8 @@ internal class NoiseTest : IGame
 
     private Pathfinder _pathfinder;
     private IEntityLayer<Tile> _pathLayer;
+    private PathMap _pathMap;
+    private NodeMap _nodeMap = new NodeMap();
 
     public void Initialize()
     {
@@ -48,6 +52,7 @@ internal class NoiseTest : IGame
         var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
+
 
         var window = Application.Instance.Window;
 
@@ -84,6 +89,7 @@ internal class NoiseTest : IGame
 
         WorldGenerator.GenerateWorld(80085, ref _scene);
         _pathfinder = new Pathfinder();
+        _pathMap = _nodeMap.GenerateMap(walkableTileLayer);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -133,7 +139,7 @@ internal class NoiseTest : IGame
             _pathLayer.RemoveAll();
 
             var walkableTiles = _scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
-            var path = _pathfinder.GetPath(player.Position, ork.Position, walkableTiles);
+            var path = _pathfinder.GetPath(player.Position, ork.Position, _pathMap);
 
             foreach (var node in path)
             {
