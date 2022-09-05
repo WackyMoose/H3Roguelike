@@ -61,9 +61,15 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        var window = Application.Instance.Window;
+        var app = Application.Instance;
+        var window = app.Window;
 
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        var consoleSize = new Coords2D(app.Window.Width, 200);
+        var consolePosition = new Coords2D((app.Window.Width / 2) - (consoleSize.X / 2), app.Window.Height - consoleSize.Y);
+
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height- consoleSize.Y) / 2.0f));
 
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref tileLayer);
@@ -141,15 +147,6 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-
-        var app = Application.Instance;
-
-        var size = new Coords2D(app.Window.Width, 200);
-        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
-
-        _consolePanel = new ConsolePanel(position, size);
     }
 
     public void Uninitialize()
