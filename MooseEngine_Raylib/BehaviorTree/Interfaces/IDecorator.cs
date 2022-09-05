@@ -1,4 +1,4 @@
-﻿namespace GameV1.BehaviorTree.Interfaces
+﻿namespace MooseEngine.BehaviorTree.Interfaces
 {
     public interface IDecorator : INode
     {

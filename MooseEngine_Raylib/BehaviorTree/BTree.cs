@@ -1,8 +1,8 @@
-﻿using GameV1.BehaviorTree.Interfaces;
+﻿using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
-namespace GameV1.BehaviorTree
+namespace MooseEngine.BehaviorTree
 {
     public class BTree : IBehaviorTree
     {

@@ -1,4 +1,4 @@
-﻿using GameV1.BehaviorTree;
+﻿using MooseEngine.BehaviorTree;
 using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
@@ -10,7 +10,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using static GameV1.BehaviorTree.NodeFactory;
+using static MooseEngine.BehaviorTree.NodeFactory;
 
 namespace GameV1;
 
@@ -144,8 +144,8 @@ internal class TestGameMSN : IGame
             .Add(Action(new CommandPatrolRectangularArea(
                 _scene, 
                 guard_02, 
-                light.Position + new Vector2(-8, -8) * Constants.DEFAULT_ENTITY_SIZE,
-                light.Position + new Vector2(8, 8) * Constants.DEFAULT_ENTITY_SIZE)))
+                light.Position + new Vector2(-8, -2) * Constants.DEFAULT_ENTITY_SIZE,
+                light.Position + new Vector2(8, 2) * Constants.DEFAULT_ENTITY_SIZE)))
             );
 
         btrees.Add(guard_02Tree);

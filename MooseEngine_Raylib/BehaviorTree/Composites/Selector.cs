@@ -1,8 +1,8 @@
-﻿using GameV1.BehaviorTree.Base;
-using GameV1.BehaviorTree.Interfaces;
+﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Composites
+namespace MooseEngine.BehaviorTree.Composites
 {
     public class Selector : CompositeBase
     {

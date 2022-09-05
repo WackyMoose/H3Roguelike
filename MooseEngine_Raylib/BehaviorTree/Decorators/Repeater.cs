@@ -1,7 +1,7 @@
-﻿using GameV1.BehaviorTree.Base;
+﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Decorators
+namespace MooseEngine.BehaviorTree.Decorators
 {
     // This decorator repeats child node n times, or infinitely for negative n.
     // It waits while the node is running and only attempts to repeat after receiving a success.

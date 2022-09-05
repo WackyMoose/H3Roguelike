@@ -1,7 +1,7 @@
-﻿using GameV1.BehaviorTree.Base;
+﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Decorators
+namespace MooseEngine.BehaviorTree.Decorators
 {
     public class Breakpoint : DecoratorBase
     {

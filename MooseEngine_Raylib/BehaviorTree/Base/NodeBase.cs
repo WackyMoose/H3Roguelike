@@ -1,7 +1,7 @@
-﻿using GameV1.BehaviorTree.Interfaces;
+﻿using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Base
+namespace MooseEngine.BehaviorTree.Base
 {
 
     public abstract class NodeBase : INode

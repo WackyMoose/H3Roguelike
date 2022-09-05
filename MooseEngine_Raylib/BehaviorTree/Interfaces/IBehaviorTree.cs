@@ -1,7 +1,7 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
-namespace GameV1.BehaviorTree.Interfaces
+namespace MooseEngine.BehaviorTree.Interfaces
 {
     public interface IBehaviorTree
     {

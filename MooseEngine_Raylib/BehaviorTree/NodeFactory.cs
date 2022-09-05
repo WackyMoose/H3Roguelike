@@ -1,10 +1,10 @@
-﻿using GameV1.BehaviorTree.Actions;
-using GameV1.BehaviorTree.Composites;
-using GameV1.BehaviorTree.Decorators;
-using GameV1.BehaviorTree.Interfaces;
+﻿using MooseEngine.BehaviorTree.Actions;
+using MooseEngine.BehaviorTree.Composites;
+using MooseEngine.BehaviorTree.Decorators;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree
+namespace MooseEngine.BehaviorTree
 {
     public static class NodeFactory
     {

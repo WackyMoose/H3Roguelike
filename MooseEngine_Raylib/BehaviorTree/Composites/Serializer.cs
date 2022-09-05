@@ -1,7 +1,8 @@
-﻿using GameV1.BehaviorTree.Base;
+﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Composites
+namespace MooseEngine.BehaviorTree.Composites
 {
     // This composite runs a series of tasks, one at a time.
     // It starts with the first, and only steps on to the next once the previous has returned success.

@@ -1,7 +1,7 @@
-﻿using GameV1.BehaviorTree.Base;
+﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.Core;
 
-namespace GameV1.BehaviorTree.Actions
+namespace MooseEngine.BehaviorTree.Actions
 {
     //public delegate NodeStates ActionDelegate();
 
