@@ -26,7 +26,7 @@ namespace GameV1.Entities
             {
                 var entities = scene.EntityLayers[layer].Entities;
 
-                var entitiesWithinRange = scene.GetEntitiesWithinRange(entities, this.Position, this.Range);
+                var entitiesWithinRange = scene.GetEntitiesWithinCircle(entities, this.Position, this.Range);
 
                 var maxDistanceSquared = this.Range * this.Range;
 

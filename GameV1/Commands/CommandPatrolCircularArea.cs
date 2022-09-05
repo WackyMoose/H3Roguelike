@@ -12,21 +12,20 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1.Commands
 {
-    public class CommandPatrolArea : Command
+    public class CommandPatrolCircularArea : Command
     {
         private Vector2 m_position;
         private int m_radius;
         private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_currentTargetPosition;
-        Vector2 m_nextPosition;
+        private Vector2 m_nextPosition;
         private Vector2 m_distance;
 
-        public CommandPatrolArea(IScene scene, IEntity entity, Vector2 position, int radius) : base(scene, entity)
+        public CommandPatrolCircularArea(IScene scene, IEntity entity, Vector2 position, int radius) : base(scene, entity)
         {
             m_position = position;
             m_radius = radius;
-            m_targetEntities = new Dictionary<Vector2, IEntity>();
-            m_targetEntities = Scene.GetEntitiesWithinRange(Scene.GetLayer((int)EntityLayer.Tiles).Entities, m_position, m_radius);
+            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.Tiles).Entities, m_position, m_radius);
             m_currentTargetPosition = NextRandomTargetPosition();
         }
 

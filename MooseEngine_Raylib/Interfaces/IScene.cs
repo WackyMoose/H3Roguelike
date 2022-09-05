@@ -10,7 +10,8 @@ public interface IScene : IDisposable
     IDictionary<int, IEntityLayer> EntityLayers { get; set; }
 
     IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);
-    IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance);
+    IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance);
+    IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight);
 
     IEntityLayer<TEntity> AddLayer<TEntity>(int layer) where TEntity : class, IEntity;
     IEntityLayer GetLayer(int layer);

@@ -136,9 +136,17 @@ internal class TestGameMSN : IGame
         var guard_02Tree = new BTree(guard_02);
 
         // Roam around the campfire
+        //guard_02Tree.Add(Repeater(-1)
+        //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
+        //);
+
         guard_02Tree.Add(Repeater(-1)
-            .Add(Action(new CommandPatrolArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
-        );
+            .Add(Action(new CommandPatrolRectangularArea(
+                _scene, 
+                guard_02, 
+                light.Position + new Vector2(-8, -8) * Constants.DEFAULT_ENTITY_SIZE,
+                light.Position + new Vector2(8, 8) * Constants.DEFAULT_ENTITY_SIZE)))
+            );
 
         btrees.Add(guard_02Tree);
 
