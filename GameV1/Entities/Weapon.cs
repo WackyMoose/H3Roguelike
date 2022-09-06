@@ -4,7 +4,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Weapon : Item, IWeapon, IQuickSlottable
+    public class Weapon : Item, IWeapon
     {
         #region Properties
         public int Range { get; set; }

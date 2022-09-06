@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
@@ -16,7 +17,7 @@ namespace GameV1.Commands
 
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            Item? item = (Item?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
+            IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
 
             if(item != null)
             {
