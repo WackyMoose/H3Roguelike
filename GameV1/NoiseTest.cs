@@ -51,6 +51,7 @@ internal class NoiseTest : IGame
         var nonWalkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+        
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
         var window = Application.Instance.Window;
@@ -85,7 +86,9 @@ internal class NoiseTest : IGame
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
+        
         WorldGenerator.GenerateWorld(80085, ref _scene);
+
         _pathfinder = new Pathfinder();
         _pathMap = _nodeMap.GenerateMap(walkableTileLayer);
        // WorldGenerator.GenerateWorld(80085,ref tile);
@@ -137,7 +140,6 @@ internal class NoiseTest : IGame
 
             _pathLayer.RemoveAll();
 
-            var walkableTiles = _scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
             var path = _pathfinder.GetPath(player.Position, ork.Position, _pathMap);
 
             foreach (var node in path)
