@@ -3,16 +3,13 @@ using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
-using MooseEngine.BehaviorTree.Actions;
-using MooseEngine.BehaviorTree.Composites;
-using MooseEngine.BehaviorTree.Decorators;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections.Generic;
 using System.Numerics;
 using static MooseEngine.BehaviorTree.NodeFactory;
 
@@ -47,9 +44,11 @@ internal class TestGameMSN : IGame
     private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
 
-    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
-
     private List<BTree> btrees = new List<BTree>();
+
+    // Layers
+    private IEntityLayer<Tile> _pathLayer;
+    private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
     private ConsolePanel _consolePanel;
 
@@ -66,8 +65,13 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
+        // Spawn world
+        WorldGenerator.GenerateWorld(80085, ref _scene);
+        
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+
+        _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
         var app = Application.Instance;
         var window = app.Window;
@@ -78,9 +82,6 @@ internal class TestGameMSN : IGame
         _consolePanel = new ConsolePanel(consolePosition, consoleSize);
 
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-
-        // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref _scene);
 
         // Spawn items
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
@@ -174,6 +175,8 @@ internal class TestGameMSN : IGame
                );
 
         btrees.Add(guard_01Tree);
+
+        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
 
         // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);

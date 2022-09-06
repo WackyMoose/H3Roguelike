@@ -1,6 +1,5 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
-using GameV1.Pathfinding;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
@@ -29,10 +28,8 @@ internal class NoiseTest : IGame
 
     private ConsolePanel _consolePanel;
 
-    private Pathfinder _pathfinder;
     private IEntityLayer<Tile> _pathLayer;
-    private PathMap _pathMap;
-    private NodeMap _nodeMap = new NodeMap();
+    private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
     public void Initialize()
     {
@@ -47,11 +44,12 @@ internal class NoiseTest : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
-        var walkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
-        var nonWalkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
+        WorldGenerator.GenerateWorld(80085, ref _scene);
+        // WorldGenerator.GenerateWorld(80085,ref tile);
+
+        // Layers
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
-        
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
         var window = Application.Instance.Window;
@@ -86,12 +84,9 @@ internal class NoiseTest : IGame
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
-        
-        WorldGenerator.GenerateWorld(80085, ref _scene);
 
-        _pathfinder = new Pathfinder();
-        _pathMap = _nodeMap.GenerateMap(walkableTileLayer);
-       // WorldGenerator.GenerateWorld(80085,ref tile);
+        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -140,7 +135,7 @@ internal class NoiseTest : IGame
 
             _pathLayer.RemoveAll();
 
-            var path = _pathfinder.GetPath(player.Position, ork.Position, _pathMap);
+            var path = _scene.Pathfinder.GetPath(player.Position, ork.Position, _scene.PathMap);
 
             foreach (var node in path)
             {

@@ -1,11 +1,12 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Tile : Entity, ITile
+    public class Tile : Entity, ITile, IPathMappable
     {
         public bool IsWalkable { get; set; }
         public float PathWeight { get; set; }

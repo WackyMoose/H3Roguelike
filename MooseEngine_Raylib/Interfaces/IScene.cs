@@ -1,4 +1,5 @@
-﻿using MooseEngine.Scenes;
+﻿using MooseEngine.Pathfinding;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -8,6 +9,8 @@ public interface IScene : IDisposable
 {
     ISceneCamera SceneCamera { get; set; }
     IDictionary<int, IEntityLayer> EntityLayers { get; set; }
+    Pathfinder Pathfinder { get; set; }
+    PathMap PathMap { get; set; }
 
     IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities);
     IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);

@@ -2,6 +2,7 @@
 using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -24,6 +25,13 @@ public class Scene : Disposeable, IScene
         return _entityLayers[layer];
     }
 
+    // Pathfinding
+    private Pathfinder _pathfinder = new Pathfinder();
+    private PathMap _pathMap;
+
+    public Pathfinder Pathfinder { get { return _pathfinder; } set { _pathfinder = value; } }
+    public PathMap PathMap { get { return _pathMap; } set { _pathMap = value; } }
+
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
@@ -38,6 +46,11 @@ public class Scene : Disposeable, IScene
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
+
+    //public void GeneratePathMap()
+    //{
+    //    _pathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+    //}
 
     public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
     {

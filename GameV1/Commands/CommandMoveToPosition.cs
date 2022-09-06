@@ -24,6 +24,10 @@ namespace GameV1.Commands
                 return NodeStates.Success;
             }
 
+            //var path = Scene.Pathfinder.GetPath(Entity.Position, m_position, Scene.PathMap);
+
+            //m_nextPosition = path[path.Length - 1].Position;
+
             // No, then attempt to move
             m_distance = m_position - Entity.Position;
 

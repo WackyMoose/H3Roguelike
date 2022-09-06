@@ -96,12 +96,19 @@ namespace MooseEngine.Pathfinding
             return new PathNode[0];
         }
 
+        private float GetFlatDistance(Vector2 startPos, Vector2 endPos)
+        {
+            return Math.Abs(startPos.X - endPos.X) + Math.Abs(startPos.Y - endPos.Y);
+        }
+
         public static List<Vector2> CardinalDirectionList = new List<Vector2>
-            {
-                new Vector2(0,Constants.DEFAULT_ENTITY_SIZE),  //Up
-                new Vector2(Constants.DEFAULT_ENTITY_SIZE,0),  //Right
-                new Vector2(0,-Constants.DEFAULT_ENTITY_SIZE), //Down
-                new Vector2(-Constants.DEFAULT_ENTITY_SIZE,0), //Left
-            };
+        {
+            new Vector2(0,Constants.DEFAULT_ENTITY_SIZE),  //Up
+            new Vector2(Constants.DEFAULT_ENTITY_SIZE,0),  //Right
+            new Vector2(0,-Constants.DEFAULT_ENTITY_SIZE), //Down
+            new Vector2(-Constants.DEFAULT_ENTITY_SIZE,0), //Left
+        };
+
+
     }
 }
