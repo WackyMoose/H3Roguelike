@@ -8,6 +8,6 @@ namespace MooseEngine.BehaviorTree.Interfaces
         IEntity Entity { get; set; }
         NodeStates State { get; set; }
         INode? RootNode { get; set; }
-        Dictionary<string, object> Blackboard { get; set; }
+        IDictionary<string, object> Blackboard { get; set; }
     }
 }

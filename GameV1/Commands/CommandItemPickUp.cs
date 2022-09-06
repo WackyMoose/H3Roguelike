@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using GameV1.Entities;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
 namespace GameV1.Commands
@@ -15,9 +16,22 @@ namespace GameV1.Commands
 
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IEntity item = Scene.EntityAtPosition(itemLayer.Entities, Entity.Position);
+            Item? item = (Item?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
 
-            return NodeStates.Success;
+            if(item != null)
+            {
+                // Add item to Creature inventory
+                Creature creature = (Creature)Entity;
+
+                creature.Inventory.AddItemToFirstEmptySlot(item);
+
+                // Remove item from ItemLayer
+                itemLayer.Entities.Remove(item.Position);
+
+                return NodeStates.Success;
+            }
+
+            return NodeStates.Failure;
         }
     }
 }

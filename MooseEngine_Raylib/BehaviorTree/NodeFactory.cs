@@ -1,8 +1,8 @@
-﻿using MooseEngine.BehaviorTree.Actions;
+﻿using MooseEngine.Core;
+using MooseEngine.BehaviorTree.Actions;
 using MooseEngine.BehaviorTree.Composites;
 using MooseEngine.BehaviorTree.Decorators;
 using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree
 {

@@ -1,5 +1,6 @@
 ﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.Core;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.BehaviorTree.Actions
 {
@@ -9,7 +10,7 @@ namespace MooseEngine.BehaviorTree.Actions
     {
         //private ActionDelegate m_action;
 
-        Command m_command;
+        private readonly ICommand m_command;
 
         //public ActionNode(ActionDelegate action)
         //{

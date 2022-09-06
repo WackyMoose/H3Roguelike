@@ -11,6 +11,19 @@ namespace GameV1.Entities
         {
         }
 
+        public override bool AddItemToFirstEmptySlot(IQuickSlottable item)
+        {
+            foreach (var slot in Slots)
+            {
+                if (slot.IsEmpty == true)
+                {
+                    slot.Add(item);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override bool AddItemToSlot(IQuickSlottable item, Slot<IQuickSlottable> slot)
         {
             return slot.Add(item);

@@ -9,23 +9,23 @@ namespace GameV1.Entities
     {
         public int Durability { get; set; }
         public int MaxValue { get; set; }
-        public List<Material> Materials { get; set; }
+        public IEnumerable<IMaterial>? Materials { get; set; }
         public bool IsBroken { get { return Durability <= 0; } }
 
-        public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+            : base(name, spriteCoords, colorTint)
         {
             Durability = durability;
             MaxValue = maxValue;
+            Materials = new List<IMaterial>();
         }
 
         public override void Initialize()
         {
-            //throw new NotImplementedException();
         }
 
         public override void Update(float deltaTime)
         {
-            //throw new NotImplementedException();
         }
     }
 }
