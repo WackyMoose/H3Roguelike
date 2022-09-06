@@ -1,6 +1,7 @@
 ﻿using GameV1.Entities;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
 using System.Numerics;
 
@@ -10,59 +11,125 @@ internal class StatsPanel
 {
     private Player _player;
 
-    private Vector2 _position;
-    private Vector2 _size;
+    private PanelOptions _panelOptions;
+    private SeperatorOptions _seperatorOptions;
 
-    private float _startHealth;
+    // Debug
+    private ButtonOptions _consoleButton;
     private SliderOptions _sliderOptions;
+    private ButtonOptions _buttonOptions;
+
+    // Stats
+    private ImageOptions _portraitOptions;
+    private LabelOptions _strengthLabelOptions;
+    private LabelOptions _agilityLabelOptions;
+    private LabelOptions _toughnessLabelOptions;
+    private LabelOptions _perceptionLabelOptions;
+    private LabelOptions _charismaLabelOptions;
+
     private SliderOptions _healthBarOptions;
+    private SliderOptions _experienceBarOptions;
+    private SliderOptions _fatigueBarOptions;
 
     public StatsPanel(Player player)
     {
         _player = player;
-        _startHealth = _player.Stats.Health;
 
         var window = Application.Instance.Window;
 
-        _size = new Vector2(400, window.Height);
-        _position = new Vector2(window.Width - _size.X, 0);
+        var size = new UIScreenCoords(330, window.Height);
+        var position = new UIScreenCoords(window.Width - size.X, 0);
+        var startPosition = position;
+        _panelOptions = new PanelOptions(position, size, "Stats");
 
-        var sliderPosition = new UIScreenCoords(10, 70);
-        var sliderSize = new UIScreenCoords(250, 30);
-        _sliderOptions = new SliderOptions(sliderPosition, sliderSize, 24, $"{damage} Damage", TextAlignmentSlider.Right, 0, 250);
+        var portait = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\8bitPortraitPack24x24.png");
+        var portaitSize = new UIScreenCoords(180, 180);
+        var portraitPosition = new UIScreenCoords(1200 + (400 - portaitSize.X - 10), 25);
+        _portraitOptions = new ImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
 
-        sliderPosition = new UIScreenCoords((int)_position.X + 55, (int)_position.Y + (28 * 4));
-        sliderSize = new UIScreenCoords(330, 30);
-        _healthBarOptions = new SliderOptions(sliderPosition, sliderSize, 24, "HP", TextAlignmentSlider.Left, 0, _player.Stats.Health, false);
-        _healthBarOptions.Value = _player.Stats.Health;
+        _player.Stats.Stamina = 9999;
+        _player.Stats.Agility = 9999;
+        _player.Stats.Toughness = 9999;
+        _player.Stats.Perception = 9999;
+        _player.Stats.Charisma = 9999;
+
+        _player.Stats.Fatigue = 100;
+
+        var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
+        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, 96, $"STR: {_player.Stats.Stamina}");
+
+        var agilityLabelPosition = new UIScreenCoords(startPosition.X + 4, 70);
+        _agilityLabelOptions = new LabelOptions(agilityLabelPosition, 96, $"AGI: {_player.Stats.Agility}");
+
+        var toughnessLabelPosition = new UIScreenCoords(startPosition.X + 4, 105);
+        _toughnessLabelOptions = new LabelOptions(toughnessLabelPosition, 96, $"TOU: {_player.Stats.Toughness}");
+
+        var perceptionLabelPosition = new UIScreenCoords(startPosition.X + 4, 140);
+        _perceptionLabelOptions = new LabelOptions(perceptionLabelPosition, 96, $"PER: {_player.Stats.Perception}");
+
+        var charismaLabelPosition = new UIScreenCoords(startPosition.X + 4, 175);
+        _charismaLabelOptions = new LabelOptions(charismaLabelPosition, 96, $"CHA: {_player.Stats.Charisma}");
+
+        position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215);
+        var healthBarSize = new UIScreenCoords(270, 25);
+        _healthBarOptions = new SliderOptions(position, healthBarSize, 24, "HP", TextAlignment.Left, 0, _player.Stats.Health, Color.Red, false);
+
+        var exp = 1000;
+
+        position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 245);
+        var experienceBarSize = new UIScreenCoords(270, 24);
+        _experienceBarOptions = new SliderOptions(position, experienceBarSize, 24, "XP", TextAlignment.Left, 0, exp, Color.Orange, false);
+
+        position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 275);
+        var fatigueBarSize = new UIScreenCoords(270, 25);
+        _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, 24, "FT", TextAlignment.Left, 0, _player.Stats.Fatigue, Color.Green, false);
+
+        position = new UIScreenCoords(window.Width - size.X + 5, position.Y + 30);
+        _seperatorOptions = new SeperatorOptions(position, size.X - 10);
+
+        // DEBUG -------------------------------------------------------
+        var debugSliderPosition = new UIScreenCoords(10, 70);
+        var debugSliderSize = new UIScreenCoords(250, 30);
+        _sliderOptions = new SliderOptions(debugSliderPosition, debugSliderSize, 24, $"{damage} Damage", TextAlignment.Right, 0, 250);
+
+        var btnPosition = new UIScreenCoords(10, 124);
+        var btnSize = new UIScreenCoords(100, 50);
+        _buttonOptions = new ButtonOptions(btnPosition, btnSize, "Die");
+
+        btnPosition = new UIScreenCoords(10, 50);
+        btnSize = new UIScreenCoords(100, 50);
+        _consoleButton = new ButtonOptions(btnPosition, btnSize, "Add");
     }
 
     private float damage = 50;
 
     public void OnGUI(IUIRenderer UIRenderer)
     {
-        UIRenderer.DrawPanel((int)_position.X, (int)_position.Y, (int)_size.X, (int)_size.Y, "Stats");
+        UIRenderer.DrawPanel(_panelOptions);
 
-        UIRenderer.DrawLabel((int)_position.X + 4, (int)_position.Y + 28, $"Health: {_player.Stats.Health}");
-        UIRenderer.DrawLabel((int)_position.X + 4, (int)_position.Y + (28 * 2), $"Movement Points: {_player.Stats.MovementPoints}");
+        UIRenderer.DrawImage(_portraitOptions);
+        UIRenderer.DrawLabel(_strengthLabelOptions);
+        UIRenderer.DrawLabel(_agilityLabelOptions);
+        UIRenderer.DrawLabel(_toughnessLabelOptions);
+        UIRenderer.DrawLabel(_perceptionLabelOptions);
+        UIRenderer.DrawLabel(_charismaLabelOptions);
+
+        UIRenderer.DrawSliderBar(_healthBarOptions, _player.Stats.Health);
+        UIRenderer.DrawSliderBar(_experienceBarOptions, 555.0f);
+        UIRenderer.DrawSliderBar(_fatigueBarOptions, _player.Stats.Fatigue / 2);
+
+        UIRenderer.DrawSeperator(_seperatorOptions);
 
         _sliderOptions.Text = $"{damage} Damage";
-        damage = UIRenderer.DrawSliderBar(_sliderOptions);
-        //damage = (int)UIRenderer.DrawSlider(new Raylib_cs.Rectangle(10, 92, 250, 20), string.Empty, $"{damage} Damage", damage, 0, 250, 0);
-        if (UIRenderer.DrawButton(10, 124, "Die"))
+        damage = UIRenderer.DrawSliderBar(_sliderOptions, damage);
+        if (UIRenderer.DrawButton(_buttonOptions))
         {
             _player.TakeDamage((int)damage);
         }
 
-        string text = $"{_player.Stats.Health} Health";
-        if (_player.IsDead)
+        if(UIRenderer.DrawButton(_consoleButton))
         {
-            text = "You fucking died!";
+            ConsolePanel.Add("Test");
         }
-        UIRenderer.DrawLabel((int)_position.X + 4, (int)_position.Y + (28 * 3), text);
-
-        _healthBarOptions.Value = _player.Stats.Health;
-        _player.Stats.Health = (int)UIRenderer.DrawSliderBar(_healthBarOptions);
-        //_player.Stats.Health = (int)UIRenderer.DrawSlider(new Raylib_cs.Rectangle((int)_position.X + 10, (int)_position.Y + (28 * 7), 380, 20), string.Empty, string.Empty, _player.Stats.Health, 0, _startHealth, 0);
     }
 }

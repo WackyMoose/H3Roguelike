@@ -1,4 +1,5 @@
-﻿using MooseEngine.Utilities;
+﻿using MooseEngine.Graphics.UI.Options;
+using MooseEngine.Utilities;
 using System;
 
 namespace MooseEngine.Graphics.UI;
@@ -20,6 +21,8 @@ public class ConsolePanel
 
     private List<string> _history;
 
+    private ListViewOptions _listViewOptions;
+
     public ConsolePanel(Coords2D position, Coords2D size, int capacity = 10)
     {
         s_Instance = this;
@@ -29,12 +32,18 @@ public class ConsolePanel
         _historyCapacity = capacity;
 
         _history = new List<string>(_historyCapacity);
+
+        var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
+        var listViewSize = new UIScreenCoords(_size.X, _size.Y);
+        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
     {
-        var rect = new Raylib_cs.Rectangle(_position.X, _position.Y, _size.X, _size.Y);
-        _active = UIRenderer.DrawListViewEx(rect, TITLE, _history.ToArray(), _history.Count, ref _focus, ref _scrollIndex, _active, _stickToBottom);
+        _active = UIRenderer.DrawListViewEx(_listViewOptions, _history, ref _focus, ref _scrollIndex, _active);
+
+        //var rect = new Raylib_cs.Rectangle(_position.X, _position.Y, _size.X, _size.Y);
+        //_active = UIRenderer.DrawListViewEx(rect, TITLE, _history.ToArray(), _history.Count, ref _focus, ref _scrollIndex, _active, _stickToBottom);
     }
 
     private void AddToList(string msg)

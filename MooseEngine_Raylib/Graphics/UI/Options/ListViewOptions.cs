@@ -1,6 +1,30 @@
 ﻿namespace MooseEngine.Graphics.UI.Options;
 
-public class ListViewOptions
+public class ListViewOptions : PanelOptions
+{
+    public ListViewOptions(UIScreenCoords position, UIScreenCoords size, string title) 
+        : base(position, size, title)
+    {
+        ScrollSliderSize = 16;
+        ScrollSpeed = 12;
+
+        ItemHeight = 24;
+        ItemSpacing = 2;
+        ScrollbarWidth = 12;
+        ScrollbarSide = ScrollbarSide.Right;
+    }
+
+    public int ScrollSliderSize { get; set; }
+    public int ScrollSpeed { get; set; }
+
+    public int ScrollbarWidth { get; set; }
+    public int ItemSpacing { get; set; }
+    public int ItemHeight { get; set; }
+    public ScrollbarSide ScrollbarSide { get; set; }
+}
+
+[Obsolete]
+public class ListViewOptionsDep
 {
     public int ScrollbarWidth { get; set; }
     public int ItemSpacing { get; set; }
@@ -23,7 +47,7 @@ public class ListViewOptions
     public Color TextPressedColor { get; set; }
     public Color TextDisabledColor { get; set; }
 
-    public ListViewOptions()
+    public ListViewOptionsDep()
     {
         ItemHeight = 24;
         ItemSpacing = 2;
