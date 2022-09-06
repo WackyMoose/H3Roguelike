@@ -22,7 +22,7 @@ namespace GameV1.Entities
         public IWeapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
         public IEntity? TargetEntity { get; set; }
 
-        public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public Creature(string name, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
@@ -34,11 +34,10 @@ namespace GameV1.Entities
             OffHand = new Slot<IWeapon>();
             Chest = new Slot<IArmor>();
 
-            Stats.MovementPoints = movementPoints;
             Stats.Health = health;
         }
 
-        public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
+        public Creature(string name, int health, Coords2D spriteCoords) : base(name, spriteCoords)
         {
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
@@ -50,7 +49,6 @@ namespace GameV1.Entities
             OffHand = new Slot<IWeapon>();
             Chest = new Slot<IArmor>();
 
-            Stats.MovementPoints = movementPoints;
             Stats.Health = health;
         }
 
