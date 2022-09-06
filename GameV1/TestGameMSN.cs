@@ -23,8 +23,7 @@ public enum EntityLayer : int
     NonWalkableTiles,
     Creatures,
     Items,
-    Path,
-    LightSources
+    Path
 }
 
 internal class TestGameMSN : IGame
@@ -66,9 +65,7 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
-
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
-        var lightSourceLayer = _scene.AddLayer<LightSource>(EntityLayer.LightSources);
         var tileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
@@ -83,7 +80,7 @@ internal class TestGameMSN : IGame
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
         // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref tileLayer);
+        WorldGenerator.GenerateWorld(80085, ref _scene);
 
         // Spawn items
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
@@ -223,9 +220,12 @@ internal class TestGameMSN : IGame
 
         // TODO: Wrap in method
         // Dynamically updated light sources
-        var lightSourceLayer = _scene.GetLayer((int)EntityLayer.LightSources);
+        // Dynamically updated light sources
+        var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
 
-        foreach (LightSource lightSource in lightSourceLayer.Entities.Values)
+        var lightSources = _scene.GetEntitiesOfType<LightSource>(itemLayer);
+
+        foreach (LightSource lightSource in lightSources.Values)
         {
             lightSource.Illuminate(_scene);
         }

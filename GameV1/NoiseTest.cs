@@ -1,7 +1,6 @@
 ﻿using GameV1.Commands.Factory;
-using GameV1.Commands.Factory;
+using GameV1.Entities;
 using GameV1.Pathfinding;
-using GameV1.WorldGeneration;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
@@ -50,10 +49,9 @@ internal class NoiseTest : IGame
 
         var walkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
         var nonWalkableTileLayer = _scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
-        var itemLayer = _scene.AddLayer<LightSource>(EntityLayer.Items);
+        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
-
 
         var window = Application.Instance.Window;
 

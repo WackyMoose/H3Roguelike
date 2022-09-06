@@ -14,7 +14,7 @@ namespace GameV1.Commands
 
         public CommandPatrolRectangularArea(IScene scene, IEntity entity, Vector2 topLeft, Vector2 bottomRight) : base(scene, entity)
         {
-            m_targetEntities = Scene.GetEntitiesWithinRectangle(Scene.GetLayer((int)EntityLayer.Tiles).Entities, topLeft, bottomRight);
+            m_targetEntities = Scene.GetEntitiesWithinRectangle(Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities, topLeft, bottomRight);
             m_currentTargetPosition = NextRandomTargetPosition();
         }
 
