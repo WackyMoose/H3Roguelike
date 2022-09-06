@@ -18,7 +18,7 @@ namespace GameV1.Commands
         {
             m_position = position;
             m_radius = radius;
-            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.Tiles).Entities, m_position, m_radius);
+            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities, m_position, m_radius);
             m_currentTargetPosition = NextRandomTargetPosition();
         }
 

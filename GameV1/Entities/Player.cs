@@ -5,11 +5,11 @@ namespace GameV1.Entities
 {
     public class Player : Creature
     {
-        public Player(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, movementPoints, health, spriteCoords)
+        public Player(string name, int health, Coords2D spriteCoords) : base(name, health, spriteCoords)
         {
         }
 
-        public Player(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, movementPoints, health, spriteCoords, colorTint)
+        public Player(string name, int health, Coords2D spriteCoords, Color colorTint) : base(name, health, spriteCoords, colorTint)
         {
         }
     }

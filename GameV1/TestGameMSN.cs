@@ -23,7 +23,8 @@ public enum EntityLayer : int
     WalkableTiles,
     NonWalkableTiles,
     Creatures,
-    Items
+    Items,
+    Path
 }
 
 internal class TestGameMSN : IGame
@@ -31,13 +32,13 @@ internal class TestGameMSN : IGame
     private IScene? _scene;
 
     // Creatures
-    private Player player = new Player("Hero", 120, 1000, new Coords2D(5, 0));
+    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-    private Npc druid = new Npc("Druid", 100, 1000, new Coords2D(9, 0));
-    private Npc orc = new Npc("Orc", 100, 1000, new Coords2D(11, 0));
-    public Npc guard_01 = new Npc("City guard", 100, 1000, new Coords2D(6, 0));
-    public Npc guard_02 = new Npc("City guard", 100, 1000, new Coords2D(15, 0));
+    private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
+    private Npc orc = new Npc("Orc", 100, new Coords2D(11, 0));
+    public Npc guard_01 = new Npc("City guard", 100, new Coords2D(6, 0));
+    public Npc guard_02 = new Npc("City guard", 100, new Coords2D(15, 0));
 
     // Items
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);

@@ -18,7 +18,7 @@ public class PlayerFactory : SceneEntityFactory, IPlayerFactory
 
     public Player CreatePlayer()
     {
-        var player = new Player("Player", 120, 1000, new Coords2D(4, 0));
+        var player = new Player("Player", 120, new Coords2D(4, 0));
 
         //AddToScene(player);
 
