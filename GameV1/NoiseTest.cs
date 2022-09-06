@@ -1,6 +1,7 @@
 ﻿using GameV1.Commands.Factory;
-using GameV1.Entities;
+using GameV1.Commands.Factory;
 using GameV1.Pathfinding;
+using GameV1.WorldGeneration;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
@@ -10,7 +11,7 @@ using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using static System.Formats.Asn1.AsnWriter;
+using System.Threading;
 
 namespace GameV1;
 
@@ -86,10 +87,10 @@ internal class NoiseTest : IGame
         ork.MainHand.Add(sword);
         ork.Chest.Add(armor);
         creatureLayer?.Add(ork);
-
         WorldGenerator.GenerateWorld(80085, ref _scene);
         _pathfinder = new Pathfinder();
         _pathMap = _nodeMap.GenerateMap(walkableTileLayer);
+       // WorldGenerator.GenerateWorld(80085,ref tile);
 
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);

@@ -74,7 +74,7 @@ internal class RaylibUIRenderer : IUIRenderer
     {
         // Draw control
         //--------------------------------------------------------------------
-        var textColor = UIRendererOptions.TextColor; 
+        var textColor = UIRendererOptions.TextColor;
 
         var bounds = new Rectangle(x, y, 0.0f, 0.0f);
         GuiDrawText(text, GetTextBounds(bounds), textColor);

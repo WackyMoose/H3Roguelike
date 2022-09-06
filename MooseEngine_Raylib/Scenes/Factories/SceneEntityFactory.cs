@@ -1,5 +1,4 @@
-﻿using MooseEngine.Core.Factories;
-using MooseEngine.Interfaces;
+﻿using MooseEngine.Interfaces;
 
 namespace MooseEngine.Scenes.Factories;
 

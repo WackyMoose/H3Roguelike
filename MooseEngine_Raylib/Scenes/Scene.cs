@@ -45,11 +45,11 @@ public class Scene : Disposeable, IScene
         return entities.ContainsKey(position) ? entities[position] : default;
     }
 
-    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance)
+    public IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
         int distanceSquared = distance * distance;
 
-        Dictionary<Vector2, IEntity> TilesWithinDist = new Dictionary<Vector2, IEntity>();
+        Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
 
         var topLft = new Vector2(position.X - distance, position.Y - distance);
         var btmRgt = new Vector2(position.X + distance, position.Y + distance);
@@ -59,17 +59,37 @@ public class Scene : Disposeable, IScene
         {
             for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
             {
-                if (Tiles.ContainsKey(v))
+                if (entities.ContainsKey(v))
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
                     {
-                        TilesWithinDist.Add(v, Tiles[v]);
+                        tilesWithinDist.Add(v, entities[v]);
                     }
                 }
             }
         }
 
-        return TilesWithinDist;
+        return tilesWithinDist;
+    }
+
+    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight)
+    {
+        Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
+
+        var v = new Vector2();
+
+        for (v.Y = topLeft.Y; v.Y <= bottomRight.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        {
+            for (v.X = topLeft.X; v.X <= bottomRight.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+            {
+                if (entities.ContainsKey(v))
+                {
+                    tilesWithinDist.Add(v, entities[v]);
+                }
+            }
+        }
+
+        return tilesWithinDist;
     }
 
     protected override void DisposeManagedState()
@@ -103,7 +123,7 @@ public class Scene : Disposeable, IScene
                 {
                     if (entities.ContainsKey(v))
                     {
-                        Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
+                        Renderer.Render(entities[v], Constants.DEFAULT_ENTITY_SIZE);
                         entities[v].ColorTint = defaultTint;
                     }
                 }

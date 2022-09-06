@@ -10,6 +10,11 @@ public static class Randomizer
         return _generator.Next(minVal, maxVal);
     }
 
+    public static float RandomFloat(float minVal, float maxVal)
+    {
+        return minVal + _generator.NextSingle() * (maxVal - minVal);
+    }
+
     public static int RandomPercent()
     {
         return _generator.Next(0, 100 + 1);

@@ -1,7 +1,6 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Utilities;
-using System.Xml.Linq;
 
 namespace GameV1.Entities
 {
@@ -10,7 +9,7 @@ namespace GameV1.Entities
         public int MaxSlots { get; set; }
         public List<TSlot> Slots { get; set; }
 
-        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             MaxSlots = maxSlots;
@@ -30,7 +29,7 @@ namespace GameV1.Entities
             //    Slots.Add(new Slot<TItem>() );
             //    AddItemToSlot()
             //}
-            
+
             //foreach (TSlot slot in container.Slots)
             //{
             //    if(!slot.IsEmpty)

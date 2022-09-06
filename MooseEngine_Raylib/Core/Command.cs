@@ -1,18 +1,17 @@
 ﻿using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 namespace MooseEngine.Core
 {
     public abstract class Command : ICommand
     {
         public IEntity Entity { get; set; }
-        public IEntityLayer EntityLayer { get; set; }
-        public Command(IEntityLayer entityLayer, IEntity entity)
+        public IScene Scene { get; set; }
+        public Command(IScene scene, IEntity entity)
         {
             Entity = entity;
-            EntityLayer = entityLayer;
+            Scene = scene;
         }
 
-        public abstract void Execute();
+        public abstract NodeStates Execute();
     }
 }

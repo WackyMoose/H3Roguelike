@@ -1,11 +1,8 @@
 ﻿using GameV1.Entities;
-using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using System.Reflection.Emit;
 
 
 namespace GameV1.Commands.Factory
@@ -41,7 +38,7 @@ namespace GameV1.Commands.Factory
                 if (entity is Creature && CreaturesAtTargetPosition is not null)
                 {
                     //Console.WriteLine("We are attacking!");
-                    return new CommandAttack(creatures, entity, CreaturesAtTargetPosition);
+                    return new CommandAttack(scene, entity, CreaturesAtTargetPosition);
                 }
 
                 // Tile
@@ -52,25 +49,29 @@ namespace GameV1.Commands.Factory
                     if (!tile.IsWalkable)
                     {
                         //Console.WriteLine("Tile in the way!");
-                        return new CommandIdle(creatures, entity);
+                        return new CommandIdle(scene, entity);
                     }
                 }
 
                 //Console.WriteLine("We are walking!");
                 switch (input)
                 {
-                    case InputOptions.Up: return new CommandMoveUp(creatures, entity);
-                    case InputOptions.Down: return new CommandMoveDown(creatures, entity);
-                    case InputOptions.Left: return new CommandMoveLeft(creatures, entity);
-                    case InputOptions.Right: return new CommandMoveRight(creatures, entity);
+                    case InputOptions.Up: return new CommandMoveUp(scene, entity);
+                    case InputOptions.Down: return new CommandMoveDown(scene, entity);
+                    case InputOptions.Left: return new CommandMoveLeft(scene, entity);
+                    case InputOptions.Right: return new CommandMoveRight(scene, entity);
                 }
 
+            }
+            if(input == InputOptions.PickUp)
+            {
+                return new CommandItemPickUp(scene, entity);
             }
 
             if (input == InputOptions.Idle)
             {
                 //Console.WriteLine("We are idling!");
-                return new CommandIdle(creatures, entity);
+                return new CommandIdle(scene, entity);
             }
 
             return null;

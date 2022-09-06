@@ -1,6 +1,5 @@
 ﻿using GameV1.Entities;
 using MooseEngine.Graphics;
-using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 
@@ -21,17 +20,17 @@ namespace GameV1.WorldGeneration
                                                                      new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
 
-        private static int[] walkableIds = new int[]{};
+        private static int[] walkableIds = new int[] { };
 
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(501,501,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
-            
+            var world = new World(501, 501, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
+
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
-            
+
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
@@ -86,7 +85,7 @@ namespace GameV1.WorldGeneration
                         world.AddTile(coord, treeTile);
                     }
                 }
-                
+
                 //Console.WriteLine("Forest Done");
                 //Console.WriteLine("--------------------------------");
 
@@ -119,7 +118,7 @@ namespace GameV1.WorldGeneration
                 for (int i = 0; i < _startVillageData[k].Count; i++)
                 {
                     Tile spriteTile = new Tile("StartVillage", _startVillageData[k][i].IsWalkable, _startVillageData[k][i].SpriteCoords);
-                    spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y-(5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
+                    spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y - (5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
