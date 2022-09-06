@@ -1,5 +1,4 @@
-﻿
-using MooseEngine.Interfaces;
+﻿using MooseEngine.Interfaces;
 
 namespace MooseEngine.Core
 {
@@ -8,7 +7,6 @@ namespace MooseEngine.Core
         private static Queue<ICommand> Commands = new Queue<ICommand>();
 
         public static bool IsEmpty { get { return Commands.Count() == 0; } }
-
 
         public static void Add(ICommand? command)
         {

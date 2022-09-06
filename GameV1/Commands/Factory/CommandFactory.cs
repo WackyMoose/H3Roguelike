@@ -31,8 +31,8 @@ namespace GameV1.Commands.Factory
                     case InputOptions.Right: direction = Constants.Right; break;
                 }
 
-                var TilesAtTargetPosition = scene.EntityAtPosition(tiles.Entities, entity.Position + direction);
-                var CreaturesAtTargetPosition = scene.EntityAtPosition(creatures.Entities, entity.Position + direction);
+                var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.Entities, entity.Position + direction);
+                var CreaturesAtTargetPosition = scene.GetEntityAtPosition(creatures.Entities, entity.Position + direction);
 
                 // Creature
                 if (entity is Creature && CreaturesAtTargetPosition is not null)

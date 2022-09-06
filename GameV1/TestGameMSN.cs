@@ -12,6 +12,7 @@ using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
+using System.Collections.Generic;
 using System.Numerics;
 using static MooseEngine.BehaviorTree.NodeFactory;
 
@@ -22,8 +23,7 @@ public enum EntityLayer : int
     WalkableTiles,
     NonWalkableTiles,
     Creatures,
-    Items,
-    Path
+    Items
 }
 
 internal class TestGameMSN : IGame
@@ -66,7 +66,6 @@ internal class TestGameMSN : IGame
         _scene = sceneFactory.CreateScene();
 
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
-        var tileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         var app = Application.Instance;
@@ -92,22 +91,23 @@ internal class TestGameMSN : IGame
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        //player.Inventory.
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
         creatureLayer?.Add(player);
 
         // Light sources
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        lightSourceLayer?.Add(light);
+        itemLayer?.Add(light);
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        lightSourceLayer?.Add(townLights);
+        itemLayer?.Add(townLights);
 
         for (int i = 0; i < 32; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
+            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            lightSourceLayer?.Add(light);
+            itemLayer?.Add(light);
         }
 
         // Druid chasing player
@@ -136,7 +136,6 @@ internal class TestGameMSN : IGame
         //guard_02Tree.Add(Repeater(-1)
         //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
         //);
-        btrees.Add(guard_02Tree);
 
         guard_02Tree.Add(Serializer()
                 .Add(Action(new CommandPatrolRectangularArea(
@@ -147,11 +146,11 @@ internal class TestGameMSN : IGame
                 .Add(Action(new CommandIdle(_scene, guard_02)))
                 .Add(Action(new CommandIdle(_scene, guard_02)))
             );
+        
+        btrees.Add(guard_02Tree);
 
         // Druid behavior tree
         var druidTree = new BTree(druid);
-
-        btrees.Add(druidTree);
 
         // Follow the player, but only walk every other turn
         druidTree.Add(Serializer()
@@ -160,12 +159,10 @@ internal class TestGameMSN : IGame
                 )
             );
 
-
+        btrees.Add(druidTree);
 
         // Roaming guard behavior tree
         var guard_01Tree = new BTree(guard_01);
-
-        btrees.Add(guard_01Tree);
 
         // March along the city walls
         guard_01Tree.Add(Serializer()
@@ -175,8 +172,9 @@ internal class TestGameMSN : IGame
                         .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
                );
 
-        WorldGenerator.GenerateWorld(80085, ref _scene);
+        btrees.Add(guard_01Tree);
 
+        // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
@@ -219,7 +217,6 @@ internal class TestGameMSN : IGame
         }
 
         // TODO: Wrap in method
-        // Dynamically updated light sources
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
 

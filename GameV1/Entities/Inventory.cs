@@ -1,9 +1,10 @@
-﻿using MooseEngine.Graphics;
+﻿using GameV1.Interfaces;
+using MooseEngine.Graphics;
 using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Inventory : Container<Slot<Item>, Item>
+    public class Inventory : Container<Slot<Item>, Item>, IInventory
     {
         public Inventory(int maxSlots, int durability, int maxValue)
             : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.White)
@@ -15,6 +16,19 @@ namespace GameV1.Entities
             : base(maxSlots, durability, maxValue, name, textureCoords, Color.White)
         {
             MaxSlots = maxSlots;
+        }
+
+        public override bool AddItemToFirstEmptySlot(Item item)
+        {
+            foreach(var slot in Slots)
+            {
+                if( slot.IsEmpty == true )
+                {
+                    slot.Add(item);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public override bool AddItemToSlot(Item item, Slot<Item> slot)

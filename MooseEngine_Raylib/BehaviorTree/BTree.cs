@@ -1,6 +1,6 @@
-﻿using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
+using MooseEngine.BehaviorTree.Interfaces;
 
 namespace MooseEngine.BehaviorTree
 {
@@ -9,7 +9,7 @@ namespace MooseEngine.BehaviorTree
         public IEntity Entity { get; set; }
         public NodeStates State { get; set; }
         public INode? RootNode { get; set; }
-        public Dictionary<string, object> Blackboard { get; set; }
+        public IDictionary<string, object> Blackboard { get; set; }
 
         public BTree(IEntity entity)
         {

@@ -39,7 +39,22 @@ public class Scene : Disposeable, IScene
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
 
-    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
+    public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
+    {
+        Dictionary<Vector2, IEntity> entitiesOfType = new Dictionary<Vector2, IEntity>();
+
+        foreach(var entity in entities.Entities)
+        {
+            if (entity.Value.GetType() == typeof(TType))
+            {
+                entitiesOfType.Add(entity.Key, entity.Value);
+            }
+        }
+
+        return entitiesOfType;
+    }
+
+    public IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         return entities.ContainsKey(position) ? entities[position] : default;
