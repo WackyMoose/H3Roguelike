@@ -3,21 +3,17 @@ using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
-using System.Numerics;
 
 namespace GameV1.UI;
 
 internal class StatsPanel
 {
+    public const int WIDTH = 330;
+
     private Player _player;
 
     private PanelOptions _panelOptions;
     private SeperatorOptions _seperatorOptions;
-
-    // Debug
-    private ButtonOptions _consoleButton;
-    private SliderOptions _sliderOptions;
-    private ButtonOptions _buttonOptions;
 
     // Stats
     private ImageOptions _portraitOptions;
@@ -37,7 +33,7 @@ internal class StatsPanel
 
         var window = Application.Instance.Window;
 
-        var size = new UIScreenCoords(330, window.Height);
+        var size = new UIScreenCoords(WIDTH, window.Height);
         var position = new UIScreenCoords(window.Width - size.X, 0);
         var startPosition = position;
         _panelOptions = new PanelOptions(position, size, "Stats");
@@ -86,22 +82,7 @@ internal class StatsPanel
 
         position = new UIScreenCoords(window.Width - size.X + 5, position.Y + 30);
         _seperatorOptions = new SeperatorOptions(position, size.X - 10);
-
-        // DEBUG -------------------------------------------------------
-        var debugSliderPosition = new UIScreenCoords(10, 70);
-        var debugSliderSize = new UIScreenCoords(250, 30);
-        _sliderOptions = new SliderOptions(debugSliderPosition, debugSliderSize, 24, $"{damage} Damage", TextAlignment.Right, 0, 250);
-
-        var btnPosition = new UIScreenCoords(10, 124);
-        var btnSize = new UIScreenCoords(100, 50);
-        _buttonOptions = new ButtonOptions(btnPosition, btnSize, "Die");
-
-        btnPosition = new UIScreenCoords(10, 50);
-        btnSize = new UIScreenCoords(100, 50);
-        _consoleButton = new ButtonOptions(btnPosition, btnSize, "Add");
     }
-
-    private float damage = 50;
 
     public void OnGUI(IUIRenderer UIRenderer)
     {
@@ -119,17 +100,5 @@ internal class StatsPanel
         UIRenderer.DrawSliderBar(_fatigueBarOptions, _player.Stats.Fatigue / 2);
 
         UIRenderer.DrawSeperator(_seperatorOptions);
-
-        _sliderOptions.Text = $"{damage} Damage";
-        damage = UIRenderer.DrawSliderBar(_sliderOptions, damage);
-        if (UIRenderer.DrawButton(_buttonOptions))
-        {
-            _player.TakeDamage((int)damage);
-        }
-
-        if(UIRenderer.DrawButton(_consoleButton))
-        {
-            ConsolePanel.Add("Test");
-        }
     }
 }

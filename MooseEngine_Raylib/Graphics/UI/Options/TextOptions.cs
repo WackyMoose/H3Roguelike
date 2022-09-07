@@ -22,18 +22,23 @@ public class TextOptions : UIOptionsBase
     {
     }
 
+    public TextOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, int borderWidth, bool interactable = true)
+    : this(position, size, fontSize, 1.0f, borderWidth, 2, TextAlignment.Left, interactable)
+    {
+    }
+
     public TextOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, float textSpacing, int borderWidth, int padding, TextAlignment textAlignment, bool interactable = true)
-		: base(position, size, interactable)
+        : base(position, size, interactable)
     {
         FontSize = fontSize;
-		TextSpacing = textSpacing;
+        TextSpacing = textSpacing;
         BorderWidth = borderWidth;
         Padding = padding;
         TextAlignment = textAlignment;
     }
 
     public int FontSize { get; set; }
-	public float TextSpacing { get; set; }
+    public float TextSpacing { get; set; }
     public int BorderWidth { get; set; }
     public int Padding { get; set; }
     public TextAlignment TextAlignment { get; set; }

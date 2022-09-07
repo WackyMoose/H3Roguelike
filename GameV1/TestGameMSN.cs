@@ -7,9 +7,9 @@ using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
+using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1;
 
@@ -35,6 +35,7 @@ internal class TestGameMSN : IGame
 
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
+    private DebugPanel _debugPanel;
 
     public void Initialize()
     {
@@ -54,8 +55,6 @@ internal class TestGameMSN : IGame
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         var window = Application.Instance.Window;
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
@@ -97,13 +96,14 @@ internal class TestGameMSN : IGame
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
 
-        var app = Application.Instance;
+        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
+        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
 
-        var size = new Coords2D(app.Window.Width, 240);
-        var position = new Coords2D((app.Window.Width / 2) - (size.X / 2), app.Window.Height - size.Y);
-
-        _consolePanel = new ConsolePanel(position, size);
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
         _statsPanel = new StatsPanel(player);
+        _debugPanel = new DebugPanel(10, 10, player);
+
+        _scene.SceneCamera = new Camera(player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
     }
 
     public void Uninitialize()
@@ -154,5 +154,6 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
+        _debugPanel.OnGUI(UIRenderer);
     }
 }

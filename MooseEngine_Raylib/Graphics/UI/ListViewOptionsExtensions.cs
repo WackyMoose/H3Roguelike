@@ -5,10 +5,8 @@ namespace MooseEngine.Graphics.UI;
 
 public static class ListViewOptionsExtensions
 {
-    public static Rectangle GetItemBounds(this ListViewOptions listViewOptions)
+    public static Rectangle GetItemBounds(this ListViewOptions listViewOptions, Rectangle bounds)
     {
-        var bounds = listViewOptions.GetBounds();
-
         var rect = new Rectangle
         {
             x = bounds.x + listViewOptions.ItemSpacing,

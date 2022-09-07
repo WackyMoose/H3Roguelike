@@ -2,8 +2,8 @@
 
 public class ListViewOptions : PanelOptions
 {
-    public ListViewOptions(UIScreenCoords position, UIScreenCoords size, string title) 
-        : base(position, size, title)
+    public ListViewOptions(UIScreenCoords position, UIScreenCoords size, string title, bool interactable = true) 
+        : base(position, size, title, interactable)
     {
         ScrollSliderSize = 16;
         ScrollSpeed = 12;

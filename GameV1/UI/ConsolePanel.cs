@@ -1,12 +1,14 @@
-﻿using MooseEngine.Graphics.UI.Options;
+﻿using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
+using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Utilities;
-using System;
 
-namespace MooseEngine.Graphics.UI;
+namespace MooseEngine.UI;
 
 public class ConsolePanel
 {
     private const string TITLE = "Console";
+    public const int HEIGHT = 140;
 
     private static ConsolePanel s_Instance;
 
