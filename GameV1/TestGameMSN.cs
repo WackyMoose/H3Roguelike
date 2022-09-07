@@ -104,7 +104,7 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 64; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
@@ -238,7 +238,7 @@ internal class TestGameMSN : IGame
             }
         }
 
-        // TODO: Wrap in method
+        // TODO: Only illuminate if range within viewport
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
 

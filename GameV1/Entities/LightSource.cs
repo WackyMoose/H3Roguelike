@@ -70,13 +70,18 @@ namespace GameV1.Entities
                     Position - new Vector2(Range, Range),
                     Position + new Vector2(Range, Range));
 
-                foreach(var tint in Tints)
+                foreach (var entity in entitiesWithinRange)
                 {
-                    if(entitiesWithinRange.ContainsKey(tint.Key + Position))
-                    {
-                        entitiesWithinRange[tint.Key + Position].ColorTint += tint.Value;
-                    }
+                    entity.Value.ColorTint += Tints[entity.Key - Position];
                 }
+
+                //foreach(var tint in Tints)
+                //{
+                //    if(entitiesWithinRange.ContainsKey(tint.Key + Position))
+                //    {
+                //        entitiesWithinRange[tint.Key + Position].ColorTint += tint.Value;
+                //    }
+                //}
             }
         }
 
