@@ -47,7 +47,6 @@ internal class TestGameMSN : IGame
     private List<BTree> btrees = new List<BTree>();
 
     // Layers
-    private IEntityLayer<Tile> _pathLayer;
     private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
     private ConsolePanel _consolePanel;
@@ -67,11 +66,11 @@ internal class TestGameMSN : IGame
 
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref _scene);
-        
+
+        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
-
-        _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
         var app = Application.Instance;
         var window = app.Window;
@@ -107,7 +106,7 @@ internal class TestGameMSN : IGame
 
         for (int i = 0; i < 32; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            var light = new LightSource(Randomizer.RandomInt(4, 8) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
             itemLayer?.Add(light);
         }
@@ -176,8 +175,6 @@ internal class TestGameMSN : IGame
 
         btrees.Add(guard_01Tree);
 
-        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
-
         // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
         InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
@@ -195,22 +192,20 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        // Player
+        // Player input
         InputOptions? input = InputHandler.Handle();
 
+        // Generate commands
         ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 
-        // Execute Player commands
         if (!CommandQueue.IsEmpty)
         {
-            //Console.WriteLine("Players turn!");
+            // Execute Player commands
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            //Console.WriteLine("AI's turn!");
-            //AI.Execute(_scene);
             foreach (BTree btree in btrees)
             {
                 btree.Evaluate();

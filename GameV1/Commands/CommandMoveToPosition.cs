@@ -1,6 +1,8 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -9,11 +11,15 @@ namespace GameV1.Commands
     {
         private Vector2 m_position;
         private Vector2 m_nextPosition;
+        private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_distance;
+        private Vector2 m_currentTargetPosition;
 
         public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position) : base(scene, entity)
         {
             m_position = position;
+            m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+            m_currentTargetPosition = CommandUtility.GetClosestValidPosition(m_targetEntities, m_position);
         }
 
         public override NodeStates Execute()
@@ -24,52 +30,38 @@ namespace GameV1.Commands
                 return NodeStates.Success;
             }
 
-            //var path = Scene.Pathfinder.GetPath(Entity.Position, m_position, Scene.PathMap);
+            var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
-            //m_nextPosition = path[path.Length - 1].Position;
-
-            // No, then attempt to move
-            m_distance = m_position - Entity.Position;
-
-            if (Math.Abs(m_distance.Y) >= Math.Abs(m_distance.X))
+            if(path.Length == 0)
             {
-                if (Entity.Position.Y > m_position.Y)
-                {
-                    m_nextPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
-                }
-                else if (Entity.Position.Y < m_position.Y)
-                {
-                    m_nextPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
-                }
-            }
-            else if (Math.Abs(m_distance.Y) < Math.Abs(m_distance.X))
-            {
-                if (Entity.Position.X < m_position.X)
-                {
-                    m_nextPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
-                }
-                else if (Entity.Position.X > m_position.X)
-                {
-                    m_nextPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
-                }
-            }
-            else
-            {
-                m_nextPosition = Entity.Position;
+                return NodeStates.Success;
             }
 
-            var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(m_nextPosition, Entity);
+            m_nextPosition = path[path.Length - 1].Position;
 
-            if (isKeyAvailable)
+            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
+
+            if(isMoveValid)
             {
-                Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
-                Entity.Position = m_nextPosition;
                 return NodeStates.Running;
             }
             else
             {
                 return NodeStates.Failure;
             }
+
+            //var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(m_nextPosition, Entity);
+
+            //if (isKeyAvailable)
+            //{
+            //    Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
+            //    Entity.Position = m_nextPosition;
+            //    return NodeStates.Running;
+            //}
+            //else
+            //{
+            //    return NodeStates.Failure;
+            //}
         }
     }
 }

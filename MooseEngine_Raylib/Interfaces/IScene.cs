@@ -12,6 +12,7 @@ public interface IScene : IDisposable
     Pathfinder Pathfinder { get; set; }
     PathMap PathMap { get; set; }
 
+    bool MoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition);
     IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities);
     IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);
     IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance);

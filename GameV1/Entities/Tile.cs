@@ -6,7 +6,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Tile : Entity, ITile, IPathMappable
+    public class Tile : Entity, ITile
     {
         public bool IsWalkable { get; set; }
         public float PathWeight { get; set; }
