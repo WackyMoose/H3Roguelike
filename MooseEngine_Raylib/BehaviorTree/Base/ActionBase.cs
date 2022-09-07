@@ -4,7 +4,7 @@ namespace MooseEngine.BehaviorTree.Base
 {
     public abstract class ActionBase : NodeBase, IAction
     {
-        public ActionBase() { }
+        public ActionBase() : base() { }
 
         public override INode Add(INode node)
         {
@@ -12,6 +12,11 @@ namespace MooseEngine.BehaviorTree.Base
             node.Parent = this;
 
             return default;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace MooseEngine.BehaviorTree.Composites
 {
     public class Selector : CompositeBase
     {
-        public Selector() { }
+        public Selector() : base() { }
 
         public override NodeStates Evaluate()
         {
@@ -34,6 +34,11 @@ namespace MooseEngine.BehaviorTree.Composites
 
             State = NodeStates.Failure;
             return State;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

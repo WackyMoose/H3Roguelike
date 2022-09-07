@@ -8,50 +8,50 @@ namespace MooseEngine.BehaviorTree
 {
     public static class NodeFactory
     {
-        //public static INode Action(ActionDelegate @delegate)
-        //{
-        //    return new ActionNode(@delegate);
-        //}
-
-        public static INode Action(Command command)
+        public static IAction Action(Actions.Delegate @delegate)
         {
-            return new ActionNode(command);
+            return new ActionDelegate(@delegate);
         }
 
-        public static INode Breakpoint(string message)
+        public static IAction Action(Command command)
+        {
+            return new ActionCommand(command);
+        }
+
+        public static IDecorator Breakpoint(string message)
         {
             return new Breakpoint(message);
         }
 
-        public static INode Delay(int numDelays)
+        public static IDecorator Delay(int numDelays)
         {
             return new Delay(numDelays);
         }
-        public static INode Inverter()
+        public static IDecorator Inverter()
         {
             return new Inverter();
         }
 
-        public static INode Limiter(int numRepeats)
+        public static IDecorator Limiter(int numRepeats)
         {
             return new Limiter(numRepeats);
         }
 
-        public static INode Repeater(int numRepeats)
+        public static IDecorator Repeater(int numRepeats)
         {
             return new Repeater(numRepeats);
         }
 
-        public static INode Selector()
+        public static IComposite Selector()
         {
             return new Selector();
         }
 
-        public static INode Sequence()
+        public static IComposite Sequence()
         {
             return new Sequence();
         }
-        public static INode Serializer()
+        public static IComposite Serializer()
         {
             return new Serializer();
         }

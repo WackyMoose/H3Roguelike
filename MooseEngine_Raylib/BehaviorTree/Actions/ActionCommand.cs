@@ -4,20 +4,11 @@ using MooseEngine.Interfaces;
 
 namespace MooseEngine.BehaviorTree.Actions
 {
-    //public delegate NodeStates ActionDelegate();
-
-    public class ActionNode : ActionBase
+    public class ActionCommand : ActionBase
     {
-        //private ActionDelegate m_action;
-
         private readonly ICommand m_command;
 
-        //public ActionNode(ActionDelegate action)
-        //{
-        //    m_action = action;
-        //}
-
-        public ActionNode(Command command)
+        public ActionCommand(Command command) : base()
         {
             m_command = command;
         }
@@ -27,6 +18,11 @@ namespace MooseEngine.BehaviorTree.Actions
             State = m_command.Execute();
             Console.WriteLine($"ActionNode returns {State} ");
             return State;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MooseEngine.BehaviorTree.Decorators
         private static int m_currentRepeats;
         private int m_numRepeats;
 
-        public Repeater(int numRepeats)
+        public Repeater(int numRepeats) : base()
         {
             Reset();
             m_numRepeats = numRepeats;
@@ -52,6 +52,11 @@ namespace MooseEngine.BehaviorTree.Decorators
         public void Reset()
         {
             m_currentRepeats = 0;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

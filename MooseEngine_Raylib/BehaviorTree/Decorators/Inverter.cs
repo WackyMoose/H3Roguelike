@@ -5,7 +5,7 @@ namespace MooseEngine.BehaviorTree.Decorators
 {
     public class Inverter : DecoratorBase
     {
-        public Inverter() { }
+        public Inverter() : base() { }
 
         public override NodeStates Evaluate()
         {
@@ -24,6 +24,11 @@ namespace MooseEngine.BehaviorTree.Decorators
 
             State = NodeStates.Failure;
             return State;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

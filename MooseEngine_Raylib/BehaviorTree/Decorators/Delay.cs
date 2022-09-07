@@ -8,7 +8,7 @@ namespace MooseEngine.BehaviorTree.Decorators
         private static int m_currentTurns;
         private int m_numTurns;
 
-        public Delay(int numTurns)
+        public Delay(int numTurns) : base()
         {
             Reset();
             m_numTurns = numTurns;
@@ -38,6 +38,11 @@ namespace MooseEngine.BehaviorTree.Decorators
         public void Reset()
         {
             m_currentTurns = 0;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

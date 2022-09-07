@@ -10,7 +10,7 @@ namespace MooseEngine.BehaviorTree.Composites
     {
         int m_currentNode;
 
-        public Serializer()
+        public Serializer() : base()
         {
             Reset();
         }
@@ -53,6 +53,11 @@ namespace MooseEngine.BehaviorTree.Composites
         public void Reset()
         {
             m_currentNode = 0;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

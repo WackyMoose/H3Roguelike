@@ -32,5 +32,10 @@ namespace MooseEngine.BehaviorTree
         {
             return RootNode?.Evaluate();
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

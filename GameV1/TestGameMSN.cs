@@ -167,6 +167,14 @@ internal class TestGameMSN : IGame
         var guard_01Tree = new BTree(guard_01);
 
         // March along the city walls
+        guard_01Tree.Add(Serializer().Add(
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                )
+            );
+
         //guard_01Tree.Add(Serializer()
         //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
         //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
@@ -174,10 +182,11 @@ internal class TestGameMSN : IGame
         //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
         //       );
 
-        guard_01Tree.Add(Sequence()
-                .Add(Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)))
-                .Add(Action(new CommandMoveToTarget(_scene, guard_01)))
-            );
+        //guard_01Tree.Add(Sequence()
+        //        .Add(Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)))
+        //        .Add(Action(new CommandMoveToTarget(_scene, guard_01)))
+
+        //    );
 
         btrees.Add(guard_01Tree);
 

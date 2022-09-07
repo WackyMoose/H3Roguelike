@@ -9,8 +9,12 @@ namespace MooseEngine.BehaviorTree.Base
         public IBehaviorTree Root { get; set; }
         public INode? Parent { get; set; }
         public NodeStates State { get; set; }
+        public int Timestamp { get; set; }
 
-        public NodeBase() { }
+        public NodeBase() 
+        { 
+            Timestamp = DateTime.Now.Millisecond;
+        }
 
         public bool SaveData(string key, object value)
         {

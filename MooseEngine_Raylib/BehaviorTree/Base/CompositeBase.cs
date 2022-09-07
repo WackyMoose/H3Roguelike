@@ -1,4 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Interfaces;
+using System.Xml.Linq;
 
 namespace MooseEngine.BehaviorTree.Base
 {
@@ -6,17 +7,30 @@ namespace MooseEngine.BehaviorTree.Base
     {
         public IList<INode>? Children { get; set; }
 
-        public CompositeBase()
+        // TODO: Add ctors that take child node/nodes as argument?
+
+        public CompositeBase() : base()
         {
             Children = new List<INode>();
         }
 
+        public IComposite Add(params INode[] nodes)
+        {
+            foreach(INode node in nodes)
+            {
+                node.Root = Root;
+                node.Parent = this;
+                Children?.Add(node);
+            }
+
+            return this;
+        }
+
         public override INode Add(INode node)
         {
-            Children?.Add(node);
             node.Root = Root;
             node.Parent = this;
-
+            Children?.Add(node);
 
             return this;
         }

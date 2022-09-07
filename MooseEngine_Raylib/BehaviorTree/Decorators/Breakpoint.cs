@@ -7,7 +7,7 @@ namespace MooseEngine.BehaviorTree.Decorators
     {
         private string m_message;
 
-        public Breakpoint(string message)
+        public Breakpoint(string message) : base()
         {
             m_message = message;
         }
@@ -15,6 +15,11 @@ namespace MooseEngine.BehaviorTree.Decorators
         public override NodeStates Evaluate()
         {
             throw new Exception($"Breakpoint reached! {m_message}");
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

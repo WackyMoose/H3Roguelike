@@ -20,7 +20,10 @@ namespace GameV1.Commands
 
         public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position)
         {
+            Scene = scene;
+            Entity = entity;
             m_position = position;
+
             m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
             m_currentTargetPosition = CommandUtility.GetClosestValidPosition(m_targetEntities, m_position);
         }
