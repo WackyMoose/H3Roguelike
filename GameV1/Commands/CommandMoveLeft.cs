@@ -7,8 +7,13 @@ namespace GameV1.Commands
 {
     public class CommandMoveLeft : Command
     {
-        public CommandMoveLeft(IScene scene, IEntity entity) : base(scene, entity)
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
+        public CommandMoveLeft(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
         public override NodeStates Execute()

@@ -127,6 +127,7 @@ internal class TestGameMSN : IGame
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_01.MainHand.Add(sword);
         guard_01.Chest.Add(armor);
+        guard_01.Stats.Perception = 16 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(guard_01);
 
 
@@ -144,8 +145,8 @@ internal class TestGameMSN : IGame
                     guard_02,
                     light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
                     light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandIdle(_scene, guard_02)))
-                .Add(Action(new CommandIdle(_scene, guard_02)))
+                .Add(Action(new CommandIdle()))
+                .Add(Action(new CommandIdle()))
             );
         
         btrees.Add(guard_02Tree);
@@ -166,12 +167,17 @@ internal class TestGameMSN : IGame
         var guard_01Tree = new BTree(guard_01);
 
         // March along the city walls
-        guard_01Tree.Add(Serializer()
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-               );
+        //guard_01Tree.Add(Serializer()
+        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
+        //       );
+
+        guard_01Tree.Add(Sequence()
+                .Add(Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)))
+                .Add(Action(new CommandMoveToTarget(_scene, guard_01)))
+            );
 
         btrees.Add(guard_01Tree);
 

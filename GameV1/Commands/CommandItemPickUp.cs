@@ -7,8 +7,13 @@ namespace GameV1.Commands
 {
     internal class CommandItemPickUp : Command
     {
-        public CommandItemPickUp(IScene scene, IEntity entity) : base(scene, entity)
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
+        public CommandItemPickUp(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
         public override NodeStates Execute()

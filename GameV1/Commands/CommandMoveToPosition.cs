@@ -9,13 +9,16 @@ namespace GameV1.Commands
 {
     public class CommandMoveToPosition : Command
     {
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
         private Vector2 m_position;
         private Vector2 m_nextPosition;
         private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_distance;
         private Vector2 m_currentTargetPosition;
 
-        public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position) : base(scene, entity)
+        public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position)
         {
             m_position = position;
             m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;

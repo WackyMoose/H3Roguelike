@@ -11,12 +11,17 @@ namespace GameV1.Commands
 {
     public class CommandMoveToEntity : Command
     {
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
         private IEntity m_targetEntity;
         private Vector2 m_nextPosition;
         private Vector2 m_distance;
 
-        public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity) : base(scene, entity)
+        public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity)
         {
+            Scene = scene;
+            Entity = entity;
             m_targetEntity = targetEntity;
         }
 

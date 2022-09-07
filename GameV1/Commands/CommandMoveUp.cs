@@ -7,9 +7,13 @@ namespace GameV1.Commands
 {
     public class CommandMoveUp : Command
     {
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
 
-        public CommandMoveUp(IScene scene, IEntity entity) : base(scene, entity)
+        public CommandMoveUp(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
         public override NodeStates Execute()

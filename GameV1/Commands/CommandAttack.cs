@@ -6,19 +6,20 @@ namespace GameV1.Commands
 {
     internal class CommandAttack : Command
     {
-        public IEntity Attacked { get; set; }
+        public IScene Scene { get; set; }
+        public ICreature Attacker { get; set; }
+        public ICreature Attacked { get; set; }
 
-        public CommandAttack(IScene scene, IEntity attacker, IEntity attacked) : base(scene, attacker)
+        public CommandAttack(IScene scene, ICreature attacker, ICreature attacked)
         {
+            Scene = scene;
+            Attacker = attacker;
             Attacked = attacked;
         }
 
         public override NodeStates Execute()
         {
-            ICreature attacker = (ICreature)Entity;
-            ICreature attacked = (ICreature)Attacked;
-
-            CombatHandler.SolveAttack(attacker, attacked, attacker.StrongestWeapon);
+            CombatHandler.SolveAttack(Attacker, Attacked, Attacker.StrongestWeapon);
 
             return NodeStates.Success;
 
