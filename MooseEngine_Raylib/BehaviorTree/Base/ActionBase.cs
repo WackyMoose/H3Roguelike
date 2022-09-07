@@ -8,9 +8,6 @@ namespace MooseEngine.BehaviorTree.Base
 
         public override INode Add(INode node)
         {
-            node.Root = Root;
-            node.Parent = this;
-
             return default;
         }
 

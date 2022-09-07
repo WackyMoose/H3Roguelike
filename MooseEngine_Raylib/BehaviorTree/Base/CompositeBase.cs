@@ -14,6 +14,18 @@ namespace MooseEngine.BehaviorTree.Base
             Children = new List<INode>();
         }
 
+        public CompositeBase(params INode[] nodes) : base()
+        {
+            Children = new List<INode>();
+
+            foreach (INode node in nodes)
+            {
+                node.Root = Root;
+                node.Parent = this;
+                Children?.Add(node);
+            }
+        }
+
         public IComposite Add(params INode[] nodes)
         {
             foreach(INode node in nodes)

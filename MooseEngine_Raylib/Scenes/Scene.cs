@@ -137,6 +137,7 @@ public class Scene : Disposeable, IScene
 
     public void UpdateRuntime(float deltaTime)
     {
+
         SceneCamera.Update(deltaTime);
 
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
@@ -144,8 +145,10 @@ public class Scene : Disposeable, IScene
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
-
+        
+        
         var layers = _entityLayers.Keys;
+        
         Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)
@@ -166,6 +169,7 @@ public class Scene : Disposeable, IScene
                 }
             }
         }
+
         Renderer.EndScene();
     }
 }

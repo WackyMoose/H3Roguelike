@@ -51,9 +51,15 @@ namespace MooseEngine.BehaviorTree
         {
             return new Sequence();
         }
+
         public static IComposite Serializer()
         {
             return new Serializer();
+        }
+
+        public static IComposite Serializer(params INode[] nodes)
+        {
+            return new Serializer(nodes);
         }
     }
 }

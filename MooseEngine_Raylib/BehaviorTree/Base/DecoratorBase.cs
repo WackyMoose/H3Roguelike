@@ -10,6 +10,13 @@ namespace MooseEngine.BehaviorTree.Base
         {
         }
 
+        public DecoratorBase(INode node) : base()
+        {
+            node.Root = Root;
+            node.Parent = this;
+            Child = node;
+        }
+
         public override INode Add(INode node)
         {
             node.Root = Root;
