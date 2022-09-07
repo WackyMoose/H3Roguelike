@@ -106,7 +106,7 @@ internal class TestGameMSN : IGame
 
         for (int i = 0; i < 32; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(4, 8) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
             itemLayer?.Add(light);
         }

@@ -98,6 +98,7 @@ public class Scene : Disposeable, IScene
                 if (entities.ContainsKey(v))
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
+                    //if (Vector2.DistanceSquared(position, v) <= distanceSquared)
                     {
                         tilesWithinDist.Add(v, entities[v]);
                     }

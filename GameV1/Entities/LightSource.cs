@@ -2,6 +2,7 @@
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
+using System.Numerics;
 
 namespace GameV1.Entities
 {
@@ -19,22 +20,27 @@ namespace GameV1.Entities
 
         public void Illuminate(IScene scene)
         {
-
             var layers = scene.EntityLayers.Keys;
 
             foreach (var layer in layers)
             {
                 var entities = scene.EntityLayers[layer].Entities;
 
-                var entitiesWithinRange = scene.GetEntitiesWithinCircle(entities, this.Position, this.Range);
+                //var entitiesWithinRange = scene.GetEntitiesWithinCircle(entities, this.Position, this.Range);
+                var entitiesWithinRange = scene.GetEntitiesWithinRectangle( 
+                    entities,
+                    Position - new Vector2(Range, Range),
+                    Position + new Vector2(Range, Range));
 
-                var maxDistanceSquared = this.Range * this.Range;
+                var maxDistanceSquared = Range * Range;
 
                 foreach (var entity in entitiesWithinRange)
                 {
                     // TODO: Implement true inverse distance squared light intensity
                     // TODO: Optimize algorithm, and cache result for reuse.
-                    var distanceSquared = MathFunctions.DistanceSquaredBetween(this.Position, entity.Key);
+                    
+                    var distanceSquared = MathFunctions.DistanceSquaredBetween(Position, entity.Key);
+                    //var distanceSquared = Vector2.DistanceSquared(this.Position, entity.Key);
 
                     var invLerp = MathFunctions.InverseLerp(maxDistanceSquared, 0, distanceSquared);
                     //var lerp = MathFunctions.Lerp(0, 1, inLerp);
