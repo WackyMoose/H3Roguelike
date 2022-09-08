@@ -16,7 +16,6 @@ namespace GameV1.Commands
 
         private IEntity m_targetEntity;
         private Vector2 m_nextPosition;
-        private Vector2 m_distance;
 
         public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity)
         {
@@ -52,19 +51,6 @@ namespace GameV1.Commands
             {
                 return NodeStates.Failure;
             }
-
-            //var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(m_nextPosition, Entity);
-
-            //if (isKeyAvailable)
-            //{
-            //    Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
-            //    Entity.Position = m_nextPosition;
-            //    return NodeStates.Running;
-            //}
-            //else
-            //{
-            //    return NodeStates.Failure;
-            //}
         }
     }
 }

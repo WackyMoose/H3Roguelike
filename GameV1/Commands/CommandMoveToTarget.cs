@@ -50,8 +50,6 @@ namespace GameV1.Commands
             {
                 return NodeStates.Failure;
             }
-
-            return NodeStates.Failure;
         }
     }
 }

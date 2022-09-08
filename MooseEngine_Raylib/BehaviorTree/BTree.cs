@@ -18,6 +18,13 @@ namespace MooseEngine.BehaviorTree
             Blackboard = new Dictionary<string, object>();
         }
 
+        public BTree(IEntity entity, INode rootNode) : this(entity)
+        {
+            RootNode = rootNode;
+
+            Compile();
+        }
+
         public INode Add(INode node)
         {
             if(RootNode == null)
@@ -26,6 +33,13 @@ namespace MooseEngine.BehaviorTree
                 RootNode.Root = this;
             }
             return RootNode;
+        }
+
+        private IBehaviorTree Compile()
+        {
+            // Set Root and Parent for all nodes.
+
+            return this;
         }
 
         public NodeStates? Evaluate()

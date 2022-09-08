@@ -9,5 +9,8 @@ namespace MooseEngine.BehaviorTree.Interfaces
         NodeStates State { get; set; }
         INode? RootNode { get; set; }
         IDictionary<string, object> Blackboard { get; set; }
+
+        INode Add(INode node);
+        NodeStates? Evaluate();
     }
 }

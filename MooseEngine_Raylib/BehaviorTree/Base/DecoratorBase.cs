@@ -6,9 +6,7 @@ namespace MooseEngine.BehaviorTree.Base
     {
         public INode? Child { get; set; }
 
-        public DecoratorBase() : base()
-        {
-        }
+        public DecoratorBase() : base() { }
 
         public DecoratorBase(INode node) : base()
         {

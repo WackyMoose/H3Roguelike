@@ -3,6 +3,7 @@ using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -11,7 +12,7 @@ using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
-using static MooseEngine.BehaviorTree.NodeFactory;
+using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
 namespace GameV1;
 
@@ -44,7 +45,7 @@ internal class TestGameMSN : IGame
     private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
 
-    private List<BTree> btrees = new List<BTree>();
+    private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
     // Layers
     private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
@@ -132,35 +133,35 @@ internal class TestGameMSN : IGame
 
 
         // Randomized walk guard Behavior tree
-        var guard_02Tree = new BTree(guard_02);
+        //var guard_02Tree = new BTree(guard_02);
 
         // Roam around the campfire
-        //guard_02Tree.Add(Repeater(-1)
-        //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
-        //);
-
         //guard_02Tree.Add(Serializer(
         //        Action(new CommandPatrolRectangularArea(
         //            _scene,
         //            guard_02,
         //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)),
-        //        Action(new CommandIdle()),
-        //        Action(new CommandIdle())
+        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+        //            )),
+        //        Delay( Action(new CommandIdle()), 
+        //               2)
         //        )
         //    );
 
-        guard_02Tree.Add(Serializer(
+        var guard02Node = Serializer(
                 Action(new CommandPatrolRectangularArea(
                     _scene,
                     guard_02,
                     light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
                     light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
                     )),
-                Delay( Action(new CommandIdle()), 3)
-                )
-            );
+                Delay(
+                    Action(new CommandIdle()),
+                    2)
+                );
 
+        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        
         btrees.Add(guard_02Tree);
 
         // Druid behavior tree
@@ -169,8 +170,8 @@ internal class TestGameMSN : IGame
         // Follow the player, but only walk every other turn
         druidTree.Add(Serializer(
                 Delay( 
-                    Action(new CommandMoveToEntity(_scene, druid, player)), 1
-                    )
+                    Action(new CommandMoveToEntity(_scene, druid, player)), 
+                    1)
                 )
             );
 

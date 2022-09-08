@@ -3,11 +3,22 @@ using MooseEngine.BehaviorTree.Actions;
 using MooseEngine.BehaviorTree.Composites;
 using MooseEngine.BehaviorTree.Decorators;
 using MooseEngine.BehaviorTree.Interfaces;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.BehaviorTree
 {
-    public static class NodeFactory
+    public static class BehaviorTreeFactory
     {
+        public static IBehaviorTree BehaviorTree(IEntity entity)
+        {
+            return new BTree(entity);
+        }
+
+        public static IBehaviorTree BehaviorTree(IEntity entity, INode rootNode)
+        {
+            return new BTree(entity, rootNode);
+        }
+
         public static IAction Action(Actions.Delegate @delegate)
         {
             return new ActionDelegate(@delegate);
@@ -22,6 +33,7 @@ namespace MooseEngine.BehaviorTree
         {
             return new Breakpoint(message);
         }
+
         public static IDecorator Breakpoint(INode node, string message)
         {
             return new Breakpoint(node, message);
