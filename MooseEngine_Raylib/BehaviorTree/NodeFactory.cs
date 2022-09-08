@@ -22,14 +22,29 @@ namespace MooseEngine.BehaviorTree
         {
             return new Breakpoint(message);
         }
+        public static IDecorator Breakpoint(INode node, string message)
+        {
+            return new Breakpoint(node, message);
+        }
 
         public static IDecorator Delay(int numDelays)
         {
             return new Delay(numDelays);
         }
+
+        public static IDecorator Delay(INode node, int numDelays)
+        {
+            return new Delay(node, numDelays);
+        }
+
         public static IDecorator Inverter()
         {
             return new Inverter();
+        }
+
+        public static IDecorator Inverter(INode node)
+        {
+            return new Inverter(node);
         }
 
         public static IDecorator Limiter(int numRepeats)
@@ -37,9 +52,19 @@ namespace MooseEngine.BehaviorTree
             return new Limiter(numRepeats);
         }
 
+        public static IDecorator Limiter(INode node, int numRepeats)
+        {
+            return new Limiter(node, numRepeats);
+        }
+
         public static IDecorator Repeater(int numRepeats)
         {
             return new Repeater(numRepeats);
+        }
+
+        public static IDecorator Repeater(INode node, int numRepeats)
+        {
+            return new Repeater(node, numRepeats);
         }
 
         public static IComposite Selector()
@@ -47,9 +72,19 @@ namespace MooseEngine.BehaviorTree
             return new Selector();
         }
 
+        public static IComposite Selector(params INode[] nodes)
+        {
+            return new Selector(nodes);
+        }
+
         public static IComposite Sequence()
         {
             return new Sequence();
+        }
+
+        public static IComposite Sequence(params INode[] nodes)
+        {
+            return new Sequence(nodes);
         }
 
         public static IComposite Serializer()

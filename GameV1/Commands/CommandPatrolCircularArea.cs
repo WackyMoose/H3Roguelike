@@ -52,21 +52,6 @@ namespace GameV1.Commands
             {
                 return NodeStates.Failure;
             }
-
-            //var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(m_nextPosition, Entity);
-
-            //if (isKeyAvailable)
-            //{
-            //    Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
-            //    Entity.Position = m_nextPosition;
-            //    return NodeStates.Running;
-            //}
-            //else
-            //{
-            //    m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
-
-            //    return NodeStates.Failure;
-            //}
         }
     }
 }

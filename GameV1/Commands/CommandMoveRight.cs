@@ -20,15 +20,16 @@ namespace GameV1.Commands
         {
             var newPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
 
-            var isKeyAvailable = Scene.GetLayer((int)EntityLayer.Creatures).Entities.TryAdd(newPosition, Entity);
+            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
 
-            if (isKeyAvailable)
+            if (isMoveValid)
             {
-                Scene.GetLayer((int)EntityLayer.Creatures).Entities.Remove(Entity.Position);
-                Entity.Position = newPosition;
-                return NodeStates.Success;
+                return NodeStates.Running;
             }
-            return NodeStates.Failure;
+            else
+            {
+                return NodeStates.Failure;
+            }
         }
     }
 }

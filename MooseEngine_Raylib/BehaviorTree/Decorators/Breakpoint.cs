@@ -1,4 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
@@ -8,6 +9,10 @@ namespace MooseEngine.BehaviorTree.Decorators
         private string m_message;
 
         public Breakpoint(string message) : base()
+        {
+            m_message = message;
+        }
+        public Breakpoint(INode node, string message) : base(node)
         {
             m_message = message;
         }

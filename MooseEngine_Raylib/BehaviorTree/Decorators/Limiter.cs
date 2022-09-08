@@ -1,14 +1,20 @@
 ﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {
     public class Limiter : DecoratorBase
     {
-        private static int m_currentRepeats;
+        private int m_currentRepeats;
         private int m_numRepeats;
 
         public Limiter(int numRepeats) : base()
+        {
+            Reset();
+            m_numRepeats = numRepeats;
+        }
+        public Limiter(INode node, int numRepeats) : base(node)
         {
             Reset();
             m_numRepeats = numRepeats;

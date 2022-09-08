@@ -1,4 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
@@ -6,6 +7,8 @@ namespace MooseEngine.BehaviorTree.Decorators
     public class AlwaysSuccess : DecoratorBase
     {
         public AlwaysSuccess() : base() { }
+
+        public AlwaysSuccess(INode node) : base(node) { }
 
         public override NodeStates Evaluate()
         {

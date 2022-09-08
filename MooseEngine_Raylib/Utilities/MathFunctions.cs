@@ -41,7 +41,7 @@ public static class MathFunctions
         return (int)Math.Sqrt(distance.X * distance.X + distance.Y * distance.Y);
     }
 
-    public static bool AABBCollisionDetection(Vector2 positionA, Vector2 sizeA, Vector2 positionB, Vector2 sizeB)
+    public static bool IsOverlappingAABB(Vector2 positionA, Vector2 sizeA, Vector2 positionB, Vector2 sizeB)
     {
         var aLft = positionA.X - sizeA.X;
         var bRgt = positionB.X + sizeB.X;

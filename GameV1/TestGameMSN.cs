@@ -104,7 +104,7 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 256; i++)
+        for (int i = 0; i < 64; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(3, 24) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
@@ -139,25 +139,38 @@ internal class TestGameMSN : IGame
         //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
         //);
 
-        guard_02Tree.Add(Serializer()
-                .Add(Action(new CommandPatrolRectangularArea(
+        //guard_02Tree.Add(Serializer(
+        //        Action(new CommandPatrolRectangularArea(
+        //            _scene,
+        //            guard_02,
+        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
+        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)),
+        //        Action(new CommandIdle()),
+        //        Action(new CommandIdle())
+        //        )
+        //    );
+
+        guard_02Tree.Add(Serializer(
+                Action(new CommandPatrolRectangularArea(
                     _scene,
                     guard_02,
                     light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandIdle()))
-                .Add(Action(new CommandIdle()))
+                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay( Action(new CommandIdle()), 3)
+                )
             );
-        
+
         btrees.Add(guard_02Tree);
 
         // Druid behavior tree
         var druidTree = new BTree(druid);
 
         // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer()
-                .Add(Delay(1)
-                    .Add(Action(new CommandMoveToEntity(_scene, druid, player)))
+        druidTree.Add(Serializer(
+                Delay( 
+                    Action(new CommandMoveToEntity(_scene, druid, player)), 1
+                    )
                 )
             );
 
@@ -174,27 +187,6 @@ internal class TestGameMSN : IGame
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
-
-        //guard_01Tree.Add(Serializer().Add(
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
-        //        )
-        //    );
-
-        //guard_01Tree.Add(Serializer()
-        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-        //                .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-        //       );
-
-        //guard_01Tree.Add(Sequence()
-        //        .Add(Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)))
-        //        .Add(Action(new CommandMoveToTarget(_scene, guard_01)))
-
-        //    );
 
         btrees.Add(guard_01Tree);
 
@@ -249,7 +241,11 @@ internal class TestGameMSN : IGame
 
         foreach (LightSource lightSource in lightSources.Values)
         {
-            var isOverlapping = MathFunctions.AABBCollisionDetection(cameraPosition, windowSize, lightSource.Position, new Vector2(lightSource.Range, lightSource.Range));
+            var isOverlapping = MathFunctions.IsOverlappingAABB(
+                cameraPosition, 
+                windowSize, 
+                lightSource.Position, 
+                new Vector2(lightSource.Range, lightSource.Range));
 
             if (isOverlapping)
             {

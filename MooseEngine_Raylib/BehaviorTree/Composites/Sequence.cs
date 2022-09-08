@@ -8,6 +8,8 @@ namespace MooseEngine.BehaviorTree.Composites
     {
         public Sequence() : base() { }
 
+        public Sequence(params INode[] nodes) : base(nodes) { }
+
         public override NodeStates Evaluate()
         {
             bool anyChildRunning = false;

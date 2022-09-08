@@ -8,6 +8,8 @@ namespace MooseEngine.BehaviorTree.Composites
     {
         public Selector() : base() { }
 
+        public Selector(params INode[] nodes) : base(nodes) { }
+
         public override NodeStates Evaluate()
         {
             if (Children != null)
