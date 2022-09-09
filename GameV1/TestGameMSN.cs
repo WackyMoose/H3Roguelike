@@ -1,6 +1,7 @@
 ﻿using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
@@ -10,6 +11,7 @@ using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
+using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
 using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
@@ -51,6 +53,8 @@ internal class TestGameMSN : IGame
     private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
     private ConsolePanel _consolePanel;
+    private StatsPanel _statsPanel;
+    private DebugPanel _debugPanel;
 
     public void Initialize()
     {
@@ -75,13 +79,6 @@ internal class TestGameMSN : IGame
 
         var app = Application.Instance;
         var window = app.Window;
-
-        var consoleSize = new Coords2D(app.Window.Width, 200);
-        var consolePosition = new Coords2D((app.Window.Width / 2) - (consoleSize.X / 2), app.Window.Height - consoleSize.Y);
-
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
         // Spawn items
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
@@ -116,6 +113,7 @@ internal class TestGameMSN : IGame
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
+        druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(druid);
 
         // Randomized walk guard
@@ -133,21 +131,6 @@ internal class TestGameMSN : IGame
 
 
         // Randomized walk guard Behavior tree
-        //var guard_02Tree = new BTree(guard_02);
-
-        // Roam around the campfire
-        //guard_02Tree.Add(Serializer(
-        //        Action(new CommandPatrolRectangularArea(
-        //            _scene,
-        //            guard_02,
-        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay( Action(new CommandIdle()), 
-        //               2)
-        //        )
-        //    );
-
         var guard02Node = Serializer(
                 Action(new CommandPatrolRectangularArea(
                     _scene,
@@ -169,6 +152,7 @@ internal class TestGameMSN : IGame
 
         // Follow the player, but only walk every other turn
         druidTree.Add(Serializer(
+                //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
                 Delay( 
                     Action(new CommandMoveToEntity(_scene, druid, player)), 
                     1)
@@ -197,6 +181,18 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+
+        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+
+        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
+        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
+
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+        _statsPanel = new StatsPanel(player);
+        _debugPanel = new DebugPanel(10, 10, player);
+
+        _scene.SceneCamera = new Camera(player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
         InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
     }
 
@@ -261,9 +257,8 @@ internal class TestGameMSN : IGame
     {
         UIRenderer.DrawFPS(16, 16);
 
-        //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
-        //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
-
         _consolePanel.OnGUI(UIRenderer);
+        _statsPanel.OnGUI(UIRenderer);
+        _debugPanel.OnGUI(UIRenderer);
     }
 }

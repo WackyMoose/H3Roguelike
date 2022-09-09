@@ -25,6 +25,8 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
+            if(Creature.TargetEntity == null) { return NodeStates.Failure; }
+
             // Are we there yet?
             if (Creature.Position == Creature.TargetEntity.Position)
             {
