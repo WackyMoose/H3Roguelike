@@ -33,7 +33,7 @@ public interface IRaylibUIRendererOptions
     //ButtonOptions ButtonOptions { get; set; }
     ListViewOptionsDep ListViewOptions { get; set; }
     ScrollbarOptions ScrollbarOptions { get; set; }
-    SliderOptionsDep SliderOptions { get; set; }
+    //SliderOptionsDep SliderOptions { get; set; }
 
     TextAlignment LabelTextAlignment { get; set; }
     TextAlignment StatusBarTextAlignment { get; set; }
@@ -55,7 +55,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
     //public ButtonOptions ButtonOptions { get; set; }
     public ListViewOptionsDep ListViewOptions { get; set; }
     public ScrollbarOptions ScrollbarOptions { get; set; }
-    public SliderOptionsDep SliderOptions { get; set; }
+    //public SliderOptionsDep SliderOptions { get; set; }
 
     public TextAlignment StatusBarTextAlignment { get; set; }
     public TextAlignment LabelTextAlignment { get; set; }
@@ -79,7 +79,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
         //ButtonOptions = new ButtonOptions();
         ListViewOptions = new ListViewOptionsDep();
         ScrollbarOptions = new ScrollbarOptions();
-        SliderOptions = new SliderOptionsDep();
+        //SliderOptions = new SliderOptionsDep();
 
         StatusBarTextAlignment = TextAlignment.Left;
         LabelTextAlignment = TextAlignment.Left;

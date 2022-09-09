@@ -15,10 +15,7 @@ public class ButtonOptions : TextOptions
     {
     }
     public ButtonOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, float textSpacing, int borderWidth, int padding, TextAlignment textAlignment, bool interactable = true) 
-        : base(position, size, fontSize, textSpacing, borderWidth, padding, textAlignment, interactable)
+        : base(position, size, text, fontSize, textSpacing, borderWidth, padding, textAlignment, interactable)
     {
-        Text = text;
     }
-
-    public string Text { get; set; }
 }

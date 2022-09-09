@@ -19,11 +19,6 @@ public abstract class UIOptionsBase
     public Color BorderPressedColor { get; set; }
     public Color BorderDisabledColor { get; set; }
 
-    public Color TextNormalColor { get; set; }
-    public Color TextFocusedColor { get; set; }
-    public Color TextPressedColor { get; set; }
-    public Color TextDisabledColor { get; set; }
-
     public UIOptionsBase(bool interactable)
 		: this(UIScreenCoords.Zero, UIScreenCoords.One, interactable)
     {
@@ -36,7 +31,8 @@ public abstract class UIOptionsBase
 		Interactable = interactable;
 
 		LineColor = new Color(144, 171, 181, 255);
-		BackgroundColor = new Color(245, 245, 245, 255);
+		BackgroundColor = new Color(48, 15, 10, 255);
+		//BackgroundColor = new Color(245, 245, 245, 255);
 
 		NormalColor = new Color(201, 201, 201, 255);
 		FocusedColor = new Color(201, 239, 254, 255);
@@ -47,10 +43,5 @@ public abstract class UIOptionsBase
         BorderFocusedColor = new Color(91, 178, 217, 255);
         BorderPressedColor = new Color(4, 146, 199, 255);
         BorderDisabledColor = new Color(181, 193, 194, 255);
-
-        TextNormalColor = new Color(104, 104, 104, 255);
-        TextFocusedColor = new Color(108, 155, 188, 255);
-        TextPressedColor = new Color(54, 139, 175, 255);
-        TextDisabledColor = new Color(174, 183, 184, 255);
     }
 }

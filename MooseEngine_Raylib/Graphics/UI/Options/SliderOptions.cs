@@ -2,14 +2,6 @@
 
 public class SliderOptions : TextOptions
 {
-    public string Text { get; set; }
-	public int TextPadding { get; set; }
-
-	public int MaxValue { get; set; }
-	public int MinValue { get; set; }
-
-	public Color Color { get; set; }
-
     public SliderOptions(bool interactable = true)
 		: this(UIScreenCoords.Zero, UIScreenCoords.One, 24, string.Empty, TextAlignment.None, 0, 100, new Color(151, 232, 255, 255), interactable)
     {
@@ -21,9 +13,8 @@ public class SliderOptions : TextOptions
 	}
 
 	public SliderOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, TextAlignment textAlignment, int minValue, int maxValue, Color color, bool interactable = true)
-		: base(position, size, fontSize, interactable)
+		: base(position, size, text, fontSize, interactable)
 	{
-		Text = text;
 		TextAlignment = textAlignment;
 		BorderWidth = 0;
 		Padding = 1;
@@ -33,6 +24,12 @@ public class SliderOptions : TextOptions
 		MinValue = minValue;
 		Color = color;
 	}
+
+    public int TextPadding { get; set; }
+    public int MaxValue { get; set; }
+    public int MinValue { get; set; }
+
+    public Color Color { get; set; }
 }
 
 [Obsolete]

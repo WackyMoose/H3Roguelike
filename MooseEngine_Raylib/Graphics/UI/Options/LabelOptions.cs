@@ -13,10 +13,7 @@ public class LabelOptions : TextOptions
     }
 
     public LabelOptions(UIScreenCoords position, int fontSize, string text)
-    : base(position, UIScreenCoords.Zero, fontSize, false)
+    : base(position, UIScreenCoords.Zero, text, fontSize, false)
     {
-        Text = text;
     }
-
-    public string Text { get; set; }
 }

@@ -42,7 +42,7 @@ internal class RaylibUIRenderer : IUIRenderer
         // Draw control
         //--------------------------------------------------------------------
         var textBounds = labelOptions.GetTextBounds();
-        GuiDrawText(labelOptions.Text, textBounds, GetTextColorByState(_guiState));
+        GuiDrawText(labelOptions.Text, textBounds, labelOptions.TextNormalColor); //  GetTextColorByState(_guiState)
         //--------------------------------------------------------------------
     }
 
@@ -149,12 +149,12 @@ internal class RaylibUIRenderer : IUIRenderer
         var statusBarRectangle = panelOptions.GetStatusBarRectangle();
 
         // Text will be drawn as a header bar (if provided)
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title) && (bounds.height < panelOptions.StatusBarHeight * 2.0f))
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text) && (bounds.height < panelOptions.StatusBarHeight * 2.0f))
         {
             bounds.height = panelOptions.StatusBarHeight * 2;
         }
 
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title))
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
         {
             // Move panel bounds after the header bar
             bounds.y += panelOptions.StatusBarHeight - 1;
@@ -163,9 +163,13 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title))
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
         {
-            GuiStatusBar(statusBarRectangle, panelOptions.Title);  // Draw panel header as status bar
+            var borderColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.BorderNormalColor;
+            var baseColor = state == GuiState.STATE_DISABLED ? panelOptions.DisabledColor : panelOptions.NormalColor;
+            var textColor = state == GuiState.STATE_DISABLED ? panelOptions.TextDisabledColor : panelOptions.TextNormalColor;
+
+            GuiStatusBar(statusBarRectangle, panelOptions.Text, panelOptions.BorderWidth, borderColor, baseColor, textColor);  // Draw panel header as status bar
         }
 
         var lineColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.LineColor;
@@ -198,12 +202,12 @@ internal class RaylibUIRenderer : IUIRenderer
 
         var useScrollBar = (listViewOptions.ItemHeight + listViewOptions.ItemSpacing) * count > bounds.height;
 
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title) && (bounds.height < listViewOptions.StatusBarHeight * 2.0f))
+        if (!string.IsNullOrWhiteSpace(listViewOptions.Text) && (bounds.height < listViewOptions.StatusBarHeight * 2.0f))
         {
             bounds.height = listViewOptions.StatusBarHeight * 2;
         }
 
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title))
+        if (!string.IsNullOrWhiteSpace(listViewOptions.Text))
         {
             // Move panel bounds after the header bar
             bounds.y += listViewOptions.StatusBarHeight - 1;
@@ -286,9 +290,13 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title))
+        if (!string.IsNullOrWhiteSpace(listViewOptions.Text))
         {
-            GuiStatusBar(statusBarRectangle, listViewOptions.Title);  // Draw panel header as status bar
+            var borderColor = state == GuiState.STATE_DISABLED ? listViewOptions.BorderDisabledColor : listViewOptions.BorderNormalColor;
+            var baseColor = state == GuiState.STATE_DISABLED ? listViewOptions.DisabledColor : listViewOptions.NormalColor;
+            var textColor = state == GuiState.STATE_DISABLED ? listViewOptions.TextDisabledColor : listViewOptions.TextNormalColor;
+
+            GuiStatusBar(statusBarRectangle, listViewOptions.Text, listViewOptions.BorderWidth, borderColor, baseColor, textColor);  // Draw panel header as status bar
         }
 
         GuiDrawRectangle(bounds, listViewOptions.BorderWidth, GetBorderColorByState(state), listViewOptions.BackgroundColor);     // Draw background
@@ -540,18 +548,11 @@ internal class RaylibUIRenderer : IUIRenderer
     }
 
     // Status Bar control
-    private void GuiStatusBar(Rectangle bounds, string text)
+    private void GuiStatusBar(Rectangle bounds, string text, int borderWidth, Color borderColor, Color baseColor, Color textColor)
     {
-        var state = _guiState;
-        var colors = UIRendererOptions.Colors;
-
         // Draw control
         //--------------------------------------------------------------------
-        var borderColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.BorderNormalColor;
-        var baseColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.NormalColor;
-        var textColor = state == GuiState.STATE_DISABLED ? colors.TextDisabledColor : colors.TextNormalColor;
-
-        GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, borderColor, baseColor);
+        GuiDrawRectangle(bounds, borderWidth, borderColor, baseColor);
         GuiDrawText(text, GetTextBounds(bounds), textColor);
         //--------------------------------------------------------------------
     }
