@@ -122,6 +122,7 @@ internal class RaylibUIRenderer : IUIRenderer
         // Draw control
         //--------------------------------------------------------------------
         GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
+        //var textColor = sliderOptions.TextNormalColor; 
 
         // Draw slider internal bar (depends on state)
         if (!sliderOptions.Interactable)

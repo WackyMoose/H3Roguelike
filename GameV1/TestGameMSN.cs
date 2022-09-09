@@ -80,13 +80,6 @@ internal class TestGameMSN : IGame
         var app = Application.Instance;
         var window = app.Window;
 
-        var consoleSize = new Coords2D(app.Window.Width, 200);
-        var consolePosition = new Coords2D((app.Window.Width / 2) - (consoleSize.X / 2), app.Window.Height - consoleSize.Y);
-
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-
         // Spawn items
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(doubleAxe);

@@ -43,7 +43,7 @@ internal class StatsPanel
         var portraitPosition = new UIScreenCoords(1200 + (400 - portaitSize.X - 10), 25);
         _portraitOptions = new ImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
 
-        _player.Stats.Stamina = 9999;
+        _player.Stats.Strength = 9999;
         _player.Stats.Agility = 9999;
         _player.Stats.Toughness = 9999;
         _player.Stats.Perception = 9999;
@@ -52,7 +52,7 @@ internal class StatsPanel
         _player.Stats.Fatigue = 100;
 
         var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
-        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, 96, $"STR: {_player.Stats.Stamina}");
+        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, 96, $"STR: {_player.Stats.Strength}");
 
         var agilityLabelPosition = new UIScreenCoords(startPosition.X + 4, 70);
         _agilityLabelOptions = new LabelOptions(agilityLabelPosition, 96, $"AGI: {_player.Stats.Agility}");

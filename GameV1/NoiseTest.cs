@@ -7,6 +7,7 @@ using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
+using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
 using System.Threading;
