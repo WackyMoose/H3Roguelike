@@ -1,15 +1,26 @@
-﻿namespace MooseEngine.Graphics;
+﻿using MooseEngine.Graphics.UI.Options;
+using Raylib_cs;
+using System.Drawing;
 
-public enum TextAlignment : uint
+namespace MooseEngine.Graphics;
+
+//public enum TextAlignment : uint
+//{
+//    Left = 0,
+//    Center,
+//    Right,
+//}
+
+public enum ScrollbarSide
 {
-    TEXT_ALIGN_LEFT = 0,
-    TEXT_ALIGN_CENTER,
-    TEXT_ALIGN_RIGHT,
+    Left,
+    Right
 }
 
 public interface IRaylibUIRendererOptions
 {
     int FontSize { get; set; }
+    Font Font { get; set; }
 
     int BorderWidth { get; set; }
     int TextPadding { get; set; }
@@ -18,19 +29,20 @@ public interface IRaylibUIRendererOptions
     int ComboButtonWidth { get; set; }
     int ComboButtonSpacing { get; set; }
 
+    ColorOptions Colors { get; set; }
+    //ButtonOptions ButtonOptions { get; set; }
+    ListViewOptionsDep ListViewOptions { get; set; }
+    ScrollbarOptions ScrollbarOptions { get; set; }
+    SliderOptionsDep SliderOptions { get; set; }
+
     TextAlignment LabelTextAlignment { get; set; }
     TextAlignment StatusBarTextAlignment { get; set; }
-
-    Color? BaseColor { get; set; }
-    Color? LineColor { get; set; }
-    Color? TextColor { get; set; }
-    Color? BorderColor { get; set; }
-    Color? BackgroundColor { get; set; }
 }
 
 internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
 {
     public int FontSize { get; set; }
+    public Font Font { get; set; }
 
     public int BorderWidth { get; set; }
     public int TextPadding { get; set; }
@@ -39,23 +51,22 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
     public int ComboButtonWidth { get; set; }
     public int ComboButtonSpacing { get; set; }
 
+    public ColorOptions Colors { get; set; }
+    //public ButtonOptions ButtonOptions { get; set; }
+    public ListViewOptionsDep ListViewOptions { get; set; }
+    public ScrollbarOptions ScrollbarOptions { get; set; }
+    public SliderOptionsDep SliderOptions { get; set; }
+
     public TextAlignment StatusBarTextAlignment { get; set; }
     public TextAlignment LabelTextAlignment { get; set; }
-
-    public Color? BaseColor { get; set; }
-    public Color? LineColor { get; set; }
-    public Color? TextColor { get; set; }
-    public Color? BorderColor { get; set; }
-    public Color? BackgroundColor { get; set; }
 
     public RaylibUIRendererOptions(int fontSize)
     {
         FontSize = fontSize;
-        BaseColor = new Color(201, 201, 201, 255);
-        LineColor = new Color(0, 0, 0, 255);
-        TextColor = new Color(104, 104, 104, 255);
-        BorderColor = new Color(131, 131, 131, 255);
-        BackgroundColor = new Color(245, 245, 245, 255);
+
+        var path = @"..\..\..\Resources\Fonts\Retro_Gaming.ttf";
+
+        Font = File.Exists(path) ? Raylib.LoadFont(path) : Raylib.GetFontDefault();
 
         BorderWidth = 1;
         TextPadding = 4;
@@ -64,22 +75,14 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
         ComboButtonWidth = 32;
         ComboButtonSpacing = 2;
 
-        StatusBarTextAlignment = TextAlignment.TEXT_ALIGN_LEFT;
-        LabelTextAlignment = TextAlignment.TEXT_ALIGN_LEFT;
+        Colors = new ColorOptions();
+        //ButtonOptions = new ButtonOptions();
+        ListViewOptions = new ListViewOptionsDep();
+        ScrollbarOptions = new ScrollbarOptions();
+        SliderOptions = new SliderOptionsDep();
+
+        StatusBarTextAlignment = TextAlignment.Left;
+        LabelTextAlignment = TextAlignment.Left;
     }
 }
 
-/*
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BORDER_COLOR_NORMAL, 0x838383ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BASE_COLOR_NORMAL, 0xc9c9c9ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_NORMAL, 0x686868ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BORDER_COLOR_FOCUSED, 0x5bb2d9ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BASE_COLOR_FOCUSED, 0xc9effeff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_FOCUSED, 0x6c9bbcff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BORDER_COLOR_PRESSED, 0x0492c7ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BASE_COLOR_PRESSED, 0x97e8ffff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_PRESSED, 0x368bafff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BORDER_COLOR_DISABLED, 0xb5c1c2ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.BASE_COLOR_DISABLED, 0xe6e9e9ff);
-GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_DISABLED, 0xaeb7b8ff);
-*/
