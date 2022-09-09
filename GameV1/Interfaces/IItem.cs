@@ -6,7 +6,7 @@ namespace GameV1.Interfaces
     {
         int Durability { get; set; }
         int MaxValue { get; set; }
-        List<Material> Materials { get; set; }
+        IEnumerable<IMaterial>? Materials { get; set; }
         bool IsBroken { get; }
     }
 }

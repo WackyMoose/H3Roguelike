@@ -1,19 +1,23 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 
 namespace GameV1.Commands
 {
     internal class CommandInteract : Command
     {
-        public CommandInteract(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
+        public CommandInteract(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
-
+            return NodeStates.Success;
         }
     }
 }

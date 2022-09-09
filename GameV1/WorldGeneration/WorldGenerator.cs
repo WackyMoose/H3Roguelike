@@ -21,17 +21,17 @@ namespace GameV1.WorldGeneration
                                                                      new Coords2D(4, 10),
                                                                      new Coords2D(5, 10)};
 
-        private static int[] walkableIds = new int[]{};
+        private static int[] walkableIds = new int[] { };
 
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref IEntityLayer<Tile> tileLayer) 
+        public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(501,501,seed,new Coords2D(51*Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
-            
+            var world = new World(501, 501, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
+
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
-            
+
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
@@ -45,30 +45,25 @@ namespace GameV1.WorldGeneration
                     var rand = Randomizer.RandomInt(0, 3);
                     var coord = _grassTilesCoords[rand];
 
-                    var posA = new Vector2(tile.Key.X, tile.Key.Y);
-                    var posB = new Vector2(world.StartPos.X, world.StartPos.Y);
-
-                    var dist = Vector2.Distance(posB, posA);
-                    var maxDist = Vector2.Distance(new Vector2(0, 0), posB);
-                    var inLerp = MathFunctions.InverseLerp(maxDist, 0, dist);
-                    var lerp = MathFunctions.Lerp(65, 255, inLerp);
-                    var color = new Color((int)lerp, (int)lerp, (int)lerp, 255);
-
-                    Tile grass = new Tile("Grass", true, coord, color);
+                    Tile grass = new Tile("Grass", true, coord, Color.White);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
-                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 }
-
-                //Generate water with perlin noise..
-                if (tile.Value > 0.8)
+                else
                 {
-
-                    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
-                    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
-                    world.AddTile(tile.Key, water);
-                    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
+                    Tile grass = new Tile("Grass", true, new Coords2D(1, 1), Color.White);
+                    grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                    world.AddTile(tile.Key, grass);
                 }
+                ////Generate water with perlin noise..
+                //if (tile.Value > 0.8)
+                //{
+
+                //    Tile water = new Tile("Water", true, new Coords2D(12, 8), Color.White);
+                //    water.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                //    world.AddTile(tile.Key, water);
+                //    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
+                //}
             }
             //Console.WriteLine("Grass Done");
             //Console.WriteLine("--------------------------------");
@@ -91,7 +86,7 @@ namespace GameV1.WorldGeneration
                         world.AddTile(coord, treeTile);
                     }
                 }
-                
+
                 //Console.WriteLine("Forest Done");
                 //Console.WriteLine("--------------------------------");
 
@@ -124,7 +119,7 @@ namespace GameV1.WorldGeneration
                 for (int i = 0; i < _startVillageData[k].Count; i++)
                 {
                     Tile spriteTile = new Tile("StartVillage", _startVillageData[k][i].IsWalkable, _startVillageData[k][i].SpriteCoords);
-                    spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y-(5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
+                    spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y - (5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
@@ -133,9 +128,19 @@ namespace GameV1.WorldGeneration
             //Console.WriteLine("Starter Village Done");
             //Console.WriteLine("--------------------------------");
 
+            scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
+            scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
+
             foreach (var tile in world.WorldTiles)
             {
-                tileLayer?.Add(tile.Value);
+                if (tile.Value.IsWalkable == true)
+                {
+                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key,tile.Value);
+                }
+                else
+                {
+                    scene.GetLayer((int)EntityLayer.NonWalkableTiles).Entities.Add(tile.Key, tile.Value);
+                }
             }
 
             return true;

@@ -1,9 +1,4 @@
 ﻿using GameV1.Categories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Interfaces
 {
@@ -11,7 +6,7 @@ namespace GameV1.Interfaces
     {
         MaterialCategory Category { get; }
         string Name { get; }
-        double StrengthModifier { get; }
-        double ValueModifier { get; }
+        float StrengthModifier { get; }
+        float ValueModifier { get; }
     }
 }

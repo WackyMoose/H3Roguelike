@@ -1,47 +1,42 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Utilities;
-using System.Xml.Linq;
 
 namespace GameV1.Entities
 {
-    public abstract class Container<TSlot, TItem> : Item, IContainer<TSlot, TItem> where TSlot : ISlot<TItem> where TItem : IItem
+    public abstract class Container<TItem> : Item, IContainer<TItem> where TItem : IItem
     {
         public int MaxSlots { get; set; }
-        public List<TSlot> Slots { get; set; }
+        public IEnumerable<ISlot<TItem>> Slots { get; set; }
 
-        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
             MaxSlots = maxSlots;
-            Slots = new List<TSlot>();
+            Slots = new List<ISlot<TItem>>();
         }
 
-        public Container(Container<TSlot, TItem> container)
-            : base(container.Durability, container.MaxValue, container.Name, container.SpriteCoords, container.ColorTint)
+        public bool AddItemToFirstEmptySlot(TItem item)
         {
-            MaxSlots = container.MaxSlots;
-            Materials = container.Materials;
-
-            Slots = new List<TSlot>();
-
-            //foreach(TSlot slot in container.Slots)
-            //{
-            //    Slots.Add(new Slot<TItem>() );
-            //    AddItemToSlot()
-            //}
-            
-            //foreach (TSlot slot in container.Slots)
-            //{
-            //    if(!slot.IsEmpty)
-            //    {
-            //        AddItemToSlot(slot.Item, slot);
-            //    }
-            //}
+            foreach (var slot in Slots)
+            {
+                if (slot.IsEmpty == true)
+                {
+                    slot.Add(item);
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public abstract bool AddItemToSlot(TItem item, TSlot slot);
+        public bool AddItemToSlot(TItem item, ISlot<TItem> slot)
+        {
+            return slot.Add(item);
+        }
 
-        public abstract TItem? RemoveItemFromSlot(TSlot slot);
+        public TItem? RemoveItemFromSlot(ISlot<TItem> slot)
+        {
+            return slot.Remove();
+        }
     }
 }

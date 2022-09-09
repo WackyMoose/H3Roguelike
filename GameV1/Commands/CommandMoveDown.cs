@@ -1,6 +1,5 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -8,20 +7,28 @@ namespace GameV1.Commands
 {
     public class CommandMoveDown : Command
     {
-        public CommandMoveDown(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
+        public CommandMoveDown(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
             var newPosition = Entity.Position + new Vector2(0, Constants.DEFAULT_ENTITY_SIZE);
 
-            var isKeyAvailable = EntityLayer.Entities.TryAdd(newPosition, Entity);
-            
-            if(isKeyAvailable)
+            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
+
+            if (isMoveValid)
             {
-                EntityLayer.Entities.Remove(Entity.Position);
-                Entity.Position = newPosition;
+                return NodeStates.Running;
+            }
+            else
+            {
+                return NodeStates.Failure;
             }
         }
     }

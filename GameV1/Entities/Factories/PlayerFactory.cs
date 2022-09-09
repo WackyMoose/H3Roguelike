@@ -11,14 +11,14 @@ public interface IPlayerFactory : ISceneEntityFactory
 
 public class PlayerFactory : SceneEntityFactory, IPlayerFactory
 {
-    public PlayerFactory(ISceneFactory sceneFactory) 
+    public PlayerFactory(ISceneFactory sceneFactory)
         : base(sceneFactory)
     {
     }
 
     public Player CreatePlayer()
     {
-        var player = new Player("Player", 120, 1000, new Coords2D(4, 0));
+        var player = new Player("Player", 120, new Coords2D(4, 0));
 
         //AddToScene(player);
 

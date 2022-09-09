@@ -15,6 +15,7 @@ public interface IEntityLayer<TEntity> : IEntityLayer
 {
     void Add(TEntity entity);
     void Remove(TEntity entity);
+    void RemoveAll();
 }
 
 public class EntityLayer<TEntity> : IEntityLayer<TEntity>
@@ -35,5 +36,10 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
     public void Remove(TEntity entity)
     {
         Entities.Remove(entity.Position);
+    }
+
+    public void RemoveAll() 
+    {
+        Entities.Clear();
     }
 }

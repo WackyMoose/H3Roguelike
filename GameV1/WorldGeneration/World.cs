@@ -20,7 +20,7 @@ namespace GameV1.WorldGeneration
             StartPos = startPos;
         }
 
-        public void AddTile(Coords2D coord, Tile newTile) 
+        public void AddTile(Coords2D coord, Tile newTile)
         {
             if (WorldTiles.ContainsKey(coord))
             {

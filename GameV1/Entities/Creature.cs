@@ -10,19 +10,19 @@ namespace GameV1.Entities
     public class Creature : Entity, ICreature
     {
         public CreatureSpeciesCategory Species { get; set; }
-        public List<Skill> Skills { get; set; }
+        public IEnumerable<ISkill> Skills { get; set; }
         public CreatureStats Stats { get; set; }
-        public Inventory Inventory { get; set; }
-        public List<CreatureSpeciesCategory> EnemySpecies { get; set; }
-        public List<Creature> EnemyCreatures { get; set; }
+        public IInventory Inventory { get; set; }
+        public IEnumerable<CreatureSpeciesCategory> EnemySpecies { get; set; }
+        public IEnumerable<ICreature> EnemyCreatures { get; set; }
         public override bool IsDead { get { return Stats.Health <= 0; } }
-        public Slot<Weapon> MainHand { get; set; }
-        public Slot<Weapon> OffHand { get; set; }
-        public Slot<Armor> Chest { get; set; }
+        public ISlot<IWeapon> MainHand { get; set; }
+        public ISlot<IWeapon> OffHand { get; set; }
+        public ISlot<IArmor> Chest { get; set; }
         public IWeapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
         public IEntity? TargetEntity { get; set; }
 
-        public Creature(string name, int movementPoints, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public Creature(string name, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
@@ -30,15 +30,14 @@ namespace GameV1.Entities
             Inventory = new Inventory(16, 0, 0);
             EnemySpecies = new List<CreatureSpeciesCategory>();
             EnemyCreatures = new List<Creature>();
-            MainHand = new Slot<Weapon>();
-            OffHand = new Slot<Weapon>();
-            Chest = new Slot<Armor>();
+            MainHand = new Slot<IWeapon>();
+            OffHand = new Slot<IWeapon>();
+            Chest = new Slot<IArmor>();
 
-            Stats.MovementPoints = movementPoints;
             Stats.Health = health;
         }
 
-        public Creature(string name, int movementPoints, int health, Coords2D spriteCoords) : base(name, spriteCoords)
+        public Creature(string name, int health, Coords2D spriteCoords) : base(name, spriteCoords)
         {
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
@@ -46,11 +45,10 @@ namespace GameV1.Entities
             Inventory = new Inventory(16, 0, 0);
             EnemySpecies = new List<CreatureSpeciesCategory>();
             EnemyCreatures = new List<Creature>();
-            MainHand = new Slot<Weapon>();
-            OffHand = new Slot<Weapon>();
-            Chest = new Slot<Armor>();
+            MainHand = new Slot<IWeapon>();
+            OffHand = new Slot<IWeapon>();
+            Chest = new Slot<IArmor>();
 
-            Stats.MovementPoints = movementPoints;
             Stats.Health = health;
         }
 

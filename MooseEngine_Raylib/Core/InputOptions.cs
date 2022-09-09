@@ -6,6 +6,11 @@
         Down,
         Left,
         Right,
-        Idle
+        PickUp,
+        Interact,
+        TabCreatures,
+        Idle,
+        QuitToMenu,
+        QuitGame
     }
 }

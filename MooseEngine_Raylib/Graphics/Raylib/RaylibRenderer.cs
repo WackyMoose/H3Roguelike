@@ -1,11 +1,9 @@
 ﻿using MooseEngine.Extensions.Runtime;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Scenes.Extensions;
 using MooseEngine.Utilities;
 using Raylib_cs;
 using System.Numerics;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace MooseEngine.Graphics;
 

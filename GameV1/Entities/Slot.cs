@@ -1,7 +1,4 @@
 ﻿using GameV1.Interfaces;
-using MooseEngine.Graphics;
-using MooseEngine.Scenes;
-using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {

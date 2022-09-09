@@ -4,7 +4,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Weapon : Item, IWeapon, IQuickSlottable
+    public class Weapon : Item, IWeapon
     {
         #region Properties
         public int Range { get; set; }
@@ -18,7 +18,8 @@ namespace GameV1.Entities
         #endregion
 
         #region Constructors
-        public Weapon(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
+        public Weapon(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+            : base(durability, maxValue, name, spriteCoords, colorTint)
         {
         }
         #endregion
@@ -36,12 +37,10 @@ namespace GameV1.Entities
         #region Methods
         public override void Initialize()
         {
-            //throw new NotImplementedException();
         }
 
         public override void Update(float deltaTime)
         {
-            //throw new NotImplementedException();
         }
         #endregion
 

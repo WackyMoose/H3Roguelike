@@ -1,15 +1,15 @@
 ﻿using MooseEngine.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MooseEngine.Interfaces;
+using System.Numerics;
 
 namespace GameV1.Interfaces
 {
     public interface ILightSource : IItem
     {
-        public int Range { get; set; }
-        public Color TintModifier { get; set; }
+        int Range { get; set; }
+        Color TintModifier { get; set; }
+        IDictionary<Vector2, Color> Tints { get; set; }
+
+        void Illuminate(IScene scene);
     }
 }

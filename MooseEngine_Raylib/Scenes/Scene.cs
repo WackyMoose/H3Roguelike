@@ -2,12 +2,13 @@
 using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace MooseEngine.Scenes;
 
-internal class Scene : Disposeable, IScene
+public class Scene : Disposeable, IScene
 {
     private IDictionary<int, IEntityLayer> _entityLayers;
 
@@ -24,6 +25,13 @@ internal class Scene : Disposeable, IScene
         return _entityLayers[layer];
     }
 
+    // Pathfinding
+    private Pathfinder _pathfinder = new Pathfinder();
+    private PathMap _pathMap;
+
+    public Pathfinder Pathfinder { get { return _pathfinder; } set { _pathfinder = value; } }
+    public PathMap PathMap { get { return _pathMap; } set { _pathMap = value; } }
+
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
@@ -39,17 +47,45 @@ internal class Scene : Disposeable, IScene
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
 
-    public IEntity? EntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
+    public bool MoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
+    {
+        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+
+        if (isKeyAvailable == true)
+        {
+            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            entity.Position = targetPosition;
+            return true;
+        }
+        return false;
+    }
+
+    public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
+    {
+        Dictionary<Vector2, IEntity> entitiesOfType = new Dictionary<Vector2, IEntity>();
+
+        foreach(var entity in entities.Entities)
+        {
+            if (entity.Value.GetType() == typeof(TType))
+            {
+                entitiesOfType.Add(entity.Key, entity.Value);
+            }
+        }
+
+        return entitiesOfType;
+    }
+
+    public IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> entities, Vector2 position)
     {
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         return entities.ContainsKey(position) ? entities[position] : default;
     }
 
-    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRange(IDictionary<Vector2, IEntity> Tiles, Coords2D position, int distance)
+    public IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
         int distanceSquared = distance * distance;
 
-        Dictionary<Vector2, IEntity> TilesWithinDist = new Dictionary<Vector2, IEntity>();
+        Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
 
         var topLft = new Vector2(position.X - distance, position.Y - distance);
         var btmRgt = new Vector2(position.X + distance, position.Y + distance);
@@ -59,17 +95,38 @@ internal class Scene : Disposeable, IScene
         {
             for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
             {
-                if (Tiles.ContainsKey(v))
+                if (entities.ContainsKey(v))
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
+                    //if (Vector2.DistanceSquared(position, v) <= distanceSquared)
                     {
-                        TilesWithinDist.Add(v, Tiles[v]);
+                        tilesWithinDist.Add(v, entities[v]);
                     }
                 }
             }
         }
 
-        return TilesWithinDist;
+        return tilesWithinDist;
+    }
+
+    public IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight)
+    {
+        Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
+
+        var v = new Vector2();
+
+        for (v.Y = topLeft.Y; v.Y <= bottomRight.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        {
+            for (v.X = topLeft.X; v.X <= bottomRight.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+            {
+                if (entities.ContainsKey(v))
+                {
+                    tilesWithinDist.Add(v, entities[v]);
+                }
+            }
+        }
+
+        return tilesWithinDist;
     }
 
     protected override void DisposeManagedState()
@@ -80,6 +137,7 @@ internal class Scene : Disposeable, IScene
 
     public void UpdateRuntime(float deltaTime)
     {
+
         SceneCamera.Update(deltaTime);
 
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
@@ -87,8 +145,10 @@ internal class Scene : Disposeable, IScene
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
-
+        
+        
         var layers = _entityLayers.Keys;
+        
         Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)
@@ -103,12 +163,13 @@ internal class Scene : Disposeable, IScene
                 {
                     if (entities.ContainsKey(v))
                     {
-                        Renderer.Render((Entity)entities[v], Constants.DEFAULT_ENTITY_SIZE);
+                        Renderer.Render(entities[v], Constants.DEFAULT_ENTITY_SIZE);
                         entities[v].ColorTint = defaultTint;
                     }
                 }
             }
         }
+
         Renderer.EndScene();
     }
 }

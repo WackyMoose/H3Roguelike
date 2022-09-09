@@ -1,10 +1,7 @@
-﻿using GameV1.Commands;
-using GameV1.Commands.Factory;
+﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
-using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 
 namespace GameV1
 {

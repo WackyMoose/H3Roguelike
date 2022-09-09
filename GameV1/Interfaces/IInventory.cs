@@ -1,6 +1,9 @@
-﻿namespace GameV1.Interfaces
+﻿
+using GameV1.Entities;
+
+namespace GameV1.Interfaces
 {
-    public interface IInventory
+    public interface IInventory : IContainer<IItem>
     {
     }
 }

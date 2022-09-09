@@ -1,30 +1,34 @@
-﻿using GameV1.Interfaces;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace GameV1.Commands
 {
     public class CommandMoveUp : Command
     {
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
 
-        public CommandMoveUp(IEntityLayer entityLayer, IEntity entity) : base(entityLayer, entity)
+        public CommandMoveUp(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
-        public override void Execute()
+        public override NodeStates Execute()
         {
             var newPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
 
-            var isKeyAvailable = EntityLayer.Entities.TryAdd(newPosition, Entity);
+            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
 
-            if (isKeyAvailable)
+            if (isMoveValid)
             {
-                EntityLayer.Entities.Remove(Entity.Position);
-                Entity.Position = newPosition;
+                return NodeStates.Running;
+            }
+            else
+            {
+                return NodeStates.Failure;
             }
         }
     }
