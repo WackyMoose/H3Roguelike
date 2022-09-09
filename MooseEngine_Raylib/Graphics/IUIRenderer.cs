@@ -1,4 +1,5 @@
 ﻿using MooseEngine.Core;
+using MooseEngine.Graphics.UI.Options;
 
 namespace MooseEngine.Graphics;
 
@@ -6,11 +7,15 @@ public interface IUIRenderer
 {
     IWindowData WindowData { get; }
 
-    void DrawFPS(int x, int y);
-    void DrawText(string text, int x, int y, int fontScale, Color background, Color fontColor);
+    void Initialize();
 
-    bool DrawButton(int x, int y, string text, bool enabled = true);
-    void DrawLabel(int x, int y, string text);
-    void DrawLine(int x, int y, int width, int height, string text);
-    void DrawPanel(int x, int y, int width, int height, string title, bool enabled = true);
+    void DrawFPS(int x, int y);
+
+    void DrawLabel(LabelOptions labelOptions);
+    bool DrawButton(ButtonOptions buttonOptions);
+    float DrawSliderBar(SliderOptions sliderOptions, float value);
+    void DrawPanel(PanelOptions panelOptions);
+    void DrawImage(ImageOptions imageOptions);
+    int DrawListViewEx(ListViewOptions listViewOptions, IEnumerable<string> items, ref int focus, ref int scrollIndex, int active);
+    void DrawSeperator(SeperatorOptions seperatorOptions);
 }

@@ -55,6 +55,7 @@ public sealed class Application : Disposeable, IApplication
 
         Window.Initialize();
         Renderer.Initialize();
+        UIRenderer.Initialize();
         Input.Initialize(InputAPI);
     }
 
