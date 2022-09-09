@@ -6,7 +6,9 @@ namespace MooseEngine.BehaviorTree.Composites
 {
     public class Sequence : CompositeBase
     {
-        public Sequence() { }
+        public Sequence() : base() { }
+
+        public Sequence(params INode[] nodes) : base(nodes) { }
 
         public override NodeStates Evaluate()
         {
@@ -38,6 +40,11 @@ namespace MooseEngine.BehaviorTree.Composites
 
             State = anyChildRunning ? NodeStates.Running : NodeStates.Success;
             return State;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

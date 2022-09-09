@@ -5,9 +5,7 @@ namespace GameV1.Commands
 {
     internal class CommandIdle : Command
     {
-        public CommandIdle(IScene scene, IEntity entity) : base(scene, entity)
-        {
-        }
+        public CommandIdle() { }
 
         public override NodeStates Execute()
         {

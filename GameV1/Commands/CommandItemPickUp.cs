@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
@@ -6,8 +7,13 @@ namespace GameV1.Commands
 {
     internal class CommandItemPickUp : Command
     {
-        public CommandItemPickUp(IScene scene, IEntity entity) : base(scene, entity)
+        public IScene Scene { get; set; }
+        public IEntity Entity { get; set; }
+
+        public CommandItemPickUp(IScene scene, IEntity entity)
         {
+            Scene = scene;
+            Entity = entity;
         }
 
         public override NodeStates Execute()
@@ -16,7 +22,7 @@ namespace GameV1.Commands
 
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            Item? item = (Item?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
+            IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
 
             if(item != null)
             {

@@ -1,5 +1,6 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 

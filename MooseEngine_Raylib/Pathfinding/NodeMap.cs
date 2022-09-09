@@ -1,15 +1,15 @@
-﻿using GameV1.Entities;
-using MooseEngine.Pathfinding;
+﻿using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 
-namespace GameV1.Pathfinding
+namespace MooseEngine.Pathfinding
 {
-    public class NodeMap
+    public class NodeMap<TType> where TType : class, IPathMappable
     {
-        public PathMap GenerateMap(IEntityLayer<Tile> walkableLayer)
+        public PathMap GenerateMap(IEntityLayer<TType> walkableLayer)
         {
             var map = new PathMap();
-            foreach (Tile tile in walkableLayer.Entities.Values)
+
+            foreach (TType tile in walkableLayer.Entities.Values)
             {
                 var node = new MapNode(tile.Position, tile.PathWeight);
                 map.Map.Add(tile.Position, node);

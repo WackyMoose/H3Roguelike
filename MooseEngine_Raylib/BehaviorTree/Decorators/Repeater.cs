@@ -1,4 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
@@ -8,10 +9,16 @@ namespace MooseEngine.BehaviorTree.Decorators
 
     public class Repeater : DecoratorBase
     {
-        private static int m_currentRepeats;
+        private int m_currentRepeats;
         private int m_numRepeats;
 
-        public Repeater(int numRepeats)
+        public Repeater(int numRepeats) : base()
+        {
+            Reset();
+            m_numRepeats = numRepeats;
+        }
+
+        public Repeater(INode node, int numRepeats) : base(node)
         {
             Reset();
             m_numRepeats = numRepeats;
@@ -52,6 +59,11 @@ namespace MooseEngine.BehaviorTree.Decorators
         public void Reset()
         {
             m_currentRepeats = 0;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }
