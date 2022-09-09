@@ -144,7 +144,6 @@ internal class RaylibUIRenderer : IUIRenderer
     public void DrawPanel(PanelOptions panelOptions)
     {
         var state = _guiState;
-        var colors = UIRendererOptions.Colors;
 
         var bounds = panelOptions.GetBounds();
         var statusBarRectangle = panelOptions.GetStatusBarRectangle();
@@ -169,8 +168,8 @@ internal class RaylibUIRenderer : IUIRenderer
             GuiStatusBar(statusBarRectangle, panelOptions.Title);  // Draw panel header as status bar
         }
 
-        var lineColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.LineColor;
-        var backgroundColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.BackgroundColor;
+        var lineColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.LineColor;
+        var backgroundColor = state == GuiState.STATE_DISABLED ? panelOptions.DisabledColor : panelOptions.BackgroundColor;
 
         GuiDrawRectangle(bounds, panelOptions.BorderWidth, lineColor, backgroundColor);
         //--------------------------------------------------------------------
