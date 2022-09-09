@@ -27,7 +27,7 @@ namespace GameV1.Entities
             Species = new CreatureSpeciesCategory();
             Skills = new List<Skill>();
             Stats = new CreatureStats();
-            Inventory = new Inventory(16, 0, 0);
+            Inventory = new Inventory(8, 0, 0);
             EnemySpecies = new List<CreatureSpeciesCategory>();
             EnemyCreatures = new List<Creature>();
             MainHand = new Slot<IWeapon>();

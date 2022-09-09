@@ -25,22 +25,26 @@ namespace GameV1.Commands
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
             var entitiesWithinRange = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
-            if(entitiesWithinRange.ContainsKey(Creature.Position))
+            if (entitiesWithinRange.ContainsKey(Creature.Position))
             {
                 entitiesWithinRange.Remove(Creature.Position);
             }
 
-            if (entitiesWithinRange != null)
-            {
-                Creature.TargetEntity = entitiesWithinRange.Values.FirstOrDefault();
-                
-                return NodeStates.Success;
-            }
-            else
+            if (entitiesWithinRange.Count == 0) 
             {
                 Creature.TargetEntity = null;
 
-                return NodeStates.Failure;
+                Console.WriteLine($"CheckForCreaturesWithinRange found nothing.");
+
+                return NodeStates.Failure; 
+            }
+            else
+            {
+                Creature.TargetEntity = entitiesWithinRange.Values.FirstOrDefault();
+
+                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetEntity}");
+
+                return NodeStates.Success;
             }
         }
     }

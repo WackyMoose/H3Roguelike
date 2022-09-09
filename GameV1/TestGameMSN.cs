@@ -126,7 +126,7 @@ internal class TestGameMSN : IGame
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_01.MainHand.Add(sword);
         guard_01.Chest.Add(armor);
-        guard_01.Stats.Perception = 16 * Constants.DEFAULT_ENTITY_SIZE;
+        guard_01.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(guard_01);
 
 
@@ -144,18 +144,17 @@ internal class TestGameMSN : IGame
                 );
 
         var guard_02Tree = BehaviorTree(guard_02, guard02Node);
-        
+
         btrees.Add(guard_02Tree);
 
         // Druid behavior tree
         var druidTree = new BTree(druid);
 
-        // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer(
-                //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
-                Delay( 
-                    Action(new CommandMoveToEntity(_scene, druid, player)), 
-                    1)
+        // Follow creatures while inside perception range, but only walk every other turn
+        druidTree.Add(
+            Sequence(
+                Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
+                Delay( Action(new CommandMoveToTarget(_scene, druid)), 1)
                 )
             );
 
@@ -165,13 +164,28 @@ internal class TestGameMSN : IGame
         var guard_01Tree = new BTree(guard_01);
 
         // March along the city walls
-        guard_01Tree.Add(Serializer(
+        guard_01Tree.Add(
+            Selector(
+                Sequence(
+                    Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)),
+                    Action(new CommandMoveToTarget(_scene, guard_01))
+                ), 
+                Serializer(
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
                 )
-            );
+            )
+        );
+
+        //guard_01Tree.Add(Serializer(
+        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+        //    )
+        //);
 
         btrees.Add(guard_01Tree);
 
@@ -221,9 +235,6 @@ internal class TestGameMSN : IGame
             foreach (BTree btree in btrees)
             {
                 btree.Evaluate();
-
-                // Execute AI commands
-                CommandQueue.Execute();
             }
         }
 

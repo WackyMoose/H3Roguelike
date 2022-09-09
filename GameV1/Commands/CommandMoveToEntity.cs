@@ -36,12 +36,12 @@ namespace GameV1.Commands
 
             if (path.Length == 0)
             {
-                return NodeStates.Success;
+                return NodeStates.Running;
             }
 
             m_nextPosition = path[path.Length - 1].Position;
 
-            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
+            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
 
             if (isMoveValid)
             {

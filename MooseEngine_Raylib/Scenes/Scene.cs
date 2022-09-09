@@ -47,13 +47,25 @@ public class Scene : Disposeable, IScene
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
 
-    public bool MoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
+    public bool TryMoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
     {
         bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
 
         if (isKeyAvailable == true)
         {
             GetLayer(entityLayer).Entities.Remove(entity.Position);
+            entity.Position = targetPosition;
+            return true;
+        }
+        return false;
+    }
+
+    public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
+    {
+        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+
+        if (isKeyAvailable == true)
+        {
             entity.Position = targetPosition;
             return true;
         }

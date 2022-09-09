@@ -33,31 +33,35 @@ namespace MooseEngine.BehaviorTree.Composites
 
         public override NodeStates Evaluate()
         {
-            if (Children != null)
+            if (Children == null) 
             {
-                if (m_currentNode == Children.Count)
-                {
-                    State = NodeStates.Success;
-                    Console.WriteLine($"Serializer returns {State} ");
-                    Reset();
-                    return State;
-                }
-
-                switch (Children[m_currentNode].Evaluate())
-                {
-                    case NodeStates.Success:
-                        m_currentNode++;
-                        State = NodeStates.Running;
-                        break;
-                    case NodeStates.Running:
-                        State = NodeStates.Running;
-                        break;
-                    case NodeStates.Failure:
-                        State = NodeStates.Failure;
-                        break;
-
-                }
+                State = NodeStates.Failure;
+                return State;
             }
+            
+            if (m_currentNode == Children.Count)
+            {
+                State = NodeStates.Success;
+                Console.WriteLine($"Serializer returns {State} ");
+                Reset();
+                return State;
+            }
+
+            switch (Children[m_currentNode].Evaluate())
+            {
+                case NodeStates.Success:
+                    m_currentNode++;
+                    State = NodeStates.Running;
+                    break;
+                case NodeStates.Running:
+                    State = NodeStates.Running;
+                    break;
+                case NodeStates.Failure:
+                    State = NodeStates.Failure;
+                    break;
+
+            }
+
             Console.WriteLine($"Serializer returns {State} ");
             return State;
         }

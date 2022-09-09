@@ -42,7 +42,7 @@ namespace GameV1.Commands
 
             m_nextPosition = path[path.Length - 1].Position;
 
-            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
+            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
 
             if (isMoveValid)
             {

@@ -20,7 +20,7 @@ namespace GameV1.Commands
         {
             var newPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
 
-            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
+            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
 
             if (isMoveValid)
             {
