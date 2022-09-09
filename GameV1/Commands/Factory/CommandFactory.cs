@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
@@ -38,7 +39,7 @@ namespace GameV1.Commands.Factory
                 if (entity is Creature && CreaturesAtTargetPosition is not null)
                 {
                     //Console.WriteLine("We are attacking!");
-                    return new CommandAttack(scene, entity, CreaturesAtTargetPosition);
+                    return new CommandAttack(scene, (ICreature)entity, (ICreature)CreaturesAtTargetPosition);
                 }
 
                 // Tile
@@ -49,7 +50,7 @@ namespace GameV1.Commands.Factory
                     if (!tile.IsWalkable)
                     {
                         //Console.WriteLine("Tile in the way!");
-                        return new CommandIdle(scene, entity);
+                        return new CommandIdle();
                     }
                 }
 
@@ -71,7 +72,7 @@ namespace GameV1.Commands.Factory
             if (input == InputOptions.Idle)
             {
                 //Console.WriteLine("We are idling!");
-                return new CommandIdle(scene, entity);
+                return new CommandIdle();
             }
 
             return null;

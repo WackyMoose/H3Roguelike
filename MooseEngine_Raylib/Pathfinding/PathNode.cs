@@ -21,9 +21,4 @@ namespace MooseEngine.Pathfinding
 
         public override void Update(float deltaTime) { }
     }
-
-    public enum PathNodeState
-    {
-        Open, Closed
-    }
 }

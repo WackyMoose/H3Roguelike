@@ -2,6 +2,7 @@
 using MooseEngine.Extensions.Runtime;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -24,6 +25,13 @@ public class Scene : Disposeable, IScene
         return _entityLayers[layer];
     }
 
+    // Pathfinding
+    private Pathfinder _pathfinder = new Pathfinder();
+    private PathMap _pathMap;
+
+    public Pathfinder Pathfinder { get { return _pathfinder; } set { _pathfinder = value; } }
+    public PathMap PathMap { get { return _pathMap; } set { _pathMap = value; } }
+
     private readonly float _defaultEntitySize;
     private ISceneCamera _cameraEntity;
 
@@ -38,6 +46,19 @@ public class Scene : Disposeable, IScene
     public IRenderer Renderer { get; }
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
+
+    public bool MoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
+    {
+        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+
+        if (isKeyAvailable == true)
+        {
+            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            entity.Position = targetPosition;
+            return true;
+        }
+        return false;
+    }
 
     public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
     {
@@ -77,6 +98,7 @@ public class Scene : Disposeable, IScene
                 if (entities.ContainsKey(v))
                 {
                     if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
+                    //if (Vector2.DistanceSquared(position, v) <= distanceSquared)
                     {
                         tilesWithinDist.Add(v, entities[v]);
                     }
@@ -115,6 +137,7 @@ public class Scene : Disposeable, IScene
 
     public void UpdateRuntime(float deltaTime)
     {
+
         SceneCamera.Update(deltaTime);
 
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
@@ -122,8 +145,10 @@ public class Scene : Disposeable, IScene
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
-
+        
+        
         var layers = _entityLayers.Keys;
+        
         Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)
@@ -144,6 +169,7 @@ public class Scene : Disposeable, IScene
                 }
             }
         }
+
         Renderer.EndScene();
     }
 }

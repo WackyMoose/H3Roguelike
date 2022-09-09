@@ -40,4 +40,29 @@ public static class MathFunctions
 
         return (int)Math.Sqrt(distance.X * distance.X + distance.Y * distance.Y);
     }
+
+    public static bool IsOverlappingAABB(Vector2 positionA, Vector2 sizeA, Vector2 positionB, Vector2 sizeB)
+    {
+        var aLft = positionA.X - sizeA.X;
+        var bRgt = positionB.X + sizeB.X;
+
+        if (aLft > bRgt) { return false; }
+
+        var aRgt = positionA.X + sizeA.X;
+        var bLft = positionB.X - sizeB.X;
+
+        if (aRgt < bLft) { return false; }
+
+        var aBtm = positionA.Y + sizeA.Y;
+        var bTop = positionB.Y - sizeB.Y;
+
+        if (aBtm < bTop) { return false; }
+
+        var aTop = positionA.Y - sizeA.Y;
+        var bBtm = positionB.Y + sizeB.Y;
+
+        if (aTop > bBtm) { return false; }
+
+        return true;
+    }
 }

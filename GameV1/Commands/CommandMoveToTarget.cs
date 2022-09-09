@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
@@ -9,30 +10,28 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToEntity : Command
+    public class CommandMoveToTarget : Command
     {
         public IScene Scene { get; set; }
-        public IEntity Entity { get; set; }
+        public ICreature Creature { get; set; }
 
-        private IEntity m_targetEntity;
         private Vector2 m_nextPosition;
 
-        public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity)
+        public CommandMoveToTarget(IScene scene, ICreature creature)
         {
             Scene = scene;
-            Entity = entity;
-            m_targetEntity = targetEntity;
+            Creature = creature;
         }
 
         public override NodeStates Execute()
         {
             // Are we there yet?
-            if (Entity.Position == m_targetEntity.Position)
+            if (Creature.Position == Creature.TargetEntity.Position)
             {
                 return NodeStates.Success;
             }
 
-            var path = Scene.Pathfinder.GetPath(Entity.Position, m_targetEntity.Position, Scene.PathMap);
+            var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetEntity.Position, Scene.PathMap);
 
             if (path.Length == 0)
             {
@@ -41,7 +40,7 @@ namespace GameV1.Commands
 
             m_nextPosition = path[path.Length - 1].Position;
 
-            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
+            var isMoveValid = Scene.MoveEntity((int)EntityLayer.Creatures, Creature, m_nextPosition);
 
             if (isMoveValid)
             {

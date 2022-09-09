@@ -3,18 +3,16 @@ using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
-using MooseEngine.BehaviorTree.Actions;
-using MooseEngine.BehaviorTree.Composites;
-using MooseEngine.BehaviorTree.Decorators;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
+using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System.Collections.Generic;
 using System.Numerics;
-using static MooseEngine.BehaviorTree.NodeFactory;
+using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
 namespace GameV1;
 
@@ -47,9 +45,10 @@ internal class TestGameMSN : IGame
     private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
 
-    private HashSet<Coords2D> forest = new HashSet<Coords2D>();
+    private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
-    private List<BTree> btrees = new List<BTree>();
+    // Layers
+    private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
     private ConsolePanel _consolePanel;
 
@@ -66,6 +65,11 @@ internal class TestGameMSN : IGame
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
 
+        // Spawn world
+        WorldGenerator.GenerateWorld(80085, ref _scene);
+
+        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
@@ -78,9 +82,6 @@ internal class TestGameMSN : IGame
         _consolePanel = new ConsolePanel(consolePosition, consoleSize);
 
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-
-        // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref _scene);
 
         // Spawn items
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
@@ -104,9 +105,9 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 64; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(4, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            var light = new LightSource(Randomizer.RandomInt(3, 24) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
             itemLayer?.Add(light);
         }
@@ -127,26 +128,39 @@ internal class TestGameMSN : IGame
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_01.MainHand.Add(sword);
         guard_01.Chest.Add(armor);
+        guard_01.Stats.Perception = 16 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(guard_01);
 
 
         // Randomized walk guard Behavior tree
-        var guard_02Tree = new BTree(guard_02);
+        //var guard_02Tree = new BTree(guard_02);
 
         // Roam around the campfire
-        //guard_02Tree.Add(Repeater(-1)
-        //    .Add(Action(new CommandPatrolCircularArea(_scene, guard_02, light.Position, 8 * Constants.DEFAULT_ENTITY_SIZE)))
-        //);
+        //guard_02Tree.Add(Serializer(
+        //        Action(new CommandPatrolRectangularArea(
+        //            _scene,
+        //            guard_02,
+        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
+        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+        //            )),
+        //        Delay( Action(new CommandIdle()), 
+        //               2)
+        //        )
+        //    );
 
-        guard_02Tree.Add(Serializer()
-                .Add(Action(new CommandPatrolRectangularArea(
+        var guard02Node = Serializer(
+                Action(new CommandPatrolRectangularArea(
                     _scene,
                     guard_02,
                     light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE)))
-                .Add(Action(new CommandIdle(_scene, guard_02)))
-                .Add(Action(new CommandIdle(_scene, guard_02)))
-            );
+                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay(
+                    Action(new CommandIdle()),
+                    2)
+                );
+
+        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
         
         btrees.Add(guard_02Tree);
 
@@ -154,9 +168,10 @@ internal class TestGameMSN : IGame
         var druidTree = new BTree(druid);
 
         // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer()
-                .Add(Delay(1)
-                    .Add(Action(new CommandMoveToEntity(_scene, druid, player)))
+        druidTree.Add(Serializer(
+                Delay( 
+                    Action(new CommandMoveToEntity(_scene, druid, player)), 
+                    1)
                 )
             );
 
@@ -166,12 +181,13 @@ internal class TestGameMSN : IGame
         var guard_01Tree = new BTree(guard_01);
 
         // March along the city walls
-        guard_01Tree.Add(Serializer()
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-                        .Add(Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)))
-               );
+        guard_01Tree.Add(Serializer(
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                )
+            );
 
         btrees.Add(guard_01Tree);
 
@@ -192,22 +208,20 @@ internal class TestGameMSN : IGame
 
     public void Update(float deltaTime)
     {
-        // Player
+        // Player input
         InputOptions? input = InputHandler.Handle();
 
+        // Generate commands
         ICommand command = CommandFactory.Create(input, _scene, player);
 
         CommandQueue.Add(command);
 
-        // Execute Player commands
         if (!CommandQueue.IsEmpty)
         {
-            //Console.WriteLine("Players turn!");
+            // Execute Player commands
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            //Console.WriteLine("AI's turn!");
-            //AI.Execute(_scene);
             foreach (BTree btree in btrees)
             {
                 btree.Evaluate();
@@ -217,15 +231,27 @@ internal class TestGameMSN : IGame
             }
         }
 
-        // TODO: Wrap in method
+        // TODO: Only illuminate if range within viewport, AABB check
         // Dynamically updated light sources
+        var windowSize = new Vector2(
+            (int)(Application.Instance.Window.Width  * 0.5 - (Application.Instance.Window.Width  * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), 
+            (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
+        var cameraPosition = _scene.SceneCamera.Position;
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
-
         var lightSources = _scene.GetEntitiesOfType<LightSource>(itemLayer);
 
         foreach (LightSource lightSource in lightSources.Values)
         {
-            lightSource.Illuminate(_scene);
+            var isOverlapping = MathFunctions.IsOverlappingAABB(
+                cameraPosition, 
+                windowSize, 
+                lightSource.Position, 
+                new Vector2(lightSource.Range, lightSource.Range));
+
+            if (isOverlapping)
+            {
+                lightSource.Illuminate(_scene);
+            }
         }
 
         _scene?.UpdateRuntime(deltaTime);
