@@ -113,6 +113,7 @@ internal class TestGameMSN : IGame
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
+        druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(druid);
 
         // Randomized walk guard
@@ -130,21 +131,6 @@ internal class TestGameMSN : IGame
 
 
         // Randomized walk guard Behavior tree
-        //var guard_02Tree = new BTree(guard_02);
-
-        // Roam around the campfire
-        //guard_02Tree.Add(Serializer(
-        //        Action(new CommandPatrolRectangularArea(
-        //            _scene,
-        //            guard_02,
-        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay( Action(new CommandIdle()), 
-        //               2)
-        //        )
-        //    );
-
         var guard02Node = Serializer(
                 Action(new CommandPatrolRectangularArea(
                     _scene,
@@ -166,6 +152,7 @@ internal class TestGameMSN : IGame
 
         // Follow the player, but only walk every other turn
         druidTree.Add(Serializer(
+                //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
                 Delay( 
                     Action(new CommandMoveToEntity(_scene, druid, player)), 
                     1)

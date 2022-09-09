@@ -3,6 +3,7 @@ using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -23,15 +24,24 @@ namespace GameV1.Commands
         {
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
             var entitiesWithinRange = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
-            
-            if(entitiesWithinRange != null)
+
+            if(entitiesWithinRange.ContainsKey(Creature.Position))
+            {
+                entitiesWithinRange.Remove(Creature.Position);
+            }
+
+            if (entitiesWithinRange != null)
             {
                 Creature.TargetEntity = entitiesWithinRange.Values.FirstOrDefault();
                 
                 return NodeStates.Success;
             }
+            else
+            {
+                Creature.TargetEntity = null;
 
-            return NodeStates.Failure;
+                return NodeStates.Failure;
+            }
         }
     }
 }

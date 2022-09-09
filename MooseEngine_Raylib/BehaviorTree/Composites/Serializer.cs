@@ -7,15 +7,25 @@ namespace MooseEngine.BehaviorTree.Composites
     // This composite runs a series of tasks, one at a time.
     // It starts with the first, and only steps on to the next once the previous has returned success.
     // Once a task has been completed successfully, it is not evaluated again.
+
+    /// <summary>
+    /// This composite runs a series of tasks, one at a time.
+    /// </summary>
     public class Serializer : CompositeBase
     {
         int m_currentNode;
 
+        /// <summary>
+        /// This composite runs a series of tasks, one at a time.
+        /// </summary>
         public Serializer() : base()
         {
             Reset();
         }
 
+        /// <summary>
+        /// This composite runs a series of tasks, one at a time.
+        /// </summary>
         public Serializer(params INode[] nodes) : base(nodes)
         {
             Reset();
@@ -38,20 +48,16 @@ namespace MooseEngine.BehaviorTree.Composites
                     case NodeStates.Success:
                         m_currentNode++;
                         State = NodeStates.Running;
-                        Console.WriteLine($"Serializer returns {State} ");
-                        return State;
+                        break;
                     case NodeStates.Running:
                         State = NodeStates.Running;
-                        Console.WriteLine($"Serializer returns {State} ");
-                        return State;
+                        break;
                     case NodeStates.Failure:
                         State = NodeStates.Failure;
-                        Console.WriteLine($"Serializer returns {State} ");
-                        return State;
+                        break;
 
                 }
             }
-            State = NodeStates.Failure;
             Console.WriteLine($"Serializer returns {State} ");
             return State;
         }
