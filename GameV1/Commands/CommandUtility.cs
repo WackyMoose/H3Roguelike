@@ -12,7 +12,7 @@ namespace GameV1.Commands
 
         public static Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities)
         {
-            return entities.ElementAt(Randomizer.RandomInt(0, entities.Count)).Value.Position;
+            return entities.ElementAt(Randomizer.RandomInt(0, entities.Count-1)).Value.Position;
         }
 
         public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)

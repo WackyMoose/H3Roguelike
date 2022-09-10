@@ -36,6 +36,11 @@ namespace GameV1.Commands
 
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
+            if (path.Length == 0)
+            {
+                return NodeStates.Success;
+            }
+
             m_nextPosition = path[path.Length - 1].Position;
 
             var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);

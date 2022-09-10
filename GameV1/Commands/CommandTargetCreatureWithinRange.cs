@@ -9,12 +9,12 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandCheckForCreaturesWithinRange : Command
+    public class CommandTargetCreatureWithinRange : Command
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
-        public CommandCheckForCreaturesWithinRange(IScene scene, ICreature creature)
+        public CommandTargetCreatureWithinRange(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;
@@ -23,16 +23,16 @@ namespace GameV1.Commands
         public override NodeStates Execute()
         {
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
-            var entitiesWithinRange = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
+            IDictionary<Vector2, IEntity>? creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
-            if (entitiesWithinRange.ContainsKey(Creature.Position))
+            if (creaturesWithinLayer.ContainsKey(Creature.Position))
             {
-                entitiesWithinRange.Remove(Creature.Position);
+                creaturesWithinLayer.Remove(Creature.Position);
             }
 
-            if (entitiesWithinRange.Count == 0) 
+            if (creaturesWithinLayer.Count == 0) 
             {
-                Creature.TargetEntity = null;
+                Creature.TargetCreature = null;
 
                 Console.WriteLine($"CheckForCreaturesWithinRange found nothing.");
 
@@ -40,9 +40,9 @@ namespace GameV1.Commands
             }
             else
             {
-                Creature.TargetEntity = entitiesWithinRange.Values.FirstOrDefault();
+                Creature.TargetCreature = (ICreature?)creaturesWithinLayer.Values.FirstOrDefault();
 
-                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetEntity}");
+                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetCreature}");
 
                 return NodeStates.Success;
             }

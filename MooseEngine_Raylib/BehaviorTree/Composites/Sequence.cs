@@ -33,7 +33,6 @@ namespace MooseEngine.BehaviorTree.Composites
                         default:
                             State = NodeStates.Success;
                             return State;
-
                     }
                 }
             }

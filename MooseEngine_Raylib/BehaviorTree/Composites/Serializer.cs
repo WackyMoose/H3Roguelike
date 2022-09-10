@@ -33,12 +33,32 @@ namespace MooseEngine.BehaviorTree.Composites
 
         public override NodeStates Evaluate()
         {
+            // TODO: Proceed immediately to next node on success,
+            // Don't wait a turn.
             if (Children == null) 
             {
                 State = NodeStates.Failure;
                 return State;
             }
-            
+
+            //for (int node = 0; node < 10; node++)
+            //{
+            //    if (m_currentNode == Children.Count)
+            //    {
+            //        Reset();
+            //        State = NodeStates.Success;
+            //        break;
+            //    }
+
+            //    //if (State == NodeStates.Success)
+            //    //{
+            //        m_currentNode++;
+            //        Children[m_currentNode].Evaluate();
+            //        State = NodeStates.Running;
+            //        break;
+            //    //}
+            //}
+
             if (m_currentNode == Children.Count)
             {
                 State = NodeStates.Success;
@@ -57,6 +77,7 @@ namespace MooseEngine.BehaviorTree.Composites
                     State = NodeStates.Running;
                     break;
                 case NodeStates.Failure:
+                    //Reset();
                     State = NodeStates.Failure;
                     break;
 

@@ -41,7 +41,7 @@ internal class TestGameMSN : IGame
     public Npc guard_02 = new Npc("City guard", 100, new Coords2D(15, 0));
 
     // Items
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Weapon sword = new Weapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
     private Weapon doubleAxe = new Weapon(100, 100, "Double Axe", new Coords2D(7, 4), Color.White);
     private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
@@ -102,15 +102,21 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 128; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(3, 24) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            // Color(128, 128 - 48, 128 - 96, 255)
+            var color = new Color(
+                128 + Randomizer.RandomInt(-96, 96),
+                128 + Randomizer.RandomInt(-96, 96),
+                128 + Randomizer.RandomInt(-96, 96), 255);
+            var light = new LightSource(Randomizer.RandomInt(2, 32) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
+            //itemLayer?.Add(light);
+            _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position);
         }
 
         // Druid chasing player
-        druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
@@ -148,15 +154,28 @@ internal class TestGameMSN : IGame
         btrees.Add(guard_02Tree);
 
         // Druid behavior tree
-        var druidTree = new BTree(druid);
+        //// Follow creatures while inside perception range, but only walk every other turn
+        //druidTree.Add(
+        //    Sequence(
+        //        Action(new CommandTargetCreatureWithinRange(_scene, druid)),
+        //        Delay( Action(new CommandMoveToTarget(_scene, druid)), 1)
+        //        )
+        //    );
 
+        // Roam around randomly in a part of the map
         // Follow creatures while inside perception range, but only walk every other turn
-        druidTree.Add(
-            Sequence(
-                Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
-                Delay( Action(new CommandMoveToTarget(_scene, druid)), 1)
-                )
+        // When no creatures within range, go back to roaming
+        var druidNode = Selector(
+                Serializer(
+                        Action(new CommandTargetCreatureWithinRange(_scene, druid)),
+                        Action(new CommandMoveToTarget(_scene, druid)),
+                        Action(new CommandAttackTarget(_scene, druid))
+                    ),
+                Action(new CommandPatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
+                
             );
+
+        var druidTree = BehaviorTree(druid, druidNode);
 
         btrees.Add(druidTree);
 
@@ -166,9 +185,10 @@ internal class TestGameMSN : IGame
         // March along the city walls
         guard_01Tree.Add(
             Selector(
-                Sequence(
-                    Action(new CommandCheckForCreaturesWithinRange(_scene, guard_01)),
-                    Action(new CommandMoveToTarget(_scene, guard_01))
+                Serializer(
+                    Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
+                    Action(new CommandMoveToTarget(_scene, guard_01)),
+                    Action(new CommandAttackTarget(_scene, guard_01))
                 ), 
                 Serializer(
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),

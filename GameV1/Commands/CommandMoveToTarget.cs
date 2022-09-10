@@ -25,33 +25,31 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            if(Creature.TargetEntity == null) { return NodeStates.Failure; }
+            if(Creature.TargetCreature == null) { return NodeStates.Failure; }
 
             // Are we there yet?
-            if (Creature.Position == Creature.TargetEntity.Position)
+            if (
+                Creature.Position == Creature.TargetCreature.Position + Constants.Up ||
+                Creature.Position == Creature.TargetCreature.Position + Constants.Down ||
+                Creature.Position == Creature.TargetCreature.Position + Constants.Left ||
+                Creature.Position == Creature.TargetCreature.Position + Constants.Right
+                )
             {
                 return NodeStates.Success;
             }
 
-            var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetEntity.Position, Scene.PathMap);
+            var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetCreature.Position, Scene.PathMap);
 
             if (path.Length == 0)
             {
-                return NodeStates.Success;
+                return NodeStates.Running;
             }
 
             m_nextPosition = path[path.Length - 1].Position;
 
             var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Creature, m_nextPosition);
 
-            if (isMoveValid)
-            {
-                return NodeStates.Running;
-            }
-            else
-            {
-                return NodeStates.Failure;
-            }
+            return isMoveValid ? NodeStates.Running : NodeStates.Failure;
         }
     }
 }

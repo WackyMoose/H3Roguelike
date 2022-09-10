@@ -17,7 +17,7 @@ namespace GameV1.Interfaces
         ISlot<IWeapon> OffHand { get; set; }
         ISlot<IArmor> Chest { get; set; }
         IWeapon? StrongestWeapon { get; }
-        IEntity? TargetEntity { get; set; }
+        ICreature? TargetCreature { get; set; }
 
         void TakeDamage(int damage);
     }

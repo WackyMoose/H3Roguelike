@@ -38,9 +38,19 @@ namespace GameV1.Commands
                 return NodeStates.Success;
             }
 
+            if(m_currentTargetPosition == null)
+            {
+                return NodeStates.Failure;
+            }
+
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
             m_nextPosition = path[path.Length - 1].Position;
+
+            if (path.Length == 0)
+            {
+                return NodeStates.Success;
+            }
 
             var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
 

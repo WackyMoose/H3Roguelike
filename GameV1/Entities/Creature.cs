@@ -20,7 +20,7 @@ namespace GameV1.Entities
         public ISlot<IWeapon> OffHand { get; set; }
         public ISlot<IArmor> Chest { get; set; }
         public IWeapon? StrongestWeapon => MainHand.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
-        public IEntity? TargetEntity { get; set; }
+        public ICreature? TargetCreature { get; set; }
 
         public Creature(string name, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {
