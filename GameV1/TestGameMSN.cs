@@ -42,10 +42,10 @@ internal class TestGameMSN : IGame
 
     // Items
     private Weapon sword = new Weapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
-    private Weapon doubleAxe = new Weapon(100, 100, "Double Axe", new Coords2D(7, 4), Color.White);
-    private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
-    private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
+    private Armor armor = new Armor(100, 10, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private Weapon doubleAxe = new Weapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White);
+    private Weapon crossBow = new Weapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
+    private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
 
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
@@ -58,10 +58,10 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-        sword.MinDamage = 50;
-        sword.MaxDamage = 200;
-        sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
+        sword.MinDamage = 5;
+        sword.MaxDamage = 20;
+        sword.ArmorPenetrationFlat = 5;
+        sword.ArmorPenetrationPercent = 2;
 
         armor.MinDamageReduction = 20;
         armor.MaxDamageReduction = 120;
@@ -91,8 +91,8 @@ internal class TestGameMSN : IGame
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
-        player.MainHand.Add(sword);
-        player.Chest.Add(armor);
+        player.PrimaryWeapon.Add(sword);
+        player.BodyArmor.Add(armor);
         creatureLayer?.Add(player);
 
         // Light sources
@@ -117,53 +117,46 @@ internal class TestGameMSN : IGame
 
         // Druid chasing player
         druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.MainHand.Add(sword);
-        druid.Chest.Add(armor);
+        druid.PrimaryWeapon.Add(sword);
+        druid.BodyArmor.Add(armor);
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(druid);
 
         // Randomized walk guard
         guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_02.MainHand.Add(sword);
-        guard_02.Chest.Add(armor);
+        guard_02.PrimaryWeapon.Add(sword);
+        guard_02.BodyArmor.Add(armor);
         creatureLayer?.Add(guard_02);
 
         // Patrolling guard
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_01.MainHand.Add(sword);
-        guard_01.Chest.Add(armor);
+        guard_01.PrimaryWeapon.Add(sword);
+        guard_01.BodyArmor.Add(armor);
         guard_01.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(guard_01);
 
 
         // Randomized walk guard Behavior tree
-        var guard02Node = Serializer(
-                Action(new CommandPatrolRectangularArea(
-                    _scene,
-                    guard_02,
-                    light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
-                    )),
-                Delay(
-                    Action(new CommandIdle()),
-                    2)
-                );
+        //var guard02Node = Serializer(
+        //        Action(new CommandPatrolRectangularArea(
+        //            _scene,
+        //            guard_02,
+        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
+        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+        //            )),
+        //        Delay(
+        //            Action(new CommandIdle()),
+        //            2)
+        //        );
 
-        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        //var guard_02Tree = BehaviorTree(guard_02, guard02Node);
 
-        btrees.Add(guard_02Tree);
+        //btrees.Add(guard_02Tree);
 
         // Druid behavior tree
-        //// Follow creatures while inside perception range, but only walk every other turn
-        //druidTree.Add(
-        //    Sequence(
-        //        Action(new CommandTargetCreatureWithinRange(_scene, druid)),
-        //        Delay( Action(new CommandMoveToTarget(_scene, druid)), 1)
-        //        )
-        //    );
-
         // Roam around randomly in a part of the map
-        // Follow creatures while inside perception range, but only walk every other turn
+        // Follow creatures while inside perception range
+        // Attack when standing beside creature
         // When no creatures within range, go back to roaming
         var druidNode = Selector(
                 Serializer(
@@ -180,34 +173,26 @@ internal class TestGameMSN : IGame
         btrees.Add(druidTree);
 
         // Roaming guard behavior tree
-        var guard_01Tree = new BTree(guard_01);
+        //var guard_01Tree = new BTree(guard_01);
 
         // March along the city walls
-        guard_01Tree.Add(
-            Selector(
-                Serializer(
-                    Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
-                    Action(new CommandMoveToTarget(_scene, guard_01)),
-                    Action(new CommandAttackTarget(_scene, guard_01))
-                ), 
-                Serializer(
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
-                )
-            )
-        );
-
-        //guard_01Tree.Add(Serializer(
-        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-        //        Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+        //guard_01Tree.Add(
+        //    Selector(
+        //        Sequence(
+        //            Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
+        //            Action(new CommandMoveToTarget(_scene, guard_01)),
+        //            Action(new CommandAttackTarget(_scene, guard_01))
+        //        ), 
+        //        Serializer(
+        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+        //        )
         //    )
         //);
 
-        btrees.Add(guard_01Tree);
+        //btrees.Add(guard_01Tree);
 
         // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
@@ -254,7 +239,10 @@ internal class TestGameMSN : IGame
             // AI NPC / Monster / Critter controls
             foreach (BTree btree in btrees)
             {
-                btree.Evaluate();
+                if(btree.Entity.IsDead == false)
+                {
+                    btree.Evaluate();
+                }
             }
         }
 

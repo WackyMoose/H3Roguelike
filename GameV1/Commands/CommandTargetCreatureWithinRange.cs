@@ -25,12 +25,15 @@ namespace GameV1.Commands
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
             IDictionary<Vector2, IEntity>? creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
+            // Remove self
             if (creaturesWithinLayer.ContainsKey(Creature.Position))
             {
                 creaturesWithinLayer.Remove(Creature.Position);
             }
 
-            if (creaturesWithinLayer.Count == 0) 
+            var creatures = creaturesWithinLayer.Where(creature => creature.Value.IsDead == false).ToDictionary(creature => creature.Key, creature => creature.Value);
+
+            if (creatures.Count == 0) 
             {
                 Creature.TargetCreature = null;
 
@@ -40,7 +43,7 @@ namespace GameV1.Commands
             }
             else
             {
-                Creature.TargetCreature = (ICreature?)creaturesWithinLayer.Values.FirstOrDefault();
+                Creature.TargetCreature = (ICreature?)creatures.Values.FirstOrDefault();
 
                 Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetCreature}");
 

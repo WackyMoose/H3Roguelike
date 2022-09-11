@@ -46,14 +46,7 @@ namespace GameV1.Commands
 
             var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
 
-            if(isMoveValid)
-            {
-                return NodeStates.Running;
-            }
-            else
-            {
-                return NodeStates.Failure;
-            }
+            return isMoveValid ? NodeStates.Running : NodeStates.Failure;
         }
     }
 }

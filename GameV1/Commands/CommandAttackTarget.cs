@@ -17,11 +17,12 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.StrongestWeapon);
-
-            return NodeStates.Success;
-
-            //Console.WriteLine(attacked.Stats.Health);
+            if(Attacker.TargetCreature.IsDead == false)
+            {
+                CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.StrongestWeapon);
+                return NodeStates.Success;
+            }
+            return NodeStates.Failure;
         }
     }
 }

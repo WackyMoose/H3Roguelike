@@ -41,7 +41,7 @@ namespace MooseEngine.BehaviorTree.Composites
                 return State;
             }
 
-            //for (int node = 0; node < 10; node++)
+            //for (int node = m_currentNode; node < Children.Count-1; node++)
             //{
             //    if (m_currentNode == Children.Count)
             //    {
@@ -49,14 +49,15 @@ namespace MooseEngine.BehaviorTree.Composites
             //        State = NodeStates.Success;
             //        break;
             //    }
-
-            //    //if (State == NodeStates.Success)
-            //    //{
-            //        m_currentNode++;
+            //    else
+            //    {
             //        Children[m_currentNode].Evaluate();
+            //        m_currentNode++;
+
             //        State = NodeStates.Running;
             //        break;
-            //    //}
+            //    }
+
             //}
 
             if (m_currentNode == Children.Count)
@@ -71,6 +72,7 @@ namespace MooseEngine.BehaviorTree.Composites
             {
                 case NodeStates.Success:
                     m_currentNode++;
+                    Evaluate();
                     State = NodeStates.Running;
                     break;
                 case NodeStates.Running:
@@ -80,7 +82,6 @@ namespace MooseEngine.BehaviorTree.Composites
                     //Reset();
                     State = NodeStates.Failure;
                     break;
-
             }
 
             Console.WriteLine($"Serializer returns {State} ");

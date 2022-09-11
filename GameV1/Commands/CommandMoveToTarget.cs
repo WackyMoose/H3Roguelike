@@ -40,16 +40,16 @@ namespace GameV1.Commands
 
             var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetCreature.Position, Scene.PathMap);
 
-            if (path.Length == 0)
+            if (path.Length > 0)
             {
-                return NodeStates.Running;
+                m_nextPosition = path[path.Length - 1].Position;
+
+                var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Creature, m_nextPosition);
+
+                return isMoveValid ? NodeStates.Running : NodeStates.Failure;
             }
 
-            m_nextPosition = path[path.Length - 1].Position;
-
-            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Creature, m_nextPosition);
-
-            return isMoveValid ? NodeStates.Running : NodeStates.Failure;
+            return NodeStates.Running;
         }
     }
 }

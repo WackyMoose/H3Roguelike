@@ -10,7 +10,7 @@ namespace GameV1
         {
             int damage = (int)(attacker.Stats.Strength + attackWeapon.Damage);
             //int damage = (int)(attacker.Stats.Strength + attacker.StrongestWeapon.Damage);
-            float damageModifier = 100.0f / (100.0f + ((float)defender.Chest.Item.DamageReduction * (1.0f - ((float)attackWeapon.ArmorPenetrationPercent / 100.0f)) - (float)attackWeapon.ArmorPenetrationFlat));
+            float damageModifier = 100.0f / (100.0f + ((float)defender.BodyArmor.Item.DamageReduction * (1.0f - ((float)attackWeapon.ArmorPenetrationPercent / 100.0f)) - (float)attackWeapon.ArmorPenetrationFlat));
             defender.Stats.Health -= (int)(damage * damageModifier);
 
             //Console.WriteLine($"Damage: {damage}, Damage modifier: {damageModifier}");

@@ -13,10 +13,11 @@ namespace GameV1.Interfaces
         IEnumerable<CreatureSpeciesCategory> EnemySpecies { get; set; }
         IEnumerable<ICreature> EnemyCreatures { get; set; }
         bool IsDead { get { return Stats.Health <= 0; } }
-        ISlot<IWeapon> MainHand { get; set; }
-        ISlot<IWeapon> OffHand { get; set; }
-        ISlot<IArmor> Chest { get; set; }
+        ISlot<IWeapon> PrimaryWeapon { get; set; }
+        ISlot<IWeapon> SecondaryWeapon { get; set; }
+        ISlot<IArmor> BodyArmor { get; set; }
         IWeapon? StrongestWeapon { get; }
+        IWeapon DefaultWeapon { get; set; }
         ICreature? TargetCreature { get; set; }
 
         void TakeDamage(int damage);
