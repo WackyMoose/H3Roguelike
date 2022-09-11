@@ -10,6 +10,7 @@ namespace GameV1.Interfaces
         Color TintModifier { get; set; }
         IDictionary<Vector2, Color> Tints { get; set; }
 
+        IDictionary<Vector2, Color> CreateTints(int range, Color tint);
         void Illuminate(IScene scene);
     }
 }

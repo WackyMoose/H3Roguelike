@@ -60,6 +60,24 @@ public class Scene : Disposeable, IScene
         return false;
     }
 
+    public bool TryMoveEntity(IEntity entity, Vector2 targetPosition, int entityLayer, params int[] collisionLayers)
+    {
+        if(collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
+        
+        foreach(var layer in collisionLayers)
+        {
+            bool isKeyAvailable = !GetLayer(layer).Entities.ContainsKey(targetPosition);
+
+            if(isKeyAvailable == true) { continue; } else { return false; }
+        }
+        
+        GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+        GetLayer(entityLayer).Entities.Remove(entity.Position);
+        entity.Position = targetPosition;
+
+        return true;
+    }
+
     public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
     {
         bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);

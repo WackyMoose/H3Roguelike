@@ -47,6 +47,8 @@ internal class TestGameMSN : IGame
     private Weapon crossBow = new Weapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
 
+    private Inventory weaponChest = new Inventory(8, 1000, 1000, "Weapon chest", new Coords2D(9, 3));
+
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
     // Layers
@@ -72,7 +74,7 @@ internal class TestGameMSN : IGame
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref _scene);
 
-        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+
 
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
@@ -87,6 +89,9 @@ internal class TestGameMSN : IGame
         itemLayer?.Add(crossBow);
         trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(trident);
+
+        weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.Add(weaponChest);
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
@@ -136,22 +141,27 @@ internal class TestGameMSN : IGame
         creatureLayer?.Add(guard_01);
 
 
+        var walkableTileLayer = (IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles);
+
+        _scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
+
+
         // Randomized walk guard Behavior tree
-        //var guard02Node = Serializer(
-        //        Action(new CommandPatrolRectangularArea(
-        //            _scene,
-        //            guard_02,
-        //            light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-        //            light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay(
-        //            Action(new CommandIdle()),
-        //            2)
-        //        );
+        var guard02Node = Serializer(
+                Action(new CommandPatrolRectangularArea(
+                    _scene,
+                    guard_02,
+                    light.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    light.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay(
+                    Action(new CommandIdle()),
+                    2)
+                );
 
-        //var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
 
-        //btrees.Add(guard_02Tree);
+        btrees.Add(guard_02Tree);
 
         // Druid behavior tree
         // Roam around randomly in a part of the map
@@ -172,27 +182,24 @@ internal class TestGameMSN : IGame
 
         btrees.Add(druidTree);
 
-        // Roaming guard behavior tree
-        //var guard_01Tree = new BTree(guard_01);
+        // Patrolling town guard
+        var guard01Node = Selector(
+                Serializer(
+                    Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
+                    Action(new CommandMoveToTarget(_scene, guard_01)),
+                    Action(new CommandAttackTarget(_scene, guard_01))
+                ),
+                Serializer(
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                )
+            );
 
-        // March along the city walls
-        //guard_01Tree.Add(
-        //    Selector(
-        //        Sequence(
-        //            Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
-        //            Action(new CommandMoveToTarget(_scene, guard_01)),
-        //            Action(new CommandAttackTarget(_scene, guard_01))
-        //        ), 
-        //        Serializer(
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-        //            Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
-        //        )
-        //    )
-        //);
+        var guard_01Tree = BehaviorTree(guard_01, guard01Node);
 
-        //btrees.Add(guard_01Tree);
+        btrees.Add(guard_01Tree);
 
         // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
