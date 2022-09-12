@@ -75,7 +75,7 @@ internal class RaylibUIRenderer : IUIRenderer
         // Draw control
         //--------------------------------------------------------------------
         GuiDrawRectangle(bounds, buttonOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
-        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state));
+        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state, buttonOptions));
         //--------------------------------------------------------------------
 
         return pressed;
@@ -121,20 +121,19 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
-        //var textColor = sliderOptions.TextNormalColor; 
+        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), sliderOptions.BackgroundColor);
 
         // Draw slider internal bar (depends on state)
         if (!sliderOptions.Interactable)
         {
             sliderRectangle.width = MathFunctions.Lerp(sliderOptions.MinValue, bounds.width, value) / sliderOptions.MaxValue;
         }
-        GuiDrawRectangle(sliderRectangle, 0, Color.Blank, state == GuiState.STATE_HOVERED ? sliderOptions.TextFocusedColor : sliderOptions.Color);
+        GuiDrawRectangle(sliderRectangle, 0, Color.Blank, state == GuiState.STATE_HOVERED ? sliderOptions.TextFocusedColor : sliderOptions.NormalColor);
 
         if (sliderOptions.TextAlignment != TextAlignment.None)
         {
             var textBounds = sliderOptions.GetTextBounds();
-            GuiDrawText(sliderOptions.Text, textBounds, GetTextColorByState(state));
+            GuiDrawText(sliderOptions.Text, textBounds, GetTextColorByState(state, sliderOptions));
         }
         //--------------------------------------------------------------------
 
@@ -163,19 +162,18 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
-        {
-            var borderColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.BorderNormalColor;
-            var baseColor = state == GuiState.STATE_DISABLED ? panelOptions.DisabledColor : panelOptions.NormalColor;
-            var textColor = state == GuiState.STATE_DISABLED ? panelOptions.TextDisabledColor : panelOptions.TextNormalColor;
-
-            GuiStatusBar(statusBarRectangle, panelOptions.Text, panelOptions.BorderWidth, borderColor, baseColor, textColor);  // Draw panel header as status bar
-        }
-
-        var lineColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.LineColor;
+        var borderColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.BorderNormalColor;
         var backgroundColor = state == GuiState.STATE_DISABLED ? panelOptions.DisabledColor : panelOptions.BackgroundColor;
 
-        GuiDrawRectangle(bounds, panelOptions.BorderWidth, lineColor, backgroundColor);
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
+        {
+            var headerColor = state == GuiState.STATE_DISABLED ? panelOptions.HeaderDisabledColor : panelOptions.HeaderNormalColor;
+            var textColor = state == GuiState.STATE_DISABLED ? panelOptions.TextDisabledColor : panelOptions.TextNormalColor;
+
+            GuiStatusBar(statusBarRectangle, panelOptions.Text, panelOptions.BorderWidth, borderColor, headerColor, textColor);  // Draw panel header as status bar
+        }
+
+        GuiDrawRectangle(bounds, panelOptions.BorderWidth, borderColor, backgroundColor);
         //--------------------------------------------------------------------
     }
 
@@ -254,7 +252,7 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Update control
         //--------------------------------------------------------------------
-        if(listViewOptions.Interactable)
+        if (listViewOptions.Interactable)
         {
             Vector2 mousePoint = Raylib.GetMousePosition();
 
@@ -626,8 +624,19 @@ internal class RaylibUIRenderer : IUIRenderer
         };
     }
 
-    private Color GetTextColorByState(GuiState state)
+    private Color GetTextColorByState(GuiState state, TextOptions? textOptions = default)
     {
+        if (textOptions != null)
+        {
+            return state switch
+            {
+                GuiState.STATE_HOVERED => textOptions.TextFocusedColor,
+                GuiState.STATE_PRESSED => textOptions.TextPressedColor,
+                GuiState.STATE_DISABLED => textOptions.TextDisabledColor,
+                _ => textOptions.TextNormalColor,
+            };
+        }
+
         var colors = UIRendererOptions.Colors;
         return state switch
         {

@@ -8,6 +8,15 @@ namespace GameV1.UI;
 
 internal class StatsPanel
 {
+    private readonly static Color HEADER_COLOR = new Color(68, 48, 41, 255);
+    private readonly static Color BACKGROUND_COLOR = new Color(63, 42, 39, 255);
+
+    private readonly static Color HEALTH_BAR_SLIDER_COLOR = new Color(178, 32, 25, 255);
+    private readonly static Color EXPERIENCE_BAR_SLIDER_COLOR = new Color(239, 58, 12, 255);
+    private readonly static Color FATIGUE_BAR_SLIDER_COLOR = new Color(57, 87, 28, 255);
+
+    private readonly static Color TEXT_COLOR = new Color(165, 98, 67, 255);
+
     public const int WIDTH = 330;
 
     private Player _player;
@@ -38,7 +47,7 @@ internal class StatsPanel
         var size = new UIScreenCoords(WIDTH, window.Height);
         var position = new UIScreenCoords(window.Width - size.X, 0);
         var startPosition = position;
-        _panelOptions = new PanelOptions(position, size, "Stats");
+        _panelOptions = new PanelOptions(position, size, "Stats", HEADER_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
 
         var portait = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\8bitPortraitPack24x24.png");
         var portaitSize = new UIScreenCoords(180, 180);
@@ -54,33 +63,33 @@ internal class StatsPanel
         _player.Stats.Fatigue = 100;
 
         var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
-        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, 96, $"STR: {_player.Stats.Strength}");
+        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, $"STR: {_player.Stats.Strength}", 96, TEXT_COLOR);
 
         var agilityLabelPosition = new UIScreenCoords(startPosition.X + 4, 70);
-        _agilityLabelOptions = new LabelOptions(agilityLabelPosition, 96, $"AGI: {_player.Stats.Agility}");
+        _agilityLabelOptions = new LabelOptions(agilityLabelPosition, $"AGI: {_player.Stats.Agility}", 96, TEXT_COLOR);
 
         var toughnessLabelPosition = new UIScreenCoords(startPosition.X + 4, 105);
-        _toughnessLabelOptions = new LabelOptions(toughnessLabelPosition, 96, $"TOU: {_player.Stats.Toughness}");
+        _toughnessLabelOptions = new LabelOptions(toughnessLabelPosition, $"TOU: {_player.Stats.Toughness}", 96, TEXT_COLOR);
 
         var perceptionLabelPosition = new UIScreenCoords(startPosition.X + 4, 140);
-        _perceptionLabelOptions = new LabelOptions(perceptionLabelPosition, 96, $"PER: {_player.Stats.Perception}");
+        _perceptionLabelOptions = new LabelOptions(perceptionLabelPosition, $"PER: {_player.Stats.Perception}", 96, TEXT_COLOR);
 
         var charismaLabelPosition = new UIScreenCoords(startPosition.X + 4, 175);
-        _charismaLabelOptions = new LabelOptions(charismaLabelPosition, 96, $"CHA: {_player.Stats.Charisma}");
+        _charismaLabelOptions = new LabelOptions(charismaLabelPosition, $"CHA: {_player.Stats.Charisma}", 96, TEXT_COLOR);
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215);
-        var healthBarSize = new UIScreenCoords(270, 25);
-        _healthBarOptions = new SliderOptions(position, healthBarSize, 24, "HP", TextAlignment.Left, 0, _player.Stats.Health, Color.Red, false);
+        var healthBarSize = new UIScreenCoords(265, 25);
+        _healthBarOptions = new SliderOptions(position, healthBarSize, "HP", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, HEALTH_BAR_SLIDER_COLOR, 0, _player.Stats.Health, false);
 
         var exp = 1000;
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 245);
-        var experienceBarSize = new UIScreenCoords(270, 24);
-        _experienceBarOptions = new SliderOptions(position, experienceBarSize, 24, "XP", TextAlignment.Left, 0, exp, Color.Orange, false);
+        var experienceBarSize = new UIScreenCoords(265, 24);
+        _experienceBarOptions = new SliderOptions(position, experienceBarSize, "XP", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, EXPERIENCE_BAR_SLIDER_COLOR, 0, exp, false);
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 275);
-        var fatigueBarSize = new UIScreenCoords(270, 25);
-        _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, 24, "FT", TextAlignment.Left, 0, _player.Stats.Fatigue, Color.Green, false);
+        var fatigueBarSize = new UIScreenCoords(265, 25);
+        _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, "FT", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, FATIGUE_BAR_SLIDER_COLOR, 0, _player.Stats.Fatigue, false);
 
         var seperatorImage = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources/Textures/Seperator.png");
         var seperatorSize = new UIScreenCoords(size.X - 10, 16);

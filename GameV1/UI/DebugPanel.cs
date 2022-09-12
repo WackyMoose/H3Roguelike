@@ -23,7 +23,7 @@ internal class DebugPanel
 
         var debugSliderPosition = new UIScreenCoords(10, 70);
         var debugSliderSize = new UIScreenCoords(250, 30);
-        _sliderOptions = new SliderOptions(debugSliderPosition, debugSliderSize, 24, $"{damage} Damage", TextAlignment.Right, 0, 250);
+        _sliderOptions = new SliderOptions(debugSliderPosition, debugSliderSize, $"{damage} Damage", 24, TextAlignment.Right, 0, 250);
 
         var btnPosition = new UIScreenCoords(10, 124);
         var btnSize = new UIScreenCoords(100, 50);
