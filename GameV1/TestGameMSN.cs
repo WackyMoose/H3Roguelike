@@ -55,6 +55,7 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
+    private bool _showDebugPanel = false;
 
     public void Initialize()
     {
@@ -144,7 +145,7 @@ internal class TestGameMSN : IGame
                 );
 
         var guard_02Tree = BehaviorTree(guard_02, guard02Node);
-        
+
         btrees.Add(guard_02Tree);
 
         // Druid behavior tree
@@ -153,8 +154,8 @@ internal class TestGameMSN : IGame
         // Follow the player, but only walk every other turn
         druidTree.Add(Serializer(
                 //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
-                Delay( 
-                    Action(new CommandMoveToEntity(_scene, druid, player)), 
+                Delay(
+                    Action(new CommandMoveToEntity(_scene, druid, player)),
                     1)
                 )
             );
@@ -232,7 +233,7 @@ internal class TestGameMSN : IGame
         // TODO: Only illuminate if range within viewport, AABB check
         // Dynamically updated light sources
         var windowSize = new Vector2(
-            (int)(Application.Instance.Window.Width  * 0.5 - (Application.Instance.Window.Width  * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), 
+            (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
             (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var cameraPosition = _scene.SceneCamera.Position;
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
@@ -241,15 +242,20 @@ internal class TestGameMSN : IGame
         foreach (LightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
-                cameraPosition, 
-                windowSize, 
-                lightSource.Position, 
+                cameraPosition,
+                windowSize,
+                lightSource.Position,
                 new Vector2(lightSource.Range, lightSource.Range));
 
             if (isOverlapping)
             {
                 lightSource.Illuminate(_scene);
             }
+        }
+
+        if(Input.IsKeyPressed(Keycode.KEY_P))
+        {
+            _showDebugPanel = !_showDebugPanel;
         }
 
         _scene?.UpdateRuntime(deltaTime);
@@ -261,6 +267,9 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
-        _debugPanel.OnGUI(UIRenderer);
+        if (_showDebugPanel)
+        {
+            _debugPanel.OnGUI(UIRenderer);
+        }
     }
 }
