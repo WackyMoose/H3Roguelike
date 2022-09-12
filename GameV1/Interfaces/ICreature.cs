@@ -6,19 +6,14 @@ namespace GameV1.Interfaces
 {
     public interface ICreature : IEntity
     {
-        CreatureSpeciesCategory Species { get; set; }
+        ICreatureSpeciesCategory Species { get; set; }
         IEnumerable<ISkill> Skills { get; set; }
         CreatureStats Stats { get; set; }
-        IInventory Inventory { get; set; }
-        IEnumerable<CreatureSpeciesCategory> EnemySpecies { get; set; }
+        CreatureInventory Inventory { get; set; }
+        IEnumerable<ICreatureSpeciesCategory> EnemySpecies { get; set; }
         IEnumerable<ICreature> EnemyCreatures { get; set; }
-        bool IsDead { get { return Stats.Health <= 0; } }
-        ISlot<IWeapon> PrimaryWeapon { get; set; }
-        ISlot<IWeapon> SecondaryWeapon { get; set; }
-        ISlot<IBodyArmor> BodyArmor { get; set; }
-        IWeapon? StrongestWeapon { get; }
-        IWeapon DefaultWeapon { get; set; }
         ICreature? TargetCreature { get; set; }
+        bool IsDead { get { return Stats.Health <= 0; } }
 
         void TakeDamage(int damage);
     }

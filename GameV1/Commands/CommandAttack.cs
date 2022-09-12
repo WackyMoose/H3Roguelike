@@ -19,7 +19,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            CombatHandler.SolveAttack(Attacker, Attacked, Attacker.StrongestWeapon);
+            CombatHandler.SolveAttack(Attacker, Attacked, Attacker.Inventory.StrongestWeapon);
 
             return NodeStates.Success;
 

@@ -19,7 +19,7 @@ namespace GameV1.Commands
         {
             if(Attacker.TargetCreature.IsDead == false)
             {
-                CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.StrongestWeapon);
+                CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.Inventory.StrongestWeapon);
                 return NodeStates.Success;
             }
             return NodeStates.Failure;

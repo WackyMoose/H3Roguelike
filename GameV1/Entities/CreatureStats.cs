@@ -1,6 +1,8 @@
-﻿namespace GameV1.Entities
+﻿using GameV1.Interfaces;
+
+namespace GameV1.Entities
 {
-    public class CreatureStats
+    public class CreatureStats : ICreatureStats
     {
         public CreatureStats()
         {

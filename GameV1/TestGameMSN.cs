@@ -30,16 +30,20 @@ public enum EntityLayer : int
 
 internal class TestGameMSN : IGame
 {
+    public ICreature? Player { get; set; }
+
     private IScene? _scene;
 
     // Creatures
     private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
-    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
-    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
     private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
     public Creature guard_01 = new Creature("City guard", 100, new Coords2D(6, 0));
     public Creature guard_02 = new Creature("City guard", 100, new Coords2D(15, 0));
+
+    // LightSources
+    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
+    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
 
     // Items
     private Weapon sword = new Weapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
@@ -48,8 +52,10 @@ internal class TestGameMSN : IGame
     private Weapon crossBow = new Weapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
 
+    // Inventories
     private Inventory weaponChest = new Inventory(8, 1000, 1000, "Weapon chest", new Coords2D(9, 3));
 
+    // Behavior trees
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
     // Layers
@@ -61,6 +67,8 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
+        Player = player;
+
         sword.MinDamage = 5;
         sword.MaxDamage = 20;
         sword.ArmorPenetrationFlat = 5;
@@ -95,11 +103,17 @@ internal class TestGameMSN : IGame
         itemLayer?.Add(weaponChest);
 
         // Spawn player
-        player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
-        player.PrimaryWeapon.Add(sword);
-        player.BodyArmor.Add(armor);
+        player.Inventory.PrimaryWeapon.Add(sword);
+        player.Inventory.BodyArmor.Add(armor);
         creatureLayer?.Add(player);
+
+        orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        //player.Inventory.
+        orc.Inventory.PrimaryWeapon.Add(sword);
+        orc.Inventory.BodyArmor.Add(armor);
+        _scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
 
         // Light sources
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
@@ -123,21 +137,21 @@ internal class TestGameMSN : IGame
 
         // Druid chasing player
         druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.PrimaryWeapon.Add(sword);
-        druid.BodyArmor.Add(armor);
+        druid.Inventory.PrimaryWeapon.Add(sword);
+        druid.Inventory.BodyArmor.Add(armor);
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(druid);
 
         // Randomized walk guard
-        guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_02.PrimaryWeapon.Add(sword);
-        guard_02.BodyArmor.Add(armor);
+        guard_02.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_02.Inventory.PrimaryWeapon.Add(sword);
+        guard_02.Inventory.BodyArmor.Add(armor);
         creatureLayer?.Add(guard_02);
 
         // Patrolling guard
         guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_01.PrimaryWeapon.Add(sword);
-        guard_01.BodyArmor.Add(armor);
+        guard_01.Inventory.PrimaryWeapon.Add(sword);
+        guard_01.Inventory.BodyArmor.Add(armor);
         guard_01.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(guard_01);
 
@@ -208,19 +222,16 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
+        InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
 
         var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
         var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
 
         _consolePanel = new ConsolePanel(consolePosition, consoleSize);
-        _statsPanel = new StatsPanel(player);
-        _debugPanel = new DebugPanel(10, 10, player);
+        _statsPanel = new StatsPanel(Player);
+        _debugPanel = new DebugPanel(10, 10, Player);
 
-        _scene.SceneCamera = new Camera(player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-        InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
+        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
     }
 
     public void Uninitialize()
@@ -235,7 +246,7 @@ internal class TestGameMSN : IGame
         InputOptions? input = InputHandler.Handle();
 
         // Generate commands
-        ICommand command = CommandFactory.Create(input, _scene, player);
+        ICommand command = CommandFactory.Create(input, _scene, Player);
 
         CommandQueue.Add(command);
 

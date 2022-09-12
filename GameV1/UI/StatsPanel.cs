@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -10,7 +11,7 @@ internal class StatsPanel
 {
     public const int WIDTH = 330;
 
-    private Creature _player;
+    private ICreature _player;
 
     private PanelOptions _panelOptions;
     private SeperatorOptions _seperatorOptions;
@@ -27,7 +28,7 @@ internal class StatsPanel
     private SliderOptions _experienceBarOptions;
     private SliderOptions _fatigueBarOptions;
 
-    public StatsPanel(Creature player)
+    public StatsPanel(ICreature player)
     {
         _player = player;
 
@@ -43,13 +44,13 @@ internal class StatsPanel
         var portraitPosition = new UIScreenCoords(1200 + (400 - portaitSize.X - 10), 25);
         _portraitOptions = new ImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
 
-        _player.Stats.Strength = 9999;
-        _player.Stats.Agility = 9999;
-        _player.Stats.Toughness = 9999;
-        _player.Stats.Perception = 9999;
-        _player.Stats.Charisma = 9999;
+        //_player.Stats.Strength = 9999;
+        //_player.Stats.Agility = 9999;
+        //_player.Stats.Toughness = 9999;
+        //_player.Stats.Perception = 9999;
+        //_player.Stats.Charisma = 9999;
 
-        _player.Stats.Fatigue = 100;
+        //_player.Stats.Fatigue = 100;
 
         var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
         _strengthLabelOptions = new LabelOptions(strengthLabelPosition, 96, $"STR: {_player.Stats.Strength}");

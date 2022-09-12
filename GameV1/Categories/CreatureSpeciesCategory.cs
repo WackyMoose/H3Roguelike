@@ -1,6 +1,8 @@
-﻿namespace GameV1.Categories
+﻿using GameV1.Interfaces;
+
+namespace GameV1.Categories
 {
-    public struct CreatureSpeciesCategory
+    public struct CreatureSpeciesCategory : ICreatureSpeciesCategory
     {
         private CreatureSpeciesCategory(string speciesName, int maxHealthPoints, int maxDamagePoints)
         {

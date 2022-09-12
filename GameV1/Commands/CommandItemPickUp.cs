@@ -27,7 +27,7 @@ namespace GameV1.Commands
             if(item == null) { return NodeStates.Failure; }
             
             // Attempt to add item to Creature inventory
-            var result = Creature.Inventory.AddItemToFirstEmptySlot(item);
+            var result = Creature.Inventory.Inventory.AddItemToFirstEmptySlot(item);
 
             if(result == false) { return NodeStates.Failure; }
 

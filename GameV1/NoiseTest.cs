@@ -59,8 +59,8 @@ internal class NoiseTest : IGame
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        player.PrimaryWeapon.Add(sword);
-        player.BodyArmor.Add(armor);
+        player.Inventory.PrimaryWeapon.Add(sword);
+        player.Inventory.BodyArmor.Add(armor);
         creatureLayer?.Add(player);
 
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
@@ -77,13 +77,13 @@ internal class NoiseTest : IGame
         }
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.PrimaryWeapon.Add(sword);
-        druid.BodyArmor.Add(armor);
+        druid.Inventory.PrimaryWeapon.Add(sword);
+        druid.Inventory.BodyArmor.Add(armor);
         creatureLayer?.Add(druid);
 
         ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
-        ork.PrimaryWeapon.Add(sword);
-        ork.BodyArmor.Add(armor);
+        ork.Inventory.PrimaryWeapon.Add(sword);
+        ork.Inventory.BodyArmor.Add(armor);
         creatureLayer?.Add(ork);
 
         _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));

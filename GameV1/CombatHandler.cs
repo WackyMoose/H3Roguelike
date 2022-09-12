@@ -13,7 +13,7 @@ namespace GameV1
         {
             int damage = attacker.Stats.Strength + attackWeapon.Damage;
             //int damage = (int)(attacker.Stats.Strength + attacker.StrongestWeapon.Damage);
-            float damageModifier = 100.0f / (100.0f + (defender.BodyArmor.Item.DamageReduction * (1.0f - (attackWeapon.ArmorPenetrationPercent / 100.0f)) - attackWeapon.ArmorPenetrationFlat));
+            float damageModifier = 100.0f / (100.0f + (defender.Inventory.BodyArmor.Item.DamageReduction * (1.0f - (attackWeapon.ArmorPenetrationPercent / 100.0f)) - attackWeapon.ArmorPenetrationFlat));
             defender.Stats.Health -= (int)(damage * damageModifier);
 
             //Console.WriteLine($"Damage: {damage}, Damage modifier: {damageModifier}");
@@ -30,7 +30,7 @@ namespace GameV1
             lootableCorpse.Position = creature.Position;
             
             // Add lootable content from dead creature
-            creature.Inventory.MoveContainerContent(lootableCorpse);
+            creature.Inventory.Inventory.MoveContainerContent(lootableCorpse);
 
             // Remove Creature from entity layer
             creatureLayer.Entities.Remove(creature.Position);
