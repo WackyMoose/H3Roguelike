@@ -42,9 +42,6 @@ public class ConsolePanel
     public void OnGUI(IUIRenderer UIRenderer)
     {
         _active = UIRenderer.DrawListViewEx(_listViewOptions, _history, ref _focus, ref _scrollIndex, _active);
-
-        //var rect = new Raylib_cs.Rectangle(_position.X, _position.Y, _size.X, _size.Y);
-        //_active = UIRenderer.DrawListViewEx(rect, TITLE, _history.ToArray(), _history.Count, ref _focus, ref _scrollIndex, _active, _stickToBottom);
     }
 
     private void AddToList(string msg)
