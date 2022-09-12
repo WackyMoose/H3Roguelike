@@ -1,6 +1,7 @@
 ﻿using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Interfaces;
 using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
@@ -32,17 +33,17 @@ internal class TestGameMSN : IGame
     private IScene? _scene;
 
     // Creatures
-    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
+    private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-    private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
-    private Npc orc = new Npc("Orc", 100, new Coords2D(11, 0));
-    public Npc guard_01 = new Npc("City guard", 100, new Coords2D(6, 0));
-    public Npc guard_02 = new Npc("City guard", 100, new Coords2D(15, 0));
+    private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
+    private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
+    public Creature guard_01 = new Creature("City guard", 100, new Coords2D(6, 0));
+    public Creature guard_02 = new Creature("City guard", 100, new Coords2D(15, 0));
 
     // Items
     private Weapon sword = new Weapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 10, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private BodyArmor armor = new BodyArmor(100, 10, "LifeSaver", new Coords2D(6, 4), Color.White);
     private Weapon doubleAxe = new Weapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White);
     private Weapon crossBow = new Weapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
     private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
@@ -249,6 +250,14 @@ internal class TestGameMSN : IGame
                 if(btree.Entity.IsDead == false)
                 {
                     btree.Evaluate();
+                }
+            }
+
+            foreach (var creature in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
+            {
+                if (creature.Value.IsDead == true)
+                {
+                    CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), (ICreature)creature.Value, _scene.GetLayer((int)EntityLayer.Items));
                 }
             }
         }

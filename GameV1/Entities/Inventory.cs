@@ -4,7 +4,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public class Inventory : Container<IItem>, IInventory
+    public class Inventory : Container, IInventory
     {
         public Inventory(int maxSlots, int durability, int maxValue)
             : base(maxSlots, durability, maxValue, "Inventory", new Coords2D(1, 1), Color.White)

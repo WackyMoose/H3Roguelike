@@ -1,6 +1,6 @@
 ﻿namespace GameV1.Interfaces
 {
-    public interface IArmor : IItem
+    public interface IBodyArmor : IItem
     {
         int MaxDamageReduction { get; set; }
         int MinDamageReduction { get; set; }

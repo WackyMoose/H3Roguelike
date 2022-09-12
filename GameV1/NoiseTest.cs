@@ -17,13 +17,13 @@ namespace GameV1;
 internal class NoiseTest : IGame
 {
     private IScene? _scene;
-    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
+    private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-    private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
-    private Npc ork = new Npc("Ork", 100, new Coords2D(11, 0));
+    private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
+    private Creature ork = new Creature("Ork", 100, new Coords2D(11, 0));
     private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private BodyArmor armor = new BodyArmor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -129,7 +129,7 @@ internal class NoiseTest : IGame
 
             // AI NPC / Monster / Critter controls
             //Console.WriteLine("AI's turn!");
-            AI.Execute(_scene);
+            AI.Execute(_scene, player);
 
             // Execute AI commands
             CommandQueue.Execute();

@@ -1,7 +1,7 @@
 ﻿
 namespace GameV1.Interfaces
 {
-    public interface IInventory : IContainer
+    public interface IHeadGear : IItem
     {
     }
 }

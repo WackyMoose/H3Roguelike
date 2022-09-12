@@ -1,12 +1,15 @@
 ﻿namespace GameV1.Interfaces
 {
-    public interface IContainer<TItem> where TItem : IItem
+    public interface IContainer
     {
-        int MaxSlots { get; set; }
-        IEnumerable<ISlot<TItem>> Slots { get; set; }
+        int NumSlots { get; set; }
+        IEnumerable<ISlot<IItem>> Slots { get; set; }
+        int NumEmptySlots { get; }
+        bool HasEmptySlots { get; }
 
-        bool AddItemToFirstEmptySlot(TItem item);
-        bool AddItemToSlot(TItem item, ISlot<TItem> slot);
-        TItem? RemoveItemFromSlot(ISlot<TItem> slot);
+        bool AddItemToFirstEmptySlot(IItem item);
+        bool AddItemToSlot(IItem item, ISlot<IItem> slot);
+        bool MoveContainerContent(IContainer targetContainer);
+        IItem? RemoveItemFromSlot(ISlot<IItem> slot);
     }
 }

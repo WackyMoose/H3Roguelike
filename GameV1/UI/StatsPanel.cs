@@ -10,7 +10,7 @@ internal class StatsPanel
 {
     public const int WIDTH = 330;
 
-    private Player _player;
+    private Creature _player;
 
     private PanelOptions _panelOptions;
     private SeperatorOptions _seperatorOptions;
@@ -27,7 +27,7 @@ internal class StatsPanel
     private SliderOptions _experienceBarOptions;
     private SliderOptions _fatigueBarOptions;
 
-    public StatsPanel(Player player)
+    public StatsPanel(Creature player)
     {
         _player = player;
 

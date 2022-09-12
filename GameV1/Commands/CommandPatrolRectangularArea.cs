@@ -34,6 +34,11 @@ namespace GameV1.Commands
                 return NodeStates.Success;
             }
 
+            if (m_currentTargetPosition == default)
+            {
+                return NodeStates.Failure;
+            }
+
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
             if (path.Length == 0)

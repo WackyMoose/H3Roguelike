@@ -1,5 +1,6 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
@@ -7,7 +8,7 @@ namespace GameV1
 {
     public static class AI
     {
-        public static void Execute(IScene scene)
+        public static void Execute(IScene scene, ICreature player)
         {
             // TODO: Add Initializer that does player look-up once.
             //var player = scene.GetEntitiesOfType<Player>(scene.Tiles).FirstOrDefault();
@@ -15,9 +16,7 @@ namespace GameV1
 
             var creatureLayer = scene.GetLayer((int)EntityLayer.Creatures);
 
-            Player? player = creatureLayer.GetEntitiesOfType<Player>().FirstOrDefault();
-
-            var npcs = creatureLayer.GetEntitiesOfType<Npc>();
+            var npcs = creatureLayer.GetEntitiesOfType<Creature>();
 
             foreach (var npc in npcs)
             {

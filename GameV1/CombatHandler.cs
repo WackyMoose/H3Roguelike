@@ -1,6 +1,9 @@
-﻿using GameV1.Interfaces;
+﻿using GameV1.Entities;
+using GameV1.Interfaces;
 using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.UI;
+using MooseEngine.Utilities;
 
 namespace GameV1
 {
@@ -17,9 +20,22 @@ namespace GameV1
             ConsolePanel.Add($"Damage: {damage}, Damage modifier: {damageModifier} (health left: {defender.Stats.Health})");
         }
 
-        public static void KillCreature(EntityLayer entityLayer, ICreature creature, IEntity replacement)
+        public static void KillCreature(IEntityLayer creatureLayer, ICreature creature, IEntityLayer replacementLayer)
         {
+            // Check if entíty exists at position
+            if(creatureLayer.Entities.ContainsKey(creature.Position) == false) { return; }
+
+            // Create Inventory item
+            var lootableCorpse = new Inventory(8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7));
+            lootableCorpse.Position = creature.Position;
             
+            // Add lootable content from dead creature
+            creature.Inventory.MoveContainerContent(lootableCorpse);
+
+            // Remove Creature from entity layer
+            creatureLayer.Entities.Remove(creature.Position);
+            // Add inventory to item layer.
+            replacementLayer.Entities.Add(lootableCorpse.Position, lootableCorpse);
         }
     }
 }

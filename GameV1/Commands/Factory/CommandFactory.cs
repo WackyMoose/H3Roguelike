@@ -66,7 +66,7 @@ namespace GameV1.Commands.Factory
             }
             if(input == InputOptions.PickUp)
             {
-                return new CommandItemPickUp(scene, entity);
+                return new CommandItemPickUp(scene, (ICreature)entity);
             }
 
             if (input == InputOptions.Idle)

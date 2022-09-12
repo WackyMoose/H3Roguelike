@@ -6,7 +6,7 @@ namespace GameV1.Entities.Factories;
 
 public interface IPlayerFactory : ISceneEntityFactory
 {
-    Player CreatePlayer();
+    Creature CreatePlayer();
 }
 
 public class PlayerFactory : SceneEntityFactory, IPlayerFactory
@@ -16,9 +16,9 @@ public class PlayerFactory : SceneEntityFactory, IPlayerFactory
     {
     }
 
-    public Player CreatePlayer()
+    public Creature CreatePlayer()
     {
-        var player = new Player("Player", 120, new Coords2D(4, 0));
+        var player = new Creature("Player", 120, new Coords2D(4, 0));
 
         //AddToScene(player);
 

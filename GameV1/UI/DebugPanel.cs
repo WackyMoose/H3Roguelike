@@ -8,7 +8,7 @@ namespace GameV1.UI;
 
 internal class DebugPanel
 {
-    private Player _player;
+    private Creature _player;
 
     private ButtonOptions _consoleButton;
     private SliderOptions _sliderOptions;
@@ -17,7 +17,7 @@ internal class DebugPanel
     private int damage = 50;
     private static int _index = 0;
 
-    public DebugPanel(int x, int y, Player player)
+    public DebugPanel(int x, int y, Creature player)
     {
         _player = player;
 

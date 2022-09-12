@@ -15,7 +15,7 @@ namespace GameV1.Interfaces
         bool IsDead { get { return Stats.Health <= 0; } }
         ISlot<IWeapon> PrimaryWeapon { get; set; }
         ISlot<IWeapon> SecondaryWeapon { get; set; }
-        ISlot<IArmor> BodyArmor { get; set; }
+        ISlot<IBodyArmor> BodyArmor { get; set; }
         IWeapon? StrongestWeapon { get; }
         IWeapon DefaultWeapon { get; set; }
         ICreature? TargetCreature { get; set; }

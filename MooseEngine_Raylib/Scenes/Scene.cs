@@ -90,6 +90,25 @@ public class Scene : Disposeable, IScene
         return false;
     }
 
+    public bool PlaceEntityWithinSquare(IEntity entity, Vector2 topLeft, Vector2 bottomRight, int targetEntityLayer, params int[] collisionLayers)
+    {
+        return true;
+    }
+
+    public bool PlaceEntityAtClosestPosition(IEntity entity, Vector2 targetPosition, int targetEntityLayer, params int[] collisionLayers)
+    {
+        int distance = 0;
+
+        bool result = TryPlaceEntity(targetEntityLayer, entity, targetPosition);
+
+        if(result == false)
+        {
+
+        }
+
+        return true;
+    }
+
     public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
     {
         Dictionary<Vector2, IEntity> entitiesOfType = new Dictionary<Vector2, IEntity>();

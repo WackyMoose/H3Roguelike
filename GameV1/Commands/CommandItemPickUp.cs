@@ -2,42 +2,41 @@
 using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
+using MooseEngine.UI;
 
 namespace GameV1.Commands
 {
     internal class CommandItemPickUp : Command
     {
         public IScene Scene { get; set; }
-        public IEntity Entity { get; set; }
+        public ICreature Creature { get; set; }
 
-        public CommandItemPickUp(IScene scene, IEntity entity)
+        public CommandItemPickUp(IScene scene, ICreature creature)
         {
             Scene = scene;
-            Entity = entity;
+            Creature = creature;
         }
 
         public override NodeStates Execute()
         {
-            // TODO: Finish this!
-
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
+            IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
 
-            if(item != null)
-            {
-                // Add item to Creature inventory
-                Creature creature = (Creature)Entity;
+            // Does item exist?
+            if(item == null) { return NodeStates.Failure; }
+            
+            // Attempt to add item to Creature inventory
+            var result = Creature.Inventory.AddItemToFirstEmptySlot(item);
 
-                creature.Inventory.AddItemToFirstEmptySlot(item);
+            if(result == false) { return NodeStates.Failure; }
 
-                // Remove item from ItemLayer
-                itemLayer.Entities.Remove(item.Position);
+            // Remove item from ItemLayer
+            itemLayer.Entities.Remove(item.Position);
 
-                return NodeStates.Success;
-            }
+            ConsolePanel.Add($"{Creature.Name} picked up { item.Name}");
 
-            return NodeStates.Failure;
+            return NodeStates.Success;
         }
     }
 }
