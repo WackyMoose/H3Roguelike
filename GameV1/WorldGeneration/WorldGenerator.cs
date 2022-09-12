@@ -2,8 +2,8 @@
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-
 using System.Numerics;
+using System.Linq;
 
 namespace GameV1.WorldGeneration
 {
@@ -27,12 +27,16 @@ namespace GameV1.WorldGeneration
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(501, 501, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(501, 501, seed, new Coords2D(251 * Constants.DEFAULT_ENTITY_SIZE, 251 * Constants.DEFAULT_ENTITY_SIZE));
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
 
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
+
+            TileLibrary lib = JsonUtility.LoadFromJson<TileLibrary>(@"..\..\..\Resources\JSON\Tiles.json");
+
+            //Console.WriteLine($"{lib.Tiles["Grass"].SpriteCoords.X}:{lib.Tiles["Grass"].SpriteCoords.Y}");
 
             foreach (var tile in _overWorld)
             {
@@ -42,15 +46,15 @@ namespace GameV1.WorldGeneration
                 if (tile.Value > -0.3 && tile.Value < 0.3)
                 {
                     var rand = Randomizer.RandomInt(0, 3);
-                    var coord = _grassTilesCoords[rand];
+                    var grassTile = lib.Tiles.ElementAt(rand);
 
-                    Tile grass = new Tile("Grass", true, coord, Color.White);
+                    Tile grass = grassTile.Value.DeepCopy();
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                 }
                 else
                 {
-                    Tile grass = new Tile("Grass", true, new Coords2D(1, 1), Color.White);
+                    Tile grass = new Tile("Empty", true, new Coords2D(1, 1), Color.White);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                 }

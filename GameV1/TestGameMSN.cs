@@ -81,25 +81,25 @@ internal class TestGameMSN : IGame
         var window = app.Window;
 
         // Spawn items
-        doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
+        doubleAxe.Position = new Vector2(263, 242) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(doubleAxe);
-        crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
+        crossBow.Position = new Vector2(264, 243) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(crossBow);
-        trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
+        trident.Position = new Vector2(266, 247) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(trident);
 
         // Spawn player
-        player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        player.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
         player.MainHand.Add(sword);
         player.Chest.Add(armor);
         creatureLayer?.Add(player);
 
         // Light sources
-        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        light.Position = new Vector2(257, 229) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(light);
 
-        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        townLights.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(townLights);
 
         for (int i = 0; i < 64; i++)
@@ -110,20 +110,20 @@ internal class TestGameMSN : IGame
         }
 
         // Druid chasing player
-        druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.Position = new Vector2(255, 228) * Constants.DEFAULT_ENTITY_SIZE;
         druid.MainHand.Add(sword);
         druid.Chest.Add(armor);
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.Add(druid);
 
         // Randomized walk guard
-        guard_02.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_02.Position = new Vector2(251, 251) * Constants.DEFAULT_ENTITY_SIZE;
         guard_02.MainHand.Add(sword);
         guard_02.Chest.Add(armor);
         creatureLayer?.Add(guard_02);
 
         // Patrolling guard
-        guard_01.Position = new Vector2(35, 40) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_01.Position = new Vector2(235, 240) * Constants.DEFAULT_ENTITY_SIZE;
         guard_01.MainHand.Add(sword);
         guard_01.Chest.Add(armor);
         guard_01.Stats.Perception = 16 * Constants.DEFAULT_ENTITY_SIZE;
@@ -166,10 +166,10 @@ internal class TestGameMSN : IGame
 
         // March along the city walls
         guard_01Tree.Add(Serializer(
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 244) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 244) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 257) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 257) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
@@ -259,6 +259,6 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
-        _debugPanel.OnGUI(UIRenderer);
+        //_debugPanel.OnGUI(UIRenderer);
     }
 }
