@@ -104,6 +104,5 @@ internal class StatsPanel
         UIRenderer.DrawSliderBar(_fatigueBarOptions, _player.Stats.Fatigue / 2);
 
         UIRenderer.DrawImage(_seperatorImageOptions);
-        //UIRenderer.DrawSeperator(_seperatorOptions);
     }
 }
