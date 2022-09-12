@@ -192,6 +192,8 @@ internal class TestGameMSN : IGame
         _statsPanel = new StatsPanel(player);
         _debugPanel = new DebugPanel(10, 10, player);
 
+        ConsolePanel.Add("Hello there stranger!");
+
         _scene.SceneCamera = new Camera(player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
         InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
     }

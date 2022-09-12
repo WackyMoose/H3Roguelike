@@ -181,12 +181,39 @@ internal class RaylibUIRenderer : IUIRenderer
 
     public void DrawImage(ImageOptions imageOptions)
     {
-        var source = imageOptions.GetImageSource();
-        var dest = imageOptions.GetImageDestination();
+        var source = new Rectangle
+        {
+            x = 0.0f,
+            y = 0.0f,
+            width = imageOptions.Image.width,
+            height = imageOptions.Image.height
+        };
+
+        //var dest = new Rectangle
+        //{
+        //    x = imageOptions.Position.X,
+        //    y = imageOptions.Position.Y,
+        //    width = imageOptions.Image.width,
+        //    height = imageOptions.Image.height
+        //}; 
+        var dest = new Rectangle
+        {
+            x = imageOptions.Position.X,
+            y = imageOptions.Position.Y,
+            width = imageOptions.Size.X,
+            height = imageOptions.Size.Y
+        };
+
         Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
 
-        //var size = 192;
-        //var dest = new Rectangle(1200 + (400 - size - 10), 25, size, size);
+        //Raylib.DrawTexture(imageOptions.Image, imageOptions.Position.X, imageOptions.Position.Y, Color.White);
+    }
+
+    public void DrawImage(SubImageOptions subImageOptions)
+    {
+        var source = subImageOptions.GetImageSource();
+        var dest = subImageOptions.GetImageDestination();
+        Raylib.DrawTexturePro(subImageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
     }
 
     public int DrawListViewEx(ListViewOptions listViewOptions, IEnumerable<string> items, ref int focus, ref int scrollIndex, int active)

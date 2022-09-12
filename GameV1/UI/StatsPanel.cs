@@ -13,10 +13,12 @@ internal class StatsPanel
     private Player _player;
 
     private PanelOptions _panelOptions;
+    private ImageOptions _seperatorImageOptions;
+
     private SeperatorOptions _seperatorOptions;
 
     // Stats
-    private ImageOptions _portraitOptions;
+    private SubImageOptions _portraitOptions;
     private LabelOptions _strengthLabelOptions;
     private LabelOptions _agilityLabelOptions;
     private LabelOptions _toughnessLabelOptions;
@@ -41,7 +43,7 @@ internal class StatsPanel
         var portait = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\8bitPortraitPack24x24.png");
         var portaitSize = new UIScreenCoords(180, 180);
         var portraitPosition = new UIScreenCoords(1200 + (400 - portaitSize.X - 10), 25);
-        _portraitOptions = new ImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
+        _portraitOptions = new SubImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
 
         _player.Stats.Strength = 9999;
         _player.Stats.Agility = 9999;
@@ -80,8 +82,10 @@ internal class StatsPanel
         var fatigueBarSize = new UIScreenCoords(270, 25);
         _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, 24, "FT", TextAlignment.Left, 0, _player.Stats.Fatigue, Color.Green, false);
 
-        position = new UIScreenCoords(window.Width - size.X + 5, position.Y + 30);
-        _seperatorOptions = new SeperatorOptions(position, size.X - 10);
+        var seperatorImage = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources/Textures/Seperator.png");
+        var seperatorSize = new UIScreenCoords(size.X - 10, 16);
+        var seperatorPosition = new UIScreenCoords(window.Width - size.X + 5, position.Y + 30);
+        _seperatorImageOptions = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -99,6 +103,7 @@ internal class StatsPanel
         UIRenderer.DrawSliderBar(_experienceBarOptions, 555.0f);
         UIRenderer.DrawSliderBar(_fatigueBarOptions, _player.Stats.Fatigue / 2);
 
-        UIRenderer.DrawSeperator(_seperatorOptions);
+        UIRenderer.DrawImage(_seperatorImageOptions);
+        //UIRenderer.DrawSeperator(_seperatorOptions);
     }
 }

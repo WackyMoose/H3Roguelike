@@ -31,7 +31,7 @@ public abstract class UIOptionsBase
 		Interactable = interactable;
 
 		LineColor = new Color(144, 171, 181, 255);
-		BackgroundColor = new Color(48, 15, 10, 255);
+		BackgroundColor = new Color(63, 42, 39, 255);
 		//BackgroundColor = new Color(245, 245, 245, 255);
 
 		NormalColor = new Color(201, 201, 201, 255);
