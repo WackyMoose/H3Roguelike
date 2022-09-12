@@ -18,7 +18,6 @@ public class ConsolePanel
     private int _focus = -1;
     private int _scrollIndex = 3;
     private int _active = -1;
-    private bool _stickToBottom = true;
     private int _historyCapacity;
 
     private List<string> _history;
@@ -37,7 +36,7 @@ public class ConsolePanel
 
         var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
         var listViewSize = new UIScreenCoords(_size.X, _size.Y);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE);
+        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE, false);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
