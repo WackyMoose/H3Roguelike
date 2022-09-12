@@ -189,13 +189,6 @@ internal class RaylibUIRenderer : IUIRenderer
             height = imageOptions.Image.height
         };
 
-        //var dest = new Rectangle
-        //{
-        //    x = imageOptions.Position.X,
-        //    y = imageOptions.Position.Y,
-        //    width = imageOptions.Image.width,
-        //    height = imageOptions.Image.height
-        //}; 
         var dest = new Rectangle
         {
             x = imageOptions.Position.X,
@@ -205,8 +198,6 @@ internal class RaylibUIRenderer : IUIRenderer
         };
 
         Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
-
-        //Raylib.DrawTexture(imageOptions.Image, imageOptions.Position.X, imageOptions.Position.Y, Color.White);
     }
 
     public void DrawImage(SubImageOptions subImageOptions)
