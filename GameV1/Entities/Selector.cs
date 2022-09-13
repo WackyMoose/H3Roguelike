@@ -6,15 +6,11 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    internal class Selector : Entity, ISelector
+    internal class Selector<T> : Entity, ISelector<T> where T : class, IEnumerable<T>
     {
-
+        public IEnumerable<T> Entities { get; set; }
         public IEntity SelectedEntity { get; set; }
-
-        //public IDictionary<Vector2, IEntity>? TilesWithinRange(IScene scene, IDictionary<Vector2, IEntity> Tiles, int range)
-        //{
-        //    return scene.GetEntitiesWithinRange(Tiles, SelectedEntity, range);
-        //}
+        public int SelectedEntityIndex { get; set; }
 
         public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)
         {

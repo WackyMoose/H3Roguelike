@@ -1,4 +1,6 @@
-﻿namespace GameV1.Interfaces.Containers
+﻿using GameV1.Interfaces.Items;
+
+namespace GameV1.Interfaces.Containers
 {
     public interface IContainer
     {
@@ -7,9 +9,9 @@
         int NumEmptySlots { get; }
         bool HasEmptySlots { get; }
 
-        bool AddItemToFirstEmptySlot(IItem item);
-        bool AddItemToSlot(IItem item, ISlot<IItem> slot);
-        bool MoveContainerContent(IContainer targetContainer);
+        bool AddItemToFirstEmptySlot(IItem? item);
+        bool AddItemToSlot(IItem? item, ISlot<IItem> slot);
+        bool TransferContainerContent(IContainer targetContainer);
         IItem? RemoveItemFromSlot(ISlot<IItem> slot);
     }
 }

@@ -1,5 +1,5 @@
-﻿using GameV1.Interfaces;
-using GameV1.Interfaces.Creatures;
+﻿using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Items;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;

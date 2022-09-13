@@ -34,7 +34,7 @@ namespace GameV1
             lootableCorpse.Position = creature.Position;
 
             // Add lootable content from dead creature
-            creature.Inventory.Inventory.MoveContainerContent(lootableCorpse);
+            creature.Inventory.Inventory.TransferContainerContent(lootableCorpse);
 
             // Remove Creature from entity layer
             creatureLayer.Entities.Remove(creature.Position);

@@ -1,8 +1,8 @@
-﻿using GameV1.Interfaces;
+﻿using GameV1.Interfaces.Items;
 using MooseEngine.Graphics;
 using MooseEngine.Utilities;
 
-namespace GameV1.Entities
+namespace GameV1.Entities.Items
 {
     internal class Consumable : Item, IConsumable
     {

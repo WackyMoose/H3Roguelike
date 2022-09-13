@@ -1,7 +1,10 @@
-﻿using GameV1.Interfaces;
+﻿using GameV1.Entities.Items;
 using GameV1.Interfaces.Containers;
+using GameV1.Interfaces.Items;
 using MooseEngine.Graphics;
+using MooseEngine.UI;
 using MooseEngine.Utilities;
+using System.Reflection.Metadata.Ecma335;
 
 namespace GameV1.Entities.Containers
 {
@@ -12,7 +15,8 @@ namespace GameV1.Entities.Containers
         public int NumEmptySlots { get { return Slots.Where(s => s.IsEmpty == true).Count(); } }
         public bool HasEmptySlots { get { return NumEmptySlots > 0; } }
 
-        public Container(int maxSlots) : this(maxSlots, 0, 0, "Container", new Coords2D(), Color.White)
+        public Container(int maxSlots) 
+            : this(maxSlots, 0, 0, "Container", new Coords2D(), Color.White)
         {
         }
 
@@ -30,8 +34,10 @@ namespace GameV1.Entities.Containers
             }
         }
 
-        public bool AddItemToFirstEmptySlot(IItem item)
+        public bool AddItemToFirstEmptySlot(IItem? item)
         {
+            if (item == null) { return false; }
+
             foreach (var slot in Slots)
             {
                 if (slot.IsEmpty == true)
@@ -42,13 +48,15 @@ namespace GameV1.Entities.Containers
             return false;
         }
 
-        public bool AddItemToSlot(IItem item, ISlot<IItem> slot)
+        public bool AddItemToSlot(IItem? item, ISlot<IItem> slot)
         {
+            if(item == null) { return false; }
+            
             var result = slot.Add(item);
 
             if (result == true)
             {
-                Console.WriteLine($"{item} added to {slot}");
+                ConsolePanel.Add($"{item.Name} added to {slot}");
             }
             return result;
         }
@@ -68,7 +76,7 @@ namespace GameV1.Entities.Containers
         {
             var item = slot.Remove();
 
-            Console.WriteLine($"{item} removed from {slot}");
+            ConsolePanel.Add($"{item} removed from {slot}");
 
             return item;
         }
@@ -78,16 +86,18 @@ namespace GameV1.Entities.Containers
             return true;
         }
 
-        public bool MoveSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
+        public bool TransferSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
         {
             return true;
         }
 
-        public bool MoveContainerContent(IContainer targetContainer)
+        public bool TransferContainerContent(IContainer targetContainer)
         {
             foreach (var slot in Slots)
             {
-                targetContainer.AddItemToFirstEmptySlot(slot.Remove());
+                var result = targetContainer.AddItemToFirstEmptySlot(slot.Remove());
+
+                if(result == false) { return false; }
             }
 
             return true;

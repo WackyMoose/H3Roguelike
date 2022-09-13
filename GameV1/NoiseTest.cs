@@ -2,6 +2,7 @@
 using GameV1.Entities;
 using GameV1.Entities.Armors;
 using GameV1.Entities.Creatures;
+using GameV1.Entities.Items;
 using GameV1.Entities.Weapons;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;

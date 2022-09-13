@@ -1,4 +1,6 @@
-﻿namespace GameV1.Interfaces.Weapons
+﻿using GameV1.Interfaces.Items;
+
+namespace GameV1.Interfaces.Weapons
 {
     public interface IWeapon : IItem
     {

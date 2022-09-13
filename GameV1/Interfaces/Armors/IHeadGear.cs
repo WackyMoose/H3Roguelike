@@ -1,6 +1,6 @@
 ﻿namespace GameV1.Interfaces.Armors
 {
-    public interface IHeadGear : IItem
+    public interface IHeadGear : IArmor
     {
     }
 }

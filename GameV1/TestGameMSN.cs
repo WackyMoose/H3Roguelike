@@ -4,6 +4,7 @@ using GameV1.Entities;
 using GameV1.Entities.Armors;
 using GameV1.Entities.Containers;
 using GameV1.Entities.Creatures;
+using GameV1.Entities.Items;
 using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Creatures;
 using GameV1.UI;

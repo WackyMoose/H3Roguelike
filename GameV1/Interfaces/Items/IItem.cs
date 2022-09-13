@@ -1,6 +1,7 @@
-﻿using MooseEngine.Interfaces;
+﻿using GameV1.Interfaces;
+using MooseEngine.Interfaces;
 
-namespace GameV1.Interfaces
+namespace GameV1.Interfaces.Items
 {
     public interface IItem : IEntity
     {

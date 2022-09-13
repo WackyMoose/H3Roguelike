@@ -1,11 +1,10 @@
-﻿using GameV1.Enums;
-using GameV1.Interfaces.Creatures;
+﻿using GameV1.Interfaces.Creatures;
 
 namespace GameV1.Entities.Creatures
 {
-    public abstract class Skill : ICreatureSkill
+    public abstract class CreatureSkill : ICreatureSkill
     {
-        public Skill(CreatureSkillType type, int experience = 0)
+        public CreatureSkill(CreatureSkillType type, int experience = 0)
         {
             Type = type;
             Experience = experience;

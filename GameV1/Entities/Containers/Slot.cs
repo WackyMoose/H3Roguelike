@@ -1,5 +1,5 @@
-﻿using GameV1.Interfaces;
-using GameV1.Interfaces.Containers;
+﻿using GameV1.Interfaces.Containers;
+using GameV1.Interfaces.Items;
 
 namespace GameV1.Entities.Containers
 {

@@ -2,7 +2,7 @@
 using MooseEngine.Interfaces;
 using System.Numerics;
 
-namespace GameV1.Interfaces
+namespace GameV1.Interfaces.Items
 {
     public interface ILightSource : IItem
     {

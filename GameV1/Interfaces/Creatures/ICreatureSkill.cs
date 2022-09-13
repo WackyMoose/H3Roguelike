@@ -1,4 +1,4 @@
-﻿using GameV1.Enums;
+﻿using GameV1.Entities.Creatures;
 
 namespace GameV1.Interfaces.Creatures
 {

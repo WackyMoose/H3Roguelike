@@ -1,7 +1,6 @@
 ﻿namespace GameV1.Interfaces.Armors
 {
-    public interface IBodyArmor : IItem
+    public interface IBodyArmor : IArmor
     {
-        int DamageReduction { get; set; }
     }
 }

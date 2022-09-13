@@ -1,10 +1,10 @@
-﻿using GameV1.Interfaces;
+﻿using GameV1.Interfaces.Items;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
 using System.Numerics;
 
-namespace GameV1.Entities
+namespace GameV1.Entities.Items
 {
     public class LightSource : Item, ILightSource
     {

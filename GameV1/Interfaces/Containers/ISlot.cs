@@ -1,4 +1,6 @@
-﻿namespace GameV1.Interfaces.Containers
+﻿using GameV1.Interfaces.Items;
+
+namespace GameV1.Interfaces.Containers
 {
     public interface ISlot<TItem> where TItem : IItem
     {

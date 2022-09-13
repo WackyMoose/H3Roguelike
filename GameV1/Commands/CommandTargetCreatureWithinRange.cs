@@ -40,7 +40,7 @@ namespace GameV1.Commands
             {
                 Creature.TargetCreature = (ICreature?)creatures.Values.FirstOrDefault();
 
-                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetCreature}");
+                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetCreature.Name}");
 
                 return NodeStates.Success;
             }
