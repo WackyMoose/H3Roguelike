@@ -19,7 +19,7 @@ public interface IRaylibUIRendererOptions
     float TextSpacing { get; set; }
 
     ColorOptions Colors { get; set; }
-    ScrollbarOptions ScrollbarOptions { get; set; }
+    ScrollbarOptionsDep ScrollbarOptions { get; set; }
     TextAlignment StatusBarTextAlignment { get; set; }
 }
 
@@ -33,7 +33,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
     public float TextSpacing { get; set; }
 
     public ColorOptions Colors { get; set; }
-    public ScrollbarOptions ScrollbarOptions { get; set; }
+    public ScrollbarOptionsDep ScrollbarOptions { get; set; }
 
     public TextAlignment StatusBarTextAlignment { get; set; }
 
@@ -50,7 +50,7 @@ internal class RaylibUIRendererOptions : IRaylibUIRendererOptions
         TextSpacing = 1;
 
         Colors = new ColorOptions();
-        ScrollbarOptions = new ScrollbarOptions();
+        ScrollbarOptions = new ScrollbarOptionsDep();
 
         StatusBarTextAlignment = TextAlignment.Left;
     }

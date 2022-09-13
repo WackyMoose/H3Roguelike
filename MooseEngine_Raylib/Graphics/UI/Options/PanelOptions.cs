@@ -4,10 +4,9 @@ namespace MooseEngine.Graphics.UI.Options;
 
 public class PanelOptions : TextOptions
 {
-    private readonly static Color NORMAL_HEADER_COLOR = new Color(201, 201, 201, 255);
-    private readonly static Color DISABLED_HEADER_COLOR = new Color(230, 233, 233, 255);
-
-    private readonly static int DEFAULT_STATUS_BAR_HEIGHT = 24;
+    protected readonly static Color HEADER_NORMAL_COLOR = new Color(201, 201, 201, 255);
+    protected readonly static Color HEADER_DISABLED_COLOR = new Color(230, 233, 233, 255);
+    protected readonly static int DEFAULT_STATUS_BAR_HEIGHT = 24;
 
     //public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title)
     //    : this(position, size, title, 1, 24, NORMAL_HEADER_COLOR, DISABLED_HEADER_COLOR, false)
@@ -46,7 +45,7 @@ public class PanelOptions : TextOptions
               DEFAULT_NORMAL_COLOR, DEFAULT_FOCUSED_COLOR, DEFAULT_PRESSED_COLOR, DEFAULT_DISABLED_COLOR,
               headerTextColor, DEFAULT_TEXT_FOCUSED_COLOR, DEFAULT_TEXT_PRESSED_COLOR, DEFAULT_TEXT_DISABLED_COLOR,
               borderColor, DEFAULT_BORDER_FOCUSED_COLOR, DEFAULT_BORDER_PRESSED_COLOR, DEFAULT_BORDER_DISABLED_COLOR,
-              DEFAULT_STATUS_BAR_HEIGHT, headerNormalColor, Color.Blank, interactable)
+              DEFAULT_STATUS_BAR_HEIGHT, headerNormalColor, Color.Blank, DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_TEXT_DISABLED_COLOR, interactable)
     {
     }
 
@@ -55,7 +54,7 @@ public class PanelOptions : TextOptions
         Color normalColor, Color focusedColor, Color pressedColor, Color disabledColor, 
         Color textNormalColor, Color textFocusedColor, Color textPressedColor, Color textDisabledColor, 
         Color borderNormalColor, Color borderFocusedColor, Color borderPressedColor, Color borderDisabledColor, 
-        int statusBarHeight, Color headerNormalColor, Color headerDisabledColor, bool interactable = true) 
+        int statusBarHeight, Color headerNormalColor, Color headerDisabledColor, Color headerTextNormalColor, Color headerTextDisabledColor, bool interactable = true) 
         : base(position, size, text, fontSize, textSpacing, borderWidth, padding, textAlignment, 
             lineColor, backgroundColor, 
             normalColor, focusedColor, pressedColor, disabledColor, 
@@ -66,9 +65,13 @@ public class PanelOptions : TextOptions
         StatusBarHeight = statusBarHeight;
         HeaderNormalColor = headerNormalColor;
         HeaderDisabledColor = headerDisabledColor;
+        HeaderTextNormalColor = headerTextNormalColor;
+        HeaderTextDisabledColor = headerTextDisabledColor;
     }
 
     public int StatusBarHeight { get; set; }
     public Color HeaderNormalColor { get; set; }
     public Color HeaderDisabledColor { get; set; }
+    public Color HeaderTextNormalColor { get; set; }
+    public Color HeaderTextDisabledColor { get; set; }
 }

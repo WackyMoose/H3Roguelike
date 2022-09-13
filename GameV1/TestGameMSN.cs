@@ -55,7 +55,7 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
-    private bool _showDebugPanel = false;
+    private bool _showDebugPanel = true;
 
     public void Initialize()
     {
@@ -189,7 +189,7 @@ internal class TestGameMSN : IGame
         var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
         var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
 
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize, 4);
         _statsPanel = new StatsPanel(player);
         _debugPanel = new DebugPanel(10, 10, player);
 
