@@ -1,88 +1,10 @@
-﻿using MooseEngine.Graphics;
+﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Utilities;
 
 namespace MooseEngine.UI;
-
-public static class IEnumerableExtensions
-{
-    public static IEnumerable<string> SplitString(this string str, int size)
-    {
-        return Enumerable.Range(0, str.Length / size).Select(i => str.Substring(i * size, size));
-    }
-
-    public static IEnumerable<string> Split(this string str, int length)
-    {
-        return str.Split(' ')
-            .Aggregate(new [] { "" }.ToList(), (a, x) =>
-            {
-                var last = a[a.Count - 1];
-                if ((last + " " + x).Length > length)
-                {
-                    a.Add(x);
-                }
-                else
-                {
-                    a[a.Count - 1] = (last + " " + x).Trim();
-                }
-                return a;
-            });
-    }
-
-    public static IEnumerable<string> EnumByNearestSpace(this string value, int length)
-    {
-        if (String.IsNullOrEmpty(value))
-            yield break;
-
-        int bestDelta = int.MaxValue;
-        int bestSplit = -1;
-
-        int from = 0;
-
-        for (int i = 0; i < value.Length; ++i)
-        {
-            var Ch = value[i];
-
-            if (Ch != ' ')
-                continue;
-
-            int size = (i - from);
-            int delta = (size - length > 0) ? size - length : length - size;
-
-            if ((bestSplit < 0) || (delta < bestDelta))
-            {
-                bestSplit = i;
-                bestDelta = delta;
-            }
-            else
-            {
-                yield return value.Substring(from, bestSplit - from);
-
-                i = bestSplit;
-
-                from = i + 1;
-                bestSplit = -1;
-                bestDelta = int.MaxValue;
-            }
-        }
-
-        // String's tail
-        if (from < value.Length)
-        {
-            if (bestSplit >= 0)
-            {
-                if (bestDelta < value.Length - from)
-                    yield return value.Substring(from, bestSplit - from);
-
-                from = bestSplit + 1;
-            }
-
-            if (from < value.Length)
-                yield return value.Substring(from);
-        }
-    }
-}
 
 public class ConsolePanel
 {
