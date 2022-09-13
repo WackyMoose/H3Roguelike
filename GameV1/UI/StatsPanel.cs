@@ -25,8 +25,6 @@ internal class StatsPanel
     private PanelOptions _panelOptions;
     private ImageOptions _seperatorImageOptions;
 
-    private SeperatorOptions _seperatorOptions;
-
     // Stats
     private SubImageOptions _portraitOptions;
     private LabelOptions _strengthLabelOptions;
