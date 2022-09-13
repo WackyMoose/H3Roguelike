@@ -1,7 +1,6 @@
 ﻿using GameV1.Categories;
 using GameV1.Interfaces;
 using MooseEngine.Graphics;
-using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 
@@ -10,11 +9,11 @@ namespace GameV1.Entities
     public class Creature : Entity, ICreature
     {
         public ICreatureSpeciesCategory Species { get; set; }
-        public IEnumerable<ISkill?> Skills { get; set; }
-        public CreatureStats Stats { get; set; }
-        public CreatureInventory Inventory { get; set; }
-        public IEnumerable<ICreatureSpeciesCategory?> EnemySpecies { get; set; }
-        public IEnumerable<ICreature?> EnemyCreatures { get; set; }
+        public IEnumerable<ISkill> Skills { get; set; }
+        public ICreatureStats Stats { get; set; }
+        public ICreatureInventory Inventory { get; set; }
+        public IEnumerable<ICreatureSpeciesCategory> EnemySpecies { get; set; }
+        public IEnumerable<ICreature> EnemyCreatures { get; set; }
         public bool IsDead { get { return Stats.Health <= 0; } }
         public ICreature? TargetCreature { get; set; }
 
@@ -23,10 +22,10 @@ namespace GameV1.Entities
             Species = new CreatureSpeciesCategory();
             Skills = new List<ISkill>();
             Stats = new CreatureStats();
-            Inventory = new CreatureInventory(new Weapon(0, 0, "Fist", new Coords2D(), Color.White), new Inventory(8, 0, 0));
+            Inventory = new CreatureInventory(new Weapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(8));
             EnemySpecies = new List<ICreatureSpeciesCategory>();
             EnemyCreatures = new List<ICreature>();
-            
+
             Stats.Health = health;
         }
 
@@ -35,7 +34,7 @@ namespace GameV1.Entities
             Species = new CreatureSpeciesCategory();
             Skills = new List<ISkill>();
             Stats = new CreatureStats();
-            Inventory = new CreatureInventory(new Weapon(0, 0, "Fist", new Coords2D(), Color.White), new Inventory(8, 0, 0));
+            Inventory = new CreatureInventory(new Weapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(8));
             EnemySpecies = new List<ICreatureSpeciesCategory>();
             EnemyCreatures = new List<ICreature>();
 
@@ -45,6 +44,8 @@ namespace GameV1.Entities
         public void TakeDamage(int damage)
         {
             Stats.Health -= damage;
+
+            if (Stats.Health < 0) { Stats.Health = 0; IsActive = false; }
         }
 
         public override void Initialize()

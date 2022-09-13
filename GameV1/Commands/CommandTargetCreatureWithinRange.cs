@@ -1,11 +1,6 @@
-﻿using GameV1.Entities;
-using GameV1.Interfaces;
+﻿using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
 
 namespace GameV1.Commands
 {
@@ -23,7 +18,7 @@ namespace GameV1.Commands
         public override NodeStates Execute()
         {
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
-            IDictionary<Vector2, IEntity>? creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
+            var creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
             // Remove self
             if (creaturesWithinLayer.ContainsKey(Creature.Position))
@@ -31,15 +26,15 @@ namespace GameV1.Commands
                 creaturesWithinLayer.Remove(Creature.Position);
             }
 
-            var creatures = creaturesWithinLayer.Where(creature => creature.Value.IsDead == false).ToDictionary(creature => creature.Key, creature => creature.Value);
+            var creatures = creaturesWithinLayer.Where(creature => creature.Value.IsActive == true).ToDictionary(creature => creature.Key, creature => creature.Value);
 
-            if (creatures.Count == 0) 
+            if (creatures.Count == 0)
             {
                 Creature.TargetCreature = null;
 
                 Console.WriteLine($"CheckForCreaturesWithinRange found nothing.");
 
-                return NodeStates.Failure; 
+                return NodeStates.Failure;
             }
             else
             {

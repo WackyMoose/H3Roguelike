@@ -64,7 +64,7 @@ namespace GameV1.Commands.Factory
                 }
 
             }
-            if(input == InputOptions.PickUp)
+            if (input == InputOptions.PickUp)
             {
                 return new CommandItemPickUp(scene, (ICreature)entity);
             }

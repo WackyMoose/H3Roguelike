@@ -17,7 +17,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            if(Attacker.TargetCreature.IsDead == false)
+            if (Attacker.TargetCreature.IsDead == false)
             {
                 CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.Inventory.StrongestWeapon);
                 return NodeStates.Success;

@@ -3,14 +3,12 @@ using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
-using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
-using System.Threading;
 
 namespace GameV1;
 

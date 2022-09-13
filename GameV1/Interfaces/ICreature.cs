@@ -1,6 +1,4 @@
-﻿using GameV1.Categories;
-using GameV1.Entities;
-using MooseEngine.Interfaces;
+﻿using MooseEngine.Interfaces;
 
 namespace GameV1.Interfaces
 {
@@ -8,12 +6,12 @@ namespace GameV1.Interfaces
     {
         ICreatureSpeciesCategory Species { get; set; }
         IEnumerable<ISkill> Skills { get; set; }
-        CreatureStats Stats { get; set; }
-        CreatureInventory Inventory { get; set; }
+        ICreatureStats Stats { get; set; }
+        ICreatureInventory Inventory { get; set; }
         IEnumerable<ICreatureSpeciesCategory> EnemySpecies { get; set; }
         IEnumerable<ICreature> EnemyCreatures { get; set; }
         ICreature? TargetCreature { get; set; }
-        bool IsDead { get { return Stats.Health <= 0; } }
+        bool IsDead { get; }
 
         void TakeDamage(int damage);
     }

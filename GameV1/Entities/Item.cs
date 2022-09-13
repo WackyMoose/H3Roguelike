@@ -12,7 +12,7 @@ namespace GameV1.Entities
         public IEnumerable<IMaterial>? Materials { get; set; }
         public bool IsBroken { get { return Durability <= 0; } }
 
-        public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(name, spriteCoords, colorTint)
         {
             Durability = durability;

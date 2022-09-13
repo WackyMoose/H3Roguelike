@@ -1,7 +1,4 @@
-﻿
-using MooseEngine.Graphics.UI;
-
-namespace MooseEngine.Core
+﻿namespace MooseEngine.Core
 {
     public static class InputHandler
     {

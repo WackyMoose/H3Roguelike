@@ -11,8 +11,8 @@ namespace MooseEngine.BehaviorTree.Base
         public NodeStates State { get; set; }
         public int Timestamp { get; set; }
 
-        public NodeBase() 
-        { 
+        public NodeBase()
+        {
             Timestamp = DateTime.Now.Millisecond;
         }
 

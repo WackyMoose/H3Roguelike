@@ -14,7 +14,7 @@ public class PanelOptions : TextOptions
     {
     }
 
-    public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title, int statusBarHeight, bool interactable) 
+    public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title, int statusBarHeight, bool interactable)
         : base(position, size, Constants.DEFAULT_FONT_SIZE, 1, interactable)
     {
         Title = title;

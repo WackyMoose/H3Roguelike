@@ -233,7 +233,7 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Update control
         //--------------------------------------------------------------------
-        if(listViewOptions.Interactable)
+        if (listViewOptions.Interactable)
         {
             Vector2 mousePoint = Raylib.GetMousePosition();
 

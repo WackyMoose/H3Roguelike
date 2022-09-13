@@ -1,7 +1,6 @@
 ﻿
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-using System.Linq;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -12,14 +11,14 @@ namespace GameV1.Commands
 
         public static Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities)
         {
-            return entities.ElementAt(Randomizer.RandomInt(0, entities.Count-1)).Value.Position;
+            return entities.ElementAt(Randomizer.RandomInt(0, entities.Count - 1)).Value.Position;
         }
 
         public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)
         {
             Vector2 closestValidPosition = Vector2.Zero;
             float tempDist = Vector2.DistanceSquared(closestValidPosition, targetPosition);
-            
+
             foreach (var pos in entities.Keys)
             {
                 var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);

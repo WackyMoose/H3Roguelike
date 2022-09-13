@@ -62,20 +62,24 @@ public class Scene : Disposeable, IScene
 
     public bool TryMoveEntity(IEntity entity, Vector2 targetPosition, int entityLayer, params int[] collisionLayers)
     {
-        if(collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
-        
-        foreach(var layer in collisionLayers)
+        if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
+
+        foreach (var layer in collisionLayers)
         {
             bool isKeyAvailable = !GetLayer(layer).Entities.ContainsKey(targetPosition);
 
-            if(isKeyAvailable == true) { continue; } else { return false; }
+            if (isKeyAvailable == true) { continue; } else { return false; }
         }
-        
-        GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
-        GetLayer(entityLayer).Entities.Remove(entity.Position);
-        entity.Position = targetPosition;
 
-        return true;
+        if (GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity))
+        {
+            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            entity.Position = targetPosition;
+
+            return true;
+        }
+
+        return false;
     }
 
     public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
@@ -85,39 +89,43 @@ public class Scene : Disposeable, IScene
         if (isKeyAvailable == true)
         {
             entity.Position = targetPosition;
+
             return true;
         }
+
         return false;
     }
 
-    public bool PlaceEntityWithinSquare(IEntity entity, Vector2 topLeft, Vector2 bottomRight, int targetEntityLayer, params int[] collisionLayers)
+    public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers)
     {
-        return true;
-    }
+        if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
 
-    public bool PlaceEntityAtClosestPosition(IEntity entity, Vector2 targetPosition, int targetEntityLayer, params int[] collisionLayers)
-    {
-        int distance = 0;
-
-        bool result = TryPlaceEntity(targetEntityLayer, entity, targetPosition);
-
-        if(result == false)
+        foreach (var layer in collisionLayers)
         {
+            bool isKeyAvailable = !GetLayer(layer).Entities.ContainsKey(targetPosition);
 
+            if (isKeyAvailable == true) { continue; } else { return false; }
         }
 
-        return true;
+        if (GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity))
+        {
+            entity.Position = targetPosition;
+
+            return true;
+        }
+
+        return false;
     }
 
-    public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
+    public IDictionary<Vector2, TEntity>? GetEntitiesOfType<TEntity>(IEntityLayer entities) where TEntity : class, IEntity
     {
-        Dictionary<Vector2, IEntity> entitiesOfType = new Dictionary<Vector2, IEntity>();
+        Dictionary<Vector2, TEntity>? entitiesOfType = new Dictionary<Vector2, TEntity>();
 
-        foreach(var entity in entities.Entities)
+        foreach (var entity in entities.Entities)
         {
-            if (entity.Value.GetType() == typeof(TType))
+            if (entity.Value.GetType() == typeof(TEntity))
             {
-                entitiesOfType.Add(entity.Key, entity.Value);
+                entitiesOfType.Add(entity.Key, (TEntity)entity.Value);
             }
         }
 
@@ -194,10 +202,10 @@ public class Scene : Disposeable, IScene
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
-        
-        
+
+
         var layers = _entityLayers.Keys;
-        
+
         Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)

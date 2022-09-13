@@ -11,7 +11,8 @@ namespace MooseEngine.Interfaces
         Coords2D SpriteCoords { get; set; }
         Color ColorTint { get; set; }
         string Name { get; set; }
-        bool IsDead { get; set; }
+        bool IsActive { get; set; }
+        bool IsVisible { get; set; }
 
         void Initialize();
         void Update(float deltaTime);

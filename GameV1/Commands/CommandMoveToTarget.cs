@@ -1,11 +1,7 @@
-﻿using GameV1.Entities;
-using GameV1.Interfaces;
+﻿using GameV1.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Pathfinding;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using System;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -25,7 +21,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            if(Creature.TargetCreature == null) { return NodeStates.Failure; }
+            if (Creature.TargetCreature == null) { return NodeStates.Failure; }
 
             // Are we there yet?
             if (

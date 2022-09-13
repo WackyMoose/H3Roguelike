@@ -1,6 +1,6 @@
 ﻿using GameV1.Entities;
 using GameV1.Interfaces;
-using MooseEngine.Interfaces;
+using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
@@ -23,12 +23,15 @@ namespace GameV1
         public static void KillCreature(IEntityLayer creatureLayer, ICreature creature, IEntityLayer replacementLayer)
         {
             // Check if entíty exists at position
-            if(creatureLayer.Entities.ContainsKey(creature.Position) == false) { return; }
+            if (creatureLayer.Entities.ContainsKey(creature.Position) == false) { return; }
+
+            creature.IsActive = false;
+            creature.Stats.Health = 0;
 
             // Create Inventory item
-            var lootableCorpse = new Inventory(8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7));
+            var lootableCorpse = new Container(8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7), Color.White);
             lootableCorpse.Position = creature.Position;
-            
+
             // Add lootable content from dead creature
             creature.Inventory.Inventory.MoveContainerContent(lootableCorpse);
 

@@ -8,7 +8,6 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
-using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
@@ -53,7 +52,7 @@ internal class TestGameMSN : IGame
     private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
 
     // Inventories
-    private Inventory weaponChest = new Inventory(8, 1000, 1000, "Weapon chest", new Coords2D(9, 3));
+    private Container weaponChest = new Container(8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
 
     // Behavior trees
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
@@ -190,7 +189,7 @@ internal class TestGameMSN : IGame
                         Action(new CommandAttackTarget(_scene, druid))
                     ),
                 Action(new CommandPatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
-                
+
             );
 
         var druidTree = BehaviorTree(druid, druidNode);
@@ -246,7 +245,7 @@ internal class TestGameMSN : IGame
         InputOptions? input = InputHandler.Handle();
 
         // Generate commands
-        ICommand command = CommandFactory.Create(input, _scene, Player);
+        ICommand? command = CommandFactory.Create(input, _scene, Player);
 
         CommandQueue.Add(command);
 
@@ -255,20 +254,29 @@ internal class TestGameMSN : IGame
             // Execute Player commands
             CommandQueue.Execute();
 
-            // AI NPC / Monster / Critter controls
-            foreach (BTree btree in btrees)
+            foreach (var entity in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
             {
-                if(btree.Entity.IsDead == false)
+                ICreature creature = (ICreature)entity.Value;
+
+                if (creature.IsDead == true)
                 {
-                    btree.Evaluate();
+                    CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), creature, _scene.GetLayer((int)EntityLayer.Items));
                 }
             }
 
-            foreach (var creature in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
+            // AI NPC / Monster / Critter controls
+            foreach (BTree btree in btrees)
             {
-                if (creature.Value.IsDead == true)
+                btree.Evaluate();
+
+                foreach (var entity in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
                 {
-                    CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), (ICreature)creature.Value, _scene.GetLayer((int)EntityLayer.Items));
+                    ICreature creature = (ICreature)entity.Value;
+
+                    if (creature.IsDead == true)
+                    {
+                        CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), creature, _scene.GetLayer((int)EntityLayer.Items));
+                    }
                 }
             }
         }
@@ -276,7 +284,7 @@ internal class TestGameMSN : IGame
         // TODO: Only illuminate if range within viewport, AABB check
         // Dynamically updated light sources
         var windowSize = new Vector2(
-            (int)(Application.Instance.Window.Width  * 0.5 - (Application.Instance.Window.Width  * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), 
+            (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
             (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var cameraPosition = _scene.SceneCamera.Position;
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
@@ -285,9 +293,9 @@ internal class TestGameMSN : IGame
         foreach (LightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
-                cameraPosition, 
-                windowSize, 
-                lightSource.Position, 
+                cameraPosition,
+                windowSize,
+                lightSource.Position,
                 new Vector2(lightSource.Range, lightSource.Range));
 
             if (isOverlapping)

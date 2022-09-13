@@ -75,7 +75,7 @@ internal class RaylibRenderer : IRaylibRenderer
             source,
             destination,
             new Vector2(Constants.DEFAULT_ENTITY_SIZE / 2, Constants.DEFAULT_ENTITY_SIZE / 2), // Vector2.Zero
-            entity.IsDead ? 90.0f : 0.0f,
+            0.0f,
             entity.ColorTint);
     }
 }

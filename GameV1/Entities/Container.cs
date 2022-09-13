@@ -4,12 +4,16 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    public abstract class Container: Item, IContainer
+    public class Container : Item, IContainer
     {
         public int NumSlots { get; set; }
         public IEnumerable<ISlot<IItem>> Slots { get; set; }
         public int NumEmptySlots { get { return Slots.Where(s => s.IsEmpty == true).Count(); } }
         public bool HasEmptySlots { get { return NumEmptySlots > 0; } }
+
+        public Container(int maxSlots) : this(maxSlots, 0, 0, "Container", new Coords2D(), Color.White)
+        {
+        }
 
         public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
@@ -40,8 +44,8 @@ namespace GameV1.Entities
         public bool AddItemToSlot(IItem item, ISlot<IItem> slot)
         {
             var result = slot.Add(item);
-            
-            if(result == true)
+
+            if (result == true)
             {
                 Console.WriteLine($"{item} added to {slot}");
             }
@@ -50,11 +54,11 @@ namespace GameV1.Entities
 
         public IItem? RemoveItemFromSlotIndex(int slotIndex)
         {
-            if(slotIndex > Slots.Count()) { return default; }
-            
+            if (slotIndex > Slots.Count()) { return default; }
+
             var slot = Slots.ElementAt(slotIndex);
 
-            if(slot.IsEmpty == true) { return default; }
+            if (slot.IsEmpty == true) { return default; }
 
             return RemoveItemFromSlot(slot);
         }
@@ -69,7 +73,7 @@ namespace GameV1.Entities
         }
 
         public bool SwapSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
-        { 
+        {
             return true;
         }
 
@@ -80,7 +84,7 @@ namespace GameV1.Entities
 
         public bool MoveContainerContent(IContainer targetContainer)
         {
-            foreach(var slot in Slots)
+            foreach (var slot in Slots)
             {
                 targetContainer.AddItemToFirstEmptySlot(slot.Remove());
             }

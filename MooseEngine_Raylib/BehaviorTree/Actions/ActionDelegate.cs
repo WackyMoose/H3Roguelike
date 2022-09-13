@@ -1,5 +1,5 @@
-﻿using MooseEngine.Core;
-using MooseEngine.BehaviorTree.Base;
+﻿using MooseEngine.BehaviorTree.Base;
+using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Actions
 {

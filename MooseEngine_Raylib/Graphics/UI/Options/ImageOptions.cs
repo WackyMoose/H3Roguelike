@@ -4,7 +4,7 @@ namespace MooseEngine.Graphics.UI.Options;
 
 public class ImageOptions : UIOptionsBase
 {
-    public ImageOptions(UIScreenCoords position, UIScreenCoords size, Coords2D coords, int spriteSize, Raylib_cs.Texture2D image) 
+    public ImageOptions(UIScreenCoords position, UIScreenCoords size, Coords2D coords, int spriteSize, Raylib_cs.Texture2D image)
         : base(position, size, false)
     {
         Coords = coords;

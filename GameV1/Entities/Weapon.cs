@@ -18,7 +18,7 @@ namespace GameV1.Entities
         #endregion
 
         #region Constructors
-        public Weapon(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public Weapon(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
         }

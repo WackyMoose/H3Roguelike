@@ -1,7 +1,5 @@
-﻿using System.Numerics;
-using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
-using MooseEngine.Utilities;
+﻿using MooseEngine.Utilities;
+using System.Numerics;
 
 namespace MooseEngine.Pathfinding
 {

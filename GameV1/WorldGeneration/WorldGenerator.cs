@@ -25,7 +25,7 @@ namespace GameV1.WorldGeneration
         //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref IScene scene) 
+        public static bool GenerateWorld(int seed, ref IScene scene)
         {
             var world = new World(501, 501, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
 
@@ -134,7 +134,7 @@ namespace GameV1.WorldGeneration
             {
                 if (tile.Value.IsWalkable == true)
                 {
-                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key,tile.Value);
+                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key, tile.Value);
                 }
                 else
                 {

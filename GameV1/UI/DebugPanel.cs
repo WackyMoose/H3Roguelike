@@ -1,5 +1,4 @@
-﻿using GameV1.Entities;
-using GameV1.Interfaces;
+﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;

@@ -1,8 +1,5 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
-using MooseEngine.Utilities;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -37,7 +34,7 @@ namespace GameV1.Commands
 
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
-            if(path.Length == 0)
+            if (path.Length == 0)
             {
                 return NodeStates.Success;
             }

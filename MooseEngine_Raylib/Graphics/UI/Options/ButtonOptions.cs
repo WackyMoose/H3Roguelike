@@ -14,7 +14,7 @@ public class ButtonOptions : TextOptions
         : this(position, size, fontSize, string.Empty, 1.0f, 2, 2, TextAlignment.Center, interactable)
     {
     }
-    public ButtonOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, float textSpacing, int borderWidth, int padding, TextAlignment textAlignment, bool interactable = true) 
+    public ButtonOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, float textSpacing, int borderWidth, int padding, TextAlignment textAlignment, bool interactable = true)
         : base(position, size, fontSize, textSpacing, borderWidth, padding, textAlignment, interactable)
     {
         Text = text;

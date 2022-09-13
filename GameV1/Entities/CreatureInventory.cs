@@ -1,17 +1,12 @@
 ﻿using GameV1.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities
 {
     public class CreatureInventory : ICreatureInventory
     {
         public CreatureInventory(
-            IWeapon defaultWeapon, 
-            IInventory inventory)
+            IWeapon defaultWeapon,
+            IContainer inventory)
         {
             HeadGear = new Slot<IHeadGear>();
             PrimaryWeapon = new Slot<IWeapon>();
@@ -27,8 +22,8 @@ namespace GameV1.Entities
         public ISlot<IWeapon> SecondaryWeapon { get; set; }
         public ISlot<IBodyArmor> BodyArmor { get; set; }
         public ISlot<IFootWear> FootWear { get; set; }
-        public IWeapon StrongestWeapon => PrimaryWeapon.Item; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
+        public IWeapon StrongestWeapon => PrimaryWeapon.Item is not null ? PrimaryWeapon.Item : DefaultWeapon; // MainHand.Item?.Damage > OffHand.Item?.Damage ? MainHand.Item : OffHand.Item;
         public IWeapon DefaultWeapon { get; set; }
-        public IInventory Inventory { get; set; }
+        public IContainer Inventory { get; set; }
     }
 }

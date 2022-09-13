@@ -33,7 +33,7 @@ namespace MooseEngine.BehaviorTree.Composites
 
         public override NodeStates Evaluate()
         {
-            if (Children == null) 
+            if (Children == null)
             {
                 State = NodeStates.Failure;
                 return State;
