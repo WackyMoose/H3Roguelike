@@ -1,5 +1,8 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Entities.Armors;
+using GameV1.Entities.Creatures;
+using GameV1.Entities.Weapons;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
@@ -20,7 +23,7 @@ internal class NoiseTest : IGame
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
     private Creature ork = new Creature("Ork", 100, new Coords2D(11, 0));
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Weapon sword = new MeleeWeapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private BodyArmor armor = new BodyArmor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
@@ -37,8 +40,7 @@ internal class NoiseTest : IGame
         sword.ArmorPenetrationFlat = 50;
         sword.ArmorPenetrationPercent = 20;
 
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
+        armor.DamageReduction = 50;
 
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();

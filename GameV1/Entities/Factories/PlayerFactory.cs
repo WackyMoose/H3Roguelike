@@ -1,4 +1,5 @@
-﻿using MooseEngine.Interfaces;
+﻿using GameV1.Entities.Creatures;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes.Factories;
 using MooseEngine.Utilities;
 

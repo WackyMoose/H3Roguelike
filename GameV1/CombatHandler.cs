@@ -1,5 +1,6 @@
-﻿using GameV1.Entities;
-using GameV1.Interfaces;
+﻿using GameV1.Entities.Containers;
+using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Weapons;
 using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.UI;

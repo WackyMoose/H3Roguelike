@@ -1,7 +1,11 @@
 ﻿using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
-using GameV1.Interfaces;
+using GameV1.Entities.Armors;
+using GameV1.Entities.Containers;
+using GameV1.Entities.Creatures;
+using GameV1.Entities.Weapons;
+using GameV1.Interfaces.Creatures;
 using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
@@ -45,11 +49,11 @@ internal class TestGameMSN : IGame
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
 
     // Items
-    private Weapon sword = new Weapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private Weapon sword = new MeleeWeapon(100, 10, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private BodyArmor armor = new BodyArmor(100, 10, "LifeSaver", new Coords2D(6, 4), Color.White);
-    private Weapon doubleAxe = new Weapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White);
-    private Weapon crossBow = new Weapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
-    private Weapon trident = new Weapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
+    private Weapon doubleAxe = new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White);
+    private Weapon crossBow = new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
+    private Weapon trident = new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
 
     // Inventories
     private Container weaponChest = new Container(8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
@@ -73,8 +77,7 @@ internal class TestGameMSN : IGame
         sword.ArmorPenetrationFlat = 5;
         sword.ArmorPenetrationPercent = 2;
 
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
+        armor.DamageReduction = 50;
 
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();

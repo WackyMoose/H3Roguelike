@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
-using GameV1.Interfaces;
+using GameV1.Entities.Creatures;
+using GameV1.Interfaces.Creatures;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
