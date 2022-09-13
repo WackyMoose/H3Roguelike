@@ -1,8 +1,8 @@
 ﻿using GameV1.Entities;
+using GameV1.SpriteLibraries;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-
 using System.Numerics;
 
 namespace GameV1.WorldGeneration
@@ -16,41 +16,33 @@ namespace GameV1.WorldGeneration
         private static List<List<StructureData>> _castle02Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
 
-        private static Coords2D[] _grassTilesCoords = new Coords2D[3]{new Coords2D(5, 4),
-                                                                     new Coords2D(4, 10),
-                                                                     new Coords2D(5, 10)};
-
-        private static int[] walkableIds = new int[] { };
-
-        //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
-
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
         {
-            var world = new World(501, 501, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(501, 501, seed, new Coords2D(251 * Constants.DEFAULT_ENTITY_SIZE, 251 * Constants.DEFAULT_ENTITY_SIZE));
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
 
             _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
+            TileLibrary lib = JsonUtility.LoadFromJson<TileLibrary>(@"..\..\..\Resources\JSON\Tiles.json");
+
             foreach (var tile in _overWorld)
             {
-                //Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
-
                 //Generate grass with perlin noise..
                 if (tile.Value > -0.3 && tile.Value < 0.3)
                 {
                     var rand = Randomizer.RandomInt(0, 3);
-                    var coord = _grassTilesCoords[rand];
+                    var grassTile = lib.Tiles.ElementAt(rand);
 
-                    Tile grass = new Tile("Grass", true, coord, Color.White);
+                    Tile grass = grassTile.Value.DeepCopy();
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                 }
                 else
                 {
-                    Tile grass = new Tile("Grass", true, new Coords2D(1, 1), Color.White);
+                    Tile grass = new Tile("Empty", true, new Coords2D(1, 1), Color.White);
                     grass.Position = new Vector2(tile.Key.X, tile.Key.Y);
                     world.AddTile(tile.Key, grass);
                 }
@@ -64,8 +56,6 @@ namespace GameV1.WorldGeneration
                 //    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 //}
             }
-            //Console.WriteLine("Grass Done");
-            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in _overWorld)
             {
@@ -75,19 +65,17 @@ namespace GameV1.WorldGeneration
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
                     _forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
-                    //Console.WriteLine($"{_forest.Count} trees in forest");
 
                     foreach (var coord in _forest)
                     {
-                        Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5));
-                        treeTile.Position = new Vector2(coord.X, coord.Y);
-                        //Console.WriteLine($"Tree coords: {coord.X},{coord.Y}");
-                        world.AddTile(coord, treeTile);
+                        var rand = Randomizer.RandomInt(3, 5);
+                        var treeTile = lib.Tiles.ElementAt(rand);
+
+                        Tile tree = treeTile.Value.DeepCopy();
+                        tree.Position = new Vector2(coord.X, coord.Y);
+                        world.AddTile(coord, tree);
                     }
                 }
-
-                //Console.WriteLine("Forest Done");
-                //Console.WriteLine("--------------------------------");
 
                 //if (tile.Value > 0.1 && tile.Value < 0.101)
                 //{
@@ -123,9 +111,6 @@ namespace GameV1.WorldGeneration
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
             }
-
-            //Console.WriteLine("Starter Village Done");
-            //Console.WriteLine("--------------------------------");
 
             scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
             scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);

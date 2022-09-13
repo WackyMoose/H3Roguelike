@@ -52,6 +52,8 @@ public class Color
         A = Convert.ToByte(Math.Clamp(a, 0, 255));
     }
 
+    public Color(){}
+
     public static Color operator +(Color lhs, Color rhs)
     {
         return new Color(lhs.R + rhs.R, lhs.G + rhs.G, lhs.B + rhs.B, lhs.A + rhs.A);

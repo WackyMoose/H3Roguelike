@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace MooseEngine.Utilities
 {
@@ -11,8 +6,16 @@ namespace MooseEngine.Utilities
     {
         public static T LoadFromJson<T>(string path) 
         {
-            var json = JsonConvert.DeserializeObject<T>(path);
+            var txt = File.ReadAllText(path);
+            var json = JsonConvert.DeserializeObject<T>(txt);
             return json!;
+        }
+
+        public static bool SaveToJson<T>(T obj,string path)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            File.WriteAllText(path, json);
+            return File.Exists(path);
         }
     }
 }
