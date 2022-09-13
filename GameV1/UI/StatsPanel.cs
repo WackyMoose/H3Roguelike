@@ -18,6 +18,10 @@ internal class StatsPanel
 
     private readonly static Color TEXT_COLOR = new Color(165, 98, 67, 255);
 
+    private const int INVENTORY_SIZE = 10;
+    private const int ARMOR_SLOTS = 3;
+    private const int EQUIPMENT_SLOTS = 2;
+
     public const int WIDTH = 330;
 
     private Player _player;
@@ -36,6 +40,12 @@ internal class StatsPanel
     private SliderOptions _healthBarOptions;
     private SliderOptions _experienceBarOptions;
     private SliderOptions _fatigueBarOptions;
+
+    // Inventory 
+    private ImageOptions[] _inventoryOptions = new ImageOptions[INVENTORY_SIZE];
+    private ImageOptions _equipmentBackgroundOptions;
+    private ImageOptions[] _armorOptions = new ImageOptions[ARMOR_SLOTS];
+    private ImageOptions[] _equipmentOptions = new ImageOptions[EQUIPMENT_SLOTS];
 
     public StatsPanel(Player player)
     {
@@ -90,10 +100,48 @@ internal class StatsPanel
         var fatigueBarSize = new UIScreenCoords(265, 25);
         _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, "FT", 24, 0, 0, TextAlignment.Left, SLIDER_BACKGROUND_COLOR, TEXT_COLOR, FATIGUE_BAR_SLIDER_COLOR, 0, _player.Stats.Fatigue, false);
 
-        var seperatorImage = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources/Textures/Seperator.png");
+        var seperatorImage = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Seperator.png");
         var seperatorSize = new UIScreenCoords(size.X - 10, 16);
         var seperatorPosition = new UIScreenCoords(window.Width - size.X + 5, position.Y + 30);
         _seperatorImageOptions = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
+
+        // Inventory
+        var inventorySlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlot.png");
+        var inventorySlotSize = new UIScreenCoords(52, 52);
+        var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
+        const int padding = 10;
+        for (int i = 0; i < INVENTORY_SIZE; i++)
+        {
+            var inventorySlotPosition = startingPosition;
+            inventorySlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
+            inventorySlotPosition.Y = (i > 4) ? (startingPosition.Y + inventorySlotSize.Y + padding) : startingPosition.Y;
+
+            _inventoryOptions[i] = new ImageOptions(inventorySlotPosition, inventorySlotSize, inventorySlotTexture);
+        }
+
+        var equipmentBackground = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\EquipBackground.png");
+        var equipmentBackgroundSize = new UIScreenCoords(224, 326);
+        var equipmentBackgroundPosition = new UIScreenCoords(window.Width - ((size.X / 2) + equipmentBackgroundSize.X / 2), startingPosition.Y + 150);
+        _equipmentBackgroundOptions = new ImageOptions(equipmentBackgroundPosition, equipmentBackgroundSize, equipmentBackground, new Color(0, 0, 0, 115));
+
+        // Armor slots
+        startingPosition = new UIScreenCoords(equipmentBackgroundPosition.X + ((equipmentBackgroundSize.X / 2 - inventorySlotSize.X / 2)), equipmentBackgroundPosition.Y + 25);
+        _armorOptions[0] = new ImageOptions(startingPosition, inventorySlotSize, inventorySlotTexture);
+        startingPosition.Y += 115;
+        _armorOptions[1] = new ImageOptions(startingPosition, inventorySlotSize, inventorySlotTexture);
+        startingPosition.Y += 130;
+        _armorOptions[2] = new ImageOptions(startingPosition, inventorySlotSize, inventorySlotTexture);
+
+        // Equipment slots
+        startingPosition = new UIScreenCoords(equipmentBackgroundPosition.X, equipmentBackgroundPosition.Y);
+        for (int i = 0; i < EQUIPMENT_SLOTS; i++)
+        {
+            var equipmentSlotPosition = startingPosition;
+            equipmentSlotPosition.X += (i == 0) ? 0 : (int)(equipmentBackgroundSize.X * 0.77);
+            equipmentSlotPosition.Y += equipmentBackground.height / 2;
+
+            _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
+        }
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -112,5 +160,22 @@ internal class StatsPanel
         UIRenderer.DrawSliderBar(_fatigueBarOptions, _player.Stats.Fatigue / 2);
 
         UIRenderer.DrawImage(_seperatorImageOptions);
+
+        // Inventory
+        for (int i = 0; i < INVENTORY_SIZE; i++)
+        {
+            UIRenderer.DrawImage(_inventoryOptions[i]);
+        }
+        UIRenderer.DrawImage(_equipmentBackgroundOptions);
+
+        for (int i = 0; i < ARMOR_SLOTS; i++)
+        {
+            UIRenderer.DrawImage(_armorOptions[i]);
+        }
+
+        for (int i = 0; i < EQUIPMENT_SLOTS; i++)
+        {
+            UIRenderer.DrawImage(_equipmentOptions[i]);
+        }
     }
 }

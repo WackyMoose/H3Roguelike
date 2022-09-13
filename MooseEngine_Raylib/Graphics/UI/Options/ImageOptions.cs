@@ -5,12 +5,22 @@ namespace MooseEngine.Graphics.UI.Options;
 public class ImageOptions : UIOptionsBase
 {
     public ImageOptions(UIScreenCoords position, UIScreenCoords size, Raylib_cs.Texture2D image)
-        : base(position, size, false)
+        : this(position, size, image, Color.White)
     {
         Image = image;
     }
 
+    public ImageOptions(UIScreenCoords position, UIScreenCoords size, Raylib_cs.Texture2D image, Color tintColor)
+        : base(position, size, false)
+    {
+        Position = position;
+        Size = size;
+        Image = image;
+        TintColor = tintColor;
+    }
+
     public Raylib_cs.Texture2D Image { get; set; }
+    public Color TintColor { get; }
 }
 
 public class SubImageOptions : ImageOptions

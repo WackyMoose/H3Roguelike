@@ -195,7 +195,7 @@ internal class RaylibUIRenderer : IUIRenderer
             height = imageOptions.Size.Y
         };
 
-        Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
+        Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, imageOptions.TintColor);
     }
 
     public void DrawImage(SubImageOptions subImageOptions)
