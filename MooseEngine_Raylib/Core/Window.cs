@@ -34,6 +34,7 @@ internal class Window : IWindow
 
     public void Initialize()
     {
+        //Raylib.SetConfigFlags(ConfigFlags.FLAG_WINDOW_RESIZABLE);
         Raylib.InitWindow(_specification.Width, _specification.Height, _specification.Title);
     }
 
