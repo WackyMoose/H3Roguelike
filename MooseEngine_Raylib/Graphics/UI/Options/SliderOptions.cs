@@ -5,43 +5,18 @@ public class SliderOptions : TextOptions
 	private readonly static Color DEFAULT_SLIDER_COLOR = new Color(151, 232, 255, 255);
     private readonly static int DEFAULT_TEXT_PADDING = 2;
 
-    //public SliderOptions(bool interactable = true)
-    //	: this(UIScreenCoords.Zero, UIScreenCoords.One, 24, string.Empty, TextAlignment.None, 0, 100, DEFAULT_SLIDER_COLOR, DEFAULT_BACKGROUND_COLOR, 
-    //		  DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_BORDER_FOCUSED_COLOR, DEFAULT_BORDER_PRESSED_COLOR, DEFAULT_BORDER_DISABLED_COLOR, interactable)
-    //   {
-    //}
-
-    //public SliderOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, TextAlignment textAlignment, int minValue, int maxValue, bool interactable = true)
-    //	: this(position, size, fontSize, text, textAlignment, minValue, maxValue, DEFAULT_SLIDER_COLOR, DEFAULT_BACKGROUND_COLOR, 
-    //		  DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_BORDER_FOCUSED_COLOR, DEFAULT_BORDER_PRESSED_COLOR, DEFAULT_BORDER_DISABLED_COLOR, interactable)
-    //{
-    //}
-
-    //public SliderOptions(UIScreenCoords position, UIScreenCoords size, int fontSize, string text, TextAlignment textAlignment, int minValue, int maxValue, Color color, Color backgroundColor, bool interactable = true)
-    //	: base(position, size, text, fontSize, interactable)
-    //{
-    //	TextAlignment = textAlignment;
-    //	BorderWidth = 0;
-    //	Padding = 1;
-    //	TextPadding = 2;
-
-    //	MaxValue = maxValue;
-    //	MinValue = minValue;
-    //	SliderColor = color;
-    //}
-
     public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, TextAlignment textAlignment, int minValue, int maxValue, bool interactable = true)
-        : this(position, size, text, fontSize, textAlignment, DEFAULT_BACKGROUND_COLOR, DEFAULT_NORMAL_COLOR, minValue, maxValue, interactable)
+        : this(position, size, text, fontSize, textAlignment, DEFAULT_BACKGROUND_COLOR, DEFAULT_SLIDER_COLOR, minValue, maxValue, interactable)
     {
     }
 
     public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, TextAlignment textAlignment, Color backgroundColor, Color sliderColor, int minValue, int maxValue, bool interactable = true)
-        : this(position, size, text, fontSize, DEFAULT_BORDER_WIDTH, textAlignment, DEFAULT_BACKGROUND_COLOR, DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_NORMAL_COLOR, minValue, maxValue, interactable)
+        : this(position, size, text, fontSize, DEFAULT_BORDER_WIDTH, DEFAULT_PADDING, textAlignment, backgroundColor, DEFAULT_TEXT_NORMAL_COLOR, sliderColor, minValue, maxValue, interactable)
     {
     }
 
-    public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, int borderWidth, TextAlignment textAlignment, Color backgroundColor, Color textColor, Color sliderColor, int minValue, int maxValue, bool interactable = true)
-    : this(position, size, text, fontSize, DEFAULT_TEXT_SPACING, borderWidth, DEFAULT_PADDING, textAlignment,
+    public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, int borderWidth, int padding, TextAlignment textAlignment, Color backgroundColor, Color textColor, Color sliderColor, int minValue, int maxValue, bool interactable = true)
+    : this(position, size, text, fontSize, DEFAULT_TEXT_SPACING, borderWidth, padding, textAlignment,
           DEFAULT_LINE_COLOR, backgroundColor,
           sliderColor, DEFAULT_FOCUSED_COLOR, DEFAULT_PRESSED_COLOR, DEFAULT_DISABLED_COLOR,
           textColor, DEFAULT_TEXT_FOCUSED_COLOR, DEFAULT_TEXT_PRESSED_COLOR, DEFAULT_TEXT_DISABLED_COLOR,

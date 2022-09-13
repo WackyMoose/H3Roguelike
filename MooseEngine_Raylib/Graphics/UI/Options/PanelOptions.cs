@@ -8,32 +8,6 @@ public class PanelOptions : TextOptions
     protected readonly static Color HEADER_DISABLED_COLOR = new Color(230, 233, 233, 255);
     protected readonly static int DEFAULT_STATUS_BAR_HEIGHT = 24;
 
-    //public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title)
-    //    : this(position, size, title, 1, 24, NORMAL_HEADER_COLOR, DISABLED_HEADER_COLOR, false)
-    //{
-    //}
-
-    //public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title, bool interactable)
-    //    : this(position, size, title, 1, 24, NORMAL_HEADER_COLOR, DISABLED_HEADER_COLOR, interactable)
-    //{
-    //}
-
-    //public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title, int borderWidth, bool interactable)
-    //    : this(position, size, title, borderWidth, 24, NORMAL_HEADER_COLOR, DISABLED_HEADER_COLOR, interactable)
-    //{
-    //}
-
-    //public PanelOptions(UIScreenCoords position, UIScreenCoords size, string title, int borderWidth, int statusBarHeight, Color normalHeader, Color disabledHeader, bool interactable)
-    //    : base(position, size, title, Constants.DEFAULT_FONT_SIZE, borderWidth, interactable)
-    //{
-    //    StatusBarHeight = statusBarHeight;
-
-    //    NormalHeaderColor = normalHeader;
-    //    DisabledHeaderColor = disabledHeader;
-
-    //    BorderNormalColor = normalHeader;
-    //}
-
     public PanelOptions(UIScreenCoords position, UIScreenCoords size, string text, bool interactable = true)
         : this(position, size, text, DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_BACKGROUND_COLOR, interactable)
     {

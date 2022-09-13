@@ -2,21 +2,6 @@
 
 public class LabelOptions : TextOptions
 {
-    //public LabelOptions(UIScreenCoords position, string text)
-    //    : this(position, 24, text)
-    //{
-    //}
-
-    //public LabelOptions(UIScreenCoords position, int fontSize) 
-    //    : this(position, fontSize, string.Empty)
-    //{
-    //}
-
-    //public LabelOptions(UIScreenCoords position, int fontSize, string text)
-    //: base(position, UIScreenCoords.Zero, text, fontSize, false)
-    //{
-    //}
-
     public LabelOptions(UIScreenCoords position, string text, int fontSize, Color textNormalColor)
         : this(position, UIScreenCoords.Zero, text, fontSize, DEFAULT_TEXT_SPACING, DEFAULT_BORDER_WIDTH, DEFAULT_PADDING, TextAlignment.Left, 
               DEFAULT_LINE_COLOR, DEFAULT_BACKGROUND_COLOR, 

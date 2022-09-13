@@ -14,6 +14,7 @@ internal class StatsPanel
     private readonly static Color HEALTH_BAR_SLIDER_COLOR = new Color(178, 32, 25, 255);
     private readonly static Color EXPERIENCE_BAR_SLIDER_COLOR = new Color(239, 58, 12, 255);
     private readonly static Color FATIGUE_BAR_SLIDER_COLOR = new Color(57, 87, 28, 255);
+    private readonly static Color SLIDER_BACKGROUND_COLOR = new Color(43, 37, 36);
 
     private readonly static Color TEXT_COLOR = new Color(165, 98, 67, 255);
 
@@ -79,17 +80,17 @@ internal class StatsPanel
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215);
         var healthBarSize = new UIScreenCoords(265, 25);
-        _healthBarOptions = new SliderOptions(position, healthBarSize, "HP", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, HEALTH_BAR_SLIDER_COLOR, 0, _player.Stats.Health, false);
+        _healthBarOptions = new SliderOptions(position, healthBarSize, "HP", 24, 0, 0, TextAlignment.Left, SLIDER_BACKGROUND_COLOR, TEXT_COLOR, HEALTH_BAR_SLIDER_COLOR, 0, _player.Stats.Health, false);
 
         var exp = 1000;
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 245);
         var experienceBarSize = new UIScreenCoords(265, 24);
-        _experienceBarOptions = new SliderOptions(position, experienceBarSize, "XP", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, EXPERIENCE_BAR_SLIDER_COLOR, 0, exp, false);
+        _experienceBarOptions = new SliderOptions(position, experienceBarSize, "XP", 24, 0, 0, TextAlignment.Left, SLIDER_BACKGROUND_COLOR, TEXT_COLOR, EXPERIENCE_BAR_SLIDER_COLOR, 0, exp, false);
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 275);
         var fatigueBarSize = new UIScreenCoords(265, 25);
-        _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, "FT", 24, 0, TextAlignment.Left, Color.Blank, TEXT_COLOR, FATIGUE_BAR_SLIDER_COLOR, 0, _player.Stats.Fatigue, false);
+        _fatigueBarOptions = new SliderOptions(position, fatigueBarSize, "FT", 24, 0, 0, TextAlignment.Left, SLIDER_BACKGROUND_COLOR, TEXT_COLOR, FATIGUE_BAR_SLIDER_COLOR, 0, _player.Stats.Fatigue, false);
 
         var seperatorImage = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources/Textures/Seperator.png");
         var seperatorSize = new UIScreenCoords(size.X - 10, 16);
