@@ -70,6 +70,14 @@ public class TextOptions : UIOptionsBase
         TextFocusedColor = textFocusedColor;
         TextPressedColor = textPressedColor;
         TextDisabledColor = textDisabledColor;
+
+        Font = Raylib_cs.Raylib.GetFontDefault();
+    }
+
+    public bool SetFontByPath(string path)
+    {
+        Raylib_cs.Font? newFont = Raylib_cs.Raylib.LoadFont(path);
+        return newFont != null;
     }
 
     public string Text { get; set; }
@@ -82,4 +90,6 @@ public class TextOptions : UIOptionsBase
     public Color TextFocusedColor { get; set; }
     public Color TextPressedColor { get; set; }
     public Color TextDisabledColor { get; set; }
+
+    public Raylib_cs.Font Font { get; set; }
 }

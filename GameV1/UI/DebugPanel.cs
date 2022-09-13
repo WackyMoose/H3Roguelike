@@ -13,9 +13,13 @@ internal class DebugPanel
     private ButtonOptions _consoleButton;
     private SliderOptions _sliderOptions;
     private ButtonOptions _buttonOptions;
+    private TextInputFieldOptions _textInputFieldOptions;
 
     private int damage = 50;
     private static int _index = 0;
+
+    private string _data = string.Empty;
+    private bool _editMode = false;
 
     public DebugPanel(int x, int y, Player player)
     {
@@ -32,6 +36,11 @@ internal class DebugPanel
         btnPosition = new UIScreenCoords(10, 196);
         btnSize = new UIScreenCoords(100, 50);
         _consoleButton = new ButtonOptions(btnPosition, btnSize, "Add");
+
+        var position = new UIScreenCoords(10, 264);
+        var size = new UIScreenCoords(250, 30);
+        _textInputFieldOptions = new TextInputFieldOptions(position, size);
+        _textInputFieldOptions.SetFontByPath(@"..\..\..\Resources\Fonts\Retro_Gaming.ttf");
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -48,6 +57,12 @@ internal class DebugPanel
             ConsolePanel.Add($"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
             //ConsolePanel.Add($"adipiscing elit.");
             //ConsolePanel.Add($"Test{++_index}");
+        }
+
+        if (UIRenderer.DrawTextInputField(_textInputFieldOptions, ref _data, 64, _editMode))
+        {
+            Console.WriteLine($"DrawTextInputField pressed:{_editMode}, data:{_data}");
+            _editMode = !_editMode;
         }
     }
 }
