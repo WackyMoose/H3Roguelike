@@ -38,6 +38,32 @@
         "B": 255,
         "A": 255
       }
+    },
+    "Tree01": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 4,
+        "Y": 5
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    },
+    "Tree02": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 5
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
     }
   }
 }

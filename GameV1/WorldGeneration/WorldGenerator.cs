@@ -1,9 +1,9 @@
 ﻿using GameV1.Entities;
+using GameV1.SpriteLibraries;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
 using System.Numerics;
-using System.Linq;
 
 namespace GameV1.WorldGeneration
 {
@@ -15,14 +15,6 @@ namespace GameV1.WorldGeneration
         private static List<List<StructureData>> _castle01Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _castle02Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
-
-        private static Coords2D[] _grassTilesCoords = new Coords2D[3]{new Coords2D(5, 4),
-                                                                     new Coords2D(4, 10),
-                                                                     new Coords2D(5, 10)};
-
-        private static int[] walkableIds = new int[] { };
-
-        //private static Tile tree01 = new Tile("Tree01", true, new Coords2D());
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene) 
@@ -36,12 +28,8 @@ namespace GameV1.WorldGeneration
 
             TileLibrary lib = JsonUtility.LoadFromJson<TileLibrary>(@"..\..\..\Resources\JSON\Tiles.json");
 
-            //Console.WriteLine($"{lib.Tiles["Grass"].SpriteCoords.X}:{lib.Tiles["Grass"].SpriteCoords.Y}");
-
             foreach (var tile in _overWorld)
             {
-                //Console.WriteLine($"Tile: ({tile.Key.X}/{tile.Key.Y}), has value: {tile.Value}");
-
                 //Generate grass with perlin noise..
                 if (tile.Value > -0.3 && tile.Value < 0.3)
                 {
@@ -68,8 +56,6 @@ namespace GameV1.WorldGeneration
                 //    //Console.WriteLine($"Grass Tile at pos {grass.Position.X}:{grass.Position.Y} is {dist} distance from {posB.X}:{posB.Y}");
                 //}
             }
-            //Console.WriteLine("Grass Done");
-            //Console.WriteLine("--------------------------------");
 
             foreach (var tile in _overWorld)
             {
@@ -79,19 +65,17 @@ namespace GameV1.WorldGeneration
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
                     _forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
-                    //Console.WriteLine($"{_forest.Count} trees in forest");
 
                     foreach (var coord in _forest)
                     {
-                        Tile treeTile = new Tile("Tree01", false, new Coords2D(4, 5));
-                        treeTile.Position = new Vector2(coord.X, coord.Y);
-                        //Console.WriteLine($"Tree coords: {coord.X},{coord.Y}");
-                        world.AddTile(coord, treeTile);
+                        var rand = Randomizer.RandomInt(3, 5);
+                        var treeTile = lib.Tiles.ElementAt(rand);
+
+                        Tile tree = treeTile.Value.DeepCopy();
+                        tree.Position = new Vector2(coord.X, coord.Y);
+                        world.AddTile(coord, tree);
                     }
                 }
-
-                //Console.WriteLine("Forest Done");
-                //Console.WriteLine("--------------------------------");
 
                 //if (tile.Value > 0.1 && tile.Value < 0.101)
                 //{
@@ -127,9 +111,6 @@ namespace GameV1.WorldGeneration
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
             }
-
-            //Console.WriteLine("Starter Village Done");
-            //Console.WriteLine("--------------------------------");
 
             scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
             scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
