@@ -45,7 +45,9 @@ internal class DebugPanel
 
         if (UIRenderer.DrawButton(_consoleButton))
         {
-            ConsolePanel.Add($"Test{++_index}");
+            ConsolePanel.Add($"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+            //ConsolePanel.Add($"adipiscing elit.");
+            //ConsolePanel.Add($"Test{++_index}");
         }
     }
 }

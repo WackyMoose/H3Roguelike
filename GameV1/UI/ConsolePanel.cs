@@ -5,16 +5,96 @@ using MooseEngine.Utilities;
 
 namespace MooseEngine.UI;
 
+public static class IEnumerableExtensions
+{
+    public static IEnumerable<string> SplitString(this string str, int size)
+    {
+        return Enumerable.Range(0, str.Length / size).Select(i => str.Substring(i * size, size));
+    }
+
+    public static IEnumerable<string> Split(this string str, int length)
+    {
+        return str.Split(' ')
+            .Aggregate(new [] { "" }.ToList(), (a, x) =>
+            {
+                var last = a[a.Count - 1];
+                if ((last + " " + x).Length > length)
+                {
+                    a.Add(x);
+                }
+                else
+                {
+                    a[a.Count - 1] = (last + " " + x).Trim();
+                }
+                return a;
+            });
+    }
+
+    public static IEnumerable<string> EnumByNearestSpace(this string value, int length)
+    {
+        if (String.IsNullOrEmpty(value))
+            yield break;
+
+        int bestDelta = int.MaxValue;
+        int bestSplit = -1;
+
+        int from = 0;
+
+        for (int i = 0; i < value.Length; ++i)
+        {
+            var Ch = value[i];
+
+            if (Ch != ' ')
+                continue;
+
+            int size = (i - from);
+            int delta = (size - length > 0) ? size - length : length - size;
+
+            if ((bestSplit < 0) || (delta < bestDelta))
+            {
+                bestSplit = i;
+                bestDelta = delta;
+            }
+            else
+            {
+                yield return value.Substring(from, bestSplit - from);
+
+                i = bestSplit;
+
+                from = i + 1;
+                bestSplit = -1;
+                bestDelta = int.MaxValue;
+            }
+        }
+
+        // String's tail
+        if (from < value.Length)
+        {
+            if (bestSplit >= 0)
+            {
+                if (bestDelta < value.Length - from)
+                    yield return value.Substring(from, bestSplit - from);
+
+                from = bestSplit + 1;
+            }
+
+            if (from < value.Length)
+                yield return value.Substring(from);
+        }
+    }
+}
+
 public class ConsolePanel
 {
     private readonly static Color HEADER_COLOR = new Color(68, 48, 41);
     private readonly static Color HEADER_TEXT_COLOR = new Color(165, 98, 67);
 
-    private readonly static Color BACKGROUND_COLOR = new Color(165, 98, 67); // new Color(63, 42, 39, 255);
-    private readonly static Color TEXT_COLOR = new Color(70, 26, 20);
+    private readonly static Color BACKGROUND_COLOR = new Color(165, 98, 67);
+    private readonly static Color TEXT_COLOR = new Color(43, 37, 36); // new Color(90, 44, 32); new Color(70, 26, 20); new Color(48, 15, 10);
 
     private const string TITLE = "Log";
     public const int HEIGHT = 140;
+    private const int MAX_TEXT_LENGTH = 100;
 
     private static ConsolePanel s_Instance;
 
@@ -43,8 +123,6 @@ public class ConsolePanel
         var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
         var listViewSize = new UIScreenCoords(_size.X, _size.Y);
         _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE, HEADER_COLOR, HEADER_TEXT_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
-
-        // _panelOptions = new PanelOptions(position, size, "Stats", HEADER_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -58,9 +136,24 @@ public class ConsolePanel
         {
             _history.RemoveAt(0);
         }
-        _history.Add(msg);
+
+        if (msg.Length <= MAX_TEXT_LENGTH)
+        {
+            _history.Add(msg);
+            return;
+        }
+
+        var subStrings = msg.Split(MAX_TEXT_LENGTH);
+        foreach (var str in subStrings)
+        {
+            _history.Add(str);
+        }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg"></param>
     public static void Add(string msg)
     {
         s_Instance.AddToList(msg);
