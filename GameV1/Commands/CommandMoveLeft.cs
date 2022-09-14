@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveLeft : Command
+    public class CommandMoveLeft : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
@@ -20,9 +20,12 @@ namespace GameV1.Commands
         {
             var newPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
 
-            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, newPosition);
+            var entityLayer = (int)EntityLayer.Creatures;
+            var tileLayer = (int)EntityLayer.NonWalkableTiles;
 
-            return isMoveValid ? NodeStates.Running : NodeStates.Failure;
+            var isMoveValid = Scene.TryMoveEntity(Entity, newPosition, entityLayer, tileLayer);
+
+            return isMoveValid ? NodeStates.Success : NodeStates.Failure;
         }
     }
 }

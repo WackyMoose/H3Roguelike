@@ -24,7 +24,7 @@ namespace MooseEngine.BehaviorTree
             return new ActionDelegate(@delegate);
         }
 
-        public static IAction Action(Command command)
+        public static IAction Action(CommandBase command)
         {
             return new ActionCommand(command);
         }
@@ -107,6 +107,11 @@ namespace MooseEngine.BehaviorTree
         public static IComposite Serializer(params INode[] nodes)
         {
             return new Serializer(nodes);
+        }
+
+        public static IComposite SerializerTurnBased(params INode[] nodes)
+        {
+            return new SerializerTurnBased(nodes);
         }
     }
 }

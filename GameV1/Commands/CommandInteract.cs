@@ -4,7 +4,7 @@ using MooseEngine.Interfaces;
 
 namespace GameV1.Commands
 {
-    internal class CommandInteract : Command
+    internal class CommandInteract : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }

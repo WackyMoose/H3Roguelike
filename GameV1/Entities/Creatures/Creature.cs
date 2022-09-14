@@ -41,7 +41,7 @@ namespace GameV1.Entities.Creatures
 
             Stats.Health = health;
         }
-
+        
         public void TakeDamage(int damage)
         {
             Stats.Health -= damage;

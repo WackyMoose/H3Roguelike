@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToTarget : Command
+    public class CommandMoveToTarget : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }

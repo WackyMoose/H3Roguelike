@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandPatrolRectangularArea : Command
+    public class CommandPatrolRectangularArea : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }

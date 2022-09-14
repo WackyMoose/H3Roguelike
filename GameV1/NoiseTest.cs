@@ -24,7 +24,7 @@ internal class NoiseTest : IGame
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
     private Creature ork = new Creature("Ork", 100, new Coords2D(11, 0));
-    private Weapon sword = new MeleeWeapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private WeaponBase sword = new MeleeWeapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
     private BodyArmor armor = new BodyArmor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();

@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToPosition : Command
+    public class CommandMoveToPosition : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }

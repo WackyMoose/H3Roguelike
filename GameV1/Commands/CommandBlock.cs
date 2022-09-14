@@ -1,6 +1,4 @@
-﻿using GameV1.Interfaces.Creatures;
-using GameV1.Interfaces.Items;
-using MooseEngine.Core;
+﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,21 +8,17 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    public class CommandItemDrop : CommandBase
+    public class CommandBlock : CommandBase
     {
         public IScene Scene { get; set; }
-        public ICreature Creature { get; set; }
-        public IItem Item { get; set; }
 
-        public CommandItemDrop()
+        public CommandBlock(IScene scene)
         {
-
+            Scene = scene;
         }
 
         public override NodeStates Execute()
         {
-            
-            
             return NodeStates.Success;
         }
     }

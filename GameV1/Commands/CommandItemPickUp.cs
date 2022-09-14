@@ -6,7 +6,7 @@ using MooseEngine.UI;
 
 namespace GameV1.Commands
 {
-    internal class CommandItemPickUp : Command
+    internal class CommandItemPickUp : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }

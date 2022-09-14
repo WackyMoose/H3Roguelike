@@ -4,7 +4,7 @@ using MooseEngine.Interfaces;
 
 namespace GameV1.Commands
 {
-    internal class CommandAttackTarget : Command
+    internal class CommandAttackTarget : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Attacker { get; set; }

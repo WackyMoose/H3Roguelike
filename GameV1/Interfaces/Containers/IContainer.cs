@@ -2,7 +2,7 @@
 
 namespace GameV1.Interfaces.Containers
 {
-    public interface IContainer
+    public interface IContainer : IItem
     {
         int NumSlots { get; set; }
         IEnumerable<ISlot<IItem>> Slots { get; set; }

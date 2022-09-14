@@ -2,7 +2,7 @@
 
 namespace MooseEngine.Core
 {
-    public abstract class Command : ICommand
+    public abstract class CommandBase : ICommand
     {
         public abstract NodeStates Execute();
     }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GameV1.Entities.Armors
 {
-    public abstract class Armor : Item, IArmor
+    public abstract class ArmorBase : Item, IArmor
     {
         public int DamageReduction { get; set; }
 
-        protected Armor(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
+        protected ArmorBase(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
         }
     }
