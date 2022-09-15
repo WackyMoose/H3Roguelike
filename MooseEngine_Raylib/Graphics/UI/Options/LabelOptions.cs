@@ -2,6 +2,15 @@
 
 public class LabelOptions : TextOptions
 {
+    public LabelOptions(UIScreenCoords position, string text, int fontSize)
+        : this(position, UIScreenCoords.Zero, text, fontSize, DEFAULT_TEXT_SPACING, DEFAULT_BORDER_WIDTH, DEFAULT_PADDING, TextAlignment.Left,
+              DEFAULT_LINE_COLOR, DEFAULT_BACKGROUND_COLOR,
+              DEFAULT_NORMAL_COLOR, DEFAULT_FOCUSED_COLOR, DEFAULT_PRESSED_COLOR, DEFAULT_DISABLED_COLOR,
+              DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_TEXT_FOCUSED_COLOR, DEFAULT_TEXT_PRESSED_COLOR, DEFAULT_TEXT_DISABLED_COLOR,
+              DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_BORDER_FOCUSED_COLOR, DEFAULT_BORDER_PRESSED_COLOR, DEFAULT_BORDER_DISABLED_COLOR, false)
+    {
+    }
+
     public LabelOptions(UIScreenCoords position, string text, int fontSize, Color textNormalColor)
         : this(position, UIScreenCoords.Zero, text, fontSize, DEFAULT_TEXT_SPACING, DEFAULT_BORDER_WIDTH, DEFAULT_PADDING, TextAlignment.Left, 
               DEFAULT_LINE_COLOR, DEFAULT_BACKGROUND_COLOR, 

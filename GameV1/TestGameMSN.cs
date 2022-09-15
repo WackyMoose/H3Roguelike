@@ -55,6 +55,7 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
+    private LoginPanel _loginPanel;
     private bool _showDebugPanel = true;
 
     public void Initialize()
@@ -192,6 +193,7 @@ internal class TestGameMSN : IGame
         _consolePanel = new ConsolePanel(consolePosition, consoleSize, 4);
         _statsPanel = new StatsPanel(player);
         _debugPanel = new DebugPanel(10, 10, player);
+        _loginPanel = new LoginPanel();
 
         ConsolePanel.Add("Hello there stranger!");
 
@@ -221,13 +223,6 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            foreach (BTree btree in btrees)
-            {
-                btree.Evaluate();
-
-                // Execute AI commands
-                CommandQueue.Execute();
-            }
         }
 
         // TODO: Only illuminate if range within viewport, AABB check
@@ -267,6 +262,7 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
+        _loginPanel.OnGUI(UIRenderer);
         if (_showDebugPanel)
         {
             _debugPanel.OnGUI(UIRenderer);

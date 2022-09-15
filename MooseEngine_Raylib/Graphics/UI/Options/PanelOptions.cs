@@ -4,9 +4,10 @@ namespace MooseEngine.Graphics.UI.Options;
 
 public class PanelOptions : TextOptions
 {
-    protected readonly static Color HEADER_NORMAL_COLOR = new Color(201, 201, 201, 255);
-    protected readonly static Color HEADER_DISABLED_COLOR = new Color(230, 233, 233, 255);
-    protected readonly static int DEFAULT_STATUS_BAR_HEIGHT = 24;
+    protected static readonly new Color DEFAULT_TEXT_NORMAL_COLOR = new Color(245, 245, 245);
+    protected static readonly Color HEADER_NORMAL_COLOR = new Color(201, 201, 201);
+    protected static readonly Color HEADER_DISABLED_COLOR = new Color(230, 233, 233);
+    protected static readonly int DEFAULT_STATUS_BAR_HEIGHT = 24;
 
     public PanelOptions(UIScreenCoords position, UIScreenCoords size, string text, bool interactable = true)
         : this(position, size, text, DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_BORDER_NORMAL_COLOR, DEFAULT_BACKGROUND_COLOR, interactable)

@@ -16,10 +16,6 @@ internal class DebugPanel
     private TextInputFieldOptions _textInputFieldOptions;
 
     private int damage = 50;
-    private static int _index = 0;
-
-    private string _data = string.Empty;
-    private bool _editMode = false;
 
     public DebugPanel(int x, int y, Player player)
     {
@@ -55,14 +51,6 @@ internal class DebugPanel
         if (UIRenderer.DrawButton(_consoleButton))
         {
             ConsolePanel.Add($"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-            //ConsolePanel.Add($"adipiscing elit.");
-            //ConsolePanel.Add($"Test{++_index}");
-        }
-
-        if (UIRenderer.DrawTextInputField(_textInputFieldOptions, ref _data, 64, _editMode))
-        {
-            Console.WriteLine($"DrawTextInputField pressed:{_editMode}, data:{_data}");
-            _editMode = !_editMode;
         }
     }
 }

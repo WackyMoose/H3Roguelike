@@ -75,7 +75,7 @@ internal class RaylibUIRenderer : IUIRenderer
         // Draw control
         //--------------------------------------------------------------------
         GuiDrawRectangle(bounds, buttonOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
-        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state, buttonOptions));
+        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state, buttonOptions), buttonOptions);
         //--------------------------------------------------------------------
 
         return pressed;
@@ -213,7 +213,6 @@ internal class RaylibUIRenderer : IUIRenderer
         var bounds = textInputFieldOptions.GetBounds();
         var textBounds = textInputFieldOptions.GetTextBounds();
         int textWidth = GetTextWidth(text, textInputFieldOptions);
-        Console.WriteLine($"text:{text}, width:{textWidth}");
         var textAlignment = editMode && textWidth >= textBounds.width ? TextAlignment.Right : textInputFieldOptions.TextAlignment;
 
         var cursorRectangle = new Rectangle
@@ -258,12 +257,8 @@ internal class RaylibUIRenderer : IUIRenderer
                         for (int i = 0; i < byteSize; i++)
                         {
                             text = text.Insert(keyCount, textUTF8[i].ToString());
-                            //text[keyCount] = textUTF8[i];
                             keyCount++;
                         }
-
-                        text = text.Insert(keyCount, "\0");
-                        //text[keyCount] = '\0';
                     }
                 }
 
@@ -273,8 +268,7 @@ internal class RaylibUIRenderer : IUIRenderer
                     if (Raylib.IsKeyPressed(KeyboardKey.KEY_BACKSPACE))
                     {
                         while ((keyCount > 0) && ((text[--keyCount] & 0xc0) == 0x80)) ;
-                        text = text.Insert(keyCount, "\0");
-                        //text[keyCount] = '\0';
+                        text = text.Remove(keyCount);
                     }
                 }
 
@@ -285,7 +279,7 @@ internal class RaylibUIRenderer : IUIRenderer
                 {
                     cursorRectangle.x = bounds.x + textWidth / 2 + bounds.width / 2 + 1;
                 }
-                else if (textAlignment == TextAlignment.Right)
+                if (textAlignment == TextAlignment.Right)
                 {
                     cursorRectangle.x = bounds.x + bounds.width - textInputFieldOptions.InnerPadding - textInputFieldOptions.BorderWidth;
                 }
@@ -332,116 +326,6 @@ internal class RaylibUIRenderer : IUIRenderer
 
         return pressed;
     }
-
-    //public bool DrawTextInput(Rectangle bounds, string text, int textSize, bool editMode)
-    //{
-    //    GuiState state = _guiState;
-    //    bool pressed = false;
-    //    int textWidth = GetTextWidth(text);
-    //    Rectangle textBounds = GetTextBounds(TEXTBOX, bounds);
-    //    int textAlignment = editMode && textWidth >= textBounds.width ? TEXT_ALIGN_RIGHT : GuiGetStyle(TEXTBOX, TEXT_ALIGNMENT);
-
-    //    Rectangle cursor = {
-    //    bounds.x + GuiGetStyle(TEXTBOX, TEXT_PADDING) + GetTextWidth(text) + 2,
-    //    bounds.y + bounds.height/2 - GuiGetStyle(DEFAULT, TEXT_SIZE),
-    //    4,
-    //    (float)GuiGetStyle(DEFAULT, TEXT_SIZE)*2
-    //};
-
-    //    if (cursor.height >= bounds.height) cursor.height = bounds.height - GuiGetStyle(TEXTBOX, BORDER_WIDTH) * 2;
-    //    if (cursor.y < (bounds.y + GuiGetStyle(TEXTBOX, BORDER_WIDTH))) cursor.y = bounds.y + GuiGetStyle(TEXTBOX, BORDER_WIDTH);
-
-    //    // Update control
-    //    //--------------------------------------------------------------------
-    //    if ((state != GuiState.STATE_DISABLED))
-    //    {
-    //        Vector2 mousePoint = Raylib.GetMousePosition();
-
-    //        if (editMode)
-    //        {
-    //            state = GuiState.STATE_PRESSED;
-
-    //            int key = Raylib.GetCharPressed();      // Returns codepoint as Unicode
-    //            int keyCount = (int)strlen(text);
-    //            int byteSize = 0;
-    //            const char* textUTF8 = Raylib.CodepointToUTF8(key, &byteSize);
-
-    //            // Only allow keys in range [32..125]
-    //            if ((keyCount + byteSize) < textSize)
-    //            {
-    //                //float maxWidth = (bounds.width - (GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)*2));
-
-    //                if (key >= 32)
-    //                {
-    //                    for (int i = 0; i < byteSize; i++)
-    //                    {
-    //                        text[keyCount] = textUTF8[i];
-    //                        keyCount++;
-    //                    }
-
-    //                    text[keyCount] = '\0';
-    //                }
-    //            }
-
-    //            // Delete text
-    //            if (keyCount > 0)
-    //            {
-    //                if (Raylib.IsKeyPressed(KeyboardKey.KEY_BACKSPACE))
-    //                {
-    //                    while ((keyCount > 0) && ((text[--keyCount] & 0xc0) == 0x80)) ;
-    //                    text[keyCount] = '\0';
-    //                }
-    //            }
-
-    //            if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || (!Raylib.CheckCollisionPointRec(mousePoint, bounds) && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))) pressed = true;
-
-    //            // Check text alignment to position cursor properly
-    //            if (textAlignment == TEXT_ALIGN_CENTER) cursor.x = bounds.x + GetTextWidth(text) / 2 + bounds.width / 2 + 1;
-    //            else if (textAlignment == TEXT_ALIGN_RIGHT) cursor.x = bounds.x + bounds.width - GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING) - GuiGetStyle(TEXTBOX, BORDER_WIDTH);
-    //        }
-    //        else
-    //        {
-    //            if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
-    //            {
-    //                state = GuiState.STATE_HOVERED;
-    //                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) pressed = true;
-    //            }
-    //        }
-    //    }
-    //    //--------------------------------------------------------------------
-
-    //    // Draw control
-    //    //--------------------------------------------------------------------
-    //    if (state == GuiState.STATE_PRESSED)
-    //    {
-    //        GuiDrawRectangle(bounds, GuiGetStyle(TEXTBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state * 3))), guiAlpha), Fade(GetColor(GuiGetStyle(TEXTBOX, BASE_COLOR_PRESSED)), guiAlpha));
-    //    }
-    //    else if (state == GuiState.STATE_DISABLED)
-    //    {
-    //        GuiDrawRectangle(bounds, GuiGetStyle(TEXTBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state * 3))), guiAlpha), Fade(GetColor(GuiGetStyle(TEXTBOX, BASE_COLOR_DISABLED)), guiAlpha));
-    //    }
-    //    else GuiDrawRectangle(bounds, 1, Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state * 3))), guiAlpha), BLANK);
-
-    //    // in case we edit and text does not fit in the textbox show right aligned and character clipped, slower but working
-    //    while (editMode && textWidth >= textBounds.width && *text)
-    //    {
-    //        int bytes = 0;
-    //        Raylib.GetCodepoint(text, &bytes);
-    //        text += bytes;
-    //        textWidth = GetTextWidth(text);
-    //    }
-    //    GuiDrawText(text, textBounds, textAlignment, Fade(GetColor(GuiGetStyle(TEXTBOX, TEXT + (state * 3))), guiAlpha));
-
-    //    // Draw cursor
-    //    if (editMode)
-    //    {
-    //        GuiDrawRectangle(cursor, 0, Color.Blank, Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER_COLOR_PRESSED)), guiAlpha));
-    //    }
-    //    //--------------------------------------------------------------------
-
-    //    return pressed;
-    //}
-
     public int DrawListViewEx(ListViewOptions listViewOptions, IEnumerable<string> items, ref int focus, ref int scrollIndex, int active)
     {
         var count = items.Count();
@@ -967,6 +851,15 @@ internal class RaylibUIRenderer : IUIRenderer
         //--------------------------------------------------------------------
     }
 
+    private void GuiDrawText(string text, Rectangle bounds, Color tint, TextOptions textOptions)
+    {
+        var position = new Vector2(bounds.x, bounds.y);
+        var font = UIRendererOptions.Font;
+        //var font = Raylib.GetFontDefault();
+
+        Raylib.DrawTextEx(font, text, position, textOptions.FontSize, textOptions.TextSpacing, tint);
+    }
+
     private void GuiDrawText(string text, Rectangle bounds, Color tint)
     {
         var position = new Vector2(bounds.x, bounds.y);
@@ -1058,8 +951,7 @@ internal class RaylibUIRenderer : IUIRenderer
 
         if (!string.IsNullOrWhiteSpace(text))
         {
-            float fontSize = textOptions.FontSize;
-            size = Raylib.MeasureTextEx(textOptions.Font, text, fontSize, textOptions.TextSpacing);
+            size = Raylib.MeasureTextEx(textOptions.Font, text, textOptions.FontSize, textOptions.TextSpacing + 2);
         }
 
         return (int)size.X;
