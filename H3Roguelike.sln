@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.Extensions.Auto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooseEngine.UnitTesting", "MooseEngine.UnitTesting\MooseEngine.UnitTesting.csproj", "{19125683-AD36-4F0C-B60F-99D7F97DC5CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{07E31B25-3184-4EDA-B627-280C823A0F74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{19125683-AD36-4F0C-B60F-99D7F97DC5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19125683-AD36-4F0C-B60F-99D7F97DC5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19125683-AD36-4F0C-B60F-99D7F97DC5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E31B25-3184-4EDA-B627-280C823A0F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E31B25-3184-4EDA-B627-280C823A0F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E31B25-3184-4EDA-B627-280C823A0F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E31B25-3184-4EDA-B627-280C823A0F74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
