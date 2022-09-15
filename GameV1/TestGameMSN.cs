@@ -59,6 +59,7 @@ internal class TestGameMSN : IGame
 
     // Inventories
     private Container weaponChest = new Container(8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
+    private TemporaryContainer backpack = new TemporaryContainer(8, 0, 0, "Backpack", new Coords2D(9, 3), Color.White);
 
     // Behavior trees
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
@@ -72,8 +73,24 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-       
+
         Player = player;
+        
+        var app = Application.Instance;
+        var window = app.Window;
+        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
+        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
+
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+        _statsPanel = new StatsPanel(Player);
+        _debugPanel = new DebugPanel(10, 10, Player);
+
+
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
+        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
+
+
 
         sword.MinDamage = 5;
         sword.MaxDamage = 20;
@@ -82,8 +99,7 @@ internal class TestGameMSN : IGame
 
         armor.DamageReduction = 50;
 
-        var sceneFactory = Application.Instance.SceneFactory;
-        _scene = sceneFactory.CreateScene();
+
 
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref _scene);
@@ -91,10 +107,9 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        var app = Application.Instance;
-        var window = app.Window;
 
-        // Spawn items
+
+        // Spawn weapons
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(doubleAxe);
         crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
@@ -102,8 +117,15 @@ internal class TestGameMSN : IGame
         trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(trident);
 
+        // Spawn containers
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.Add(weaponChest);
+
+        backpack.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
+        backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
+        backpack.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
+        backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
+        itemLayer?.Add(backpack);
 
         // Spawn player
         player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
@@ -165,40 +187,40 @@ internal class TestGameMSN : IGame
 
 
         // Randomized walk guard Behavior tree
-        //var guard02Node = Serializer(
-        //        Action(new CommandPatrolRectangularArea(
-        //            _scene,
-        //            guard_02,
-        //            light.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-        //            light.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay(
-        //            Action(new CommandIdle()),
-        //            2)
-        //        );
+        var guard02Node = Serializer(
+                Action(new CommandPatrolRectangularArea(
+                    _scene,
+                    guard_02,
+                    light.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    light.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay(
+                    Action(new CommandIdle()),
+                    2)
+                );
 
-        //var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
 
-        //btrees.Add(guard_02Tree);
+        btrees.Add(guard_02Tree);
 
-        // Druid behavior tree
-        // Roam around randomly in a part of the map
-        // Follow creatures while inside perception range
+        //Druid behavior tree
+        //Roam around randomly in a part of the map
+        //Follow creatures while inside perception range
         // Attack when standing beside creature
         // When no creatures within range, go back to roaming
-        //var druidNode = Selector(
-        //        Serializer(
-        //                Action(new CommandTargetCreatureWithinRange(_scene, druid)),
-        //                Action(new CommandMoveToTarget(_scene, druid)),
-        //                Action(new CommandAttackTarget(_scene, druid))
-        //            ),
-        //        Action(new CommandPatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
+        var druidNode = Selector(
+                Serializer(
+                        Action(new CommandTargetCreatureWithinRange(_scene, druid)),
+                        Action(new CommandMoveToTarget(_scene, druid)),
+                        Action(new CommandAttackTarget(_scene, druid))
+                    ),
+                Action(new CommandPatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
 
-        //    );
+            );
 
-        //var druidTree = BehaviorTree(druid, druidNode);
+        var druidTree = BehaviorTree(druid, druidNode);
 
-        //btrees.Add(druidTree);
+        btrees.Add(druidTree);
 
         // Patrolling town guard
         //var guard01Node = SerializerTurnBased(
@@ -210,15 +232,17 @@ internal class TestGameMSN : IGame
         //        Action(new CommandMoveRight(_scene, guard_01))
         //    );
 
+        var attackPatternNode = SerializerTurnBased(
+                        Action(new CommandAttackTarget(_scene, guard_01)),
+                        Action(new CommandAttackTarget(_scene, guard_01)),
+                        Action(new CommandBlock(_scene, guard_01))
+                    );
+
         var guard01Node = Selector(
                 Serializer(
                     Action(new CommandTargetCreatureWithinRange(_scene, guard_01)),
                     Action(new CommandMoveToTarget(_scene, guard_01)),
-                    SerializerTurnBased(
-                        Action(new CommandAttackTarget(_scene, guard_01)),
-                        Action(new CommandAttackTarget(_scene, guard_01)),
-                        Action(new CommandBlock(_scene))
-                    )
+                    attackPatternNode
                 ),
                 Serializer(
                     Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
@@ -238,16 +262,19 @@ internal class TestGameMSN : IGame
         InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
         InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
         InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-        InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
+        InputHandler.Add(Keycode.KEY_I, InputOptions.ItemPickUp);
+        InputHandler.Add(Keycode.KEY_Q, InputOptions.ItemDrop);
+        InputHandler.Add(Keycode.KEY_ZERO, InputOptions.Zero);
+        InputHandler.Add(Keycode.KEY_ONE, InputOptions.One);
+        InputHandler.Add(Keycode.KEY_TWO, InputOptions.Two);
+        InputHandler.Add(Keycode.KEY_THREE, InputOptions.Three);
+        InputHandler.Add(Keycode.KEY_FOUR, InputOptions.Four);
+        InputHandler.Add(Keycode.KEY_FIVE, InputOptions.Five);
+        InputHandler.Add(Keycode.KEY_SIX, InputOptions.Six);
+        InputHandler.Add(Keycode.KEY_SEVEN, InputOptions.Seven);
+        InputHandler.Add(Keycode.KEY_EIGHT, InputOptions.Eight);
+        InputHandler.Add(Keycode.KEY_NINE, InputOptions.Nine);
 
-        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
-        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
-
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
-        _statsPanel = new StatsPanel(Player);
-        _debugPanel = new DebugPanel(10, 10, Player);
-
-        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
     }
 
     public void Uninitialize()
@@ -259,7 +286,7 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Player input
-        InputOptions? input = InputHandler.Handle();
+        var input = InputHandler.Handle();
 
         // Generate commands
         ICommand? command = CommandFactory.Create(input, _scene, Player);

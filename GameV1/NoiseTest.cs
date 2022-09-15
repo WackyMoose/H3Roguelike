@@ -116,7 +116,7 @@ internal class NoiseTest : IGame
     public void Update(float deltaTime)
     {
         // Player
-        InputOptions? input = InputHandler.Handle();
+        var input = InputHandler.Handle();
 
         ICommand command = CommandFactory.Create(input, _scene, player);
 

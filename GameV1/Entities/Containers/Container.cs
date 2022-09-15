@@ -5,6 +5,7 @@ using MooseEngine.Graphics;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Reflection.Metadata.Ecma335;
+using System.Text;
 
 namespace GameV1.Entities.Containers
 {
@@ -38,13 +39,22 @@ namespace GameV1.Entities.Containers
         {
             if (item == null) { return false; }
 
-            foreach (var slot in Slots)
+            for (int i = 0; i < NumSlots; i++)
             {
-                if (slot.IsEmpty == true)
+                if (Slots.ElementAt(i).IsEmpty == true)
                 {
-                    return AddItemToSlot(item, slot);
+                    Slots.ElementAt(i).Item = item;
+                    return true;
                 }
             }
+
+            //foreach (var slot in Slots)
+            //{
+            //    if (slot.IsEmpty == true)
+            //    {
+            //        return AddItemToSlot(item, slot);
+            //    }
+            //}
             return false;
         }
 
@@ -63,9 +73,9 @@ namespace GameV1.Entities.Containers
 
         public IItem? RemoveItemFromSlotIndex(int slotIndex)
         {
-            if (slotIndex > Slots.Count()) { return default; }
+            if (slotIndex > NumSlots) { return default; }
 
-            var slot = Slots.ElementAt(slotIndex);
+            var slot = Slots.ElementAt(slotIndex-1);
 
             if (slot.IsEmpty == true) { return default; }
 
@@ -79,6 +89,19 @@ namespace GameV1.Entities.Containers
             ConsolePanel.Add($"{item} removed from {slot}");
 
             return item;
+        }
+
+        public bool RemoveItem(IItem item)
+        {
+            foreach (var slot in Slots)
+            {
+                if (slot.IsEmpty == false && slot.Item == item)
+                {
+                    RemoveItemFromSlot(slot);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool SwapSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
@@ -101,6 +124,21 @@ namespace GameV1.Entities.Containers
             }
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            var content = new StringBuilder();
+
+            for (int i = 0; i < NumSlots; i++)
+            {
+                if (Slots.ElementAt(i).IsEmpty == false)
+                {
+                    content.Append($"{Slots.ElementAt(i).Item.Name} ({i+1}), ");
+                }
+            }
+
+            return content.ToString();
         }
     }
 }

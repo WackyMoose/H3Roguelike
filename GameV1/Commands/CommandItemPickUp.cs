@@ -1,4 +1,5 @@
-﻿using GameV1.Interfaces.Creatures;
+﻿using GameV1.Interfaces.Containers;
+using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
@@ -21,20 +22,45 @@ namespace GameV1.Commands
         {
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
+            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
 
             // Does item exist?
-            if (item == null) { return NodeStates.Failure; }
+            if (itemAtPosition == null) { return NodeStates.Failure; }
+
+            var interfaces = itemAtPosition.GetType().GetInterfaces();
+
+            // Does item inherit IContainer interface?
+            if (interfaces.Contains(typeof(IContainer)))
+            {
+                var container = (IContainer)itemAtPosition;
+
+                // Is container empty?
+                if (container.HasEmptySlots == false)
+                {
+                    return NodeStates.Failure;
+                }
+
+                // Is container not empty?
+                if (container.HasEmptySlots == true)
+                {
+                    // Transfer container content to Creature inventory
+                    container.TransferContainerContent(Creature.Inventory.Inventory);
+                    ConsolePanel.Add($"{Creature.Name} picked up content of {container.Name}");
+                    ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                    return NodeStates.Success;
+                }
+            }
 
             // Attempt to add item to Creature inventory
-            var result = Creature.Inventory.Inventory.AddItemToFirstEmptySlot(item);
+            var result = Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemAtPosition);
 
             if (result == false) { return NodeStates.Failure; }
 
             // Remove item from ItemLayer
-            itemLayer.Entities.Remove(item.Position);
+            itemLayer.Entities.Remove(itemAtPosition.Position);
 
-            ConsolePanel.Add($"{Creature.Name} picked up {item.Name}");
+            ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
+            ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
 
             return NodeStates.Success;
         }

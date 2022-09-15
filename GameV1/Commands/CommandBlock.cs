@@ -12,9 +12,12 @@ namespace GameV1.Commands
     {
         public IScene Scene { get; set; }
 
-        public CommandBlock(IScene scene)
+        public IEntity Entity { get; set; }
+
+        public CommandBlock(IScene scene, IEntity entity)
         {
             Scene = scene;
+            Entity = entity;
         }
 
         public override NodeStates Execute()

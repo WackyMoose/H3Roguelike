@@ -109,6 +109,11 @@ namespace MooseEngine.BehaviorTree
             return new Serializer(nodes);
         }
 
+        public static IComposite SerializerTurnBased()
+        {
+            return new SerializerTurnBased();
+        }
+
         public static IComposite SerializerTurnBased(params INode[] nodes)
         {
             return new SerializerTurnBased(nodes);

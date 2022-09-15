@@ -33,9 +33,11 @@ namespace GameV1
                 //CommandQueue.Add(maintenanceCommand);
 
                 // Generate random walk command
-                var input = GenerateRandomInput();
+                List<InputOptions> inputs = new List<InputOptions>();
 
-                ICommand command = CommandFactory.Create(input, scene, npc);
+                inputs.Add(GenerateRandomInput());
+
+                ICommand command = CommandFactory.Create(inputs, scene, npc);
                 CommandQueue.Add(command);
             }
         }

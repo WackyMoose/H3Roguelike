@@ -13,5 +13,7 @@ namespace GameV1.Interfaces.Containers
         bool AddItemToSlot(IItem? item, ISlot<IItem> slot);
         bool TransferContainerContent(IContainer targetContainer);
         IItem? RemoveItemFromSlot(ISlot<IItem> slot);
+        IItem? RemoveItemFromSlotIndex(int slotIndex);
+        bool RemoveItem(IItem item);
     }
 }

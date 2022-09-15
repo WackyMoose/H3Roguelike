@@ -17,6 +17,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
+            // TODO: Check if target is in range
             if (Attacker.TargetCreature.IsDead == false)
             {
                 CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.Inventory.StrongestWeapon);

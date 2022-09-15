@@ -12,17 +12,26 @@
             }
         }
 
-        public static InputOptions? Handle()
+        public static IEnumerable<InputOptions>? Handle()
         {
+            var input = new List<InputOptions>();
+
             foreach (var pair in KeyInput)
             {
                 if (Input.IsKeyPressed(pair.Key))
                 {
-                    return pair.Value;
+                    input.Add(pair.Value);
                 }
             }
 
-            return null;
+            if (input.Count > 0)
+            {
+                return input;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
