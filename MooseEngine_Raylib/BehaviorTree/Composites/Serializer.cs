@@ -48,6 +48,7 @@ namespace MooseEngine.BehaviorTree.Composites
                     State = NodeStates.Running;
                     break;
                 case NodeStates.Failure:
+                    Reset();
                     State = NodeStates.Failure;
                     break;
             }
