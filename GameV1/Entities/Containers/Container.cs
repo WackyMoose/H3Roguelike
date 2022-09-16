@@ -9,12 +9,14 @@ using System.Text;
 
 namespace GameV1.Entities.Containers
 {
-    public class Container : Item, IContainer
+    public class Container : ItemBase, IContainer
     {
         public int NumSlots { get; set; }
         public IEnumerable<ISlot<IItem>> Slots { get; set; }
         public int NumEmptySlots { get { return Slots.Where(s => s.IsEmpty == true).Count(); } }
         public bool HasEmptySlots { get { return NumEmptySlots > 0; } }
+
+        public bool IsEmpty { get { return NumEmptySlots == NumSlots; } }
 
         public Container(int maxSlots) 
             : this(maxSlots, 0, 0, "Container", new Coords2D(), Color.White)
@@ -47,14 +49,7 @@ namespace GameV1.Entities.Containers
                     return true;
                 }
             }
-
-            //foreach (var slot in Slots)
-            //{
-            //    if (slot.IsEmpty == true)
-            //    {
-            //        return AddItemToSlot(item, slot);
-            //    }
-            //}
+            
             return false;
         }
 
@@ -118,9 +113,9 @@ namespace GameV1.Entities.Containers
         {
             foreach (var slot in Slots)
             {
-                var result = targetContainer.AddItemToFirstEmptySlot(slot.Remove());
-
-                if(result == false) { return false; }
+                IItem? item = slot.Remove();
+                
+                targetContainer.AddItemToFirstEmptySlot(item);
             }
 
             return true;
@@ -134,7 +129,11 @@ namespace GameV1.Entities.Containers
             {
                 if (Slots.ElementAt(i).IsEmpty == false)
                 {
-                    content.Append($"{Slots.ElementAt(i).Item.Name} ({i+1}), ");
+                    content.Append($"({i + 1}) {Slots.ElementAt(i).Item.Name}, ");
+                }
+                else
+                {
+                    content.Append($"({i + 1}) Empty, ");
                 }
             }
 

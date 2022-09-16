@@ -12,7 +12,6 @@ namespace MooseEngine.Interfaces
         Color ColorTint { get; set; }
         string Name { get; set; }
         bool IsActive { get; set; }
-        bool IsVisible { get; set; }
 
         void Initialize();
         void Update(float deltaTime);

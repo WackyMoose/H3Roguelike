@@ -8,12 +8,15 @@ public interface IEntityLayer
     IDictionary<Vector2, IEntity> Entities { get; }
 
     IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity;
+    IEntity Add(IEntity entity);
+    void Remove(IEntity entity);
+    void RemoveAll();
 }
 
 public interface IEntityLayer<TEntity> : IEntityLayer
     where TEntity : class, IEntity
 {
-    void Add(TEntity entity);
+    IEntity Add(TEntity entity);
     void Remove(TEntity entity);
     void RemoveAll();
 }
@@ -23,9 +26,18 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
 {
     public IDictionary<Vector2, IEntity> Entities { get; } = new Dictionary<Vector2, IEntity>();
 
-    public void Add(TEntity entity)
+    public IEntity Add(TEntity entity)
     {
         Entities.Add(entity.Position, entity);
+        
+        return entity;
+    }
+
+    public IEntity Add(IEntity entity)
+    {
+        Entities.Add(entity.Position, entity);
+
+        return entity;
     }
 
     public IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity
@@ -34,6 +46,11 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
     }
 
     public void Remove(TEntity entity)
+    {
+        Entities.Remove(entity.Position);
+    }
+
+    public void Remove(IEntity entity)
     {
         Entities.Remove(entity.Position);
     }

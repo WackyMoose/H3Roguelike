@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace GameV1.Entities.Items
 {
-    public class LightSource : Item, ILightSource
+    public class LightSource : ItemBase, ILightSource
     {
         public int Range { get; set; }
         public Color TintModifier { get; set; }

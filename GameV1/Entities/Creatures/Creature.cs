@@ -46,7 +46,14 @@ namespace GameV1.Entities.Creatures
         {
             Stats.Health -= damage;
 
-            if (Stats.Health < 0) { Stats.Health = 0; IsActive = false; }
+            if (Stats.Health < 0) 
+            { 
+                Stats.Health = 0; IsActive = false; 
+            }
+            else if (Stats.Health > 0)
+            {
+                IsActive = true;
+            }
         }
 
         public override void Initialize()

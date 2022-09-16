@@ -30,7 +30,7 @@ namespace GameV1.Commands
             var interfaces = itemAtPosition.GetType().GetInterfaces();
 
             // Does item inherit IContainer interface?
-            if (interfaces.Contains(typeof(IContainer)))
+            if (interfaces.Contains(typeof(IContainer)) == true)
             {
                 var container = (IContainer)itemAtPosition;
 
@@ -39,18 +39,24 @@ namespace GameV1.Commands
                 {
                     return NodeStates.Failure;
                 }
-
-                // Is container not empty?
-                if (container.HasEmptySlots == true)
+                else if (container.HasEmptySlots == true)
                 {
                     // Transfer container content to Creature inventory
                     container.TransferContainerContent(Creature.Inventory.Inventory);
+
                     ConsolePanel.Add($"{Creature.Name} picked up content of {container.Name}");
                     ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+
+                    // Remove container from scene if empty
+                    if (container.IsEmpty == true && interfaces.Contains(typeof(ITemporaryContainer)))
+                    {
+                        itemLayer.Entities.Remove(container.Position);
+                    }
+
                     return NodeStates.Success;
                 }
             }
-
+            
             // Attempt to add item to Creature inventory
             var result = Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemAtPosition);
 

@@ -40,7 +40,6 @@ internal class TestGameMSN : IGame
     private IScene? _scene;
 
     // Creatures
-    private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
     private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
     public Creature guard_01 = new Creature("City guard", 100, new Coords2D(6, 0));
@@ -73,23 +72,36 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-
-        Player = player;
-        
         var app = Application.Instance;
         var window = app.Window;
         var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
         var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
 
+        var sceneFactory = Application.Instance.SceneFactory;
+        _scene = sceneFactory.CreateScene();
+
+        // Spawn world
+        WorldGenerator.GenerateWorld(80085, ref _scene);
+
+        var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
+        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+
+        // Spawn player
+        //ICreature? player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
+        Player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
+
+        //ICreature? player = (ICreature)creatureLayer.Entities.FirstOrDefault(c => c.Value.Name == "Hero").Value;
+
+        Player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        //player.Inventory.
+        Player.Inventory.PrimaryWeapon.Add(sword);
+        Player.Inventory.BodyArmor.Add(armor);
+        
+        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
+
         _consolePanel = new ConsolePanel(consolePosition, consoleSize);
         _statsPanel = new StatsPanel(Player);
         _debugPanel = new DebugPanel(10, 10, Player);
-
-
-        var sceneFactory = Application.Instance.SceneFactory;
-        _scene = sceneFactory.CreateScene();
-        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-
 
 
         sword.MinDamage = 5;
@@ -98,16 +110,6 @@ internal class TestGameMSN : IGame
         sword.ArmorPenetrationPercent = 2;
 
         armor.DamageReduction = 50;
-
-
-
-        // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref _scene);
-
-        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
-        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
-
-
 
         // Spawn weapons
         doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
@@ -127,12 +129,7 @@ internal class TestGameMSN : IGame
         backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
         itemLayer?.Add(backpack);
 
-        // Spawn player
-        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
-        //player.Inventory.
-        player.Inventory.PrimaryWeapon.Add(sword);
-        player.Inventory.BodyArmor.Add(armor);
-        creatureLayer?.Add(player);
+
 
         orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
@@ -288,40 +285,28 @@ internal class TestGameMSN : IGame
         // Player input
         var input = InputHandler.Handle();
 
+        //var creatures = _scene.GetLayer((int)EntityLayer.Creatures).Entities;
+        //ICreature? player = (ICreature)creatures.FirstOrDefault(c => c.Value.Name == "Hero").Value;
+
         // Generate commands
-        ICommand? command = CommandFactory.Create(input, _scene, Player);
+        if(Player is not null)
+        {
+            ICommand? command = CommandFactory.Create(input, _scene, Player);
 
-        CommandQueue.Add(command);
+            CommandQueue.Add(command);
+        }
+        
 
-        if (!CommandQueue.IsEmpty)
+        if (CommandQueue.IsEmpty == false)
         {
             // Execute Player commands
             CommandQueue.Execute();
-
-            foreach (var entity in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
-            {
-                ICreature creature = (ICreature)entity.Value;
-
-                if (creature.IsDead == true)
-                {
-                    CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), creature, _scene.GetLayer((int)EntityLayer.Items));
-                }
-            }
 
             // AI NPC / Monster / Critter controls
             foreach (BTree btree in btrees)
             {
                 btree.Evaluate();
 
-                foreach (var entity in _scene.GetLayer((int)EntityLayer.Creatures).Entities)
-                {
-                    ICreature creature = (ICreature)entity.Value;
-
-                    if (creature.IsDead == true)
-                    {
-                        CombatHandler.KillCreature(_scene.GetLayer((int)EntityLayer.Creatures), creature, _scene.GetLayer((int)EntityLayer.Items));
-                    }
-                }
             }
         }
 
@@ -331,8 +316,29 @@ internal class TestGameMSN : IGame
             (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
             (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var cameraPosition = _scene.SceneCamera.Position;
+        
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+        // TODO: Add lightsources in creature inventories and containers
+        
+        var creatureLayer = _scene.GetLayer((int)EntityLayer.Creatures);
+        
         var lightSources = _scene.GetEntitiesOfType<LightSource>(itemLayer);
+        
+        //foreach (var entity in creatureLayer.Entities)
+        //{
+        //    var creature = (ICreature)entity.Value;
+            
+        //    var creatureInventory = creature.Inventory;
+
+        //    foreach (var slot in creatureInventory.Inventory.Slots)
+        //    {
+        //        if (slot.Item is LightSource)
+        //        {
+        //            lightSources.Add(slot.Item.Position, (LightSource)slot.Item);
+        //        }
+        //    }
+
+        //}
 
         foreach (LightSource lightSource in lightSources.Values)
         {

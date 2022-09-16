@@ -6,14 +6,14 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities.Items
 {
-    public abstract class Item : Entity, IItem
+    public abstract class ItemBase : Entity, IItem
     {
         public int Durability { get; set; }
         public int MaxValue { get; set; }
         public IEnumerable<IMaterial>? Materials { get; set; }
         public bool IsBroken { get { return Durability <= 0; } }
 
-        public Item(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
+        public ItemBase(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(name, spriteCoords, colorTint)
         {
             Durability = durability;

@@ -5,7 +5,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities.Weapons
 {
-    public abstract class WeaponBase : Item, IWeapon
+    public abstract class WeaponBase : ItemBase, IWeapon
     {
         #region Properties
         public int Range { get; set; }

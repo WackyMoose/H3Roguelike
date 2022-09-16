@@ -1,4 +1,5 @@
-﻿using MooseEngine.Graphics;
+﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
 using System.Numerics;
@@ -13,7 +14,6 @@ public abstract class Entity : IEntity
     public Color ColorTint { get; set; }
     public string Name { get; set; }
     public bool IsActive { get; set; }
-    public bool IsVisible { get; set; }
 
     public Entity() { }
 
@@ -29,7 +29,6 @@ public abstract class Entity : IEntity
         SpriteCoords = spriteCoords;
         ColorTint = colorTint;
         IsActive = true;
-        IsVisible = true;
     }
 
     public abstract void Initialize();

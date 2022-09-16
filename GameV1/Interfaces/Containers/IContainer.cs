@@ -8,6 +8,8 @@ namespace GameV1.Interfaces.Containers
         IEnumerable<ISlot<IItem>> Slots { get; set; }
         int NumEmptySlots { get; }
         bool HasEmptySlots { get; }
+        bool IsEmpty { get; }
+
 
         bool AddItemToFirstEmptySlot(IItem? item);
         bool AddItemToSlot(IItem? item, ISlot<IItem> slot);

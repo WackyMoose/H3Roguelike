@@ -50,7 +50,7 @@ internal class NoiseTest : IGame
         // WorldGenerator.GenerateWorld(80085,ref tile);
 
         // Layers
-        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
+        var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 

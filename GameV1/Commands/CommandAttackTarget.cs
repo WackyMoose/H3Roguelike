@@ -14,13 +14,13 @@ namespace GameV1.Commands
             Scene = scene;
             Attacker = attacker;
         }
-
+        
         public override NodeStates Execute()
         {
             // TODO: Check if target is in range
             if (Attacker.TargetCreature.IsDead == false)
             {
-                CombatHandler.SolveAttack(Attacker, Attacker.TargetCreature, Attacker.Inventory.StrongestWeapon);
+                CombatHandler.SolveAttack(Scene, Attacker, Attacker.TargetCreature, Attacker.Inventory.StrongestWeapon);
                 return NodeStates.Success;
             }
             return NodeStates.Failure;

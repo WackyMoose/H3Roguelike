@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Entities.Armors
 {
-    public abstract class ArmorBase : Item, IArmor
+    public abstract class ArmorBase : ItemBase, IArmor
     {
         public int DamageReduction { get; set; }
 
