@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI.Extensions.Autofac\WebAPI.Extensions.Autofac.csproj" />
+    <ProjectReference Include="..\WebAPI.H3Roguelite.Data\WebAPI.H3Roguelite.Data.csproj" />
+    <ProjectReference Include="..\WebAPI.Shared\WebAPI.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

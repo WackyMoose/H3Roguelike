@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI.Extensions.AspNetCore\WebAPI.Extensions.AspNetCore.csproj" />
+    <ProjectReference Include="..\WebAPI.Extensions.Autofac\WebAPI.Extensions.Autofac.csproj" />
+    <ProjectReference Include="..\WebAPI.H3Roguelite\WebAPI.H3Roguelite.csproj" />
   </ItemGroup>
 
 </Project>
