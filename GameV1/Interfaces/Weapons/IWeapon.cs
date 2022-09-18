@@ -2,7 +2,7 @@
 
 namespace GameV1.Interfaces.Weapons
 {
-    public interface IWeapon : IItem
+    public interface IWeapon : IOrdnance
     {
         int Range { get; set; }
         int CriticalChance { get; set; }

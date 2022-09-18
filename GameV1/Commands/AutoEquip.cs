@@ -29,14 +29,16 @@ namespace GameV1.Commands
         public override NodeStates Execute()
         {
             // AutoEquip PrimaryWeapon
-            _ = new AutoEquipPrimaryWeapon(Scene, Creature).Execute();
+            //_ = new AutoEquipPrimaryWeapon(Scene, Creature).Execute();
 
 
-            //_ = new AutoEquipSlot(Scene, Creature, (ISlot<IItem?>)Creature.Inventory.PrimaryWeapon).Execute();
-            //_ = new AutoEquipSlot(Scene, Creature, (ISlot<IItem?>)Creature.Inventory.SecondaryWeapon).Execute();
-            //_ = new AutoEquipSlot(Scene, Creature, (ISlot<IItem?>)Creature.Inventory.HeadGear).Execute();
-            //_ = new AutoEquipSlot(Scene, Creature, (ISlot<IItem?>)Creature.Inventory.BodyArmor).Execute();
-            //_ = new AutoEquipSlot(Scene, Creature, (ISlot<IItem?>)Creature.Inventory.FootWear).Execute();
+            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, Creature.Inventory.PrimaryWeapon).Execute();
+            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, Creature.Inventory.SecondaryWeapon).Execute();
+            _ = new AutoEquipSlot<IHeadGear>(Scene, Creature, Creature.Inventory.HeadGear).Execute();
+            _ = new AutoEquipSlot<IBodyArmor>(Scene, Creature, Creature.Inventory.BodyArmor).Execute();
+            _ = new AutoEquipSlot<IFootWear>(Scene, Creature, Creature.Inventory.FootWear).Execute();
+
+
 
             return NodeStates.Success;
         }

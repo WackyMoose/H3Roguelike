@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class AutoEquipSlot: CommandBase
+    internal class AutoEquipSlot<TItem>: CommandBase where TItem : IOrdnance
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
-        public ISlot<IItem?> Slot { get; set; }
+        public ISlot<TItem?> Slot { get; set; }
 
-        public AutoEquipSlot(IScene scene, ICreature creature, ISlot<IItem?> slot)
+        public AutoEquipSlot(IScene scene, ICreature creature, ISlot<TItem?> slot)
         {
             Scene = scene;
             Creature = creature;
@@ -30,11 +30,34 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
+            // get list of interfaces for Slot
+            var interfaces = new List<Type>();
+            var typeArguments = Slot.GetType().GetGenericArguments();
+            
+            foreach (var typeArgument in typeArguments)
+            {
+                var typeArgumentInterfaces = typeArgument.GetInterfaces();
+
+                foreach (var @interface in typeArgumentInterfaces)
+                {
+                    interfaces.Add(@interface);
+                }
+            }
+
+            interfaces.Add(typeof(TItem));
+
             // get list of items that matches the type of the slot from inventory
-            List<IItem> items = Creature.Inventory.Inventory.Slots
-                .Where(x => x.Item != null)
-                .Cast<IItem>()
-                .ToList();
+            List<TItem> items = new List<TItem>();
+
+            var inventory = Creature.Inventory.Inventory;
+
+            foreach (var slot in inventory.Slots)
+            {
+                if (slot.Item != null && slot.Item.GetType().GetInterfaces().Contains(typeof(TItem)))
+                {
+                    items.Add((TItem)slot.Item);
+                }
+            }
 
             // if there are no items in the inventory, return failure
             if (items.Count == 0)
@@ -46,7 +69,9 @@ namespace GameV1.Commands
             if (Slot.Item == null)
             {
                 // does slot item inherit IWeapon interface?
-                if (Slot is ISlot<IWeapon>)
+                //if (Slot is ISlot<IWeapon>)
+                //if (Slot.GetType().GetInterfaces().Contains(typeof(ISlot<IWeapon>)))
+                if (interfaces.Contains(typeof(IWeapon)))
                 {
                     // cast items to IWeapon
                     List<IWeapon> weapons = items
@@ -55,26 +80,20 @@ namespace GameV1.Commands
                         .ToList();
 
                     // if there are no weapons in the inventory, return failure
-                    if (weapons.Count == 0)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (weapons.Count == 0) { return NodeStates.Failure; }
 
                     // get weapon with highest damage
-                    IWeapon? weapon = weapons
-                        .OrderByDescending(x => x.Damage)
-                        .FirstOrDefault();
+                    IWeapon? weapon = weapons.OrderByDescending(x => x.AverageDamage).FirstOrDefault();
 
                     // is item null?
-                    if (weapon == null)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (weapon == null) { return NodeStates.Failure; }
 
                     // add item to slot
                     else
                     {
-                        Slot.Add(weapon);
+                        // remove weapon from inventory and add to weapon slot
+                        Slot.Add((TItem?)inventory.RemoveItem(weapon));
+                        
                         ConsolePanel.Add($"{Creature.Name} equipped {weapon.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
@@ -82,7 +101,7 @@ namespace GameV1.Commands
                 }
 
                 // does slot item inherit IArmor interface?
-                else if (Slot is ISlot<IArmor>)
+                else if (interfaces.Contains(typeof(IArmor)))
                 {
                     // Cast items to IArmor
                     List<IArmor> armors = items
@@ -91,26 +110,20 @@ namespace GameV1.Commands
                         .ToList();
 
                     // if there are no armors in the inventory, return failure
-                    if (armors.Count == 0)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (armors.Count == 0) { return NodeStates.Failure; }
 
                     // get the armor with the highest defense
-                    IArmor? armor = armors
-                        .OrderByDescending(x => x.DamageReduction)
-                        .FirstOrDefault();
+                    IArmor? armor = armors.OrderByDescending(x => x.DamageReduction).FirstOrDefault();
 
                     // is item null?
-                    if (armor == null)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (armor == null) { return NodeStates.Failure; }
 
                     // add item to slot
                     else
                     {
-                        Slot.Add(armor);
+                        // remove armor from inventory and add to armor slot
+                        Slot.Add((TItem?)inventory.RemoveItem(armor));
+                        
                         ConsolePanel.Add($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
@@ -122,9 +135,10 @@ namespace GameV1.Commands
             else if (Slot.Item != null)
             {
                 // does slot item inherit IWeapon interface?
-                if (Slot is ISlot<IWeapon>)
+                //if (Slot is ISlot<IWeapon>)
+                if (interfaces.Contains(typeof(IWeapon)))
+                //if (Slot.GetType().GetInterfaces().Contains(typeof(ISlot<IWeapon>)))
                 {
-
                     // cast items to IWeapon
                     List<IWeapon> weapons = items
                         .Where(x => x.GetType().GetInterfaces().Contains(typeof(IWeapon)))
@@ -132,49 +146,42 @@ namespace GameV1.Commands
                         .ToList();
 
                     // if there are no weapons in the inventory, return failure
-                    if (weapons.Count == 0)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (weapons.Count == 0) { return NodeStates.Failure; }
 
                     // get weapon with highest damage
-                    IWeapon? weapon = weapons
-                        .OrderByDescending(x => x.Damage)
-                        .FirstOrDefault();
+                    IWeapon? inventoryWeapon = weapons.OrderByDescending(x => x.AverageDamage).FirstOrDefault();
 
                     // is item null?
-                    if (weapon == null)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (inventoryWeapon == null) { return NodeStates.Failure; }
 
                     // cast slot item to IWeapon
-                    var slotWeapon = Slot.Item as IWeapon;
+                    var equippedWeapon = Slot.Item as IWeapon;
 
                     // is the item in the slot better than the item in the inventory?
-                    if (slotWeapon.Damage > weapon.Damage)
+                    if (equippedWeapon.Damage > inventoryWeapon.Damage)
                     {
                         return NodeStates.Failure;
                     }
                     // is the item in the slot worse than or equal to the item in the inventory?
-                    else if (slotWeapon.Damage <= weapon.Damage)
+                    else if (equippedWeapon.AverageDamage <= inventoryWeapon.AverageDamage)
                     {
-                        // remove item from inventory and add it to a temporary variable
-                        IWeapon? temp = (IWeapon?)Creature.Inventory.Inventory.RemoveItem(weapon);
+                        // remove item from weapon slot and add it to a temporary variable
+                        IWeapon? temp = (IWeapon?)Slot.Remove();
 
-                        // add 
+                        // remove weapon from inventory and add to weapon slot
+                        Slot.Add((TItem?)Creature.Inventory.Inventory.RemoveItem(inventoryWeapon));
+
+                        // add old weapon to inventory
                         Creature.Inventory.Inventory.AddItemToFirstEmptySlot(temp);
-                        
-                        // add item to slot
-                        Slot.Add(weapon);
-                        
-                        ConsolePanel.Add($"{Creature.Name} equipped {weapon.Name} as {Slot.Name}");
+
+                        ConsolePanel.Add($"{Creature.Name} equipped {inventoryWeapon.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }
                 }
                 // does slot item inherit IArmor interface?
-                else if (Slot is ISlot<IArmor>)
+                //else if (Slot is ISlot<IArmor>)
+                else if (interfaces.Contains(typeof(IArmor)))
                 {
                     // Cast items to IArmor
                     List<IArmor> armors = items
@@ -200,25 +207,25 @@ namespace GameV1.Commands
                     }
 
                     // cast slot item to IArmor
-                    var slotArmor = Slot.Item as IArmor;
+                    var inventoryArmor = Slot.Item as IArmor;
 
                     // is the item in the slot better than the item in the inventory?
-                    if (slotArmor.DamageReduction > armor.DamageReduction)
+                    if (inventoryArmor.DamageReduction > armor.DamageReduction)
                     {
                         return NodeStates.Failure;
                     }
 
                     // is the item in the slot worse than or equal to the item in the inventory?
-                    else if (slotArmor.DamageReduction <= armor.DamageReduction)
+                    else if (inventoryArmor.DamageReduction <= armor.DamageReduction)
                     {
-                        // remove item from inventory and add it to a temporary variable
-                        IArmor? temp = (IArmor?)Creature.Inventory.Inventory.RemoveItem(armor);
+                        // remove item from weapon slot and add it to a temporary variable
+                        IArmor? temp = (IArmor?)Slot.Remove();
 
-                        // add 
+                        // remove weapon from inventory and add to weapon slot
+                        Slot.Add((TItem?)Creature.Inventory.Inventory.RemoveItem(inventoryArmor));
+
+                        // add old weapon to inventory
                         Creature.Inventory.Inventory.AddItemToFirstEmptySlot(temp);
-
-                        // add item to slot
-                        Slot.Add(armor);
 
                         ConsolePanel.Add($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
 
