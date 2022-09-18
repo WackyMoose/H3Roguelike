@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class AutoEquip : CommandBase
+    public class AutoEquip : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
@@ -28,8 +28,8 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, Creature.Inventory.PrimaryWeapon).Execute();
-            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, Creature.Inventory.SecondaryWeapon).Execute();
+            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, (ISlot<IWeapon?>)Creature.Inventory.PrimaryWeapon).Execute();
+            _ = new AutoEquipSlot<IWeapon>(Scene, Creature, (ISlot<IWeapon?>)Creature.Inventory.SecondaryWeapon).Execute();
             _ = new AutoEquipSlot<IHeadGear>(Scene, Creature, Creature.Inventory.HeadGear).Execute();
             _ = new AutoEquipSlot<IBodyArmor>(Scene, Creature, Creature.Inventory.BodyArmor).Execute();
             _ = new AutoEquipSlot<IFootWear>(Scene, Creature, Creature.Inventory.FootWear).Execute();

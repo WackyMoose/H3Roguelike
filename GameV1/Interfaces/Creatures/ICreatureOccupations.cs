@@ -1,6 +1,6 @@
 ﻿namespace GameV1.Interfaces.Creatures
 {
-    internal interface ICreatureOccupations
+    public interface ICreatureOccupations
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GameV1.Commands
 {
-    internal class Idle : CommandBase
+    public class Idle : CommandBase
     {
         public Idle() { }
 

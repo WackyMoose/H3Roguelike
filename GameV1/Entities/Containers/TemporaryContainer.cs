@@ -16,7 +16,7 @@ namespace GameV1.Entities.Containers
     // If containing multiple items, the temporary container is displayerd with a "pile of loot" texture, and when
     // it only contains one item, it is displayer with the texture of that item.
     // When the last item is removed from the temporary container, it is destroyed.
-    internal class TemporaryContainer : Container, ITemporaryContainer
+    public class TemporaryContainer : Container, ITemporaryContainer
     {
         public TemporaryContainer(int maxSlots) : base(maxSlots)
         {

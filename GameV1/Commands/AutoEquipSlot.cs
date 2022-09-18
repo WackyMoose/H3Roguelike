@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class AutoEquipSlot<TItem>: CommandBase where TItem : IOrdnance
+    public class AutoEquipSlot<TItem>: CommandBase where TItem : IOrdnance
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
@@ -31,9 +31,13 @@ namespace GameV1.Commands
         public override NodeStates Execute()
         {
             // get list of interfaces for Slot
+            // TODO: Clean up and move to method
             var interfaces = new List<Type>();
+
+            interfaces.Add(typeof(TItem));
+
             var typeArguments = Slot.GetType().GetGenericArguments();
-            
+
             foreach (var typeArgument in typeArguments)
             {
                 var typeArgumentInterfaces = typeArgument.GetInterfaces();
@@ -43,8 +47,6 @@ namespace GameV1.Commands
                     interfaces.Add(@interface);
                 }
             }
-
-            interfaces.Add(typeof(TItem));
 
             // get list of items that matches the type of the slot from inventory
             List<TItem> items = new List<TItem>();

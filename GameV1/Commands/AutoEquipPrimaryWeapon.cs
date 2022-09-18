@@ -11,7 +11,7 @@ using MooseEngine.UI;
 
 namespace GameV1.Commands
 {
-    internal class AutoEquipPrimaryWeapon : CommandBase
+    public class AutoEquipPrimaryWeapon : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }

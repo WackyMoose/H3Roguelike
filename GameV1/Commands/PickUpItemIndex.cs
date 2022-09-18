@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class PickUpItemIndex : CommandBase
+    public class PickUpItemIndex : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }

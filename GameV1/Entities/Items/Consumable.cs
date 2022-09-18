@@ -4,7 +4,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities.Items
 {
-    internal class Consumable : ItemBase, IConsumable
+    public class Consumable : ItemBase, IConsumable
     {
         public Consumable(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {

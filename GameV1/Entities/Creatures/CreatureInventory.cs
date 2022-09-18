@@ -30,7 +30,9 @@ namespace GameV1.Entities.Creatures
         public ISlot<IBodyArmor?> BodyArmor { get; set; }
         public ISlot<IFootWear?> FootWear { get; set; }
         public IWeapon DefaultWeapon { get; set; }
-        public IWeapon StrongestWeapon { get {
+        public IWeapon StrongestWeapon { 
+            
+            get {
 
                 // return weapon with highest damage, if both are null then return defaultweapon
                 if (PrimaryWeapon.Item != null && SecondaryWeapon.Item != null)

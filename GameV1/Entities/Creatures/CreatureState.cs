@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameV1.Entities.Creatures
 {
-    internal class CreatureState
+    public class CreatureState
     {
         bool _isDead;
         bool _isAttacking;
