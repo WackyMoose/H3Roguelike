@@ -79,7 +79,7 @@ namespace GameV1.Entities.Creatures
 
             if (SecondaryWeapon.Item is not null)
             {
-                equipped.Append($"´Secondary: {SecondaryWeapon.Item.Name}, ");
+                equipped.Append($"Secondary: {SecondaryWeapon.Item.Name}, ");
             }
             else
             {

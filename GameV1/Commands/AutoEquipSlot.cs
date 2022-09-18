@@ -60,17 +60,12 @@ namespace GameV1.Commands
             }
 
             // if there are no items in the inventory, return failure
-            if (items.Count == 0)
-            {
-                return NodeStates.Failure;
-            }
+            if (items.Count == 0) { return NodeStates.Failure; }
 
             // is the slot empty
             if (Slot.Item == null)
             {
                 // does slot item inherit IWeapon interface?
-                //if (Slot is ISlot<IWeapon>)
-                //if (Slot.GetType().GetInterfaces().Contains(typeof(ISlot<IWeapon>)))
                 if (interfaces.Contains(typeof(IWeapon)))
                 {
                     // cast items to IWeapon
@@ -135,9 +130,7 @@ namespace GameV1.Commands
             else if (Slot.Item != null)
             {
                 // does slot item inherit IWeapon interface?
-                //if (Slot is ISlot<IWeapon>)
                 if (interfaces.Contains(typeof(IWeapon)))
-                //if (Slot.GetType().GetInterfaces().Contains(typeof(ISlot<IWeapon>)))
                 {
                     // cast items to IWeapon
                     List<IWeapon> weapons = items
@@ -155,10 +148,10 @@ namespace GameV1.Commands
                     if (inventoryWeapon == null) { return NodeStates.Failure; }
 
                     // cast slot item to IWeapon
-                    var equippedWeapon = Slot.Item as IWeapon;
+                    var equippedWeapon = (IWeapon)Slot.Item;
 
                     // is the item in the slot better than the item in the inventory?
-                    if (equippedWeapon.Damage > inventoryWeapon.Damage)
+                    if (equippedWeapon.AverageDamage > inventoryWeapon.AverageDamage)
                     {
                         return NodeStates.Failure;
                     }
@@ -180,7 +173,6 @@ namespace GameV1.Commands
                     }
                 }
                 // does slot item inherit IArmor interface?
-                //else if (Slot is ISlot<IArmor>)
                 else if (interfaces.Contains(typeof(IArmor)))
                 {
                     // Cast items to IArmor
@@ -196,18 +188,13 @@ namespace GameV1.Commands
                     }
 
                     // get the armor with the highest defense
-                    IArmor? armor = armors
-                        .OrderByDescending(x => x.DamageReduction)
-                        .FirstOrDefault();
+                    IArmor? armor = armors.OrderByDescending(x => x.DamageReduction).FirstOrDefault();
 
                     // is item null?
-                    if (armor == null)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (armor == null) { return NodeStates.Failure; }
 
                     // cast slot item to IArmor
-                    var inventoryArmor = Slot.Item as IArmor;
+                    var inventoryArmor = (IArmor)Slot.Item;
 
                     // is the item in the slot better than the item in the inventory?
                     if (inventoryArmor.DamageReduction > armor.DamageReduction)
