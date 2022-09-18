@@ -48,7 +48,7 @@ namespace GameV1.Commands.Factory
                     if (entity is Creature && CreaturesAtTargetPosition is not null)
                     {
                         //Console.WriteLine("We are attacking!");
-                        return new CommandAttack(scene, (ICreature)entity, (ICreature)CreaturesAtTargetPosition);
+                        return new Attack(scene, (ICreature)entity, (ICreature)CreaturesAtTargetPosition);
                     }
 
                     // Tile
@@ -59,29 +59,34 @@ namespace GameV1.Commands.Factory
                         if (!tile.IsWalkable)
                         {
                             //Console.WriteLine("Tile in the way!");
-                            return new CommandIdle();
+                            return new Idle();
                         }
                     }
 
                     //Console.WriteLine("We are walking!");
                     switch (input)
                     {
-                        case InputOptions.Up: return new CommandMoveUp(scene, entity);
-                        case InputOptions.Down: return new CommandMoveDown(scene, entity);
-                        case InputOptions.Left: return new CommandMoveLeft(scene, entity);
-                        case InputOptions.Right: return new CommandMoveRight(scene, entity);
+                        case InputOptions.Up: return new MoveUp(scene, entity);
+                        case InputOptions.Down: return new MoveDown(scene, entity);
+                        case InputOptions.Left: return new MoveLeft(scene, entity);
+                        case InputOptions.Right: return new MoveRight(scene, entity);
                     }
 
                 }
                 if (input == InputOptions.ItemPickUp)
                 {
-                    return new CommandItemPickUp(scene, (ICreature)entity);
+                    return new PickUpItem(scene, (ICreature)entity);
                 }
 
                 if (input == InputOptions.Idle)
                 {
                     //Console.WriteLine("We are idling!");
-                    return new CommandIdle();
+                    return new Idle();
+                }
+
+                if (input == InputOptions.AutoEquip)
+                {
+                    return new AutoEquip(scene, (ICreature)entity);
                 }
             }
 
@@ -91,7 +96,7 @@ namespace GameV1.Commands.Factory
                 {
                     if (inputs.Contains((InputOptions)i+1))
                     {
-                        return new CommandItemIndexDrop(scene, (ICreature)entity, i+1);
+                        return new DropItemIndex(scene, (ICreature)entity, i+1);
                     }
                 }
             }

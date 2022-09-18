@@ -1,16 +1,17 @@
 ﻿using MooseEngine.Core;
 using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveRight : CommandBase
+    public class MoveUp : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
 
-        public CommandMoveRight(IScene scene, IEntity entity)
+        public MoveUp(IScene scene, IEntity entity)
         {
             Scene = scene;
             Entity = entity;
@@ -18,11 +19,11 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            var newPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
+            var newPosition = Entity.Position + new Vector2(0, -Constants.DEFAULT_ENTITY_SIZE);
 
             var entityLayer = (int)EntityLayer.Creatures;
             var tileLayer = (int)EntityLayer.NonWalkableTiles;
-
+            
             var isMoveValid = Scene.TryMoveEntity(Entity, newPosition, entityLayer, tileLayer);
 
             return isMoveValid ? NodeStates.Success : NodeStates.Failure;

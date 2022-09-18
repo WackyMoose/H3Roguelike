@@ -3,13 +3,22 @@ using GameV1.Interfaces.Items;
 
 namespace GameV1.Entities.Containers
 {
-    public class Slot<TItem> : ISlot<TItem> where TItem : IItem
+    // TODO: Check if it's a good idea that SLot<> does not inherit entity or item.
+    public class Slot<TItem> : ISlot<TItem?> where TItem : IItem?
     {
         public TItem? Item { get; set; }
         public bool IsEmpty { get { return Item == null; } }
+        public string Name { get; set; }
 
-        public bool Add(TItem item)
+        public Slot(string name)
         {
+            Name = name;
+        }
+
+        public bool Add(TItem? item)
+        {
+            if (item is null) { return false; }
+            
             if (IsEmpty)
             {
                 Item = item;

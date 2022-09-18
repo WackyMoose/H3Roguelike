@@ -31,7 +31,7 @@ namespace GameV1.Entities.Containers
 
             for (int i = 0; i < NumSlots; i++)
             {
-                var slot = new Slot<IItem>();
+                var slot = new Slot<IItem>($"Inventory Slot {i}");
 
                 Slots = Slots.Append(slot);
             }
@@ -53,7 +53,7 @@ namespace GameV1.Entities.Containers
             return false;
         }
 
-        public bool AddItemToSlot(IItem? item, ISlot<IItem> slot)
+        public bool AddItemToSlot(IItem? item, ISlot<IItem?> slot)
         {
             if(item == null) { return false; }
             
@@ -61,50 +61,58 @@ namespace GameV1.Entities.Containers
 
             if (result == true)
             {
-                ConsolePanel.Add($"{item.Name} added to {slot}");
+                ConsolePanel.Add($"{item.Name} added to {slot.Name}");
             }
             return result;
         }
 
-        public IItem? RemoveItemFromSlotIndex(int slotIndex)
+        public IItem? RemoveItem(IItem? item)
         {
-            if (slotIndex > NumSlots) { return default; }
-
-            var slot = Slots.ElementAt(slotIndex-1);
-
-            if (slot.IsEmpty == true) { return default; }
-
-            return RemoveItemFromSlot(slot);
+            foreach (var slot in Slots)
+            {
+                if (slot.IsEmpty == false && slot.Item == item)
+                {
+                    return RemoveItemFromSlot(slot); ;
+                }
+            }
+            return null;
         }
 
         public IItem? RemoveItemFromSlot(ISlot<IItem> slot)
         {
             var item = slot.Remove();
 
-            ConsolePanel.Add($"{item} removed from {slot}");
+            ConsolePanel.Add($"{item.Name} removed from {slot.Name}");
 
             return item;
         }
 
-        public bool RemoveItem(IItem item)
+        public IItem? RemoveItemFromSlotIndex(int slotIndex)
         {
-            foreach (var slot in Slots)
-            {
-                if (slot.IsEmpty == false && slot.Item == item)
-                {
-                    RemoveItemFromSlot(slot);
-                    return true;
-                }
-            }
-            return false;
+            if (slotIndex > NumSlots) { return default; }
+
+            var slot = Slots.ElementAt(slotIndex - 1);
+
+            if (slot.IsEmpty == true) { return default; }
+
+            return RemoveItemFromSlot(slot);
         }
 
-        public bool SwapSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
+        public bool SwapSlotContent(ISlot<IItem?> slotA, ISlot<IItem?> slotB)
         {
+            // place slotA item in temporary variable
+            IItem? temp = slotA.Remove();
+
+            // place slotB item in slotA
+            slotA.Add(slotB.Remove());
+
+            // place temp item in slotB
+            slotB.Add(temp);
+
             return true;
         }
 
-        public bool TransferSlotContent(ISlot<IItem> slotA, ISlot<IItem> slotB)
+        public bool TransferSlotContent(ISlot<IItem?> slotA, ISlot<IItem?> slotB)
         {
             return true;
         }
@@ -123,21 +131,21 @@ namespace GameV1.Entities.Containers
 
         public override string ToString()
         {
-            var content = new StringBuilder();
+            var inventory = new StringBuilder();
 
             for (int i = 0; i < NumSlots; i++)
             {
                 if (Slots.ElementAt(i).IsEmpty == false)
                 {
-                    content.Append($"({i + 1}) {Slots.ElementAt(i).Item.Name}, ");
+                    inventory.Append($"({i + 1}) {Slots.ElementAt(i).Item.Name}, ");
                 }
                 else
                 {
-                    content.Append($"({i + 1}) Empty, ");
+                    inventory.Append($"({i + 1}) Empty, ");
                 }
             }
 
-            return content.ToString();
+            return inventory.ToString();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToEntity : CommandBase
+    public class MoveToEntity : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
@@ -12,7 +12,7 @@ namespace GameV1.Commands
         private IEntity m_targetEntity;
         private Vector2 m_nextPosition;
 
-        public CommandMoveToEntity(IScene scene, IEntity entity, IEntity targetEntity)
+        public MoveToEntity(IScene scene, IEntity entity, IEntity targetEntity)
         {
             Scene = scene;
             Entity = entity;

@@ -4,12 +4,12 @@ using MooseEngine.Interfaces;
 
 namespace GameV1.Commands
 {
-    public class CommandTargetCreatureWithinRange : CommandBase
+    public class TargetCreatureInRange : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
-        public CommandTargetCreatureWithinRange(IScene scene, ICreature creature)
+        public TargetCreatureInRange(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;

@@ -7,12 +7,12 @@ using MooseEngine.UI;
 
 namespace GameV1.Commands
 {
-    internal class CommandItemPickUp : CommandBase
+    internal class PickUpItem : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
-        public CommandItemPickUp(IScene scene, ICreature creature)
+        public PickUpItem(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;
@@ -45,6 +45,7 @@ namespace GameV1.Commands
                     container.TransferContainerContent(Creature.Inventory.Inventory);
 
                     ConsolePanel.Add($"{Creature.Name} picked up content of {container.Name}");
+                    ConsolePanel.Add(Creature.Inventory.ToString());
                     ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
 
                     // Remove container from scene if empty
@@ -66,6 +67,7 @@ namespace GameV1.Commands
             itemLayer.Entities.Remove(itemAtPosition.Position);
 
             ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
+            ConsolePanel.Add(Creature.Inventory.ToString());
             ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
 
             return NodeStates.Success;

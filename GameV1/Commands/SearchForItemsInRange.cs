@@ -5,12 +5,12 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandSearchForLootWithinRange : CommandBase
+    public class SearchForItemsInRange : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
-        public CommandSearchForLootWithinRange(IScene scene, ICreature creature)
+        public SearchForItemsInRange(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;

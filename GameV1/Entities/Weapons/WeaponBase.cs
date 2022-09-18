@@ -9,13 +9,15 @@ namespace GameV1.Entities.Weapons
     {
         #region Properties
         public int Range { get; set; }
-        public int Damage => Randomizer.RandomInt(MinDamage, MaxDamage);
+
         public int CriticalChance { get; set; }
         public int CriticalDamage { get; set; }
         public int MinDamage { get; set; }
         public int MaxDamage { get; set; }
         public int ArmorPenetrationFlat { get; set; }
-        public int ArmorPenetrationPercent { get; set; }
+        public int ArmorPenetrationChance { get; set; }
+        public int Damage => Randomizer.RandomInt(MinDamage, MaxDamage);
+        public int AverageDamage => (MinDamage + MaxDamage) / 2;
         #endregion
 
         #region Constructors

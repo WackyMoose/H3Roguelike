@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities.Items;
+using GameV1.Interfaces;
 using GameV1.Interfaces.Armors;
 using MooseEngine.Graphics;
 using MooseEngine.Utilities;

@@ -2,9 +2,9 @@
 
 namespace GameV1.Commands
 {
-    internal class CommandIdle : CommandBase
+    internal class Idle : CommandBase
     {
-        public CommandIdle() { }
+        public Idle() { }
 
         public override NodeStates Execute()
         {

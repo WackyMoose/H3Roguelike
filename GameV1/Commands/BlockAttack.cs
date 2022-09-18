@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    public class CommandBlock : CommandBase
+    public class BlockAttack : CommandBase
     {
         public IScene Scene { get; set; }
 
         public IEntity Entity { get; set; }
 
-        public CommandBlock(IScene scene, IEntity entity)
+        public BlockAttack(IScene scene, IEntity entity)
         {
             Scene = scene;
             Entity = entity;

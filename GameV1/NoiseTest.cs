@@ -39,7 +39,7 @@ internal class NoiseTest : IGame
         sword.MinDamage = 50;
         sword.MaxDamage = 200;
         sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
+        sword.ArmorPenetrationChance = 20;
 
         armor.DamageReduction = 50;
 
@@ -126,13 +126,6 @@ internal class NoiseTest : IGame
         if (!CommandQueue.IsEmpty)
         {
             //Console.WriteLine("Players turn!");
-            CommandQueue.Execute();
-
-            // AI NPC / Monster / Critter controls
-            //Console.WriteLine("AI's turn!");
-            AI.Execute(_scene, player);
-
-            // Execute AI commands
             CommandQueue.Execute();
 
             _pathLayer.RemoveAll();

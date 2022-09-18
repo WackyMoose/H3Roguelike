@@ -12,20 +12,18 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    public class CommandItemDrop : CommandBase
+    public class ItemDrop : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
         public IItem Item { get; set; }
 
-        public CommandItemDrop(IScene scene, ICreature creature, IItem item)
+        public ItemDrop(IScene scene, ICreature creature, IItem item)
         {
             Scene = scene;
             Creature = creature;
             Item = item;
         }
-
-
 
         public override NodeStates Execute()
         {

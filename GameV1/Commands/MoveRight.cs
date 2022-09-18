@@ -5,12 +5,12 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveLeft : CommandBase
+    public class MoveRight : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
 
-        public CommandMoveLeft(IScene scene, IEntity entity)
+        public MoveRight(IScene scene, IEntity entity)
         {
             Scene = scene;
             Entity = entity;
@@ -18,7 +18,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            var newPosition = Entity.Position + new Vector2(-Constants.DEFAULT_ENTITY_SIZE, 0);
+            var newPosition = Entity.Position + new Vector2(Constants.DEFAULT_ENTITY_SIZE, 0);
 
             var entityLayer = (int)EntityLayer.Creatures;
             var tileLayer = (int)EntityLayer.NonWalkableTiles;

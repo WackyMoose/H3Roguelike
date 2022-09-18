@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    internal class CommandItemIndexPickUp : CommandBase
+    internal class PickUpItemIndex : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
         public IContainer Container { get; set; }
         public int ItemIndex { get; set; }
 
-        public CommandItemIndexPickUp(IScene scene, ICreature creature, IContainer container, int itemIndex)
+        public PickUpItemIndex(IScene scene, ICreature creature, IContainer container, int itemIndex)
         {
             Scene = scene;
             Creature = creature;

@@ -6,14 +6,14 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToTarget : CommandBase
+    public class MoveToTarget : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
         private Vector2 m_nextPosition;
 
-        public CommandMoveToTarget(IScene scene, ICreature creature)
+        public MoveToTarget(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;

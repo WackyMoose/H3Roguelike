@@ -5,12 +5,12 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveDown : CommandBase
+    public class MoveDown : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
 
-        public CommandMoveDown(IScene scene, IEntity entity)
+        public MoveDown(IScene scene, IEntity entity)
         {
             Scene = scene;
             Entity = entity;

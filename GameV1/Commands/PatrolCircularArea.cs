@@ -4,32 +4,41 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandMoveToPosition : CommandBase
+    public class PatrolCircularArea : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
 
         private Vector2 m_position;
-        private Vector2 m_nextPosition;
+        private int m_radius;
         private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_currentTargetPosition;
+        private Vector2 m_nextPosition;
 
-        public CommandMoveToPosition(IScene scene, IEntity entity, Vector2 position)
+        public PatrolCircularArea(IScene scene, IEntity entity, Vector2 position, int radius)
         {
             Scene = scene;
             Entity = entity;
             m_position = position;
+            m_radius = radius;
 
-            m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
-            m_currentTargetPosition = CommandUtility.GetClosestValidPosition(m_targetEntities, m_position);
+            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities, m_position, m_radius);
+            m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
         }
 
         public override NodeStates Execute()
         {
             // Are we there yet?
-            if (Entity.Position == m_position)
+            if (Entity.Position == m_currentTargetPosition)
             {
+                m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
+
                 return NodeStates.Success;
+            }
+
+            if (m_currentTargetPosition == default)
+            {
+                return NodeStates.Failure;
             }
 
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);

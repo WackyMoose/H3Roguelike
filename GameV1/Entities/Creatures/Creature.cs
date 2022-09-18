@@ -1,6 +1,7 @@
 ﻿using GameV1.Entities.Containers;
 using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Creatures;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
@@ -15,8 +16,9 @@ namespace GameV1.Entities.Creatures
         public ICreatureInventory Inventory { get; set; }
         public IEnumerable<ICreatureSpecies> EnemySpecies { get; set; }
         public IEnumerable<ICreature> EnemyCreatures { get; set; }
-        public bool IsDead { get { return Stats.Health <= 0; } }
         public ICreature? TargetCreature { get; set; }
+        public IBehaviorTree? BehaviorTree { get; set; }
+        public bool IsDead { get { return Stats.Health <= 0; } }
 
         public Creature(string name, int health, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
         {

@@ -4,25 +4,22 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class CommandPatrolCircularArea : CommandBase
+    public class PatrolRectangularArea : CommandBase
     {
         public IScene Scene { get; set; }
         public IEntity Entity { get; set; }
 
-        private Vector2 m_position;
-        private int m_radius;
         private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_currentTargetPosition;
         private Vector2 m_nextPosition;
 
-        public CommandPatrolCircularArea(IScene scene, IEntity entity, Vector2 position, int radius)
+        public PatrolRectangularArea(IScene scene, IEntity entity, Vector2 topLeft, Vector2 bottomRight)
         {
             Scene = scene;
             Entity = entity;
-            m_position = position;
-            m_radius = radius;
 
-            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities, m_position, m_radius);
+            var walkableTileLayer = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+            m_targetEntities = Scene.GetEntitiesWithinRectangle(walkableTileLayer, topLeft, bottomRight);
             m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
         }
 

@@ -22,6 +22,7 @@
         TabCreatures,
         Idle,
         QuitToMenu,
-        QuitGame
+        QuitGame,
+        AutoEquip
     }
 }
