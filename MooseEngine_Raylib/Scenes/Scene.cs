@@ -137,7 +137,6 @@ public class Scene : Disposeable, IScene
 
     public void UpdateRuntime(float deltaTime)
     {
-
         SceneCamera.Update(deltaTime);
 
         var defaultTint = new Color(128 - 64, 128, 128 + 64, 255);
@@ -164,7 +163,7 @@ public class Scene : Disposeable, IScene
                     if (entities.ContainsKey(v))
                     {
                         Renderer.Render(entities[v], Constants.DEFAULT_ENTITY_SIZE);
-                        entities[v].ColorTint = defaultTint;
+                        //entities[v].ColorTint = defaultTint;
                     }
                 }
             }

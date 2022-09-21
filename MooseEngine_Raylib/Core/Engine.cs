@@ -12,7 +12,7 @@ public static class Engine
 {
     private static readonly RaylibRendererOptions DefaultRaylibRendererOptions = new()
     {
-        ClearColor = new Color(0, 0, 0, 255), // Color(34, 35, 35, 255)
+        ClearColor = new Color(255, 255, 255, 255), // Color(34, 35, 35, 255)
         TargetFPS = 60,
         SpritesheetPath = @"..\..\..\Resources\Textures\Tiles.png",
         SpriteSize = 8,

@@ -21,6 +21,8 @@ namespace GameV1.WorldGeneration
             FastNoise noise = new FastNoise(seed);
             noise.UsedNoiseType = FastNoise.NoiseType.Perlin;
 
+            Console.WriteLine(worldScale);
+
             for (int y = 0; y < height; y++)
             {
                 var yCord = y * (int)worldScale;

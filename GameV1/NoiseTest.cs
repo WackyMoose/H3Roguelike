@@ -1,13 +1,9 @@
-﻿using GameV1.Commands.Factory;
-using GameV1.Entities;
+﻿using GameV1.Entities;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
-using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
-using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
-using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -18,7 +14,6 @@ internal class NoiseTest : IGame
     private IScene? _scene;
     private Player player = new Player("Hero", 120, new Coords2D(5, 0));
 
-
     public void Initialize()
     {
         var sceneFactory = Application.Instance.SceneFactory;
@@ -28,6 +23,11 @@ internal class NoiseTest : IGame
 
         // Layers
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+        //var tileLayer = _scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
+
+        //var testTile = new Tile("Tester", true, new Coords2D(1, 1));
+        //testTile.Position = new Coords2D(240, 240);
+        //tileLayer.Add(testTile);
 
         var window = Application.Instance.Window;
 
@@ -51,7 +51,7 @@ internal class NoiseTest : IGame
 
     public void UIRender(IUIRenderer UIRenderer)
     {
-        UIRenderer.DrawFPS(16, 16);
+        //UIRenderer.DrawFPS(16, 16);
 
         //var text = "Jeg tror det her UI skrammel det virker som det skal, men jeg ved det ikke helt endnu";
         //UIRenderer.DrawText(text, 16, windowData.Height - 40, 24, Color.DarkGray, Color.White);
