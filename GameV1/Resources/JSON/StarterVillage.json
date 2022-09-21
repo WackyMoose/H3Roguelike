@@ -1,0 +1,102 @@
+{ "compressionlevel":-1,
+ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[118, 1241, 982, 982, 982, 982, 982, 1014, 982, 982, 982, 982, 982, 982, 982, 982, 982, 1241, 30,
+            30, 985, 30, 30, 30, 453, 480, 1373, 30, 1234, 30, 30, 401, 422, 422, 422, 422, 985, 118,
+            482, 985, 1234, 30, 452, 1233, 30, 1319, 1272, 453, 30, 1240, 401, 422, 422, 422, 422, 985, 30,
+            1345, 1346, 1291, 1345, 1346, 1291, 1292, 1293, 1290, 30, 30, 1235, 401, 421, 421, 423, 422, 985, 30,
+            482, 985, 1239, 449, 1235, 1234, 1373, 253, 1374, 30, 30, 30, 396, 402, 393, 393, 393, 985, 481,
+            30, 985, 30, 1235, 30, 30, 1317, 1292, 1293, 1291, 1345, 1291, 1291, 1346, 1291, 1291, 1346, 1345, 1346,
+            119, 985, 30, 30, 30, 1235, 1234, 1319, 30, 903, 146, 146, 403, 402, 393, 393, 393, 985, 481,
+            30, 985, 30, 1234, 30, 30, 453, 1374, 117, 146, 145, 145, 401, 421, 423, 422, 422, 985, 30,
+            30, 985, 453, 1235, 1233, 1240, 452, 1319, 146, 145, 145, 145, 401, 423, 422, 422, 422, 985, 120,
+            30, 1241, 982, 982, 982, 982, 982, 1014, 982, 982, 982, 982, 982, 982, 982, 982, 982, 1241, 30],
+         "height":10,
+         "id":1,
+         "name":"Tile Layer 1",
+         "offsetx":-3.95031,
+         "offsety":0,
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":19,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "class":"",
+                 "height":0,
+                 "id":1,
+                 "name":"NorthGate",
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":56,
+                 "y":4
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":2,
+                 "name":"EastGate",
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":144,
+                 "y":44
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":3,
+                 "name":"WestGate",
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":28
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":4,
+                 "name":"SouthGate",
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":56,
+                 "y":76
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":5,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.1",
+ "tileheight":8,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/..\/..\/RaylibPlayground\/ClassyClash\/Textures\/Tilemap_Modified.tsx"
+        }, 
+        {
+         "firstgid":785,
+         "source":"..\/..\/..\/..\/RaylibPlayground\/ClassyClash\/Textures\/Tiles.tsx"
+        }],
+ "tilewidth":8,
+ "type":"map",
+ "version":"1.9",
+ "width":19
+}

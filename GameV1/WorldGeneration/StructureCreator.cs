@@ -24,7 +24,7 @@ namespace GameV1.WorldGeneration
                         var n = int.Parse(val);
                         var coords = GetSpriteCoords(n);
                         var isWalkable = walkableIDs.Contains(n);
-                        coordsList.Add(new StructureData(coords, isWalkable));
+                        //coordsList.Add(new StructureData(coords, isWalkable));
                     }
 
                     list.Add(coordsList);

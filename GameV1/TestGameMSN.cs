@@ -218,13 +218,13 @@ internal class TestGameMSN : IGame
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
-            foreach (BTree btree in btrees)
-            {
-                btree.Evaluate();
+            //foreach (BTree btree in btrees)
+            //{
+            //    btree.Evaluate();
 
-                // Execute AI commands
-                CommandQueue.Execute();
-            }
+            //    // Execute AI commands
+            //    CommandQueue.Execute();
+            //}
         }
 
         // TODO: Only illuminate if range within viewport, AABB check

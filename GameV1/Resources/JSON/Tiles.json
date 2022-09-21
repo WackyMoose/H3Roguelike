@@ -1,42 +1,24 @@
 {
-  "Tiles": {
+  "Sprites": {
     "Grass01": {
       "IsWalkable": true,
       "SpriteCoords": {
         "X": 5,
         "Y": 4
-      },
-      "ColorTint": {
-        "R": 255,
-        "G": 255,
-        "B": 255,
-        "A": 255
       }
     },
     "Grass02": {
       "IsWalkable": true,
       "SpriteCoords": {
-        "X": 4,
-        "Y": 10
-      },
-      "ColorTint": {
-        "R": 255,
-        "G": 255,
-        "B": 255,
-        "A": 255
+        "X": 6,
+        "Y": 4
       }
     },
     "Grass03": {
       "IsWalkable": true,
       "SpriteCoords": {
-        "X": 5,
-        "Y": 10
-      },
-      "ColorTint": {
-        "R": 255,
-        "G": 255,
-        "B": 255,
-        "A": 255
+        "X": 7,
+        "Y": 4
       }
     },
     "Tree01": {
@@ -44,12 +26,6 @@
       "SpriteCoords": {
         "X": 4,
         "Y": 5
-      },
-      "ColorTint": {
-        "R": 255,
-        "G": 255,
-        "B": 255,
-        "A": 255
       }
     },
     "Tree02": {
@@ -57,12 +33,139 @@
       "SpriteCoords": {
         "X": 5,
         "Y": 5
-      },
-      "ColorTint": {
-        "R": 255,
-        "G": 255,
-        "B": 255,
-        "A": 255
+      }
+    },
+    "Tree03": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 6
+      }
+    },
+    "TreeStump": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 8
+      }
+    },
+    "InnerWallLeftDown": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "InnerWallRightDown": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 3
+      }
+    },
+    "InnerWallLeftUp": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 2,
+        "Y": 0
+      }
+    },
+    "InnerWallRightUp": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 2,
+        "Y": 3
+      }
+    },
+    "InnerWallStraightTop01": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 1
+      }
+    },
+    "InnerWallStraightTop02": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 2,
+        "Y": 4
+      }
+    },
+    "InnerWallStraightTop03": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 3,
+        "Y": 4
+      }
+    },
+    "RoadLeftDown": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadRightDown": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadLeftUp": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadRightUp": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightWE01": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightWE02": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightWE03": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightNS01": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightNS02": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
+      }
+    },
+    "RoadStraightNS03": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 0,
+        "Y": 0
       }
     }
   }

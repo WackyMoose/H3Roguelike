@@ -29,7 +29,7 @@ namespace GameV1.Entities
             other.Name = this.Name;
             other.IsWalkable = this.IsWalkable;
             other.SpriteCoords = this.SpriteCoords;
-            other.ColorTint = this.ColorTint;
+            other.ColorTint = Color.White;
             other.Scale = Vector2.One;
             return other;
         }
