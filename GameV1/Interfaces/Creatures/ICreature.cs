@@ -1,4 +1,5 @@
-﻿using MooseEngine.BehaviorTree.Interfaces;
+﻿using GameV1.Interfaces.Items;
+using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Interfaces;
 
 namespace GameV1.Interfaces.Creatures
@@ -12,6 +13,7 @@ namespace GameV1.Interfaces.Creatures
         IEnumerable<ICreatureSpecies> EnemySpecies { get; set; }
         IEnumerable<ICreature> EnemyCreatures { get; set; }
         ICreature? TargetCreature { get; set; }
+        IItem? TargetItem { get; set; }
         IBehaviorTree? BehaviorTree { get; set; }
         bool IsDead { get; }
 

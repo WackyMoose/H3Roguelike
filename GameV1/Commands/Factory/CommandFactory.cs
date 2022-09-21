@@ -41,8 +41,8 @@ namespace GameV1.Commands.Factory
                         case InputOptions.Right: direction = Constants.Right; break;
                     }
 
-                    var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.Entities, entity.Position + direction);
-                    var CreaturesAtTargetPosition = scene.GetEntityAtPosition(creatures.Entities, entity.Position + direction);
+                    var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.ActiveEntities, entity.Position + direction);
+                    var CreaturesAtTargetPosition = scene.GetEntityAtPosition(creatures.ActiveEntities, entity.Position + direction);
 
                     // Creature
                     if (entity is Creature && CreaturesAtTargetPosition is not null)
@@ -94,9 +94,9 @@ namespace GameV1.Commands.Factory
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    if (inputs.Contains((InputOptions)i+1))
+                    if (inputs.Contains((InputOptions)i + 1))
                     {
-                        return new DropItemIndex(scene, (ICreature)entity, i+1);
+                        return new DropItemIndex(scene, (ICreature)entity, i + 1);
                     }
                 }
             }

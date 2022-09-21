@@ -6,10 +6,10 @@ using MooseEngine.Utilities;
 
 namespace GameV1.Entities
 {
-    internal class Selector<T> : Entity, ISelector<T> where T : class, IEnumerable<T>
+    internal class Selector<TEntity> : Entity, ISelector<TEntity> where TEntity : class, IEntity
     {
-        public IEnumerable<T> Entities { get; set; }
-        public IEntity SelectedEntity { get; set; }
+        public IEnumerable<TEntity> Entities { get; set; }
+        public TEntity SelectedEntity { get; set; }
         public int SelectedEntityIndex { get; set; }
 
         public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)

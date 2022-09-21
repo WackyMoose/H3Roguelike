@@ -1,8 +1,6 @@
-﻿using GameV1.Interfaces.Items;
-
-namespace GameV1.Interfaces.Weapons
+﻿namespace GameV1.Interfaces.Weapons
 {
-    public interface IWeapon : IOrdnance
+    public interface IWeapon : IEquippable
     {
         int Range { get; set; }
         int CriticalChance { get; set; }
@@ -14,7 +12,7 @@ namespace GameV1.Interfaces.Weapons
 
         int Damage { get; }
         int AverageDamage { get; }
-        
+
 
         int DoDamage();
     }

@@ -5,58 +5,96 @@ namespace MooseEngine.Scenes;
 
 public interface IEntityLayer
 {
-    IDictionary<Vector2, IEntity> Entities { get; }
+    IDictionary<Vector2, IEntity> ActiveEntities { get; }
+    IList<IEntity> InactiveEntities { get; }
 
-    IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity;
-    IEntity Add(IEntity entity);
+    IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity;
+
+    bool DeactivateEntity(IEntity entity);
+    bool ActivateEntity(IEntity entity);
+
+    TEntityType GetFirstAvailableEntity<TEntityType>() where TEntityType : class, IEntity;
+
+    //bool Add(IEntity entity);
+    //IEntity Add(IEntity entity);
     void Remove(IEntity entity);
     void RemoveAll();
 }
 
-public interface IEntityLayer<TEntity> : IEntityLayer
-    where TEntity : class, IEntity
+public interface IEntityLayer<TEntity> : IEntityLayer where TEntity : class, IEntity
 {
-    IEntity Add(TEntity entity);
-    void Remove(TEntity entity);
+    //bool InactivateEntity(TEntity entity);
+    //bool ActivateEntity(TEntity entity);
+
+    bool AddEntity(TEntity entity);
+    void RemoveEntity(TEntity entity);
     void RemoveAll();
 }
 
-public class EntityLayer<TEntity> : IEntityLayer<TEntity>
-    where TEntity : class, IEntity
+public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class, IEntity
 {
-    public IDictionary<Vector2, IEntity> Entities { get; } = new Dictionary<Vector2, IEntity>();
+    public IDictionary<Vector2, IEntity> ActiveEntities { get; } = new Dictionary<Vector2, IEntity>();
+    public IList<IEntity> InactiveEntities { get; } = new List<IEntity>();
 
-    public IEntity Add(TEntity entity)
+    public bool DeactivateEntity(IEntity entity)
     {
-        Entities.Add(entity.Position, entity);
-        
-        return entity;
+        if (ActiveEntities.ContainsKey(entity.Position))
+        {
+            InactiveEntities.Add(entity);
+            ActiveEntities.Remove(entity.Position);
+
+            return true;
+        }
+        return false;
+    }
+    public bool ActivateEntity(IEntity entity)
+    {
+        if (InactiveEntities.Contains(entity) && ActiveEntities.ContainsKey(entity.Position) == false)
+        {
+            ActiveEntities.Add(entity.Position, entity);
+            InactiveEntities.Remove(entity);
+
+            return true;
+        }
+        return false;
     }
 
-    public IEntity Add(IEntity entity)
+    public TEntityType? GetFirstAvailableEntity<TEntityType>() where TEntityType : class, IEntity
     {
-        Entities.Add(entity.Position, entity);
-
-        return entity;
+        foreach (var entity in InactiveEntities)
+        {
+            if (entity is TEntityType)
+            {
+                return entity as TEntityType;
+            }
+        }
+        return null;
     }
 
-    public IEnumerable<TEntityType> GetEntitiesOfType<TEntityType>() where TEntityType : IEntity
+    public bool AddEntity(TEntity entity)
     {
-        return Entities.Values.OfType<TEntityType>();
+        ActiveEntities.Add(entity.Position, entity);
+
+        return true;
     }
 
-    public void Remove(TEntity entity)
+    public IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity
     {
-        Entities.Remove(entity.Position);
+        return ActiveEntities.Values.OfType<TEntityType>();
+    }
+
+    public void RemoveEntity(TEntity entity)
+    {
+        ActiveEntities.Remove(entity.Position);
     }
 
     public void Remove(IEntity entity)
     {
-        Entities.Remove(entity.Position);
+        ActiveEntities.Remove(entity.Position);
     }
 
     public void RemoveAll()
     {
-        Entities.Clear();
+        ActiveEntities.Clear();
     }
 }

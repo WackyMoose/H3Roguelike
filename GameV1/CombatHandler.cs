@@ -1,10 +1,8 @@
 ﻿using GameV1.Entities.Containers;
-using GameV1.Entities.Creatures;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Weapons;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
 
@@ -15,8 +13,8 @@ namespace GameV1
         public static void SolveAttack(IScene scene, ICreature attacker, ICreature defender, IWeapon attackWeapon)
         {
             int damage = attacker.Stats.Strength + attackWeapon.Damage;
-            
-            float damageModifier = 
+
+            float damageModifier =
                 defender.Inventory.BodyArmor.Item != null ?
                 100.0f / (100.0f + (defender.Inventory.BodyArmor.Item.DamageReduction * (1.0f - (attackWeapon.ArmorPenetrationChance / 100.0f)) - attackWeapon.ArmorPenetrationFlat)) : 1.0f;
 
@@ -40,6 +38,9 @@ namespace GameV1
 
         public static void KillCreature(IScene scene, ICreature creature)
         {
+            // TODO: Check if item already exists in position.
+            // TODO: Decide what should happen, if a creature dies on top of item or container
+
             // Get creatureLayer
             var creatureLayer = scene.GetLayer((int)EntityLayer.Creatures);
 
@@ -47,13 +48,12 @@ namespace GameV1
             var itemLayer = scene.GetLayer((int)EntityLayer.Items);
 
             // Check if entíty exists at position
-            if (creatureLayer.Entities.ContainsKey(creature.Position) == false) { return; }
+            if (creatureLayer.ActiveEntities.ContainsKey(creature.Position) == false) { return; }
 
-            creature.IsActive = false;
             creature.Stats.Health = 0;
 
             // Create Inventory item
-            var lootableCorpse = new TemporaryContainer(8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7), Color.White);
+            var lootableCorpse = new Container(ContainerType.PileOfItems, 8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7), Color.White);
             lootableCorpse.Position = creature.Position;
 
             // Add creature inventory to lootable corpse
@@ -67,10 +67,10 @@ namespace GameV1
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.FootWear.Item);
 
             // Remove Creature from entity layer
-            creatureLayer.Remove(creature);
-            
+            creatureLayer.DeactivateEntity(creature);
+
             // Add inventory to item layer.
-            itemLayer.Entities.Add(lootableCorpse.Position, lootableCorpse);
+            itemLayer.ActiveEntities.Add(lootableCorpse.Position, lootableCorpse);
         }
     }
 }

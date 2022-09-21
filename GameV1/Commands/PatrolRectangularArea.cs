@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using MooseEngine.BehaviorTree;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using System.Numerics;
 
@@ -18,7 +19,7 @@ namespace GameV1.Commands
             Scene = scene;
             Entity = entity;
 
-            var walkableTileLayer = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+            var walkableTileLayer = Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
             m_targetEntities = Scene.GetEntitiesWithinRectangle(walkableTileLayer, topLeft, bottomRight);
             m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
         }

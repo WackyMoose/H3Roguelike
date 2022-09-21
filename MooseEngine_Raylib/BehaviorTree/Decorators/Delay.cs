@@ -1,6 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {

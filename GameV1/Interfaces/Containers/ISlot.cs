@@ -7,7 +7,7 @@ namespace GameV1.Interfaces.Containers
         TItem? Item { get; set; }
         bool IsEmpty { get; }
         string Name { get; set; }
-        
+
         bool Add(TItem? item);
         TItem? Remove();
     }

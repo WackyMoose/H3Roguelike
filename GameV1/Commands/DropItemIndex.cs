@@ -1,18 +1,12 @@
 ﻿using GameV1.Entities.Containers;
-using GameV1.Entities.Creatures;
 using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;
-using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
@@ -33,10 +27,10 @@ namespace GameV1.Commands
         {
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
+            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.ActiveEntities, Creature.Position);
 
             var itemAtPositionInterfaces = itemAtPosition?.GetType().GetInterfaces();
-            
+
             var inventoryItem = Creature.Inventory.Inventory.RemoveItemFromSlotIndex(ItemIndex);
 
             // Does inventory item exist?
@@ -45,7 +39,7 @@ namespace GameV1.Commands
                 ConsolePanel.Add($"{Creature.Name} tried to drop an item that doesn't exist.");
                 ConsolePanel.Add(Creature.Inventory.ToString());
                 ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                
+
                 return NodeStates.Failure;
             }
 
@@ -54,40 +48,40 @@ namespace GameV1.Commands
             if (itemAtPosition is null)
             {
                 // Create Temporary Container
-                var tempContainer = new TemporaryContainer(8, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
+                var tempContainer = new Container(ContainerType.PileOfItems, 8, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
                 tempContainer.Position = Creature.Position;
 
                 // Add item to container and drop container
                 if (tempContainer.AddItemToFirstEmptySlot(inventoryItem) == true)
                 {
-                    itemLayer.Entities.Add(tempContainer.Position, tempContainer);
+                    itemLayer.ActiveEntities.Add(tempContainer.Position, tempContainer);
                     ConsolePanel.Add($"{Creature.Name} dropped {inventoryItem.Name}");
                     ConsolePanel.Add(Creature.Inventory.ToString());
                     ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                    
+
                     return NodeStates.Success;
                 }
             }
             // If yes, check if item at position is a container.
-            else if(itemAtPosition is not null)
+            else if (itemAtPosition is not null)
             {
                 // If not, create a temporary container and add the dropped item to the container.
                 if (itemAtPositionInterfaces.Contains(typeof(IContainer)) == false)
                 {
                     // Create Temporary Container
-                    var tempContainer = new TemporaryContainer(8, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
+                    var tempContainer = new Container(ContainerType.PileOfItems, 8, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
                     tempContainer.Position = Creature.Position;
 
                     if (tempContainer.AddItemToFirstEmptySlot(inventoryItem) == true &&
                         tempContainer.AddItemToFirstEmptySlot(itemAtPosition) == true)
                     {
                         // Attempt to add item to ItemLayer
-                        itemLayer.Entities.Remove(itemAtPosition.Position);
-                        itemLayer.Entities.Add(tempContainer.Position, tempContainer);
+                        itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
+                        itemLayer.ActiveEntities.Add(tempContainer.Position, tempContainer);
                         ConsolePanel.Add($"{Creature.Name} dropped {inventoryItem.Name}");
                         ConsolePanel.Add(Creature.Inventory.ToString());
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                        
+
                         return NodeStates.Success;
                     }
                     else
@@ -97,7 +91,7 @@ namespace GameV1.Commands
                         ConsolePanel.Add($"{Creature.Name} failed to drop {inventoryItem.Name}");
                         ConsolePanel.Add(Creature.Inventory.ToString());
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                        
+
                         return NodeStates.Failure;
                     }
                 }
@@ -114,7 +108,7 @@ namespace GameV1.Commands
                             ConsolePanel.Add($"{Creature.Name} dropped {inventoryItem.Name} into {containerAtPosition.Name}");
                             ConsolePanel.Add(Creature.Inventory.ToString());
                             ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                            
+
                             return NodeStates.Success;
                         }
                     }
@@ -125,7 +119,7 @@ namespace GameV1.Commands
                         ConsolePanel.Add($"{Creature.Name} failed to drop {inventoryItem.Name}");
                         ConsolePanel.Add(Creature.Inventory.ToString());
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
-                        
+
                         return NodeStates.Failure;
                     }
                 }

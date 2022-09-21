@@ -134,11 +134,11 @@ namespace GameV1.WorldGeneration
             {
                 if (tile.Value.IsWalkable == true)
                 {
-                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key, tile.Value);
+                    scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities.Add(tile.Key, tile.Value);
                 }
                 else
                 {
-                    scene.GetLayer((int)EntityLayer.NonWalkableTiles).Entities.Add(tile.Key, tile.Value);
+                    scene.GetLayer((int)EntityLayer.NonWalkableTiles).ActiveEntities.Add(tile.Key, tile.Value);
                 }
             }
 

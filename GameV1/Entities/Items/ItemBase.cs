@@ -13,6 +13,11 @@ namespace GameV1.Entities.Items
         public IEnumerable<IMaterial>? Materials { get; set; }
         public bool IsBroken { get { return Durability <= 0; } }
 
+        public ItemBase() : base()
+        {
+            Materials = new List<IMaterial>();
+        }
+
         public ItemBase(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(name, spriteCoords, colorTint)
         {

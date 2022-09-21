@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using MooseEngine.BehaviorTree;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using System.Numerics;
 
@@ -20,7 +21,7 @@ namespace GameV1.Commands
             Entity = entity;
             m_position = position;
 
-            m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities;
+            m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
             m_currentTargetPosition = CommandUtility.GetClosestValidPosition(m_targetEntities, m_position);
         }
 

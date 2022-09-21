@@ -1,4 +1,5 @@
 ﻿using GameV1.Interfaces.Creatures;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
@@ -17,7 +18,7 @@ namespace GameV1.Commands
 
         public override NodeStates Execute()
         {
-            var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).Entities;
+            var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).ActiveEntities;
             var creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
             // Remove self
@@ -26,7 +27,7 @@ namespace GameV1.Commands
                 creaturesWithinLayer.Remove(Creature.Position);
             }
 
-            var creatures = creaturesWithinLayer.Where(creature => creature.Value.IsActive == true).ToDictionary(creature => creature.Key, creature => creature.Value);
+            var creatures = creaturesWithinLayer.ToDictionary(creature => creature.Key, creature => creature.Value);
 
             if (creatures.Count == 0)
             {

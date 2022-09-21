@@ -1,4 +1,5 @@
-﻿using MooseEngine.Interfaces;
+﻿using MooseEngine.BehaviorTree;
+using MooseEngine.Interfaces;
 
 namespace MooseEngine.Core
 {

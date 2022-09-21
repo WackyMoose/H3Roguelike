@@ -4,38 +4,40 @@ using GameV1.Interfaces.Items;
 using MooseEngine.Graphics;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace GameV1.Entities.Containers
 {
     public class Container : ItemBase, IContainer
     {
+        public ContainerType Type { get; set; }
         public int NumSlots { get; set; }
         public IEnumerable<ISlot<IItem>> Slots { get; set; }
         public int NumEmptySlots { get { return Slots.Where(s => s.IsEmpty == true).Count(); } }
         public bool HasEmptySlots { get { return NumEmptySlots > 0; } }
-
         public bool IsEmpty { get { return NumEmptySlots == NumSlots; } }
 
-        public Container(int maxSlots) 
-            : this(maxSlots, 0, 0, "Container", new Coords2D(), Color.White)
+
+        public Container(ContainerType type, int maxSlots, string name)
+            : this(type, maxSlots, 0, 0, name, new Coords2D(), Color.White)
         {
         }
 
-        public Container(int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
+        public Container(ContainerType type, int maxSlots, int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
+            Type = type;
             NumSlots = maxSlots;
             Slots = new List<ISlot<IItem>>();
 
             for (int i = 0; i < NumSlots; i++)
             {
-                var slot = new Slot<IItem>($"Inventory Slot {i}");
+                ISlot<IItem> slot = new Slot<IItem>($"Inventory Slot {i}");
 
                 Slots = Slots.Append(slot);
             }
         }
+
 
         public bool AddItemToFirstEmptySlot(IItem? item)
         {
@@ -49,14 +51,14 @@ namespace GameV1.Entities.Containers
                     return true;
                 }
             }
-            
+
             return false;
         }
 
         public bool AddItemToSlot(IItem? item, ISlot<IItem?> slot)
         {
-            if(item == null) { return false; }
-            
+            if (item == null) { return false; }
+
             var result = slot.Add(item);
 
             if (result == true)
@@ -112,8 +114,18 @@ namespace GameV1.Entities.Containers
             return true;
         }
 
-        public bool TransferSlotContent(ISlot<IItem?> slotA, ISlot<IItem?> slotB)
+        public bool TransferSlotContent<TItemA, TItemB>(ISlot<IItem?> sourceSlot, ISlot<IItem?> targetSlot) where TItemA : IItem where TItemB : IItem
         {
+            // get list of slot argument interfaces
+
+
+            // Check if slots inherit same interfaces
+            if (sourceSlot.GetType().GetInterfaces().Contains(typeof(TItemA)) == false ||
+                targetSlot.GetType().GetInterfaces().Contains(typeof(TItemB)) == false)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -122,7 +134,7 @@ namespace GameV1.Entities.Containers
             foreach (var slot in Slots)
             {
                 IItem? item = slot.Remove();
-                
+
                 targetContainer.AddItemToFirstEmptySlot(item);
             }
 
@@ -137,7 +149,7 @@ namespace GameV1.Entities.Containers
             {
                 if (Slots.ElementAt(i).IsEmpty == false)
                 {
-                    inventory.Append($"({i + 1}) {Slots.ElementAt(i).Item.Name}, ");
+                    inventory.Append($"({i + 1}) {Slots.ElementAt(i).Item?.Name}, ");
                 }
                 else
                 {

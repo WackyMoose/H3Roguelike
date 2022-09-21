@@ -18,7 +18,7 @@ namespace GameV1.Entities.Containers
         public bool Add(TItem? item)
         {
             if (item is null) { return false; }
-            
+
             if (IsEmpty)
             {
                 Item = item;

@@ -1,10 +1,7 @@
-﻿using GameV1.Entities.Containers;
-using GameV1.Interfaces.Armors;
-using GameV1.Interfaces.Containers;
-using GameV1.Interfaces;
+﻿using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
-using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;
@@ -21,7 +18,7 @@ namespace GameV1.Commands
             Scene = scene;
             Creature = creature;
         }
-        
+
         public override NodeStates Execute()
         {
             // get list of inventory weapons
@@ -64,7 +61,7 @@ namespace GameV1.Commands
             {
                 // is the item in the slot better than the item in the inventory?
                 if (weaponSlot.Item.AverageDamage > inventoryWeapon.AverageDamage) { return NodeStates.Failure; }
-                
+
                 // is the item in the slot worse than or equal to the item in the inventory?
                 else if (weaponSlot.Item.Damage <= inventoryWeapon.Damage)
                 {
@@ -84,7 +81,7 @@ namespace GameV1.Commands
                     return NodeStates.Success;
                 }
             }
-            
+
             return NodeStates.Failure;
         }
     }

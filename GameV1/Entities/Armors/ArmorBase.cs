@@ -1,13 +1,7 @@
 ﻿using GameV1.Entities.Items;
-using GameV1.Interfaces;
 using GameV1.Interfaces.Armors;
 using MooseEngine.Graphics;
 using MooseEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Entities.Armors
 {

@@ -10,7 +10,7 @@ namespace MooseEngine.Pathfinding
         {
             var map = new PathMap();
 
-            foreach (TType tile in walkableLayer.Entities.Values)
+            foreach (TType tile in walkableLayer.ActiveEntities.Values)
             {
                 var node = new MapNode(tile.Position, tile.PathWeight);
                 map.Map.Add(tile.Position, node);

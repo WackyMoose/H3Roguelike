@@ -21,6 +21,12 @@ namespace GameV1.Entities.Weapons
         #endregion
 
         #region Constructors
+
+        public WeaponBase() : base()
+        {
+
+        }
+
         public WeaponBase(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {

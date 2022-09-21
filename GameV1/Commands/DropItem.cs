@@ -1,14 +1,10 @@
 ﻿using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
@@ -29,7 +25,7 @@ namespace GameV1.Commands
         {
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
+            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.ActiveEntities, Creature.Position);
 
             // Does item exist?
             if (itemAtPosition == null)
@@ -38,7 +34,7 @@ namespace GameV1.Commands
                 Creature.Inventory.Inventory.RemoveItem(Item);
 
                 // Attempt to add item to ItemLayer
-                itemLayer.Entities.Add(Item.Position, Item);
+                itemLayer.ActiveEntities.Add(Item.Position, Item);
                 ConsolePanel.Add($"{Creature.Name} dropped {Item.Name}");
                 return NodeStates.Success;
 
@@ -49,8 +45,8 @@ namespace GameV1.Commands
             if (itemAtPosition.GetType() == typeof(IContainer))
             {
                 var container = (IContainer)itemAtPosition;
-                
-                if(container.HasEmptySlots == true)
+
+                if (container.HasEmptySlots == true)
                 {
                     container.AddItemToFirstEmptySlot(Item);
                     ConsolePanel.Add($"{Creature.Name} dropped {Item.Name} into {container.Name}");

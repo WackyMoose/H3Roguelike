@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities.Containers;
+using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Armors;
 using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
@@ -10,15 +11,21 @@ namespace GameV1.Entities.Creatures
 {
     public class CreatureInventory : ICreatureInventory
     {
-        public CreatureInventory(
-            IWeapon defaultWeapon,
-            IContainer inventory)
+
+        public CreatureInventory()
         {
+            Inventory = new Container(ContainerType.Inventory, 8, "Inventory");
             HeadGear = new Slot<IHeadGear?>("Head Gear");
             PrimaryWeapon = new Slot<IWeapon?>("Primary Weapon");
             SecondaryWeapon = new Slot<IWeapon?>("Secondary Weapon");
             BodyArmor = new Slot<IBodyArmor?>("Body Armor");
             FootWear = new Slot<IFootWear?>("Foot Wear");
+
+            DefaultWeapon = new MeleeWeapon();
+        }
+
+        public CreatureInventory(IWeapon defaultWeapon, IContainer inventory) : this()
+        {
             DefaultWeapon = defaultWeapon;
             Inventory = inventory;
         }
@@ -30,9 +37,11 @@ namespace GameV1.Entities.Creatures
         public ISlot<IBodyArmor?> BodyArmor { get; set; }
         public ISlot<IFootWear?> FootWear { get; set; }
         public IWeapon DefaultWeapon { get; set; }
-        public IWeapon StrongestWeapon { 
-            
-            get {
+        public IWeapon StrongestWeapon
+        {
+
+            get
+            {
 
                 // return weapon with highest damage, if both are null then return defaultweapon
                 if (PrimaryWeapon.Item != null && SecondaryWeapon.Item != null)
@@ -58,7 +67,7 @@ namespace GameV1.Entities.Creatures
                 {
                     return DefaultWeapon;
                 }
-            } 
+            }
         }
 
         public bool SwapSlotContent(ISlot<IItem?> slotA, ISlot<IItem?> slotB)
@@ -70,7 +79,7 @@ namespace GameV1.Entities.Creatures
         {
             var equipped = new StringBuilder();
 
-            if(PrimaryWeapon.Item is not null)
+            if (PrimaryWeapon.Item is not null)
             {
                 equipped.Append($"Primary: {PrimaryWeapon.Item.Name}, ");
             }
@@ -90,11 +99,11 @@ namespace GameV1.Entities.Creatures
 
             if (HeadGear.Item is not null)
             {
-                equipped.Append($"Helmet: {HeadGear.Item.Name}, ");
+                equipped.Append($"Head: {HeadGear.Item.Name}, ");
             }
             else
             {
-                equipped.Append($"Helmet: None, ");
+                equipped.Append($"Head: None, ");
             }
 
             if (BodyArmor.Item is not null)
@@ -108,11 +117,11 @@ namespace GameV1.Entities.Creatures
 
             if (FootWear.Item is not null)
             {
-                equipped.Append($"Boots: {FootWear.Item.Name}, ");
+                equipped.Append($"Feet: {FootWear.Item.Name}, ");
             }
             else
             {
-                equipped.Append($"Boots: None, ");
+                equipped.Append($"Feet: None, ");
             }
 
             return equipped.ToString();

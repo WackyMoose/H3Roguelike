@@ -1,5 +1,4 @@
 ﻿using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
 namespace MooseEngine.BehaviorTree

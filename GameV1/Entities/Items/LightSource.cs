@@ -61,7 +61,7 @@ namespace GameV1.Entities.Items
 
             foreach (var layer in layers)
             {
-                var entities = scene.EntityLayers[layer].Entities;
+                var entities = scene.EntityLayers[layer].ActiveEntities;
 
                 //var entitiesWithinRange = scene.GetEntitiesWithinCircle(entities, this.Position, this.Range);
                 var entitiesWithinRange = scene.GetEntitiesWithinRectangle(

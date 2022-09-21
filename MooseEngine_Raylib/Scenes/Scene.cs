@@ -49,11 +49,11 @@ public class Scene : Disposeable, IScene
 
     public bool TryMoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
     {
-        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+        bool isKeyAvailable = GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity);
 
         if (isKeyAvailable == true)
         {
-            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            GetLayer(entityLayer).ActiveEntities.Remove(entity.Position);
             entity.Position = targetPosition;
             return true;
         }
@@ -66,14 +66,14 @@ public class Scene : Disposeable, IScene
 
         foreach (var layer in collisionLayers)
         {
-            bool isKeyAvailable = !GetLayer(layer).Entities.ContainsKey(targetPosition);
+            bool isKeyAvailable = !GetLayer(layer).ActiveEntities.ContainsKey(targetPosition);
 
             if (isKeyAvailable == true) { continue; } else { return false; }
         }
 
-        if (GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity))
+        if (GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity))
         {
-            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            GetLayer(entityLayer).ActiveEntities.Remove(entity.Position);
             entity.Position = targetPosition;
 
             return true;
@@ -84,7 +84,7 @@ public class Scene : Disposeable, IScene
 
     public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
     {
-        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+        bool isKeyAvailable = GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity);
 
         if (isKeyAvailable == true)
         {
@@ -102,12 +102,12 @@ public class Scene : Disposeable, IScene
 
         foreach (var layer in collisionLayers)
         {
-            bool isKeyAvailable = !GetLayer(layer).Entities.ContainsKey(targetPosition);
+            bool isKeyAvailable = !GetLayer(layer).ActiveEntities.ContainsKey(targetPosition);
 
             if (isKeyAvailable == true) { continue; } else { return false; }
         }
 
-        if (GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity))
+        if (GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity))
         {
             entity.Position = targetPosition;
 
@@ -121,7 +121,7 @@ public class Scene : Disposeable, IScene
     {
         Dictionary<Vector2, TEntity>? entitiesOfType = new Dictionary<Vector2, TEntity>();
 
-        foreach (var entity in entities.Entities)
+        foreach (var entity in entities.ActiveEntities)
         {
             if (entity.Value.GetType() == typeof(TEntity))
             {
@@ -210,7 +210,7 @@ public class Scene : Disposeable, IScene
 
         foreach (var layer in layers)
         {
-            var entities = _entityLayers[layer].Entities;
+            var entities = _entityLayers[layer].ActiveEntities;
 
             var v = new Vector2();
 

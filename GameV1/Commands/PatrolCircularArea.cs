@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using MooseEngine.BehaviorTree;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using System.Numerics;
 
@@ -22,7 +23,7 @@ namespace GameV1.Commands
             m_position = position;
             m_radius = radius;
 
-            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).Entities, m_position, m_radius);
+            m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities, m_position, m_radius);
             m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
         }
 

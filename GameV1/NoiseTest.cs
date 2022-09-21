@@ -62,30 +62,30 @@ internal class NoiseTest : IGame
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         player.Inventory.PrimaryWeapon.Add(sword);
         player.Inventory.BodyArmor.Add(armor);
-        creatureLayer?.Add(player);
+        creatureLayer?.AddEntity(player);
 
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(light);
+        itemLayer?.AddEntity(light);
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(townLights);
+        itemLayer?.AddEntity(townLights);
 
         for (int i = 0; i < 64; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
+            itemLayer?.AddEntity(light);
         }
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(sword);
         druid.Inventory.BodyArmor.Add(armor);
-        creatureLayer?.Add(druid);
+        creatureLayer?.AddEntity(druid);
 
         ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
         ork.Inventory.PrimaryWeapon.Add(sword);
         ork.Inventory.BodyArmor.Add(armor);
-        creatureLayer?.Add(ork);
+        creatureLayer?.AddEntity(ork);
 
         _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
 
@@ -137,14 +137,14 @@ internal class NoiseTest : IGame
                 var pathPoint = new Tile("PathPoint", true, new Coords2D(0, 7), Color.White);
                 pathPoint.Position = node.Position;
 
-                _pathLayer.Add(pathPoint);
+                _pathLayer.AddEntity(pathPoint);
             }
         }
 
         // TODO: Wrap in method
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
-        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
+        var lightSources = itemLayer.GetActiveEntitiesOfType<LightSource>();
 
         foreach (var lightSource in lightSources)
         {

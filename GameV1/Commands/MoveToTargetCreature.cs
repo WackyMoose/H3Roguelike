@@ -1,4 +1,5 @@
 ﻿using GameV1.Interfaces.Creatures;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
@@ -6,14 +7,14 @@ using System.Numerics;
 
 namespace GameV1.Commands
 {
-    public class MoveToTarget : CommandBase
+    public class MoveToTargetCreature : CommandBase
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
 
         private Vector2 m_nextPosition;
 
-        public MoveToTarget(IScene scene, ICreature creature)
+        public MoveToTargetCreature(IScene scene, ICreature creature)
         {
             Scene = scene;
             Creature = creature;

@@ -1,14 +1,10 @@
 ﻿using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
@@ -31,7 +27,7 @@ namespace GameV1.Commands
         {
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
-            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Creature.Position);
+            IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.ActiveEntities, Creature.Position);
 
             Type[]? itemAtPositionInterfaces = itemAtPosition?.GetType().GetInterfaces();
 
@@ -54,7 +50,7 @@ namespace GameV1.Commands
                     if (Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemAtPosition) == true)
                     {
                         // Remove item from ItemLayer
-                        itemLayer.Entities.Remove(itemAtPosition.Position);
+                        itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
                         ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
                         return NodeStates.Success;
@@ -72,11 +68,11 @@ namespace GameV1.Commands
                     // Pick up item from container index ItemIndex
                     var containerAtPosition = (IContainer)itemAtPosition;
                     var itemToPickUp = containerAtPosition.Slots.ElementAt(ItemIndex).Item;
-                    
+
                     if (Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemToPickUp) == true)
                     {
                         // Remove item from ItemLayer
-                        itemLayer.Entities.Remove(itemAtPosition.Position);
+                        itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
                         ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
                         return NodeStates.Success;

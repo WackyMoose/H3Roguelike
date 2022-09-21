@@ -2,20 +2,15 @@
 using GameV1.Interfaces.Armors;
 using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
-using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.Commands
 {
-    public class AutoEquipSlot<TItem>: CommandBase where TItem : IOrdnance
+    public class AutoEquipSlot<TItem> : CommandBase where TItem : IEquippable
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
@@ -49,7 +44,7 @@ namespace GameV1.Commands
             }
 
             // get list of items that matches the type of the slot from inventory
-            List<TItem> items = new List<TItem>();
+            var items = new List<TItem>();
 
             var inventory = Creature.Inventory.Inventory;
 
@@ -90,7 +85,7 @@ namespace GameV1.Commands
                     {
                         // remove weapon from inventory and add to weapon slot
                         Slot.Add((TItem?)inventory.RemoveItem(weapon));
-                        
+
                         ConsolePanel.Add($"{Creature.Name} equipped {weapon.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
@@ -120,14 +115,14 @@ namespace GameV1.Commands
                     {
                         // remove armor from inventory and add to armor slot
                         Slot.Add((TItem?)inventory.RemoveItem(armor));
-                        
+
                         ConsolePanel.Add($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }
                 }
             }
-            
+
             // is the slot already occupied?
             else if (Slot.Item != null)
             {
@@ -153,12 +148,10 @@ namespace GameV1.Commands
                     var equippedWeapon = (IWeapon)Slot.Item;
 
                     // is the item in the slot better than the item in the inventory?
-                    if (equippedWeapon.AverageDamage > inventoryWeapon.AverageDamage)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (equippedWeapon.AverageDamage > inventoryWeapon.AverageDamage) { return NodeStates.Failure; }
+
                     // is the item in the slot worse than or equal to the item in the inventory?
-                    else if (equippedWeapon.AverageDamage <= inventoryWeapon.AverageDamage)
+                    else if (equippedWeapon.AverageDamage < inventoryWeapon.AverageDamage)
                     {
                         // remove item from weapon slot and add it to a temporary variable
                         IWeapon? temp = (IWeapon?)Slot.Remove();
@@ -184,10 +177,7 @@ namespace GameV1.Commands
                         .ToList();
 
                     // if there are no armors in the inventory, return failure
-                    if (armors.Count == 0)
-                    {
-                        return NodeStates.Failure;
-                    }
+                    if (armors.Count == 0) { return NodeStates.Failure; }
 
                     // get the armor with the highest defense
                     IArmor? armor = armors.OrderByDescending(x => x.DamageReduction).FirstOrDefault();
@@ -205,7 +195,7 @@ namespace GameV1.Commands
                     }
 
                     // is the item in the slot worse than or equal to the item in the inventory?
-                    else if (inventoryArmor.DamageReduction <= armor.DamageReduction)
+                    else if (inventoryArmor.DamageReduction < armor.DamageReduction)
                     {
                         // remove item from weapon slot and add it to a temporary variable
                         IArmor? temp = (IArmor?)Slot.Remove();

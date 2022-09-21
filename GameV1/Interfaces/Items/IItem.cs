@@ -1,5 +1,4 @@
-﻿using GameV1.Interfaces;
-using MooseEngine.Interfaces;
+﻿using MooseEngine.Interfaces;
 
 namespace GameV1.Interfaces.Items
 {
