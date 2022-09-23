@@ -70,6 +70,7 @@ namespace GameV1
             creatureLayer.DeactivateEntity(creature);
 
             // Add inventory to item layer.
+            // TODO: Fix exception bug if another item already occupies the position
             itemLayer.ActiveEntities.Add(lootableCorpse.Position, lootableCorpse);
         }
     }

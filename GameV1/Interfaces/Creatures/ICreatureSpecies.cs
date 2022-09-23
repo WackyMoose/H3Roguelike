@@ -2,5 +2,8 @@
 {
     public interface ICreatureSpecies
     {
+        string Name { get; }
+        int MaxHealthPoints { get; }
+        int MaxDamage { get; }
     }
 }

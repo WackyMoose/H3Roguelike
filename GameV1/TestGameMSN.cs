@@ -53,7 +53,7 @@ internal class TestGameMSN : IGame
     // Creatures
     private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
-    private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
+    //private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
     public Creature guard_01 = new Creature("City guard", 100, new Coords2D(6, 0));
     public Creature guard_02 = new Creature("City guard", 100, new Coords2D(15, 0));
 
@@ -61,18 +61,13 @@ internal class TestGameMSN : IGame
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
 
-    // Items
-    private WeaponBase doubleAxe = new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White);
-    private WeaponBase crossBow = new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White);
-    private WeaponBase trident = new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White);
-
     // Inventories
     private Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
     private Container backpack = new Container(ContainerType.PileOfItems, 8, 0, 0, "Backpack", new Coords2D(9, 3), Color.White);
 
     public void Initialize()
     {
-        Player = player;
+
         
         // Create the scene
         var app = Application.Instance;
@@ -89,8 +84,10 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        var randomMeleeWeapon = WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 41) * Constants.DEFAULT_ENTITY_SIZE);
-        randomMeleeWeapon.SpriteCoords = new Coords2D(6, 4);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
         //ICreature? player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
@@ -107,37 +104,7 @@ internal class TestGameMSN : IGame
 
         creatureLayer?.AddEntity(player);
 
-        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
-        _statsPanel = new StatsPanel(Player);
-        _debugPanel = new DebugPanel(10, 10, Player);
-
-
-        //sword.MinDamage = 5;
-        //sword.MaxDamage = 20;
-        //sword.ArmorPenetrationFlat = 5;
-        //sword.ArmorPenetrationPercent = 2;
-
-        //armor.DamageReduction = 50;
-
-        // Spawn weapons
-        //doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
-        //doubleAxe.MinDamage = 10;
-        //doubleAxe.MaxDamage = 20;
-        //doubleAxe.ArmorPenetrationFlat = 10;
-        //doubleAxe.ArmorPenetrationChance = 25;
-        //itemLayer?.AddEntity(doubleAxe);
-
-        //crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
-        //itemLayer?.AddEntity(crossBow);
-        
-        //trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
-        //trident.MinDamage = 20;
-        //trident.MaxDamage = 50;
-        //trident.ArmorPenetrationFlat = 20;
-        //trident.ArmorPenetrationChance = 50;
-        //itemLayer?.AddEntity(trident);
 
         // Spawn containers
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
@@ -149,17 +116,25 @@ internal class TestGameMSN : IGame
         backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
         itemLayer?.AddEntity(backpack);
 
+        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        ////player.Inventory.
+        //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        //orc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        //_scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
 
-        orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        //player.Inventory.
-        orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        orc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        _scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
+        Player = orc;
+
+        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
+
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+        _statsPanel = new StatsPanel(Player);
+        _debugPanel = new DebugPanel(10, 10, Player);
 
         // Light sources
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(light);
-
+        
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 

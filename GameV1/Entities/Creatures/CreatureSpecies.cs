@@ -18,24 +18,22 @@ namespace GameV1.Entities.Creatures
         // Playable species
         public static CreatureSpecies Human { get { return new CreatureSpecies("Human", 2000, 2000); } }
         public static CreatureSpecies Ork { get { return new CreatureSpecies("Ork", 700, 1000); } }
-        public static CreatureSpecies Elf { get { return new CreatureSpecies("Elf", 400, 1500); } }
-        public static CreatureSpecies Hobgoblin { get { return new CreatureSpecies("Hobgoblin", 200, 100); } }
-
+        
         // Non-playable Critter species
-        public static CreatureSpecies Rabbit { get { return new CreatureSpecies("Rabbit", 1, 1); } }
-        public static CreatureSpecies Goat { get { return new CreatureSpecies("Goat", 50, 25); } }
-        public static CreatureSpecies Griffin { get { return new CreatureSpecies("Griffin", 2000, 2000); } }
-        public static CreatureSpecies Wolf { get { return new CreatureSpecies("Wolf", 1500, 2500); } }
-        public static CreatureSpecies Snake { get { return new CreatureSpecies("Snake", 150, 250); } }
-        public static CreatureSpecies Bear { get { return new CreatureSpecies("Bear", 500, 500); } }
-        public static CreatureSpecies Lion { get { return new CreatureSpecies("Lion", 500, 500); } }
+        public static CreatureSpecies Snake { get { return new CreatureSpecies("Snake", 1, 1); } }
+        public static CreatureSpecies Wolf { get { return new CreatureSpecies("Wolf", 50, 25); } }
+        public static CreatureSpecies Rat { get { return new CreatureSpecies("Rat", 2000, 2000); } }
+        public static CreatureSpecies Spider { get { return new CreatureSpecies("Spider", 1500, 2500); } }
+        public static CreatureSpecies Turtle { get { return new CreatureSpecies("Turtle", 1500, 2500); } }
+        public static CreatureSpecies Crab { get { return new CreatureSpecies("Crab", 1500, 2500); } }
+        public static CreatureSpecies Octopus { get { return new CreatureSpecies("Octopus", 1500, 2500); } }
 
         public static List<CreatureSpecies> List()
         {
             // Added extra Humans to balance out
             return new List<CreatureSpecies>
             {
-                Ork, Elf, Human
+                //
             };
         }
     }
