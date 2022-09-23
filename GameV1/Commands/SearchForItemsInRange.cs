@@ -24,7 +24,7 @@ namespace GameV1.Commands
 
             if (itemsWithinRange == null || itemsWithinRange.Count == 0) { return NodeStates.Failure; }
 
-            var items = itemsWithinRange.Where(item => item.Value.IsActive == true).ToDictionary(item => item.Key, item => item.Value);
+            var items = itemsWithinRange.ToDictionary(item => item.Key, item => item.Value);
 
             if (itemsWithinRange.Count == 0)
             {

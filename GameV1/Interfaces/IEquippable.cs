@@ -2,7 +2,7 @@
 
 namespace GameV1.Interfaces
 {
-    // Ordnance is a weapon or armor
+    // Weapons or Armor
     public interface IEquippable : IItem
     {
     }

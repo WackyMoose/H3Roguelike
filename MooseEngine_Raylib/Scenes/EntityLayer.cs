@@ -8,27 +8,23 @@ public interface IEntityLayer
     IDictionary<Vector2, IEntity> ActiveEntities { get; }
     IList<IEntity> InactiveEntities { get; }
 
-    IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity;
-
     bool DeactivateEntity(IEntity entity);
     bool ActivateEntity(IEntity entity);
 
-    TEntityType GetFirstAvailableEntity<TEntityType>() where TEntityType : class, IEntity;
+    IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity;
 
-    //bool Add(IEntity entity);
-    //IEntity Add(IEntity entity);
-    void Remove(IEntity entity);
+    TEntityType? GetFirstInactiveEntityOfType<TEntityType>() where TEntityType : class, IEntity;
+
+    bool AddEntity(IEntity entity);
+    void RemoveEntity(IEntity entity);
     void RemoveAll();
 }
 
 public interface IEntityLayer<TEntity> : IEntityLayer where TEntity : class, IEntity
 {
-    //bool InactivateEntity(TEntity entity);
-    //bool ActivateEntity(TEntity entity);
 
     bool AddEntity(TEntity entity);
     void RemoveEntity(TEntity entity);
-    void RemoveAll();
 }
 
 public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class, IEntity
@@ -38,8 +34,9 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
 
     public bool DeactivateEntity(IEntity entity)
     {
-        if (ActiveEntities.ContainsKey(entity.Position))
+        if (InactiveEntities.Contains(entity) == false && ActiveEntities.ContainsKey(entity.Position) == true)
         {
+            entity.IsActive = false;
             InactiveEntities.Add(entity);
             ActiveEntities.Remove(entity.Position);
 
@@ -49,8 +46,9 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
     }
     public bool ActivateEntity(IEntity entity)
     {
-        if (InactiveEntities.Contains(entity) && ActiveEntities.ContainsKey(entity.Position) == false)
+        if (InactiveEntities.Contains(entity) == true && ActiveEntities.ContainsKey(entity.Position) == false)
         {
+            entity.IsActive = true;
             ActiveEntities.Add(entity.Position, entity);
             InactiveEntities.Remove(entity);
 
@@ -59,8 +57,10 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
         return false;
     }
 
-    public TEntityType? GetFirstAvailableEntity<TEntityType>() where TEntityType : class, IEntity
+    public TEntityType? GetFirstInactiveEntityOfType<TEntityType>() where TEntityType : class, IEntity
     {
+        if (InactiveEntities == null || InactiveEntities.Count == 0) { return null; }
+
         foreach (var entity in InactiveEntities)
         {
             if (entity is TEntityType)
@@ -71,6 +71,11 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
         return null;
     }
 
+    public IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity
+    {
+        return ActiveEntities.Values.OfType<TEntityType>();
+    }
+
     public bool AddEntity(TEntity entity)
     {
         ActiveEntities.Add(entity.Position, entity);
@@ -78,9 +83,16 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
         return true;
     }
 
-    public IEnumerable<TEntityType> GetActiveEntitiesOfType<TEntityType>() where TEntityType : IEntity
+    public bool AddEntity(IEntity entity)
     {
-        return ActiveEntities.Values.OfType<TEntityType>();
+        ActiveEntities.Add(entity.Position, entity);
+
+        return true;
+    }
+
+    public void RemoveEntity(IEntity entity)
+    {
+        ActiveEntities.Remove(entity.Position);
     }
 
     public void RemoveEntity(TEntity entity)
@@ -88,13 +100,8 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
         ActiveEntities.Remove(entity.Position);
     }
 
-    public void Remove(IEntity entity)
-    {
-        ActiveEntities.Remove(entity.Position);
-    }
-
     public void RemoveAll()
     {
-        ActiveEntities.Clear();
+        ActiveEntities?.Clear();
     }
 }

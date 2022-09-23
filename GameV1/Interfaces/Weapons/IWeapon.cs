@@ -13,7 +13,6 @@
         int Damage { get; }
         int AverageDamage { get; }
 
-
         int DoDamage();
     }
 }

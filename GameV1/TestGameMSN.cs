@@ -4,9 +4,11 @@ using GameV1.Entities;
 using GameV1.Entities.Armors;
 using GameV1.Entities.Containers;
 using GameV1.Entities.Creatures;
+using GameV1.Entities.Factories;
 using GameV1.Entities.Items;
 using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Weapons;
 using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
@@ -87,14 +89,8 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-
-        // add 100 Creatures to inactive creature layer
-        for (int i = 0; i < 100; i++)
-        {
-            var creature = new Creature();
-            creatureLayer.InactiveEntities.Add(creature);
-
-        }
+        var randomMeleeWeapon = WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        randomMeleeWeapon.SpriteCoords = new Coords2D(6, 4);
 
         // Spawn player
         //ICreature? player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
@@ -126,21 +122,22 @@ internal class TestGameMSN : IGame
         //armor.DamageReduction = 50;
 
         // Spawn weapons
-        doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
-        doubleAxe.MinDamage = 10;
-        doubleAxe.MaxDamage = 20;
-        doubleAxe.ArmorPenetrationFlat = 10;
-        doubleAxe.ArmorPenetrationChance = 25;
-        itemLayer?.AddEntity(doubleAxe);
+        //doubleAxe.Position = new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE;
+        //doubleAxe.MinDamage = 10;
+        //doubleAxe.MaxDamage = 20;
+        //doubleAxe.ArmorPenetrationFlat = 10;
+        //doubleAxe.ArmorPenetrationChance = 25;
+        //itemLayer?.AddEntity(doubleAxe);
 
-        crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(crossBow);
-        trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
-        trident.MinDamage = 20;
-        trident.MaxDamage = 50;
-        trident.ArmorPenetrationFlat = 20;
-        trident.ArmorPenetrationChance = 50;
-        itemLayer?.AddEntity(trident);
+        //crossBow.Position = new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE;
+        //itemLayer?.AddEntity(crossBow);
+        
+        //trident.Position = new Vector2(66, 47) * Constants.DEFAULT_ENTITY_SIZE;
+        //trident.MinDamage = 20;
+        //trident.MaxDamage = 50;
+        //trident.ArmorPenetrationFlat = 20;
+        //trident.ArmorPenetrationChance = 50;
+        //itemLayer?.AddEntity(trident);
 
         // Spawn containers
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
