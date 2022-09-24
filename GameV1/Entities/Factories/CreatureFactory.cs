@@ -3,6 +3,7 @@ using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Weapons;
 using MooseEngine.Graphics;
+using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System;
@@ -16,7 +17,7 @@ namespace GameV1.Entities.Factories
 {
     public static class CreatureFactory
     {
-        public static ICreature CreateCreature<TCreature>(IEntityLayer entityLayer, CreatureSpecies species, Vector2 position) where TCreature : class, ICreature, new()
+        public static ICreature CreateCreature<TCreature>(IEntityLayer entityLayer, CreatureSpecies species, string name, Vector2 position) where TCreature : class, ICreature, new()
         {
             IDictionary<CreatureSpecies, Coords2D> creatureSpriteCoords = new Dictionary<CreatureSpecies, Coords2D>()
             {
@@ -26,7 +27,10 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Spider, new Coords2D(7, 1) },
                 { CreatureSpecies.Turtle, new Coords2D(10, 1) },
                 { CreatureSpecies.Octopus, new Coords2D(11, 1) },
-                { CreatureSpecies.Crab, new Coords2D(12, 0) }
+                { CreatureSpecies.Crab, new Coords2D(12, 0) },
+                { CreatureSpecies.Human, new Coords2D(8, 0) },
+                { CreatureSpecies.Dwarf, new Coords2D(15, 0) },
+                { CreatureSpecies.Orc, new Coords2D(11, 0) }
             };
 
             IDictionary<CreatureSpecies, MeleeWeapon> defaultWeapons = new Dictionary<CreatureSpecies, MeleeWeapon>()
@@ -37,11 +41,12 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Spider, new MeleeWeapon() { Name = "Poison", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Turtle, new MeleeWeapon() { Name = "Beak", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Octopus, new MeleeWeapon() { Name = "Tentacles", Range = 1, MinDamage = 1, MaxDamage = 5 } },
-                { CreatureSpecies.Crab, new MeleeWeapon() { Name = "Claws", Range = 1, MinDamage = 1, MaxDamage = 5 } }
+                { CreatureSpecies.Crab, new MeleeWeapon() { Name = "Claws", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Human, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Dwarf, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } }
             };
 
-            // TODO: Wrap below code snippet in generic entitylayer method
-            // check if deactivated weapon instance is available
             TCreature? newCreature = entityLayer.ActivateOrCreateEntity<TCreature>(position);
 
             // Species
@@ -50,8 +55,6 @@ namespace GameV1.Entities.Factories
             //newCreature.Species = creatureSpriteCoords.ElementAt(speciesNum).Key;
             newCreature.SpriteCoords = creatureSpriteCoords.ContainsKey(species) ? creatureSpriteCoords[species] : new Coords2D(4, 1);
             newCreature.Species = species;
-
-            newCreature.Name = $"{newCreature.Species.Name}";
 
             // Stats
             newCreature.Stats.Agility = Randomizer.RandomInt(0, 100);
@@ -66,11 +69,11 @@ namespace GameV1.Entities.Factories
             newCreature.Inventory.DefaultWeapon = defaultWeapons[species];
 
             // IEntity
+            newCreature.Name = name;
             newCreature.Scale = Vector2.One;
             newCreature.ColorTint = Color.White;
 
             return newCreature;
-
         }
     }
 }

@@ -17,6 +17,10 @@ namespace GameV1.Entities.Containers
         public bool HasEmptySlots { get { return NumEmptySlots > 0; } }
         public bool IsEmpty { get { return NumEmptySlots == NumSlots; } }
 
+        public Container() : base()
+        {
+            Slots = new List<ISlot<IItem>>();
+        }
 
         public Container(ContainerType type, int maxSlots, string name)
             : this(type, maxSlots, 0, 0, name, new Coords2D(), Color.White)

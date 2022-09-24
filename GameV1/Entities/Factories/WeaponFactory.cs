@@ -17,54 +17,38 @@ namespace GameV1.Entities.Factories
 {
     public static class WeaponFactory
     {
-        public static IMeleeWeapon CreateMeleeWeapon(IEntityLayer entityLayer, Vector2 position)
-        {
-            IDictionary<string, Coords2D> meleeWeaponSpriteCoords = new Dictionary<string, Coords2D>()
-            {
-                { "Club", new Coords2D(10, 3) },
-                { "Sword", new Coords2D(6, 4) },
-                { "Double Axe", new Coords2D(7, 4) },
-                { "Trident", new Coords2D(10, 4) }
-            };
+        //public static IMeleeWeapon CreateMeleeWeapon(IEntityLayer entityLayer, Vector2 position)
+        //{
+        //    IDictionary<string, Coords2D> meleeWeaponSpriteCoords = new Dictionary<string, Coords2D>()
+        //    {
+        //        { "Club", new Coords2D(10, 3) },
+        //        { "Sword", new Coords2D(6, 4) },
+        //        { "Double Axe", new Coords2D(7, 4) },
+        //        { "Trident", new Coords2D(10, 4) }
+        //    };
 
-            // check if deactivated weapon instance is available
-            MeleeWeapon? newWeapon = entityLayer.GetFirstInactiveEntityOfType<MeleeWeapon>();
+        //    // check if deactivated weapon instance is available
+        //    MeleeWeapon? newWeapon = entityLayer.ActivateOrCreateEntity<MeleeWeapon>(position);
 
-            if (newWeapon != null)
-            {
-                newWeapon.Position = position;
+        //    // IWeaopn
+        //    newWeapon.Range = 1;
+        //    newWeapon.CriticalChance = Randomizer.RandomInt(0, 100);
+        //    newWeapon.CriticalDamage = Randomizer.RandomInt(0, 100);
+        //    newWeapon.MinDamage = Randomizer.RandomInt(0, 100);
+        //    newWeapon.MaxDamage = newWeapon.MinDamage + Randomizer.RandomInt(0, 100 - newWeapon.MinDamage);
+        //    newWeapon.ArmorPenetrationFlat = Randomizer.RandomInt(0, 100);
+        //    newWeapon.ArmorPenetrationChance = Randomizer.RandomInt(0, 100);
 
-                entityLayer.ActivateEntity(newWeapon);
-            }
-            else
-            {
-                newWeapon = new MeleeWeapon();
+        //    // IEntity
+        //    newWeapon.Scale = Vector2.One;
+        //    newWeapon.ColorTint = Color.White;
+        //    var spriteNum = Randomizer.RandomInt(0, meleeWeaponSpriteCoords.Count - 1);
 
-                newWeapon.IsActive = true;
-                newWeapon.Position = position;
-
-                entityLayer.AddEntity(newWeapon);
-            }
-
-            // IWeaopn
-            newWeapon.Range = 1;
-            newWeapon.CriticalChance = Randomizer.RandomInt(0, 100);
-            newWeapon.CriticalDamage = Randomizer.RandomInt(0, 100);
-            newWeapon.MinDamage = Randomizer.RandomInt(0, 100);
-            newWeapon.MaxDamage = newWeapon.MinDamage + Randomizer.RandomInt(0, 100 - newWeapon.MinDamage);
-            newWeapon.ArmorPenetrationFlat = Randomizer.RandomInt(0, 100);
-            newWeapon.ArmorPenetrationChance = Randomizer.RandomInt(0, 100);
-
-            // IEntity
-            newWeapon.Scale = Vector2.One;
-            newWeapon.ColorTint = Color.White;
-            var spriteNum = Randomizer.RandomInt(0, meleeWeaponSpriteCoords.Count - 1);
-
-            newWeapon.Name = meleeWeaponSpriteCoords.ElementAt(spriteNum).Key;
-            newWeapon.SpriteCoords = meleeWeaponSpriteCoords.ElementAt(spriteNum).Value;
+        //    newWeapon.Name = meleeWeaponSpriteCoords.ElementAt(spriteNum).Key;
+        //    newWeapon.SpriteCoords = meleeWeaponSpriteCoords.ElementAt(spriteNum).Value;
             
-            return newWeapon;
-        }
+        //    return newWeapon;
+        //}
 
         
         public static IWeapon? CreateWeapon<TWeapon>(IEntityLayer entityLayer, Vector2 position) where TWeapon : class, IWeapon, new()

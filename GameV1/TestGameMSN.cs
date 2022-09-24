@@ -50,20 +50,20 @@ internal class TestGameMSN : IGame
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
 
-    // Creatures
-    private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
-    private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
-    //private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
-    public Creature guard = new Creature("City guard", 100, new Coords2D(6, 0));
-    public Creature dwarf = new Creature("Dwarf", 100, new Coords2D(15, 0));
+    //// Creatures
+    //private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
+    //private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
+    ////private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
+    //public Creature guard = new Creature("City guard", 100, new Coords2D(6, 0));
+    //public Creature dwarf = new Creature("Dwarf", 100, new Coords2D(15, 0));
 
-    // LightSources
-    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
-    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
+    //// LightSources
+    //private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
+    //private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
 
-    // Inventories
-    private Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
-    private Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
+    //// Inventories
+    //private Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
+    //private Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
 
     public void Initialize()
     {
@@ -87,14 +87,15 @@ internal class TestGameMSN : IGame
         WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 41) * Constants.DEFAULT_ENTITY_SIZE);
         WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE);
         WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
         //ICreature? player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
 
 
         //ICreature? player = (ICreature)creatureLayer.Entities.FirstOrDefault(c => c.Value.Name == "Hero").Value;
-
+        var player = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Hero", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -107,16 +108,18 @@ internal class TestGameMSN : IGame
 
 
         // Spawn containers
+        Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(weaponChest);
 
+        Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
         loot.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
         loot.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
         itemLayer?.AddEntity(loot);
 
-        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, "Orc", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
         ////player.Inventory.
         //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -132,9 +135,12 @@ internal class TestGameMSN : IGame
         _debugPanel = new DebugPanel(10, 10, Player);
 
         // Light sources
-        light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(light);
-        
+        LightSource campFire = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
+
+        campFire.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.AddEntity(campFire);
+
+        LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
@@ -152,6 +158,8 @@ internal class TestGameMSN : IGame
         }
 
         // Druid chasing player
+        var druid = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+
         druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
@@ -159,12 +167,16 @@ internal class TestGameMSN : IGame
         creatureLayer?.AddEntity(druid);
 
         // Randomized walk guard
+        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+
         dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         creatureLayer?.AddEntity(dwarf);
 
         // Patrolling guard
+        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        
         guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         guard.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
@@ -182,8 +194,8 @@ internal class TestGameMSN : IGame
                 Action(new PatrolRectangularArea(
                     _scene,
                     dwarf,
-                    light.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-                    light.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
                     )),
                 Delay(
                     Action(new Idle()),
