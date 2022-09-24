@@ -262,7 +262,7 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
-        _loginPanel.OnGUI(UIRenderer);
+        //_loginPanel.OnGUI(UIRenderer);
         if (_showDebugPanel)
         {
             _debugPanel.OnGUI(UIRenderer);

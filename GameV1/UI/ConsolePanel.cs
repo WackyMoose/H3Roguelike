@@ -8,11 +8,9 @@ namespace MooseEngine.UI;
 
 public class ConsolePanel
 {
-    private readonly static Color HEADER_COLOR = new Color(68, 48, 41);
-    private readonly static Color HEADER_TEXT_COLOR = new Color(165, 98, 67);
-
-    private readonly static Color BACKGROUND_COLOR = new Color(165, 98, 67);
-    private readonly static Color TEXT_COLOR = new Color(43, 37, 36); // new Color(90, 44, 32); new Color(70, 26, 20); new Color(48, 15, 10);
+    private readonly static Color HEADER_COLOR = new Color(115, 67, 67);
+    private readonly static Color BACKGROUND_COLOR = new Color(42, 40, 41);
+    private readonly static Color TEXT_COLOR = Color.White; 
 
     private const string TITLE = "Log";
     public const int HEIGHT = 140;
@@ -44,7 +42,7 @@ public class ConsolePanel
 
         var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
         var listViewSize = new UIScreenCoords(_size.X, _size.Y);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE, HEADER_COLOR, HEADER_TEXT_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
+        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE, HEADER_COLOR, TEXT_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
