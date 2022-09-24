@@ -1,6 +1,7 @@
 ﻿using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
+using MooseEngine.Utilities;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -12,7 +13,7 @@ namespace GameV1.Commands
 
         private Vector2 m_position;
         private Vector2 m_nextPosition;
-        private IDictionary<Vector2, IEntity> m_targetEntities;
+        private int m_targetEntities; //private IDictionary<Vector2, IEntity> m_targetEntities;
         private Vector2 m_currentTargetPosition;
 
         public MoveToPosition(IScene scene, IEntity entity, Vector2 position)
@@ -21,8 +22,8 @@ namespace GameV1.Commands
             Entity = entity;
             m_position = position;
 
-            m_targetEntities = Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
-            m_currentTargetPosition = CommandUtility.GetClosestValidPosition(m_targetEntities, m_position);
+            m_targetEntities = (int)EntityLayer.WalkableTiles; //Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
+            m_currentTargetPosition = Scene.GetClosestValidPosition(m_targetEntities, m_position);
         }
 
         public override NodeStates Execute()

@@ -24,7 +24,7 @@ namespace GameV1.Commands
             m_radius = radius;
 
             m_targetEntities = Scene.GetEntitiesWithinCircle(Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities, m_position, m_radius);
-            m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
+            m_currentTargetPosition = Scene.GetRandomValidPosition(m_targetEntities);
         }
 
         public override NodeStates Execute()
@@ -32,7 +32,7 @@ namespace GameV1.Commands
             // Are we there yet?
             if (Entity.Position == m_currentTargetPosition)
             {
-                m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
+                m_currentTargetPosition = Scene.GetRandomValidPosition(m_targetEntities);
 
                 return NodeStates.Success;
             }

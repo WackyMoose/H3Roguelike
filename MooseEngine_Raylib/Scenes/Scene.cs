@@ -111,6 +111,39 @@ public class Scene : Disposeable, IScene
         return entities.ContainsKey(position) ? entities[position] : default;
     }
 
+    public Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities)
+    {
+        return entities.ElementAt(Randomizer.RandomInt(0, entities.Count - 1)).Value.Position;
+    }
+
+    public Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers)
+    {
+        if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
+
+        Vector2 closestValidPosition = Vector2.Zero;
+        float tempDist = Vector2.DistanceSquared(closestValidPosition, targetPosition);
+
+        foreach (var layer in collisionLayers)
+        {
+            var layerRef = GetLayer(layer).ActiveEntities;
+
+            bool isKeyAvailable = layerRef.ContainsKey(targetPosition) == false;
+
+            foreach (var pos in layerRef.Keys)
+            {
+                var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
+
+                if (distanceToTarget < tempDist)
+                {
+                    tempDist = distanceToTarget;
+                    closestValidPosition = pos;
+                }
+            }
+        }
+
+        return closestValidPosition;
+    }
+
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
         int distanceSquared = distance * distance;

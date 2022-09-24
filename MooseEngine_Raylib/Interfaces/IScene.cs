@@ -16,6 +16,8 @@ public interface IScene : IDisposable
     bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers);
     IDictionary<Vector2, TEntity>? GetEntitiesOfType<TEntity>(IEntityLayer entities) where TEntity : class, IEntity;
     IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);
+    Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities);
+    Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers);
     IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance);
     IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight);
 

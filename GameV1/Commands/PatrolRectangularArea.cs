@@ -21,7 +21,7 @@ namespace GameV1.Commands
 
             var walkableTileLayer = Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
             m_targetEntities = Scene.GetEntitiesWithinRectangle(walkableTileLayer, topLeft, bottomRight);
-            m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
+            m_currentTargetPosition = Scene.GetRandomValidPosition(m_targetEntities);
         }
 
         public override NodeStates Execute()
@@ -29,7 +29,7 @@ namespace GameV1.Commands
             // Are we there yet?
             if (Entity.Position == m_currentTargetPosition)
             {
-                m_currentTargetPosition = CommandUtility.GetRandomValidPosition(m_targetEntities);
+                m_currentTargetPosition = Scene.GetRandomValidPosition(m_targetEntities);
 
                 return NodeStates.Success;
             }
