@@ -9,7 +9,6 @@ namespace GameV1.Entities.Weapons
     {
         #region Properties
         public int Range { get; set; }
-
         public int CriticalChance { get; set; }
         public int CriticalDamage { get; set; }
         public int MinDamage { get; set; }

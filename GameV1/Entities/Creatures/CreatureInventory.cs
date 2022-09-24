@@ -21,7 +21,7 @@ namespace GameV1.Entities.Creatures
             BodyArmor = new Slot<IBodyArmor?>("Body Armor");
             FootWear = new Slot<IFootWear?>("Foot Wear");
 
-            DefaultWeapon = new MeleeWeapon();
+            DefaultWeapon = DefaultWeapon ?? new MeleeWeapon();
         }
 
         public CreatureInventory(IWeapon defaultWeapon, IContainer inventory) : this()
@@ -39,10 +39,8 @@ namespace GameV1.Entities.Creatures
         public IWeapon DefaultWeapon { get; set; }
         public IWeapon StrongestWeapon
         {
-
             get
             {
-
                 // return weapon with highest damage, if both are null then return defaultweapon
                 if (PrimaryWeapon.Item != null && SecondaryWeapon.Item != null)
                 {

@@ -3,6 +3,7 @@ using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Weapons;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
+using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
 
@@ -71,7 +72,12 @@ namespace GameV1
 
             // Add inventory to item layer.
             // TODO: Fix exception bug if another item already occupies the position
-            itemLayer.ActiveEntities.Add(lootableCorpse.Position, lootableCorpse);
+            var entityLayer = (int)EntityLayer.Creatures;
+            var tileLayer = (int)EntityLayer.NonWalkableTiles;
+
+            var isMoveValid = scene.TryPlaceEntity((int)EntityLayer.Items, lootableCorpse, lootableCorpse.Position, entityLayer, tileLayer);
+
+            //itemLayer.ActiveEntities.Add(lootableCorpse.Position, lootableCorpse);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities.Creatures;
+using GameV1.Entities.Weapons;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Weapons;
 using MooseEngine.Graphics;
@@ -28,23 +29,20 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Crab, new Coords2D(12, 0) }
             };
 
+            IDictionary<CreatureSpecies, MeleeWeapon> defaultWeapons = new Dictionary<CreatureSpecies, MeleeWeapon>()
+            {
+                { CreatureSpecies.Snake, new MeleeWeapon() { Name = "Poison fangs", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Wolf, new MeleeWeapon() { Name = "Fangs", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Rat, new MeleeWeapon() { Name = "Teeth", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Spider, new MeleeWeapon() { Name = "Poison", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Turtle, new MeleeWeapon() { Name = "Beak", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Octopus, new MeleeWeapon() { Name = "Tentacles", Range = 1, MinDamage = 1, MaxDamage = 5 } },
+                { CreatureSpecies.Crab, new MeleeWeapon() { Name = "Claws", Range = 1, MinDamage = 1, MaxDamage = 5 } }
+            };
+
+            // TODO: Wrap below code snippet in generic entitylayer method
             // check if deactivated weapon instance is available
-            TCreature? newCreature = entityLayer.GetFirstInactiveEntityOfType<TCreature>();
-            if (newCreature != null)
-            {
-                newCreature.Position = position;
-
-                entityLayer.ActivateEntity(newCreature);
-            }
-            else
-            {
-                newCreature = new TCreature();
-
-                newCreature.IsActive = true;
-                newCreature.Position = position;
-
-                entityLayer.AddEntity(newCreature);
-            }
+            TCreature? newCreature = entityLayer.ActivateOrCreateEntity<TCreature>(position);
 
             // Species
             //var speciesNum = Randomizer.RandomInt(0, creatureSpriteCoords.Count - 1);
@@ -63,6 +61,9 @@ namespace GameV1.Entities.Factories
             newCreature.Stats.Perception = Randomizer.RandomInt(0, 100);
             newCreature.Stats.Strength = Randomizer.RandomInt(0, 100);
             newCreature.Stats.Toughness = Randomizer.RandomInt(0, 100);
+
+            // Inventory
+            newCreature.Inventory.DefaultWeapon = defaultWeapons[species];
 
             // IEntity
             newCreature.Scale = Vector2.One;

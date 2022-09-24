@@ -51,7 +51,10 @@ namespace GameV1.Commands
 
             m_nextPosition = path[path.Length - 1].Position;
 
-            var isMoveValid = Scene.TryMoveEntity((int)EntityLayer.Creatures, Entity, m_nextPosition);
+            var entityLayer = (int)EntityLayer.Creatures;
+            var tileLayer = (int)EntityLayer.NonWalkableTiles;
+
+            var isMoveValid = Scene.TryMoveEntity(entityLayer, Entity, m_nextPosition, tileLayer);
 
             return isMoveValid ? NodeStates.Running : NodeStates.Failure;
         }

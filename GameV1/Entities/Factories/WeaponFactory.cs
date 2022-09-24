@@ -78,23 +78,7 @@ namespace GameV1.Entities.Factories
             };
 
             // check if deactivated weapon instance is available
-            TWeapon? newWeapon = entityLayer.GetFirstInactiveEntityOfType<TWeapon>();
-
-            if (newWeapon != null)
-            {
-                newWeapon.Position = position;
-
-                entityLayer.ActivateEntity(newWeapon);
-            }
-            else
-            {
-                newWeapon = new TWeapon();
-
-                newWeapon.IsActive = true;
-                newWeapon.Position = position;
-
-                entityLayer.AddEntity(newWeapon);
-            }
+            TWeapon? newWeapon = entityLayer.ActivateOrCreateEntity<TWeapon>(position);
 
 
             // randomize weapon stats, depending on weapon type

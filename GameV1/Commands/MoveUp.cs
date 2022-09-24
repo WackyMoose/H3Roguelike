@@ -24,7 +24,7 @@ namespace GameV1.Commands
             var entityLayer = (int)EntityLayer.Creatures;
             var tileLayer = (int)EntityLayer.NonWalkableTiles;
 
-            var isMoveValid = Scene.TryMoveEntity(Entity, newPosition, entityLayer, tileLayer);
+            var isMoveValid = Scene.TryMoveEntity(entityLayer, Entity, newPosition, tileLayer);
 
             return isMoveValid ? NodeStates.Success : NodeStates.Failure;
         }

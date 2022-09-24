@@ -12,9 +12,7 @@ public interface IScene : IDisposable
     Pathfinder Pathfinder { get; set; }
     PathMap PathMap { get; set; }
 
-    bool TryMoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition);
-    bool TryMoveEntity(IEntity entity, Vector2 targetPosition, int entityLayer, params int[] collisionLayers);
-    bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition);
+    bool TryMoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers);
     bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers);
     IDictionary<Vector2, TEntity>? GetEntitiesOfType<TEntity>(IEntityLayer entities) where TEntity : class, IEntity;
     IEntity? GetEntityAtPosition(IDictionary<Vector2, IEntity> Tiles, Vector2 position);

@@ -54,8 +54,8 @@ internal class TestGameMSN : IGame
     private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
     //private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
-    public Creature guard_01 = new Creature("City guard", 100, new Coords2D(6, 0));
-    public Creature guard_02 = new Creature("City guard", 100, new Coords2D(15, 0));
+    public Creature guard = new Creature("City guard", 100, new Coords2D(6, 0));
+    public Creature dwarf = new Creature("Dwarf", 100, new Coords2D(15, 0));
 
     // LightSources
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
@@ -63,7 +63,7 @@ internal class TestGameMSN : IGame
 
     // Inventories
     private Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
-    private Container backpack = new Container(ContainerType.PileOfItems, 8, 0, 0, "Backpack", new Coords2D(9, 3), Color.White);
+    private Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
 
     public void Initialize()
     {
@@ -110,11 +110,11 @@ internal class TestGameMSN : IGame
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(weaponChest);
 
-        backpack.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
-        backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
-        backpack.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
-        backpack.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
-        itemLayer?.AddEntity(backpack);
+        loot.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
+        loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
+        loot.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
+        loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
+        itemLayer?.AddEntity(loot);
 
         var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
@@ -138,14 +138,14 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
-        for (int i = 0; i < 128; i++)
+        for (int i = 0; i < 512; i++)
         {
             // Color(128, 128 - 48, 128 - 96, 255)
             var color = new Color(
                 160 + Randomizer.RandomInt(-32, 32),
                 144 + Randomizer.RandomInt(-32, 32),
                 128 + Randomizer.RandomInt(-32, 32), 255);
-            var light = new LightSource(Randomizer.RandomInt(2, 32) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            var light = new LightSource(Randomizer.RandomInt(2, 8) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
             //itemLayer?.Add(light);
             _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position);
@@ -159,17 +159,17 @@ internal class TestGameMSN : IGame
         creatureLayer?.AddEntity(druid);
 
         // Randomized walk guard
-        guard_02.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_02.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_02.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        creatureLayer?.AddEntity(guard_02);
+        dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
+        dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        creatureLayer?.AddEntity(dwarf);
 
         // Patrolling guard
-        guard_01.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_01.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_01.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        guard_01.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
-        creatureLayer?.AddEntity(guard_01);
+        guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
+        guard.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        guard.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
+        creatureLayer?.AddEntity(guard);
 
 
         var walkableTileLayer = (IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles);
@@ -181,7 +181,7 @@ internal class TestGameMSN : IGame
         var guard02Node = Serializer(
                 Action(new PatrolRectangularArea(
                     _scene,
-                    guard_02,
+                    dwarf,
                     light.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
                     light.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
                     )),
@@ -190,7 +190,7 @@ internal class TestGameMSN : IGame
                     2)
                 );
 
-        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        var guard_02Tree = BehaviorTree(dwarf, guard02Node);
 
         btrees.Add(guard_02Tree);
 
@@ -228,28 +228,28 @@ internal class TestGameMSN : IGame
 
         var guard01Node = Selector(
                 Serializer(
-                    Action(new TargetCreatureInRange(_scene, guard_01)),
-                    Action(new MoveToTargetCreature(_scene, guard_01)),
+                    Action(new TargetCreatureInRange(_scene, guard)),
+                    Action(new MoveToTargetCreature(_scene, guard)),
                     SerializerTurnBased(
-                        Action(new AttackTarget(_scene, guard_01)),
-                        Action(new AttackTarget(_scene, guard_01)),
-                        Action(new BlockAttack(_scene, guard_01))
+                        Action(new AttackTarget(_scene, guard)),
+                        Action(new AttackTarget(_scene, guard)),
+                        Action(new BlockAttack(_scene, guard))
                     )),
                 Serializer(
-                        Action(new SearchForItemsInRange(_scene, guard_01)),
-                        Action(new MoveToTargetItem(_scene, guard_01)),
-                        Action(new PickUpItem(_scene, guard_01)),
-                        Action(new AutoEquip(_scene, guard_01))
+                    Action(new SearchForItemsInRange(_scene, guard)),
+                    Action(new MoveToTargetItem(_scene, guard)),
+                    Action(new PickUpItem(_scene, guard)),
+                    Action(new AutoEquip(_scene, guard))
                 ),
                 Serializer(
-                    Action(new MoveToPosition(_scene, guard_01, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_01, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_01, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_01, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new MoveToPosition(_scene, guard, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
-        var guard_01Tree = BehaviorTree(guard_01, guard01Node);
+        var guard_01Tree = BehaviorTree(guard, guard01Node);
 
         btrees.Add(guard_01Tree);
 

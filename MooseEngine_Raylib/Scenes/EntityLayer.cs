@@ -8,6 +8,8 @@ public interface IEntityLayer
     IDictionary<Vector2, IEntity> ActiveEntities { get; }
     IList<IEntity> InactiveEntities { get; }
 
+    TEntityType ActivateOrCreateEntity<TEntityType>(Vector2 position) where TEntityType : class, IEntity, new();
+
     bool DeactivateEntity(IEntity entity);
     bool ActivateEntity(IEntity entity);
 
@@ -16,7 +18,7 @@ public interface IEntityLayer
     TEntityType? GetFirstInactiveEntityOfType<TEntityType>() where TEntityType : class, IEntity;
 
     bool AddEntity(IEntity entity);
-    void RemoveEntity(IEntity entity);
+    bool RemoveEntity(IEntity entity);
     void RemoveAll();
 }
 
@@ -24,13 +26,36 @@ public interface IEntityLayer<TEntity> : IEntityLayer where TEntity : class, IEn
 {
 
     bool AddEntity(TEntity entity);
-    void RemoveEntity(TEntity entity);
+    bool RemoveEntity(TEntity entity);
 }
 
 public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class, IEntity
 {
     public IDictionary<Vector2, IEntity> ActiveEntities { get; } = new Dictionary<Vector2, IEntity>();
     public IList<IEntity> InactiveEntities { get; } = new List<IEntity>();
+
+    public TEntityType ActivateOrCreateEntity<TEntityType>(Vector2 position) where TEntityType : class, IEntity, new()
+    {
+        TEntityType? entity = GetFirstInactiveEntityOfType<TEntityType>();
+        
+        if (entity != null)
+        {
+            entity.Position = position;
+
+            ActivateEntity(entity);
+        }
+        else
+        {
+            entity = new TEntityType();
+
+            entity.IsActive = true;
+            entity.Position = position;
+
+            AddEntity(entity);
+        }
+
+        return entity;
+    }
 
     public bool DeactivateEntity(IEntity entity)
     {
@@ -44,6 +69,7 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
         }
         return false;
     }
+    
     public bool ActivateEntity(IEntity entity)
     {
         if (InactiveEntities.Contains(entity) == true && ActiveEntities.ContainsKey(entity.Position) == false)
@@ -78,26 +104,32 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity> where TEntity : class,
 
     public bool AddEntity(TEntity entity)
     {
-        ActiveEntities.Add(entity.Position, entity);
-
-        return true;
+        if (ActiveEntities.ContainsKey(entity.Position) == false)
+        {
+            ActiveEntities.Add(entity.Position, entity);
+            return true;
+        }
+        return false;
     }
 
     public bool AddEntity(IEntity entity)
     {
-        ActiveEntities.Add(entity.Position, entity);
-
-        return true;
+        if (ActiveEntities.ContainsKey(entity.Position) == false)
+        {
+            ActiveEntities.Add(entity.Position, entity);
+            return true;
+        }
+        return false;
     }
 
-    public void RemoveEntity(IEntity entity)
+    public bool RemoveEntity(IEntity entity)
     {
-        ActiveEntities.Remove(entity.Position);
+        return ActiveEntities.Remove(entity.Position);
     }
 
-    public void RemoveEntity(TEntity entity)
+    public bool RemoveEntity(TEntity entity)
     {
-        ActiveEntities.Remove(entity.Position);
+        return ActiveEntities.Remove(entity.Position);
     }
 
     public void RemoveAll()
