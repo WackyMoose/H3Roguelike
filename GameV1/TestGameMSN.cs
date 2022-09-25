@@ -95,8 +95,8 @@ internal class TestGameMSN : IGame
 
 
         //ICreature? player = (ICreature)creatureLayer.Entities.FirstOrDefault(c => c.Value.Name == "Hero").Value;
-        var player = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Hero", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
-        player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
+        var player = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Hero", new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
+        //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new BodyArmor(100, 10, "Chainmail", new Coords2D(6, 4), Color.White));
@@ -158,26 +158,26 @@ internal class TestGameMSN : IGame
         }
 
         // Druid chasing player
-        var druid = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var druid = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
 
-        druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
+        //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
         creatureLayer?.AddEntity(druid);
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Druid", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
 
-        dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
+        //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         creatureLayer?.AddEntity(dwarf);
 
         // Patrolling guard
-        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
         
-        guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
+        //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         guard.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         guard.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
@@ -231,14 +231,7 @@ internal class TestGameMSN : IGame
 
         btrees.Add(druidTree);
 
-        // Patrolling town guard behavior tree
-        //var attackPatternNode = SerializerTurnBased(
-        //                Action(new AttackTarget(_scene, guard_01)),
-        //                Action(new AttackTarget(_scene, guard_01)),
-        //                Action(new BlockAttack(_scene, guard_01))
-        //            );
-
-        var guard01Node = Selector(
+        var guardNode = Selector(
                 Serializer(
                     Action(new TargetCreatureInRange(_scene, guard)),
                     Action(new MoveToTargetCreature(_scene, guard)),
@@ -261,9 +254,9 @@ internal class TestGameMSN : IGame
                 )
             );
 
-        var guard_01Tree = BehaviorTree(guard, guard01Node);
+        var guardTree = BehaviorTree(guard, guardNode);
 
-        btrees.Add(guard_01Tree);
+        btrees.Add(guardTree);
 
         // Key bindings
         InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);

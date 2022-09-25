@@ -38,16 +38,16 @@ namespace GameV1.Entities.Factories
             // check if deactivated weapon instance is available
             TArmor? newArmor = entityLayer.ActivateOrCreateEntity<TArmor>(position);
 
+            // IArmor
+            newArmor.DamageReduction = Randomizer.RandomInt(0, 100);
+
+            // IEntity
+            newArmor.Scale = Vector2.One;
+            newArmor.ColorTint = Color.White;
+
             // randomize weapon stats, depending on weapon type
             if (newArmor is IHeadGear)
             {
-                // IArmor
-                newArmor.DamageReduction = Randomizer.RandomInt(0, 100);
-
-                // IEntity
-                newArmor.Scale = Vector2.One;
-                newArmor.ColorTint = Color.White;
-
                 var spriteNum = Randomizer.RandomInt(0, headGearSpriteCoords.Count - 1);
 
                 newArmor.Name = headGearSpriteCoords.ElementAt(spriteNum).Key;
@@ -57,13 +57,6 @@ namespace GameV1.Entities.Factories
             }
             else if (newArmor is IBodyArmor)
             {
-                // IArmor
-                newArmor.DamageReduction = Randomizer.RandomInt(0, 100);
-
-                // IEntity
-                newArmor.Scale = Vector2.One;
-                newArmor.ColorTint = Color.White;
-
                 var spriteNum = Randomizer.RandomInt(0, bodyArmorSpriteCoords.Count - 1);
 
                 newArmor.Name = bodyArmorSpriteCoords.ElementAt(spriteNum).Key;
@@ -73,13 +66,6 @@ namespace GameV1.Entities.Factories
             }
             else if (newArmor is IFootWear)
             {
-                // IArmor
-                newArmor.DamageReduction = Randomizer.RandomInt(0, 100);
-
-                // IEntity
-                newArmor.Scale = Vector2.One;
-                newArmor.ColorTint = Color.White;
-
                 var spriteNum = Randomizer.RandomInt(0, footWearSpriteCoords.Count - 1);
 
                 newArmor.Name = footWearSpriteCoords.ElementAt(spriteNum).Key;

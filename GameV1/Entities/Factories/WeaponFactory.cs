@@ -61,9 +61,28 @@ namespace GameV1.Entities.Factories
                 { "Trident", new Coords2D(10, 4) }
             };
 
+            IDictionary<string, Coords2D> throwingWeaponSpriteCoords = new Dictionary<string, Coords2D>()
+            {
+                { "Throwing Knife", new Coords2D(10, 3) },
+                { "Throwing Spear", new Coords2D(6, 4) },
+                { "Throwing Axe", new Coords2D(7, 4) },
+                { "Rock", new Coords2D(10, 4) }
+            };
+
+            IDictionary<string, Coords2D> projectileWeaponSpriteCoords = new Dictionary<string, Coords2D>()
+            {
+                { "Bow", new Coords2D(10, 3) },
+                { "Crossbow", new Coords2D(6, 4) },
+                { "Slingshot", new Coords2D(7, 4) },
+                { "Blowpipe", new Coords2D(10, 4) }
+            };
+
             // check if deactivated weapon instance is available
             TWeapon? newWeapon = entityLayer.ActivateOrCreateEntity<TWeapon>(position);
 
+            // IEntity
+            newWeapon.Scale = Vector2.One;
+            newWeapon.ColorTint = Color.White;
 
             // randomize weapon stats, depending on weapon type
             if (newWeapon is IMeleeWeapon)
@@ -76,10 +95,6 @@ namespace GameV1.Entities.Factories
                 newWeapon.MaxDamage = newWeapon.MinDamage + Randomizer.RandomInt(0, 100 - newWeapon.MinDamage);
                 newWeapon.ArmorPenetrationFlat = Randomizer.RandomInt(0, 100);
                 newWeapon.ArmorPenetrationChance = Randomizer.RandomInt(0, 100);
-
-                // IEntity
-                newWeapon.Scale = Vector2.One;
-                newWeapon.ColorTint = Color.White;
                 
                 var spriteNum = Randomizer.RandomInt(0, meleeWeaponSpriteCoords.Count - 1);
 
@@ -99,17 +114,30 @@ namespace GameV1.Entities.Factories
                 newWeapon.ArmorPenetrationFlat = Randomizer.RandomInt(0, 100);
                 newWeapon.ArmorPenetrationChance = Randomizer.RandomInt(0, 100);
 
-                // IEntity
-                newWeapon.Scale = Vector2.One;
-                newWeapon.ColorTint = Color.White;
+                var spriteNum = Randomizer.RandomInt(0, throwingWeaponSpriteCoords.Count - 1);
+
+                newWeapon.Name = throwingWeaponSpriteCoords.ElementAt(spriteNum).Key;
+                newWeapon.SpriteCoords = throwingWeaponSpriteCoords.ElementAt(spriteNum).Value;
 
                 return newWeapon;
             }
             else if (newWeapon is IProjectileWeapon)
             {
-                IProjectileWeapon? projectileWeapon = newWeapon as IProjectileWeapon;
+                // IWeaopn
+                newWeapon.Range = Randomizer.RandomInt(4, 8);
+                newWeapon.CriticalChance = Randomizer.RandomInt(0, 100);
+                newWeapon.CriticalDamage = Randomizer.RandomInt(0, 100);
+                newWeapon.MinDamage = Randomizer.RandomInt(0, 100);
+                newWeapon.MaxDamage = newWeapon.MinDamage + Randomizer.RandomInt(0, 100 - newWeapon.MinDamage);
+                newWeapon.ArmorPenetrationFlat = Randomizer.RandomInt(0, 100);
+                newWeapon.ArmorPenetrationChance = Randomizer.RandomInt(0, 100);
 
-                return projectileWeapon;
+                var spriteNum = Randomizer.RandomInt(0, projectileWeaponSpriteCoords.Count - 1);
+
+                newWeapon.Name = projectileWeaponSpriteCoords.ElementAt(spriteNum).Key;
+                newWeapon.SpriteCoords = projectileWeaponSpriteCoords.ElementAt(spriteNum).Value;
+
+                return newWeapon;
             }
 
             return null;
