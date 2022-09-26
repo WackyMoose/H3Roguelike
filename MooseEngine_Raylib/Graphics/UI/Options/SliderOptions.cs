@@ -47,19 +47,3 @@ public class SliderOptions : TextOptions
     public int MinValue { get; set; }
 }
 
-[Obsolete]
-public class SliderOptionsDep
-{
-	public int BorderWidth { get; set; }
-	public int Padding { get; set; }
-	public int Width { get; set; }
-	public int TextPadding { get; set; }
-
-	public SliderOptionsDep()
-	{
-		BorderWidth = 0;
-		Padding = 1;
-		Width = 1;
-		TextPadding = 2;
-	}
-}

@@ -140,19 +140,19 @@ internal class StatsPanel
         _player.Stats.Fatigue = 100;
 
         var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
-        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, $"STR: {_player.Stats.Strength}", 96, TEXT_COLOR);
+        _strengthLabelOptions = new LabelOptions(strengthLabelPosition, $"STR: {_player.Stats.Strength}", 26, TEXT_COLOR);
 
         var agilityLabelPosition = new UIScreenCoords(startPosition.X + 4, 70);
-        _agilityLabelOptions = new LabelOptions(agilityLabelPosition, $"AGI: {_player.Stats.Agility}", 96, TEXT_COLOR);
+        _agilityLabelOptions = new LabelOptions(agilityLabelPosition, $"AGI: {_player.Stats.Agility}", 26, TEXT_COLOR);
 
         var toughnessLabelPosition = new UIScreenCoords(startPosition.X + 4, 105);
-        _toughnessLabelOptions = new LabelOptions(toughnessLabelPosition, $"TOU: {_player.Stats.Toughness}", 96, TEXT_COLOR);
+        _toughnessLabelOptions = new LabelOptions(toughnessLabelPosition, $"TOU: {_player.Stats.Toughness}", 26, TEXT_COLOR);
 
         var perceptionLabelPosition = new UIScreenCoords(startPosition.X + 4, 140);
-        _perceptionLabelOptions = new LabelOptions(perceptionLabelPosition, $"PER: {_player.Stats.Perception}", 96, TEXT_COLOR);
+        _perceptionLabelOptions = new LabelOptions(perceptionLabelPosition, $"PER: {_player.Stats.Perception}", 26, TEXT_COLOR);
 
         var charismaLabelPosition = new UIScreenCoords(startPosition.X + 4, 175);
-        _charismaLabelOptions = new LabelOptions(charismaLabelPosition, $"CHA: {_player.Stats.Charisma}", 96, TEXT_COLOR);
+        _charismaLabelOptions = new LabelOptions(charismaLabelPosition, $"CHA: {_player.Stats.Charisma}", 26, TEXT_COLOR);
 
         position = new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215);
         var healthBarSize = new UIScreenCoords(265, 25);

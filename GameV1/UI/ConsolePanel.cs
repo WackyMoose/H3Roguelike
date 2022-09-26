@@ -28,6 +28,7 @@ public class ConsolePanel
 
     private List<string> _history;
 
+    private PanelOptions _consolePanelOptions;
     private ListViewOptions _listViewOptions;
 
     public ConsolePanel(Coords2D position, Coords2D size, int capacity = 10)
@@ -40,13 +41,26 @@ public class ConsolePanel
 
         _history = new List<string>(_historyCapacity);
 
-        var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
-        var listViewSize = new UIScreenCoords(_size.X, _size.Y);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE, HEADER_COLOR, TEXT_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, false);
+        var consolePosition = new UIScreenCoords(_position.X, _position.Y);
+        var consoleSize = new UIScreenCoords(_size.X, _size.Y);
+
+        _consolePanelOptions = new PanelOptions(consolePosition, consoleSize, TITLE, HEADER_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, true);
+
+        var consolePanelBounds = _consolePanelOptions.GetBoundsWithoutStatusBar();
+
+        var listViewPosition = new UIScreenCoords((int)consolePanelBounds.x, (int)consolePanelBounds.y);
+        var listViewSize = new UIScreenCoords((int)consolePanelBounds.width, (int)consolePanelBounds.height);
+
+        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, false);
+        _listViewOptions.BackgroundColor = Color.Blank;
+        _listViewOptions.BorderNormalColor = Color.Blank;
+        _listViewOptions.TextNormalColor = TEXT_COLOR;
+        _listViewOptions.BorderWidth = 0;
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
     {
+        UIRenderer.DrawPanel(_consolePanelOptions);
         _active = UIRenderer.DrawListViewEx(_listViewOptions, _history, ref _focus, ref _scrollIndex, _active);
     }
 
