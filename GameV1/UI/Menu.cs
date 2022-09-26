@@ -16,6 +16,9 @@ internal class Menu
     private ButtonOptions _loadButton;
     private ButtonOptions _quitButton;
 
+    public event Action OnPlayButtonPressed;
+    public event Action OnLoadButtonPressed;
+
     public Menu()
     {
         var window = Application.Instance.Window;
@@ -39,10 +42,17 @@ internal class Menu
     {
         UIRenderer.DrawPanel(_panelOptions);
 
-        UIRenderer.DrawButton(_playButton);
-        UIRenderer.DrawButton(_loadButton);
+        if (UIRenderer.DrawButton(_playButton))
+        {
+            OnPlayButtonPressed?.Invoke();
+        }
 
-        if(UIRenderer.DrawButton(_quitButton))
+        if (UIRenderer.DrawButton(_loadButton))
+        {
+            OnLoadButtonPressed?.Invoke();
+        }
+
+        if (UIRenderer.DrawButton(_quitButton))
         {
             var app = Application.Instance;
             app.Close();

@@ -29,6 +29,8 @@ internal class LoginPanel
 
     private ButtonOptions _loginButtonOptions;
 
+    public event Action OnLoginButtonPressed;
+
     public LoginPanel()
     {
         var inputFieldSize = new UIScreenCoords(250, 30);
@@ -83,17 +85,19 @@ internal class LoginPanel
         {
             if (string.IsNullOrWhiteSpace(_username))
             {
-                ConsolePanel.Add($"Username is empty! Please enter a username.");
+                //ConsolePanel.Add($"Username is empty! Please enter a username.");
             }
             if (string.IsNullOrWhiteSpace(_password))
             {
-                ConsolePanel.Add($"Password is empty! Please enter a password.");
+                //ConsolePanel.Add($"Password is empty! Please enter a password.");
             }
 
             if (!string.IsNullOrWhiteSpace(_username) && !string.IsNullOrWhiteSpace(_password))
             {
-                ConsolePanel.Add($"{_username}:{_password} logging in...");
+                //ConsolePanel.Add($"{_username}:{_password} logging in...");
             }
+
+            OnLoginButtonPressed?.Invoke();
         }
     }
 }
