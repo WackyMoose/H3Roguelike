@@ -1,6 +1,10 @@
 ﻿using GameV1.Entities.Containers;
+using GameV1.Entities.Creatures;
+using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
+using MooseEngine.BehaviorTree;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
@@ -67,17 +71,46 @@ namespace GameV1
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.HeadGear.Item);
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.FootWear.Item);
 
+            IEntity? entityAtPosition = (IItem?)scene.GetEntityAtPosition(itemLayer.ActiveEntities, creature.Position);
+
+            if (entityAtPosition is null)
+            {
+                // No Entity in poition
+
+                // Add inventory to item layer
+
+                var isMoveValid = scene.TryPlaceEntity((int)EntityLayer.Items, lootableCorpse, lootableCorpse.Position, (int)EntityLayer.NonWalkableTiles);
+            }
+            else if (entityAtPosition is not null)
+            {
+                // Entity occupies poition
+                var entityInterfaces = entityAtPosition.GetType().GetInterfaces();
+
+                if (entityInterfaces.Contains(typeof(IItem)) == true && entityInterfaces.Contains(typeof(IContainer)) == false)
+                {
+                    // Entity is Item
+                    var ItemAtPostition = (IItem)entityAtPosition;
+                    
+                    // Add item to corpse
+                    lootableCorpse.AddItemToFirstEmptySlot(ItemAtPostition);
+
+                    // Remove picked up item from item layer
+                    itemLayer.DeactivateEntity(ItemAtPostition);
+
+                    var isMoveValid = scene.TryPlaceEntity((int)EntityLayer.Items, lootableCorpse, lootableCorpse.Position, (int)EntityLayer.NonWalkableTiles);
+                }
+                else if (entityInterfaces.Contains(typeof(IContainer)) == true)
+                {
+                    // Entity is Container
+                    var containerAtPosition = (IContainer)entityAtPosition;
+
+                    // Add content to existing container, whatever type
+                    lootableCorpse.TransferContainerContent(containerAtPosition);
+                }
+            }
+
             // Remove Creature from entity layer
             creatureLayer.DeactivateEntity(creature);
-
-            // Add inventory to item layer.
-            // TODO: Fix exception bug if another item already occupies the position
-            var entityLayer = (int)EntityLayer.Creatures;
-            var tileLayer = (int)EntityLayer.NonWalkableTiles;
-
-            var isMoveValid = scene.TryPlaceEntity((int)EntityLayer.Items, lootableCorpse, lootableCorpse.Position, entityLayer, tileLayer);
-
-            //itemLayer.ActiveEntities.Add(lootableCorpse.Position, lootableCorpse);
         }
     }
 }

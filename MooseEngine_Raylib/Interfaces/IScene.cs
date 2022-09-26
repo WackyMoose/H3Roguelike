@@ -19,6 +19,8 @@ public interface IScene : IDisposable
     Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities);
     Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers);
     IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance);
+    IDictionary<Vector2, TEntity>? GetEntitiesWithinCircle<TEntity>(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance) where TEntity : class, IEntity;
+    //IList<IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance);
     IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight);
 
     IEntityLayer<TEntity> AddLayer<TEntity>(int layer) where TEntity : class, IEntity;

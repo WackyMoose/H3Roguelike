@@ -19,29 +19,32 @@ namespace GameV1.Commands
         public override NodeStates Execute()
         {
             var creatureLayer = Scene.GetLayer((int)EntityLayer.Creatures).ActiveEntities;
-            var creaturesWithinLayer = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
+            var creaturesInRange = Scene.GetEntitiesWithinCircle(creatureLayer, Creature.Position, Creature.Stats.Perception);
 
-            // Remove self
-            if (creaturesWithinLayer.ContainsKey(Creature.Position))
-            {
-                creaturesWithinLayer.Remove(Creature.Position);
+            if (creaturesInRange is null) 
+            { 
+                return NodeStates.Failure; 
             }
 
-            var creatures = creaturesWithinLayer.ToDictionary(creature => creature.Key, creature => creature.Value);
+            // Remove self
+            if (creaturesInRange.ContainsKey(Creature.Position))
+            {
+                creaturesInRange.Remove(Creature.Position);
+            }
 
-            if (creatures.Count == 0)
+            if (creaturesInRange.Count == 0)
             {
                 Creature.TargetCreature = null;
-
-                Console.WriteLine($"CheckForCreaturesWithinRange found nothing.");
+                
+                Console.WriteLine($"TargetCreaturesWithinRange found nothing.");
 
                 return NodeStates.Failure;
             }
             else
             {
-                Creature.TargetCreature = (ICreature?)creatures.Values.FirstOrDefault();
+                Creature.TargetCreature = (ICreature?)creaturesInRange.Values.FirstOrDefault();
 
-                Console.WriteLine($"CheckForCreaturesWithinRange found {Creature.TargetCreature.Name}");
+                Console.WriteLine($"TargetCreaturesWithinRange found {Creature?.TargetCreature?.Name}");
 
                 return NodeStates.Success;
             }

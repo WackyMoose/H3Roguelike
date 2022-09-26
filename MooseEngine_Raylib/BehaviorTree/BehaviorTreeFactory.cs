@@ -29,6 +29,36 @@ namespace MooseEngine.BehaviorTree
             return new ActionCommand(command);
         }
 
+        public static IDecorator AlwaysReturnFailure()
+        {
+            return new AlwaysReturnFailure();
+        }
+
+        public static IDecorator AlwaysReturnFailure(INode node)
+        {
+            return new AlwaysReturnFailure(node);
+        }
+
+        public static IDecorator AlwaysReturnRunning()
+        {
+            return new AlwaysReturnRunning();
+        }
+
+        public static IDecorator AlwaysReturnRunning(INode node)
+        {
+            return new AlwaysReturnRunning(node);
+        }
+
+        public static IDecorator AlwaysReturnSuccess()
+        {
+            return new AlwaysReturnSuccess();
+        }
+
+        public static IDecorator AlwaysReturnSuccess(INode node)
+        {
+            return new AlwaysReturnSuccess(node);
+        }
+
         public static IDecorator Breakpoint(string message)
         {
             return new Breakpoint(message);

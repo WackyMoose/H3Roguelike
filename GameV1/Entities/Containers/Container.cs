@@ -36,7 +36,7 @@ namespace GameV1.Entities.Containers
 
             for (int i = 0; i < NumSlots; i++)
             {
-                ISlot<IItem> slot = new Slot<IItem>($"Inventory Slot {i}");
+                var slot = new Slot<IItem>($"Inventory Slot {i}");
 
                 Slots = Slots.Append(slot);
             }
@@ -137,6 +137,8 @@ namespace GameV1.Entities.Containers
         {
             foreach (var slot in Slots)
             {
+                if(targetContainer.HasEmptySlots == false) { return false; }
+
                 IItem? item = slot.Remove();
 
                 targetContainer.AddItemToFirstEmptySlot(item);

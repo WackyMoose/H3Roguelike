@@ -3,14 +3,16 @@ using MooseEngine.BehaviorTree.Interfaces;
 
 namespace MooseEngine.BehaviorTree.Decorators
 {
-    public class AlwaysSuccess : DecoratorBase
+    public class AlwaysReturnSuccess : DecoratorBase
     {
-        public AlwaysSuccess() : base() { }
+        public AlwaysReturnSuccess() : base() { }
 
-        public AlwaysSuccess(INode node) : base(node) { }
+        public AlwaysReturnSuccess(INode node) : base(node) { }
 
         public override NodeStates Evaluate()
         {
+            Child?.Evaluate();
+            
             State = NodeStates.Success;
             return State;
         }

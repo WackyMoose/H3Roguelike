@@ -7,7 +7,9 @@ using GameV1.Entities.Creatures;
 using GameV1.Entities.Factories;
 using GameV1.Entities.Items;
 using GameV1.Entities.Weapons;
+using GameV1.Interfaces;
 using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
 using GameV1.UI;
 using GameV1.WorldGeneration;
@@ -20,6 +22,7 @@ using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
+using System.Buffers;
 using System.Numerics;
 using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
@@ -37,6 +40,9 @@ public enum EntityLayer : int
 internal class TestGameMSN : IGame
 {
     public ICreature? Player { get; set; }
+
+    public ISelector<ICreature>? CreatureSelector { get; set; }
+    public ISelector<IEntity>? UISelector { get; set; }
 
     private IScene? _scene;
 
@@ -84,10 +90,10 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 41) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(63, 42) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(64, 43) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 45) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 46) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 47) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 48) * Constants.DEFAULT_ENTITY_SIZE);
         //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
@@ -119,7 +125,7 @@ internal class TestGameMSN : IGame
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
         itemLayer?.AddEntity(loot);
 
-        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, "Orc", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
         ////player.Inventory.
         //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -127,6 +133,8 @@ internal class TestGameMSN : IGame
         //_scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
 
         Player = orc;
+
+        CreatureSelector = new Selector<ICreature>(Player.CreaturesWithinPerceptionRange);
 
         _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
@@ -144,17 +152,17 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
-        for (int i = 0; i < 512; i++)
+        for (int i = 0; i < 128; i++)
         {
             // Color(128, 128 - 48, 128 - 96, 255)
             var color = new Color(
                 160 + Randomizer.RandomInt(-32, 32),
                 144 + Randomizer.RandomInt(-32, 32),
                 128 + Randomizer.RandomInt(-32, 32), 255);
-            var light = new LightSource(Randomizer.RandomInt(2, 8) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
+            var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
             //itemLayer?.Add(light);
-            _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position);
+            _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
 
         // Druid chasing player
@@ -167,7 +175,7 @@ internal class TestGameMSN : IGame
         creatureLayer?.AddEntity(druid);
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Druid", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
 
         //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -175,7 +183,7 @@ internal class TestGameMSN : IGame
         creatureLayer?.AddEntity(dwarf);
 
         // Patrolling guard
-        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
+        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
         
         //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -189,8 +197,10 @@ internal class TestGameMSN : IGame
         _scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
 
 
-        // Randomized walk guard Behavior tree
-        var guard02Node = Serializer(
+        // dwarf walk guard Behavior tree
+        var dwarfNode = 
+            
+            Serializer(
                 Action(new PatrolRectangularArea(
                     _scene,
                     dwarf,
@@ -202,36 +212,43 @@ internal class TestGameMSN : IGame
                     2)
                 );
 
-        var guard_02Tree = BehaviorTree(dwarf, guard02Node);
+        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        btrees.Add(guard_02Tree);
+        btrees.Add(dwarfTree);
 
         //Druid behavior tree
         //Roam around randomly in a part of the map
         //Follow creatures while inside perception range
         // Attack when standing beside creature
         // When no creatures within range, go back to roaming
-        var druidNode = Selector(
-                Serializer(
-                        Action(new TargetCreatureInRange(_scene, druid)),
-                        Action(new MoveToTargetCreature(_scene, druid)),
-                        Action(new AttackTarget(_scene, druid))
-                    ),
-                Serializer(
-                        Action(new SearchForItemsInRange(_scene, druid)),
-                        Action(new MoveToTargetItem(_scene, druid)),
-                        Action(new PickUpItem(_scene, druid)),
-                        Action(new AutoEquip(_scene, druid))
-                    ),
-                Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
 
+        var druidNode =
+
+            Selector(
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, druid))
+                ),
+                Serializer(
+                    Action(new TargetCreatureInRange(_scene, druid)),
+                    Action(new MoveToTargetCreature(_scene, druid)),
+                    Action(new AttackTarget(_scene, druid))
+                ),
+                Serializer(
+                    Action(new SearchForItemsInRange(_scene, druid)),
+                    Action(new MoveToTargetItem(_scene, druid)),
+                    Action(new PickUpItem(_scene, druid)),
+                    Action(new AutoEquip(_scene, druid))
+                ),
+                Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
             );
 
         var druidTree = BehaviorTree(druid, druidNode);
 
         btrees.Add(druidTree);
 
-        var guardNode = Selector(
+        var guardNode = 
+            
+            Selector(
                 Serializer(
                     Action(new TargetCreatureInRange(_scene, guard)),
                     Action(new MoveToTargetCreature(_scene, guard)),
@@ -291,9 +308,6 @@ internal class TestGameMSN : IGame
         // Player input
         var input = InputHandler.Handle();
 
-        //var creatures = _scene.GetLayer((int)EntityLayer.Creatures).Entities;
-        //ICreature? player = (ICreature)creatures.FirstOrDefault(c => c.Value.Name == "Hero").Value;
-
         // Generate commands
         if (Player is not null)
         {
@@ -301,7 +315,6 @@ internal class TestGameMSN : IGame
 
             CommandQueue.Add(command);
         }
-
 
         if (CommandQueue.IsEmpty == false)
         {
@@ -318,7 +331,6 @@ internal class TestGameMSN : IGame
             }
         }
 
-        // TODO: Only illuminate if range within viewport, AABB check
         // Dynamically updated light sources
         var windowSize = new Vector2(
             (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
@@ -326,6 +338,7 @@ internal class TestGameMSN : IGame
         var cameraPosition = _scene.SceneCamera.Position;
 
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+        
         // TODO: Add lightsources in creature inventories and containers
 
 
@@ -333,7 +346,7 @@ internal class TestGameMSN : IGame
 
         var lightSources = _scene.GetEntitiesOfType<LightSource>(itemLayer);
 
-        foreach (LightSource lightSource in lightSources.Values)
+        foreach (ILightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
                 cameraPosition,
