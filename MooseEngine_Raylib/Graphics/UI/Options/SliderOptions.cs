@@ -10,6 +10,11 @@ public class SliderOptions : TextOptions
     {
     }
 
+    public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, int borderWidth, int padding, TextAlignment textAlignment, int minValue, int maxValue, bool interactable = true)
+    : this(position, size, text, fontSize, borderWidth, padding, textAlignment, DEFAULT_BACKGROUND_COLOR, DEFAULT_TEXT_NORMAL_COLOR, DEFAULT_NORMAL_COLOR, minValue, maxValue, interactable)
+    {
+    }
+
     public SliderOptions(UIScreenCoords position, UIScreenCoords size, string text, int fontSize, TextAlignment textAlignment, Color backgroundColor, Color sliderColor, int minValue, int maxValue, bool interactable = true)
         : this(position, size, text, fontSize, DEFAULT_BORDER_WIDTH, DEFAULT_PADDING, textAlignment, backgroundColor, DEFAULT_TEXT_NORMAL_COLOR, sliderColor, minValue, maxValue, interactable)
     {

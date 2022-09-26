@@ -2,12 +2,6 @@
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
-using MooseEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameV1.UI;
 
@@ -48,16 +42,16 @@ internal class LoginPanel
         _loginPanelOptions = new PanelOptions(loginPanelPosition, loginPanelSize, string.Empty);
 
         var loginTitlePosition = new UIScreenCoords(loginPanelPosition);
-        _loginTitleOptions = new LabelOptions(loginTitlePosition, "LOGIN", 256);
+        _loginTitleOptions = new LabelOptions(loginTitlePosition, "LOGIN", 34);
 
         var usernameLabelPosition = new UIScreenCoords(loginTitlePosition.X + 50, loginTitlePosition.Y + 50);
-        _usernameLabelOptions = new LabelOptions(usernameLabelPosition, "Username: ", 100);
+        _usernameLabelOptions = new LabelOptions(usernameLabelPosition, "Username: ", 26);
 
         var usernameInputFieldPosition = new UIScreenCoords(usernameLabelPosition.X + 150, usernameLabelPosition.Y);
         _usernameInputFieldOptions = new TextInputFieldOptions(usernameInputFieldPosition, inputFieldSize);
 
         var passwordLabelPosition = new UIScreenCoords(loginTitlePosition.X + 50, loginTitlePosition.Y + 100);
-        _passwordLabelOptions = new LabelOptions(passwordLabelPosition, "Password: ", 100);
+        _passwordLabelOptions = new LabelOptions(passwordLabelPosition, "Password: ", 26);
 
         var passwordInputFieldPosition = new UIScreenCoords(passwordLabelPosition.X + 150, passwordLabelPosition.Y);
         _passwordInputFieldOptions = new TextInputFieldOptions(passwordInputFieldPosition, inputFieldSize);

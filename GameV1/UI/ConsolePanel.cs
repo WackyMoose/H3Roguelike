@@ -4,14 +4,10 @@ using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Utilities;
 
-namespace MooseEngine.UI;
+namespace GameV1.UI;
 
 public class ConsolePanel
 {
-    private readonly static Color HEADER_COLOR = new Color(115, 67, 67);
-    private readonly static Color BACKGROUND_COLOR = new Color(42, 40, 41);
-    private readonly static Color TEXT_COLOR = Color.White; 
-
     private const string TITLE = "Log";
     public const int HEIGHT = 140;
     private const int MAX_TEXT_LENGTH = 100;
@@ -44,7 +40,7 @@ public class ConsolePanel
         var consolePosition = new UIScreenCoords(_position.X, _position.Y);
         var consoleSize = new UIScreenCoords(_size.X, _size.Y);
 
-        _consolePanelOptions = new PanelOptions(consolePosition, consoleSize, TITLE, HEADER_COLOR, TEXT_COLOR, HEADER_COLOR, BACKGROUND_COLOR, true);
+        _consolePanelOptions = new PanelOptions(consolePosition, consoleSize, TITLE, UIColors.Console.HEADER_COLOR, UIColors.Console.TEXT_COLOR, UIColors.Console.BORDER_COLOR, UIColors.Console.BACKGROUND_COLOR, true);
 
         var consolePanelBounds = _consolePanelOptions.GetBoundsWithoutStatusBar();
 
@@ -54,7 +50,7 @@ public class ConsolePanel
         _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, false);
         _listViewOptions.BackgroundColor = Color.Blank;
         _listViewOptions.BorderNormalColor = Color.Blank;
-        _listViewOptions.TextNormalColor = TEXT_COLOR;
+        _listViewOptions.TextNormalColor = Color.White;
         _listViewOptions.BorderWidth = 0;
     }
 

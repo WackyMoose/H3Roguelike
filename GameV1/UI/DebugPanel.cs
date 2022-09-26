@@ -2,7 +2,6 @@
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
-using MooseEngine.UI;
 
 namespace GameV1.UI;
 
