@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using MooseEngine.BehaviorTree.Composites;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -104,14 +105,7 @@ internal class StatsPanel
     private ImageOptions[] _inventoryOptions = new ImageOptions[INVENTORY_SIZE];
     private ImageOptions[] _equipmentOptions = new ImageOptions[EQUIPMENT_SIZE];
 
-    private ListViewOptions _listViewOptions;
-    static string[] items =
-    {
-        "Orc Warloard",
-        "> Orc Bruiser",
-        "Orc Shaman",
-        "Goblin Looter"
-    };
+    private SelectorListView _selectorListView;
 
     public StatsPanel(Player player)
     {
@@ -210,11 +204,7 @@ internal class StatsPanel
 
         var listViewPosition = new UIScreenCoords(window.Width - size.X + 10, seperatorPosition.Y + 15);
         var listViewSize = new UIScreenCoords(size.X - 10, 200);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, false);
-        _listViewOptions.BorderWidth = 0;
-        _listViewOptions.FontSize = 36;
-        _listViewOptions.TextNormalColor = Color.White;
-        _listViewOptions.BackgroundColor = Color.Blank;
+        _selectorListView = new SelectorListView(listViewPosition, listViewSize);
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -248,11 +238,8 @@ internal class StatsPanel
         {
             UIRenderer.DrawImage(_equipmentOptions[i]);
         }
-        
-        UIRenderer.DrawListViewEx(_listViewOptions, items, ref s_Focus, ref s_ScrollIndex, -1);
-    }
 
-    static int s_Focus = 0;
-    static int s_ScrollIndex = 0;
+        _selectorListView.OnGUI(UIRenderer);
+    }
 
 }

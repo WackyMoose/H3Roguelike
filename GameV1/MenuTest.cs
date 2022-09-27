@@ -67,6 +67,14 @@ internal class MenuTest : IGame
     private DebugPanel _debugPanel;
     private bool _showDebugPanel = true;
 
+    static string[] items =
+{
+        "Orc Warloard",
+        "> Orc Bruiser",
+        "Orc Shaman",
+        "Goblin Looter"
+    };
+
     public void Initialize()
     {
         var window = Application.Instance.Window;
@@ -105,6 +113,8 @@ internal class MenuTest : IGame
         _scene.SceneCamera = new Camera(new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
         GenerateWorld(80085);
+
+        SelectorListView.SetData(items);
     }
 
     private void OnBackButtonPressed()
@@ -158,6 +168,11 @@ internal class MenuTest : IGame
 
     private void DrawBackToMenuButton(IUIRenderer UIRenderer)
     {
+        UIRenderer.DrawFPS(16, 32);
+
+        _consolePanel.OnGUI(UIRenderer);
+        _statsPanel.OnGUI(UIRenderer);
+
         if (UIRenderer.DrawButton(_backToMenuButton))
         {
             _sceneState = SceneState.Menu;
@@ -167,7 +182,7 @@ internal class MenuTest : IGame
     private void GenerateWorld(int seed)
     {
         // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref _scene);
+        WorldGenerator.GenerateWorld(seed, ref _scene);
 
         _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
 
