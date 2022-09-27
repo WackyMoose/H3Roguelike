@@ -8,19 +8,26 @@ namespace MooseEngine.Scenes;
 public class Camera : Entity, ISceneCamera
 {
     private Camera2D _raylibCamera;
-    private readonly IEntity _targetEntity;
+    private readonly IEntity? _targetEntity;
 
-    public Camera(IEntity target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D(27, 27))
+    public Camera(Vector2 offset, float zoom = 1.0f) : this(null, offset, zoom)
+    {
+    }
+
+    public Camera(IEntity? target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D(27, 27))
     {
         _targetEntity = target;
 
-        _raylibCamera = new Camera2D
+        if (_targetEntity != null)
         {
-            target = _targetEntity.Position,
-            offset = offset,
-            zoom = zoom,
-            rotation = 0.0f
-        };
+            _raylibCamera = new Camera2D
+            {
+                target = _targetEntity.Position,
+                offset = offset,
+                zoom = zoom,
+                rotation = 0.0f
+            };
+        }
     }
 
     public Camera2D RaylibCamera { get { return _raylibCamera; } }
@@ -31,6 +38,11 @@ public class Camera : Entity, ISceneCamera
 
     public override void Update(float deltaTime)
     {
+        if (_targetEntity == null)
+        {
+            return;
+        }
+
         _raylibCamera.target = _targetEntity.Position;
         Position = _targetEntity.Position;
     }

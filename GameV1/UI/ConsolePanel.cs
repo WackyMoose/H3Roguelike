@@ -1,14 +1,16 @@
-﻿using MooseEngine.Graphics;
+﻿using MooseEngine.Extensions.Runtime;
+using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Utilities;
 
-namespace MooseEngine.UI;
+namespace GameV1.UI;
 
 public class ConsolePanel
 {
-    private const string TITLE = "Console";
+    private const string TITLE = "Log";
     public const int HEIGHT = 140;
+    private const int MAX_TEXT_LENGTH = 100;
 
     private static ConsolePanel s_Instance;
 
@@ -18,11 +20,11 @@ public class ConsolePanel
     private int _focus = -1;
     private int _scrollIndex = 3;
     private int _active = -1;
-    private bool _stickToBottom = true;
     private int _historyCapacity;
 
     private List<string> _history;
 
+    private PanelOptions _consolePanelOptions;
     private ListViewOptions _listViewOptions;
 
     public ConsolePanel(Coords2D position, Coords2D size, int capacity = 10)
@@ -35,17 +37,27 @@ public class ConsolePanel
 
         _history = new List<string>(_historyCapacity);
 
-        var listViewPosition = new UIScreenCoords(_position.X, _position.Y);
-        var listViewSize = new UIScreenCoords(_size.X, _size.Y);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, TITLE);
+        var consolePosition = new UIScreenCoords(_position.X, _position.Y);
+        var consoleSize = new UIScreenCoords(_size.X, _size.Y);
+
+        _consolePanelOptions = new PanelOptions(consolePosition, consoleSize, TITLE, UIColors.Console.HEADER_COLOR, UIColors.Console.TEXT_COLOR, UIColors.Console.BORDER_COLOR, UIColors.Console.BACKGROUND_COLOR, true);
+
+        var consolePanelBounds = _consolePanelOptions.GetBoundsWithoutStatusBar();
+
+        var listViewPosition = new UIScreenCoords((int)consolePanelBounds.x, (int)consolePanelBounds.y);
+        var listViewSize = new UIScreenCoords((int)consolePanelBounds.width, (int)consolePanelBounds.height);
+
+        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, false);
+        _listViewOptions.BackgroundColor = Color.Blank;
+        _listViewOptions.BorderNormalColor = Color.Blank;
+        _listViewOptions.TextNormalColor = Color.White;
+        _listViewOptions.BorderWidth = 0;
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
     {
+        UIRenderer.DrawPanel(_consolePanelOptions);
         _active = UIRenderer.DrawListViewEx(_listViewOptions, _history, ref _focus, ref _scrollIndex, _active);
-
-        //var rect = new Raylib_cs.Rectangle(_position.X, _position.Y, _size.X, _size.Y);
-        //_active = UIRenderer.DrawListViewEx(rect, TITLE, _history.ToArray(), _history.Count, ref _focus, ref _scrollIndex, _active, _stickToBottom);
     }
 
     private void AddToList(string msg)
@@ -54,9 +66,24 @@ public class ConsolePanel
         {
             _history.RemoveAt(0);
         }
-        _history.Add(msg);
+
+        if (msg.Length <= MAX_TEXT_LENGTH)
+        {
+            _history.Add(msg);
+            return;
+        }
+
+        var subStrings = msg.Split(MAX_TEXT_LENGTH);
+        foreach (var str in subStrings)
+        {
+            _history.Add(str);
+        }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg"></param>
     public static void Add(string msg)
     {
         s_Instance.AddToList(msg);

@@ -3,9 +3,9 @@ using Raylib_cs;
 
 namespace MooseEngine.Graphics.UI;
 
-public static class ImageOptionsExtensions
+public static class SubImageOptionsExtensions
 {
-    public static Rectangle GetImageDestination(this ImageOptions imageOptions)
+    public static Rectangle GetImageDestination(this SubImageOptions imageOptions)
     {
         var rect = new Rectangle
         {
@@ -18,7 +18,7 @@ public static class ImageOptionsExtensions
         return rect;
     }
 
-    public static Rectangle GetImageSource(this ImageOptions imageOptions)
+    public static Rectangle GetImageSource(this SubImageOptions imageOptions)
     {
         var rect = new Rectangle
         {

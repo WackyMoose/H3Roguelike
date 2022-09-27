@@ -13,6 +13,7 @@ public interface IApplication : IDisposable
 
     void Initialize();
     void Run();
+    void Close();
 }
 
 public sealed class Application : Disposeable, IApplication
@@ -26,6 +27,8 @@ public sealed class Application : Disposeable, IApplication
             return s_Instance!;
         }
     }
+
+    private bool _isRunning = true;
 
     public Application(ApplicationOptions options, IGame game, IWindow window, IInputAPI inputAPI, IRenderer renderer, IUIRenderer uiRenderer, ISceneFactory sceneFactory)
     {
@@ -69,7 +72,7 @@ public sealed class Application : Disposeable, IApplication
     {
         Game.Initialize();
 
-        while (Window.IsRunning)
+        while (_isRunning && Window.IsRunning)
         {
             Renderer.BeginFrame();
 
@@ -82,5 +85,10 @@ public sealed class Application : Disposeable, IApplication
         }
 
         Game.Uninitialize();
+    }
+
+    public void Close()
+    {
+        _isRunning = false;
     }
 }

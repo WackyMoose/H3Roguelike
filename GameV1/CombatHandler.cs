@@ -8,7 +8,7 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
-using MooseEngine.UI;
+using GameV1.UI;
 using MooseEngine.Utilities;
 
 namespace GameV1

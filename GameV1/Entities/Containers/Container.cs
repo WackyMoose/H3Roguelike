@@ -2,7 +2,7 @@
 using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Items;
 using MooseEngine.Graphics;
-using MooseEngine.UI;
+using GameV1.UI;
 using MooseEngine.Utilities;
 using System.Text;
 

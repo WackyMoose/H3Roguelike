@@ -1,4 +1,5 @@
 ﻿using GameV1.Interfaces;
+using GameV1.Interfaces.Creatures;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
@@ -7,26 +8,19 @@ using System.Numerics;
 
 namespace GameV1.Entities
 {
-    internal class Selector<TEntity> : Entity, ISelector<TEntity> where TEntity : class, IEntity
+    internal class Selector : ISelector
     {
-        // 
-
-        //public IEnumerable<TEntity> Entities { get; set; }
-        public IDictionary<Vector2, TEntity> Entities { get; set; }
-        public TEntity SelectedEntity { get; set; }
+        public IDictionary<Vector2, ICreature> Entities { get; set; }
+        public IEntity SelectedEntity { get; set; }
         public int SelectedEntityIndex { get; set; }
 
-        public Selector(IDictionary<Vector2, TEntity> entities)
+        public Selector()
+        {
+        }
+
+        public void AddEntities(IDictionary<Vector2, ICreature> entities)
         {
             Entities = entities;
-        }
-
-        public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)
-        {
-        }
-
-        public Selector(string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
-        {
         }
 
         public void SelectNextEntity()
@@ -41,16 +35,6 @@ namespace GameV1.Entities
             }
             
             SelectedEntity = Entities.ElementAt(SelectedEntityIndex).Value;
-        }
-
-        public override void Initialize()
-        {
-
-        }
-
-        public override void Update(float deltaTime)
-        {
-
         }
     }
 }

@@ -13,6 +13,7 @@ using MooseEngine.Core;
 
 //Engine.Start<NoiseTest>(); 
 Engine.Start<TestGameMSN>();
+//Engine.Start<MenuTest>();
 
 
 

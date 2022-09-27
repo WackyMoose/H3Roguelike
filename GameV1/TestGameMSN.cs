@@ -20,7 +20,6 @@ using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
-using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Buffers;
 using System.Numerics;
@@ -41,8 +40,7 @@ internal class TestGameMSN : IGame
 {
     public ICreature? Player { get; set; }
 
-    public ISelector<ICreature>? CreatureSelector { get; set; }
-    public ISelector<IEntity>? UISelector { get; set; }
+    public ISelector Selector { get; set; } = new Selector();
 
     private IScene? _scene;
 
@@ -55,6 +53,8 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
+    private LoginPanel _loginPanel;
+    private bool _showDebugPanel = true;
 
     public void Initialize()
     {
@@ -119,7 +119,7 @@ internal class TestGameMSN : IGame
 
         Player = orc;
 
-        CreatureSelector = new Selector<ICreature>(Player.CreaturesWithinPerceptionRange);
+        Selector.AddEntities(Player.CreaturesWithinPerceptionRange);
 
         _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 
@@ -231,8 +231,8 @@ internal class TestGameMSN : IGame
 
         btrees.Add(druidTree);
 
-        var guardNode =
-
+        var guardNode = 
+            
             Selector(
                 Serializer(
                     Action(new TargetCreatureInRange(_scene, guard)),
@@ -345,6 +345,11 @@ internal class TestGameMSN : IGame
             }
         }
 
+        if(Input.IsKeyPressed(Keycode.KEY_P))
+        {
+            _showDebugPanel = !_showDebugPanel;
+        }
+
         _scene?.UpdateRuntime(deltaTime);
     }
 
@@ -354,6 +359,10 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
-        _debugPanel.OnGUI(UIRenderer);
+        //_loginPanel.OnGUI(UIRenderer);
+        if (_showDebugPanel)
+        {
+            _debugPanel.OnGUI(UIRenderer);
+        }
     }
 }
