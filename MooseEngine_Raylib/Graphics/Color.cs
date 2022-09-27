@@ -44,13 +44,15 @@ public class Color
         A = color.a;
     }
 
-    public Color(int r, int g, int b, int a)
+    public Color(int r, int g, int b, int a = 255)
     {
         R = Convert.ToByte(Math.Clamp(r, 0, 255));
         G = Convert.ToByte(Math.Clamp(g, 0, 255));
         B = Convert.ToByte(Math.Clamp(b, 0, 255));
         A = Convert.ToByte(Math.Clamp(a, 0, 255));
     }
+
+    public Color(){}
 
     public static Color operator +(Color lhs, Color rhs)
     {

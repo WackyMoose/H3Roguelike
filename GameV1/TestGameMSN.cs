@@ -20,7 +20,6 @@ using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
-using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Buffers;
 using System.Numerics;
@@ -54,6 +53,8 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
+    private LoginPanel _loginPanel;
+    private bool _showDebugPanel = true;
 
     public void Initialize()
     {
@@ -344,6 +345,11 @@ internal class TestGameMSN : IGame
             }
         }
 
+        if(Input.IsKeyPressed(Keycode.KEY_P))
+        {
+            _showDebugPanel = !_showDebugPanel;
+        }
+
         _scene?.UpdateRuntime(deltaTime);
     }
 
@@ -353,6 +359,10 @@ internal class TestGameMSN : IGame
 
         _consolePanel.OnGUI(UIRenderer);
         _statsPanel.OnGUI(UIRenderer);
-        _debugPanel.OnGUI(UIRenderer);
+        //_loginPanel.OnGUI(UIRenderer);
+        if (_showDebugPanel)
+        {
+            _debugPanel.OnGUI(UIRenderer);
+        }
     }
 }

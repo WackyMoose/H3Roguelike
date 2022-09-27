@@ -42,7 +42,7 @@ internal class RaylibUIRenderer : IUIRenderer
         // Draw control
         //--------------------------------------------------------------------
         var textBounds = labelOptions.GetTextBounds();
-        GuiDrawText(labelOptions.Text, textBounds, GetTextColorByState(_guiState));
+        GuiDrawText(labelOptions.Text, textBounds, labelOptions.TextNormalColor, labelOptions); //  GetTextColorByState(_guiState)
         //--------------------------------------------------------------------
     }
 
@@ -74,8 +74,8 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, buttonOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
-        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state));
+        GuiDrawRectangle(bounds, buttonOptions.BorderWidth, GetBorderColorByState(state, buttonOptions), GetBaseColorByState(state, buttonOptions));
+        GuiDrawText(buttonOptions.Text, textBounds, GetTextColorByState(state, buttonOptions), buttonOptions);
         //--------------------------------------------------------------------
 
         return pressed;
@@ -121,20 +121,19 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state), GetBaseColorByState(state));
-        //var textColor = sliderOptions.TextNormalColor; 
+        GuiDrawRectangle(bounds, sliderOptions.BorderWidth, GetBorderColorByState(state, sliderOptions), sliderOptions.BackgroundColor);
 
         // Draw slider internal bar (depends on state)
         if (!sliderOptions.Interactable)
         {
             sliderRectangle.width = MathFunctions.Lerp(sliderOptions.MinValue, bounds.width, value) / sliderOptions.MaxValue;
         }
-        GuiDrawRectangle(sliderRectangle, 0, Color.Blank, state == GuiState.STATE_HOVERED ? sliderOptions.TextFocusedColor : sliderOptions.Color);
+        GuiDrawRectangle(sliderRectangle, 0, Color.Blank, state == GuiState.STATE_HOVERED ? sliderOptions.TextFocusedColor : sliderOptions.NormalColor);
 
         if (sliderOptions.TextAlignment != TextAlignment.None)
         {
             var textBounds = sliderOptions.GetTextBounds();
-            GuiDrawText(sliderOptions.Text, textBounds, GetTextColorByState(state));
+            GuiDrawText(sliderOptions.Text, textBounds, GetTextColorByState(state, sliderOptions), sliderOptions);
         }
         //--------------------------------------------------------------------
 
@@ -144,18 +143,17 @@ internal class RaylibUIRenderer : IUIRenderer
     public void DrawPanel(PanelOptions panelOptions)
     {
         var state = _guiState;
-        var colors = UIRendererOptions.Colors;
 
         var bounds = panelOptions.GetBounds();
         var statusBarRectangle = panelOptions.GetStatusBarRectangle();
 
         // Text will be drawn as a header bar (if provided)
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title) && (bounds.height < panelOptions.StatusBarHeight * 2.0f))
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text) && (bounds.height < panelOptions.StatusBarHeight * 2.0f))
         {
             bounds.height = panelOptions.StatusBarHeight * 2;
         }
 
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title))
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
         {
             // Move panel bounds after the header bar
             bounds.y += panelOptions.StatusBarHeight - 1;
@@ -164,28 +162,170 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        if (!string.IsNullOrWhiteSpace(panelOptions.Title))
+        var borderColor = state == GuiState.STATE_DISABLED ? panelOptions.BorderDisabledColor : panelOptions.BorderNormalColor;
+        var backgroundColor = state == GuiState.STATE_DISABLED ? panelOptions.DisabledColor : panelOptions.BackgroundColor;
+
+        if (!string.IsNullOrWhiteSpace(panelOptions.Text))
         {
-            GuiStatusBar(statusBarRectangle, panelOptions.Title);  // Draw panel header as status bar
+            var headerColor = state == GuiState.STATE_DISABLED ? panelOptions.HeaderDisabledColor : panelOptions.HeaderNormalColor;
+            var textColor = state == GuiState.STATE_DISABLED ? panelOptions.TextDisabledColor : panelOptions.TextNormalColor;
+
+            GuiStatusBar(statusBarRectangle, panelOptions.Text, panelOptions.BorderWidth, borderColor, headerColor, textColor, panelOptions);  // Draw panel header as status bar
         }
 
-        var lineColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.LineColor;
-        var backgroundColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.BackgroundColor;
-
-        GuiDrawRectangle(bounds, panelOptions.BorderWidth, lineColor, backgroundColor);
+        GuiDrawRectangle(bounds, panelOptions.BorderWidth, borderColor, backgroundColor);
         //--------------------------------------------------------------------
     }
 
     public void DrawImage(ImageOptions imageOptions)
     {
-        var source = imageOptions.GetImageSource();
-        var dest = imageOptions.GetImageDestination();
-        Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
+        var source = new Rectangle
+        {
+            x = 0.0f,
+            y = 0.0f,
+            width = imageOptions.Image.width,
+            height = imageOptions.Image.height
+        };
 
-        //var size = 192;
-        //var dest = new Rectangle(1200 + (400 - size - 10), 25, size, size);
+        var dest = new Rectangle
+        {
+            x = imageOptions.Position.X,
+            y = imageOptions.Position.Y,
+            width = imageOptions.Size.X,
+            height = imageOptions.Size.Y
+        };
+
+        Raylib.DrawTexturePro(imageOptions.Image, source, dest, Vector2.Zero, 0.0f, imageOptions.TintColor);
     }
 
+    public void DrawImage(SubImageOptions subImageOptions)
+    {
+        var source = subImageOptions.GetImageSource();
+        var dest = subImageOptions.GetImageDestination();
+        Raylib.DrawTexturePro(subImageOptions.Image, source, dest, Vector2.Zero, 0.0f, Color.White);
+    }
+
+    public bool DrawTextInputField(TextInputFieldOptions textInputFieldOptions, ref string text, int textSize, bool editMode)
+    {
+        var state = _guiState;
+        bool pressed = false;
+
+        var bounds = textInputFieldOptions.GetBounds();
+        var textBounds = textInputFieldOptions.GetTextBounds();
+        int textWidth = GetTextWidth(text, textInputFieldOptions);
+        var textAlignment = editMode && textWidth >= textBounds.width ? TextAlignment.Right : textInputFieldOptions.TextAlignment;
+
+        var cursorRectangle = new Rectangle
+        {
+            x = bounds.x + textInputFieldOptions.TextPadding + textWidth + 2,
+            y = bounds.y + bounds.height / 2 - textInputFieldOptions.FontSize,
+            width = 4,
+            height = textInputFieldOptions.FontSize * 2
+        };
+
+        if (cursorRectangle.height >= bounds.height)
+        {
+            cursorRectangle.height = bounds.height - textInputFieldOptions.BorderWidth * 2;
+        }
+        if (cursorRectangle.y < (bounds.y + textInputFieldOptions.BorderWidth))
+        {
+            cursorRectangle.y = bounds.y + textInputFieldOptions.BorderWidth;
+        }
+
+        // Update control
+        //--------------------------------------------------------------------
+        if (state != GuiState.STATE_DISABLED)
+        {
+            Vector2 mousePoint = Raylib.GetMousePosition();
+
+            if (editMode)
+            {
+                state = GuiState.STATE_PRESSED;
+
+                int key = Raylib.GetCharPressed();
+                int keyCount = text.Length;
+                int byteSize = 0;
+                var textUTF8 = Raylib.CodepointToUTF8(key, ref byteSize);
+
+                // Only allow keys in range [32..125]
+                if ((keyCount + byteSize) < textSize)
+                {
+                    //float maxWidth = (bounds.width - (GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)*2));
+
+                    if (key >= 32)
+                    {
+                        for (int i = 0; i < byteSize; i++)
+                        {
+                            text = text.Insert(keyCount, textUTF8[i].ToString());
+                            keyCount++;
+                        }
+                    }
+                }
+
+                // Delete text
+                if (keyCount > 0)
+                {
+                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_BACKSPACE))
+                    {
+                        while ((keyCount > 0) && ((text[--keyCount] & 0xc0) == 0x80)) ;
+                        text = text.Remove(keyCount);
+                    }
+                }
+
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) || (!Raylib.CheckCollisionPointRec(mousePoint, bounds) && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))) pressed = true;
+
+                // Check text alignment to position cursor properly
+                if (textAlignment == TextAlignment.Center)
+                {
+                    cursorRectangle.x = bounds.x + textWidth / 2 + bounds.width / 2 + 1;
+                }
+                if (textAlignment == TextAlignment.Right)
+                {
+                    cursorRectangle.x = bounds.x + bounds.width - textInputFieldOptions.InnerPadding - textInputFieldOptions.BorderWidth;
+                }
+            }
+            else
+            {
+                if (Raylib.CheckCollisionPointRec(mousePoint, bounds))
+                {
+                    state = GuiState.STATE_HOVERED;
+                    if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) pressed = true;
+                }
+            }
+        }
+        //--------------------------------------------------------------------
+
+        // Draw control
+        //--------------------------------------------------------------------
+        if (state == GuiState.STATE_PRESSED)
+        {
+            GuiDrawRectangle(bounds, textInputFieldOptions.BorderWidth, GetBorderColorByState(state, textInputFieldOptions), textInputFieldOptions.PressedColor);
+        }
+        else if (state == GuiState.STATE_DISABLED)
+        {
+            GuiDrawRectangle(bounds, textInputFieldOptions.BorderWidth, GetBorderColorByState(state, textInputFieldOptions), textInputFieldOptions.DisabledColor);
+        }
+        else GuiDrawRectangle(bounds, 1, GetBorderColorByState(state, textInputFieldOptions), Color.Blank);
+
+        // in case we edit and text does not fit in the textbox show right aligned and character clipped, slower but working
+        //while (editMode && textWidth >= textBounds.width) //  && *text
+        //{
+        //    int bytes = 0;
+        //    Raylib.GetCodepoint(text, ref bytes);
+        //    text += bytes;
+        //    textWidth = GetTextWidth(text, textInputFieldOptions);
+        //}
+        GuiDrawText(text, textBounds, GetTextColorByState(state, textInputFieldOptions), textInputFieldOptions); // , textAlignment, Fade(GetColor(GuiGetStyle(TEXTBOX, TEXT + (state * 3))), guiAlpha)
+
+        // Draw cursor
+        if (editMode)
+        {
+            GuiDrawRectangle(cursorRectangle, 0, Color.Blank, textInputFieldOptions.BorderPressedColor);
+        }
+        //--------------------------------------------------------------------
+
+        return pressed;
+    }
     public int DrawListViewEx(ListViewOptions listViewOptions, IEnumerable<string> items, ref int focus, ref int scrollIndex, int active)
     {
         var count = items.Count();
@@ -194,22 +334,22 @@ internal class RaylibUIRenderer : IUIRenderer
         int itemFocused = (focus == 0) ? -1 : focus;
         int itemSelected = active;
 
-        var statusBarRectangle = listViewOptions.GetStatusBarRectangle();
+        //var statusBarRectangle = listViewOptions.GetStatusBarRectangle();
         var bounds = listViewOptions.GetBounds();
 
         var useScrollBar = (listViewOptions.ItemHeight + listViewOptions.ItemSpacing) * count > bounds.height;
 
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title) && (bounds.height < listViewOptions.StatusBarHeight * 2.0f))
-        {
-            bounds.height = listViewOptions.StatusBarHeight * 2;
-        }
+        //if (!string.IsNullOrWhiteSpace(listViewOptions.Text) && (bounds.height < listViewOptions.StatusBarHeight * 2.0f))
+        //{
+        //    bounds.height = listViewOptions.StatusBarHeight * 2;
+        //}
 
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title))
-        {
-            // Move panel bounds after the header bar
-            bounds.y += listViewOptions.StatusBarHeight - 1;
-            bounds.height -= listViewOptions.StatusBarHeight + 1;
-        }
+        //if (!string.IsNullOrWhiteSpace(listViewOptions.Text))
+        //{
+        //    // Move panel bounds after the header bar
+        //    bounds.y += listViewOptions.StatusBarHeight - 1;
+        //    bounds.height -= listViewOptions.StatusBarHeight + 1;
+        //}
 
         var itemBounds = listViewOptions.GetItemBounds(bounds);
 
@@ -287,18 +427,23 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        if (!string.IsNullOrWhiteSpace(listViewOptions.Title))
-        {
-            GuiStatusBar(statusBarRectangle, listViewOptions.Title);  // Draw panel header as status bar
-        }
+        //if (!string.IsNullOrWhiteSpace(listViewOptions.Text))
+        //{
+        //    var borderColor = state == GuiState.STATE_DISABLED ? listViewOptions.BorderDisabledColor : listViewOptions.BorderNormalColor;
+        //    var baseColor = state == GuiState.STATE_DISABLED ? listViewOptions.DisabledColor : listViewOptions.HeaderNormalColor;
+        //    var textColor = state == GuiState.STATE_DISABLED ? listViewOptions.HeaderTextDisabledColor : listViewOptions.HeaderTextNormalColor;
 
-        GuiDrawRectangle(bounds, listViewOptions.BorderWidth, GetBorderColorByState(state), listViewOptions.BackgroundColor);     // Draw background
+        //    GuiStatusBar(statusBarRectangle, listViewOptions.Text, listViewOptions.BorderWidth, borderColor, baseColor, textColor);  // Draw panel header as status bar
+        //}
+
+        GuiDrawRectangle(bounds, listViewOptions.BorderWidth, GetBorderColorByState(state, listViewOptions), listViewOptions.BackgroundColor);     // Draw background
 
         // Draw visible items
         for (int i = 0; ((i < visibleItems) && (count > 0)); i++)
         {
             var item = items.ElementAt(startIndex + i);
 
+            var textBounds = listViewOptions.GetTextBounds(itemBounds);
             if (state == GuiState.STATE_DISABLED)
             {
                 if ((startIndex + i) == itemSelected)
@@ -306,7 +451,7 @@ internal class RaylibUIRenderer : IUIRenderer
                     GuiDrawRectangle(itemBounds, listViewOptions.BorderWidth, listViewOptions.BorderDisabledColor, listViewOptions.DisabledColor);
                 }
 
-                GuiDrawText(item, GetTextBounds(itemBounds), listViewOptions.TextDisabledColor);
+                GuiDrawText(item, textBounds, listViewOptions.TextDisabledColor, listViewOptions);
             }
             else
             {
@@ -314,18 +459,18 @@ internal class RaylibUIRenderer : IUIRenderer
                 {
                     // Draw item selected
                     GuiDrawRectangle(itemBounds, listViewOptions.BorderWidth, listViewOptions.BorderPressedColor, listViewOptions.PressedColor);
-                    GuiDrawText(item, GetTextBounds(itemBounds), listViewOptions.TextPressedColor);
+                    GuiDrawText(item, textBounds, listViewOptions.TextPressedColor, listViewOptions);
                 }
                 else if ((startIndex + i) == itemFocused)
                 {
                     // Draw item focused
                     GuiDrawRectangle(itemBounds, listViewOptions.BorderWidth, listViewOptions.BorderFocusedColor, listViewOptions.FocusedColor);
-                    GuiDrawText(item, GetTextBounds(itemBounds), listViewOptions.TextFocusedColor);
+                    GuiDrawText(item, textBounds, listViewOptions.TextFocusedColor, listViewOptions);
                 }
                 else
                 {
                     // Draw item normal
-                    GuiDrawText(item, GetTextBounds(itemBounds), listViewOptions.TextNormalColor);
+                    GuiDrawText(item, textBounds, listViewOptions.TextNormalColor, listViewOptions);
                 }
             }
 
@@ -359,7 +504,7 @@ internal class RaylibUIRenderer : IUIRenderer
             //else
             //{
             //}
-            startIndex = GuiScrollBar(scrollBarBounds, startIndex, 0, count - visibleItems);
+            startIndex = GuiScrollBar(scrollBarBounds, startIndex, 0, count - visibleItems, listViewOptions);
 
             listViewOptions.ScrollSpeed = prevScrollSpeed; // Reset scroll speed to default
             listViewOptions.ScrollSliderSize = prevSliderSize; // Reset slider size to default
@@ -383,11 +528,9 @@ internal class RaylibUIRenderer : IUIRenderer
     }
 
     // Scroll bar control (used by GuiScrollPanel())
-    private int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue)
+    private int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue, ScrollbarOptions scrollbarOptions)
     {
         var state = _guiState;
-        var colors = UIRendererOptions.Colors;
-        var scrollbarOptions = UIRendererOptions.ScrollbarOptions;
 
         // Is the scrollbar horizontal or vertical?
         bool isVertical = (bounds.width > bounds.height) ? false : true;
@@ -521,10 +664,10 @@ internal class RaylibUIRenderer : IUIRenderer
 
         // Draw control
         //--------------------------------------------------------------------
-        GuiDrawRectangle(bounds, scrollbarOptions.BorderWidth, GetBorderColorByState(state), colors.BorderDisabledColor);   // Draw the background
+        GuiDrawRectangle(bounds, scrollbarOptions.BorderWidth, GetBorderColorByState(state, scrollbarOptions), scrollbarOptions.BorderDisabledColor);   // Draw the background
 
-        GuiDrawRectangle(scrollbar, 0, Color.Blank, colors.NormalColor);     // Draw the scrollbar active area background
-        GuiDrawRectangle(slider, 0, Color.Blank, GetBorderColorByState(state));         // Draw the slider bar
+        GuiDrawRectangle(scrollbar, 0, Color.Blank, scrollbarOptions.NormalColor);     // Draw the scrollbar active area background
+        GuiDrawRectangle(slider, 0, Color.Blank, GetBorderColorByState(state, scrollbarOptions));         // Draw the slider bar
 
         // Draw arrows (using icon if available)
         if (scrollbarOptions.ArrowsVisible)
@@ -532,8 +675,9 @@ internal class RaylibUIRenderer : IUIRenderer
             var r1 = new Rectangle(arrowUpLeft.x, arrowUpLeft.y, isVertical ? bounds.width : bounds.height, isVertical ? bounds.width : bounds.height);
             var r2 = new Rectangle(arrowDownRight.x, arrowDownRight.y, isVertical ? bounds.width : bounds.height, isVertical ? bounds.width : bounds.height);
 
-            GuiDrawText(isVertical ? "^" : "<", r1, GetTextColorByState(state));
-            GuiDrawText(isVertical ? "v" : ">", r2, GetTextColorByState(state));
+            var textColor = GetTextColorByState(state, scrollbarOptions);
+            GuiDrawText(isVertical ? "^" : "<", r1, textColor, scrollbarOptions);
+            GuiDrawText(isVertical ? "v" : ">", r2, textColor, scrollbarOptions);
         }
         //--------------------------------------------------------------------
 
@@ -541,30 +685,32 @@ internal class RaylibUIRenderer : IUIRenderer
     }
 
     // Status Bar control
-    private void GuiStatusBar(Rectangle bounds, string text)
+    private void GuiStatusBar(Rectangle bounds, string text, int borderWidth, Color borderColor, Color baseColor, Color textColor, TextOptions textOptions)
     {
-        var state = _guiState;
-        var colors = UIRendererOptions.Colors;
-
         // Draw control
         //--------------------------------------------------------------------
-        var borderColor = state == GuiState.STATE_DISABLED ? colors.BorderDisabledColor : colors.BorderNormalColor;
-        var baseColor = state == GuiState.STATE_DISABLED ? colors.DisabledColor : colors.NormalColor;
-        var textColor = state == GuiState.STATE_DISABLED ? colors.TextDisabledColor : colors.TextNormalColor;
-
-        GuiDrawRectangle(bounds, UIRendererOptions.BorderWidth, borderColor, baseColor);
-        GuiDrawText(text, GetTextBounds(bounds), textColor);
+        GuiDrawRectangle(bounds, borderWidth, borderColor, baseColor);
+        GuiDrawText(text, textOptions.GetTextBounds(bounds), textColor, textOptions);
         //--------------------------------------------------------------------
     }
 
-    private void GuiDrawText(string text, Rectangle bounds, Color tint)
+    private void GuiDrawText(string text, Rectangle bounds, Color tint, TextOptions textOptions)
     {
         var position = new Vector2(bounds.x, bounds.y);
         var font = UIRendererOptions.Font;
         //var font = Raylib.GetFontDefault();
 
-        Raylib.DrawTextEx(font, text, position, UIRendererOptions.FontSize, UIRendererOptions.TextSpacing, tint);
+        Raylib.DrawTextEx(font, text, position, textOptions.FontSize, textOptions.TextSpacing, tint);
     }
+
+    //private void GuiDrawText(string text, Rectangle bounds, Color tint)
+    //{
+    //    var position = new Vector2(bounds.x, bounds.y);
+    //    var font = UIRendererOptions.Font;
+    //    //var font = Raylib.GetFontDefault();
+
+    //    Raylib.DrawTextEx(font, text, position, UIRendererOptions.FontSize, UIRendererOptions.TextSpacing, tint);
+    //}
 
     private void GuiDrawRectangle(Rectangle rec, int borderWidth, Color borderColor, Color color)
     {
@@ -584,61 +730,92 @@ internal class RaylibUIRenderer : IUIRenderer
         }
     }
 
-    private Color GetBaseColorByState(GuiState state)
+    private Color GetBaseColorByState(GuiState state, UIOptionsBase uiOptionsBase)
     {
-        var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_HOVERED => colors.FocusedColor,
-            GuiState.STATE_PRESSED => colors.PressedColor,
-            GuiState.STATE_DISABLED => colors.DisabledColor,
-            _ => colors.NormalColor,
+            GuiState.STATE_HOVERED => uiOptionsBase.FocusedColor,
+            GuiState.STATE_PRESSED => uiOptionsBase.PressedColor,
+            GuiState.STATE_DISABLED => uiOptionsBase.DisabledColor,
+            _ => uiOptionsBase.NormalColor,
         };
     }
 
-    private Color GetBorderColorByState(GuiState state)
+    private Color GetBorderColorByState(GuiState state, UIOptionsBase uiOptionsBase)
     {
-        var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_HOVERED => colors.BorderFocusedColor,
-            GuiState.STATE_PRESSED => colors.BorderPressedColor,
-            GuiState.STATE_DISABLED => colors.BorderDisabledColor,
-            _ => colors.BorderNormalColor,
+            GuiState.STATE_HOVERED => uiOptionsBase.BorderFocusedColor,
+            GuiState.STATE_PRESSED => uiOptionsBase.BorderPressedColor,
+            GuiState.STATE_DISABLED => uiOptionsBase.BorderDisabledColor,
+            _ => uiOptionsBase.BorderNormalColor,
         };
     }
 
-    private Color GetTextColorByState(GuiState state)
+    private Color GetTextColorByState(GuiState state, TextOptions textOptions)
     {
-        var colors = UIRendererOptions.Colors;
         return state switch
         {
-            GuiState.STATE_HOVERED => colors.TextFocusedColor,
-            GuiState.STATE_PRESSED => colors.TextPressedColor,
-            GuiState.STATE_DISABLED => colors.TextDisabledColor,
-            _ => colors.TextNormalColor,
+            GuiState.STATE_HOVERED => textOptions.TextFocusedColor,
+            GuiState.STATE_PRESSED => textOptions.TextPressedColor,
+            GuiState.STATE_DISABLED => textOptions.TextDisabledColor,
+            _ => textOptions.TextNormalColor,
         };
     }
 
-    private Rectangle GetTextBounds(Rectangle bounds)
+    private static int GetTextWidth(string text, TextOptions textOptions)
     {
-        Rectangle textBounds = bounds;
+        Vector2 size = Vector2.Zero;
 
-        textBounds.x = bounds.x + UIRendererOptions.BorderWidth;
-        textBounds.y = bounds.y + UIRendererOptions.BorderWidth;
-        textBounds.width = bounds.width - 2 * UIRendererOptions.BorderWidth;
-        textBounds.height = bounds.height - 2 * UIRendererOptions.BorderWidth;
-
-        if (UIRendererOptions.StatusBarTextAlignment == TextAlignment.Right)
+        if (!string.IsNullOrWhiteSpace(text))
         {
-            textBounds.x -= UIRendererOptions.TextPadding;
+            size = Raylib.MeasureTextEx(textOptions.Font, text, textOptions.FontSize, textOptions.TextSpacing + 2);
         }
-        else
-        {
-            textBounds.x += UIRendererOptions.TextPadding;
-        }
-        textBounds.width -= 2 * UIRendererOptions.TextPadding;
 
-        return textBounds;
+        return (int)size.X;
     }
+
+    //private Rectangle GetTextBounds(Rectangle bounds, TextOptions textOptions)
+    //{
+    //    Rectangle textBounds = bounds;
+
+    //    textBounds.x = bounds.x + textOptions.BorderWidth;
+    //    textBounds.y = bounds.y + textOptions.BorderWidth;
+    //    textBounds.width = bounds.width - 2 * textOptions.BorderWidth;
+    //    textBounds.height = bounds.height - 2 * textOptions.BorderWidth;
+
+    //    if (textOptions.TextAlignment== TextAlignment.Right)
+    //    {
+    //        textBounds.x -= UIRendererOptions.TextPadding;
+    //    }
+    //    else
+    //    {
+    //        textBounds.x += UIRendererOptions.TextPadding;
+    //    }
+    //    textBounds.width -= 2 * UIRendererOptions.TextPadding;
+
+    //    return textBounds;
+    //}
+
+    //private Rectangle GetTextBounds(Rectangle bounds)
+    //{
+    //    Rectangle textBounds = bounds;
+
+    //    textBounds.x = bounds.x + UIRendererOptions.BorderWidth;
+    //    textBounds.y = bounds.y + UIRendererOptions.BorderWidth;
+    //    textBounds.width = bounds.width - 2 * UIRendererOptions.BorderWidth;
+    //    textBounds.height = bounds.height - 2 * UIRendererOptions.BorderWidth;
+
+    //    if (UIRendererOptions.StatusBarTextAlignment == TextAlignment.Right)
+    //    {
+    //        textBounds.x -= UIRendererOptions.TextPadding;
+    //    }
+    //    else
+    //    {
+    //        textBounds.x += UIRendererOptions.TextPadding;
+    //    }
+    //    textBounds.width -= 2 * UIRendererOptions.TextPadding;
+
+    //    return textBounds;
+    //}
 }

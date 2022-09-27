@@ -16,6 +16,8 @@ public interface IUIRenderer
     float DrawSliderBar(SliderOptions sliderOptions, float value);
     void DrawPanel(PanelOptions panelOptions);
     void DrawImage(ImageOptions imageOptions);
+    void DrawImage(SubImageOptions imageOptions);
+    bool DrawTextInputField(TextInputFieldOptions textInputFieldOptions, ref string text, int textSize, bool editMode);
     int DrawListViewEx(ListViewOptions listViewOptions, IEnumerable<string> items, ref int focus, ref int scrollIndex, int active);
     void DrawSeperator(SeperatorOptions seperatorOptions);
 }

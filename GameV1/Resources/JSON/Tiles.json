@@ -1,0 +1,69 @@
+{
+  "Tiles": {
+    "Grass01": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 4
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    },
+    "Grass02": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 4,
+        "Y": 10
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    },
+    "Grass03": {
+      "IsWalkable": true,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 10
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    },
+    "Tree01": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 4,
+        "Y": 5
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    },
+    "Tree02": {
+      "IsWalkable": false,
+      "SpriteCoords": {
+        "X": 5,
+        "Y": 5
+      },
+      "ColorTint": {
+        "R": 255,
+        "G": 255,
+        "B": 255,
+        "A": 255
+      }
+    }
+  }
+}

@@ -1,16 +1,12 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
-using GameV1.Entities.Armors;
-using GameV1.Entities.Creatures;
-using GameV1.Entities.Items;
-using GameV1.Entities.Weapons;
+using GameV1.UI;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
-using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
 
