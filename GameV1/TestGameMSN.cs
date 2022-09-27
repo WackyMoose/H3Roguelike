@@ -41,8 +41,7 @@ internal class TestGameMSN : IGame
 {
     public ICreature? Player { get; set; }
 
-    public ISelector<ICreature>? CreatureSelector { get; set; }
-    public ISelector<IEntity>? UISelector { get; set; }
+    public ISelector Selector { get; set; } = new Selector();
 
     private IScene? _scene;
 
@@ -119,7 +118,7 @@ internal class TestGameMSN : IGame
 
         Player = orc;
 
-        CreatureSelector = new Selector<ICreature>(Player.CreaturesWithinPerceptionRange);
+        Selector.AddEntities(Player.CreaturesWithinPerceptionRange);
 
         _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
 

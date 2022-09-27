@@ -19,7 +19,7 @@
         ItemPickUp,
         ItemDrop,
         Interact,
-        TabCreatures,
+        Tab,
         Idle,
         QuitToMenu,
         QuitGame,
