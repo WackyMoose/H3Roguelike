@@ -38,7 +38,7 @@ public class EntityLayer<TEntity> : IEntityLayer<TEntity>
         Entities.Remove(entity.Position);
     }
 
-    public void RemoveAll() 
+    public void RemoveAll()
     {
         Entities.Clear();
     }

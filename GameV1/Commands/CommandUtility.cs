@@ -1,7 +1,6 @@
 ﻿
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
-using System.Linq;
 using System.Numerics;
 
 namespace GameV1.Commands
@@ -19,7 +18,7 @@ namespace GameV1.Commands
         {
             Vector2 closestValidPosition = Vector2.Zero;
             float tempDist = Vector2.DistanceSquared(closestValidPosition, targetPosition);
-            
+
             foreach (var pos in entities.Keys)
             {
                 var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);

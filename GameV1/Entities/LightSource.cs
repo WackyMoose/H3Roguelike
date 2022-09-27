@@ -1,7 +1,6 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
 using MooseEngine.Utilities;
 using System.Numerics;
 
@@ -65,7 +64,7 @@ namespace GameV1.Entities
                 var entities = scene.EntityLayers[layer].Entities;
 
                 //var entitiesWithinRange = scene.GetEntitiesWithinCircle(entities, this.Position, this.Range);
-                var entitiesWithinRange = scene.GetEntitiesWithinRectangle( 
+                var entitiesWithinRange = scene.GetEntitiesWithinRectangle(
                     entities,
                     Position - new Vector2(Range, Range),
                     Position + new Vector2(Range, Range));

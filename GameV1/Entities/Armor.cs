@@ -10,7 +10,7 @@ namespace GameV1.Entities
         public int MinDamageReduction { get; set; }
         public int DamageReduction { get; set; }
 
-        public Armor(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) 
+        public Armor(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint)
             : base(durability, maxValue, name, spriteCoords, colorTint)
         {
         }

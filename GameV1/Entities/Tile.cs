@@ -1,9 +1,7 @@
 ﻿using GameV1.Interfaces;
 using MooseEngine.Graphics;
-using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
-using Newtonsoft.Json;
 using System.Numerics;
 
 namespace GameV1.Entities
@@ -25,7 +23,7 @@ namespace GameV1.Entities
 
         public Tile DeepCopy()
         {
-            Tile other = (Tile) this.MemberwiseClone();
+            Tile other = (Tile)this.MemberwiseClone();
             other.Name = this.Name;
             other.IsWalkable = this.IsWalkable;
             other.SpriteCoords = this.SpriteCoords;
@@ -34,7 +32,7 @@ namespace GameV1.Entities
             return other;
         }
 
-        public Tile(){}
+        public Tile() { }
 
         public override void Initialize()
         {

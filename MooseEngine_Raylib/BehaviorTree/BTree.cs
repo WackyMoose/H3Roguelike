@@ -1,6 +1,6 @@
-﻿using MooseEngine.Core;
+﻿using MooseEngine.BehaviorTree.Interfaces;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.BehaviorTree.Interfaces;
 
 namespace MooseEngine.BehaviorTree
 {
@@ -27,7 +27,7 @@ namespace MooseEngine.BehaviorTree
 
         public INode Add(INode node)
         {
-            if(RootNode == null)
+            if (RootNode == null)
             {
                 RootNode = node;
                 RootNode.Root = this;

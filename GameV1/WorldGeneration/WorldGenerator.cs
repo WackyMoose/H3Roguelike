@@ -7,6 +7,22 @@ using System.Numerics;
 
 namespace GameV1.WorldGeneration
 {
+    /*
+     * First create Dark grass all over world.
+     * Determine where to put lake from perlin noise, then use random walk to create it.
+     * Determine where to put mountains from perlin noise, then use random walk to create it.
+     * Create border of light grass around lake, this creates healthy trees and flowers.
+     * Create large forest around lakes, they will get smaller the further away from water they are.
+     * If there is 2 or more forests within a certain range then put a Bandit or Orc camp.
+     * If 4 or more healthy forests within a certain range then put a Elven village.
+     * If mountain has a certain size then create a dwarven village.
+     * If there is no forest or village within a certain range then create a ruin/graveyard/abandoned village.
+     * Difficulty should scale with range from starting village.
+     * Determine if lakes should be connected via rivers, this could be via range.
+     * Last create roads and paths.
+     * Roads is from villages that is active, paths is to ruins/graveyards/abandoned village 
+     */
+
     public static class WorldGenerator
     {
         private static HashSet<Coords2D> _forest = new HashSet<Coords2D>();
@@ -15,15 +31,15 @@ namespace GameV1.WorldGeneration
         private static List<List<StructureData>> _castle02Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
 
-        //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref IScene scene) 
+        private static readonly SpriteLibrary<Tile> lib = JsonUtility.LoadFromJson<SpriteLibrary<Tile>>(@"..\..\..\Resources\JSON\Tiles.json");
+
+        public static bool GenerateWorld(int seed, ref IScene scene)
         {
             var world = new World(501, 501, seed, new Coords2D(251 * Constants.DEFAULT_ENTITY_SIZE, 251 * Constants.DEFAULT_ENTITY_SIZE));
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             scene.AddLayer<Tile>(EntityLayer.WalkableTiles);
             scene.AddLayer<Tile>(EntityLayer.NonWalkableTiles);
-            //SpriteLibrary<Tile> lib = JsonUtility.LoadFromJson<SpriteLibrary<Tile>>(@"..\..\..\Resources\JSON\Tiles.json");
 
             foreach (var tile in _overWorld)
             {
@@ -91,10 +107,17 @@ namespace GameV1.WorldGeneration
                 float val = MathFunctions.InverseLerp(-1, 1, tile.Value);
                 int colorVal = (int)MathFunctions.Lerp(0, 255, val);
                 Color tintColor = new Color(colorVal, colorVal, colorVal, 255);
-                Tile perlinTile = new Tile("Perlin", true, new Coords2D(3, 10), tintColor);
-                perlinTile.Scale = new Vector2(Constants.DEFAULT_ENTITY_SIZE, Constants.DEFAULT_ENTITY_SIZE);
-                perlinTile.Position = new Vector2(tile.Key.X, tile.Key.Y);
-                scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key, perlinTile);
+
+                Tile newTile = new Tile("Default", true, new Coords2D(28, 28));
+                if (tile.Value < -0.2)
+                    newTile = lib.Sprites["LightGrass"].DeepCopy();
+                else if (tile.Value < 0.6)
+                    newTile = lib.Sprites["DarkGrass"].DeepCopy();
+                else
+                    newTile = lib.Sprites["Rock"].DeepCopy();
+
+                newTile.Position = new Vector2(tile.Key.X, tile.Key.Y);
+                scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key, newTile);
             }
 
             //Place Start Village...
@@ -113,7 +136,7 @@ namespace GameV1.WorldGeneration
             {
                 if (tile.Value.IsWalkable == true)
                 {
-                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key,tile.Value);
+                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key, tile.Value);
                 }
                 else
                 {
@@ -123,5 +146,7 @@ namespace GameV1.WorldGeneration
 
             return true;
         }
+
+
     }
 }

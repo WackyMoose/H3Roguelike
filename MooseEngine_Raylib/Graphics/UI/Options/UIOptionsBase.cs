@@ -4,15 +4,15 @@ public abstract class UIOptionsBase
 {
     public UIScreenCoords Position { get; set; }
     public UIScreenCoords Size { get; set; }
-	public bool Interactable { get; set; }
+    public bool Interactable { get; set; }
 
-	public Color LineColor { get; set; }
-	public Color BackgroundColor { get; set; }
+    public Color LineColor { get; set; }
+    public Color BackgroundColor { get; set; }
 
-	public Color NormalColor { get; set; }
-	public Color FocusedColor { get; set; }
-	public Color PressedColor { get; set; }
-	public Color DisabledColor { get; set; }
+    public Color NormalColor { get; set; }
+    public Color FocusedColor { get; set; }
+    public Color PressedColor { get; set; }
+    public Color DisabledColor { get; set; }
 
     public Color BorderNormalColor { get; set; }
     public Color BorderFocusedColor { get; set; }
@@ -25,23 +25,23 @@ public abstract class UIOptionsBase
     public Color TextDisabledColor { get; set; }
 
     public UIOptionsBase(bool interactable)
-		: this(UIScreenCoords.Zero, UIScreenCoords.One, interactable)
+        : this(UIScreenCoords.Zero, UIScreenCoords.One, interactable)
     {
-	}
+    }
 
-	public UIOptionsBase(UIScreenCoords position, UIScreenCoords size, bool interactable)
+    public UIOptionsBase(UIScreenCoords position, UIScreenCoords size, bool interactable)
     {
         Position = position;
         Size = size;
-		Interactable = interactable;
+        Interactable = interactable;
 
-		LineColor = new Color(144, 171, 181, 255);
-		BackgroundColor = new Color(245, 245, 245, 255);
+        LineColor = new Color(144, 171, 181, 255);
+        BackgroundColor = new Color(245, 245, 245, 255);
 
-		NormalColor = new Color(201, 201, 201, 255);
-		FocusedColor = new Color(201, 239, 254, 255);
-		PressedColor = new Color(151, 232, 255, 255);
-		DisabledColor = new Color(230, 233, 233, 255);
+        NormalColor = new Color(201, 201, 201, 255);
+        FocusedColor = new Color(201, 239, 254, 255);
+        PressedColor = new Color(151, 232, 255, 255);
+        DisabledColor = new Color(230, 233, 233, 255);
 
         BorderNormalColor = new Color(131, 131, 131, 255);
         BorderFocusedColor = new Color(91, 178, 217, 255);

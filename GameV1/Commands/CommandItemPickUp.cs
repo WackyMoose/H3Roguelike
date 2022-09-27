@@ -24,7 +24,7 @@ namespace GameV1.Commands
 
             IItem? item = (IItem?)Scene.GetEntityAtPosition(itemLayer.Entities, Entity.Position);
 
-            if(item != null)
+            if (item != null)
             {
                 // Add item to Creature inventory
                 Creature creature = (Creature)Entity;

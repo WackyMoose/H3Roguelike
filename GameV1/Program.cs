@@ -11,7 +11,7 @@ using MooseEngine.Core;
 //    Offset = 0
 //};
 
-Engine.Start<NoiseTest>(); 
+Engine.Start<NoiseTest>();
 //Engine.Start<TestGameMSN>();
 
 

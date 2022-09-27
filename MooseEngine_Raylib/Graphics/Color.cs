@@ -52,7 +52,7 @@ public class Color
         A = Convert.ToByte(Math.Clamp(a, 0, 255));
     }
 
-    public Color(){}
+    public Color() { }
 
     public static Color operator +(Color lhs, Color rhs)
     {

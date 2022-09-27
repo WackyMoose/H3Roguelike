@@ -77,6 +77,27 @@ namespace GameV1.WorldGeneration
                 new Coords2D(-1,0), //Left
             };
 
+            public static List<Coords2D> DiagonalDirectionsList = new List<Coords2D>
+            {
+                new Coords2D(1,1),  //Up - Right
+                new Coords2D(1,-1), //Down - Right
+                new Coords2D(-1,-1), //Down - Left
+                new Coords2D(-1,1),  //Up - Left
+            };
+
+            public static List<Coords2D> EightDirectionsList = new List<Coords2D>
+            {
+                new Coords2D(0,1),  //Up
+                new Coords2D(1,1),  //Up - Right
+                new Coords2D(1,0),  //Right
+                new Coords2D(1,-1), //Down - Right
+                new Coords2D(0,-1), //Down
+                new Coords2D(-1,-1), //Down - Left
+                new Coords2D(-1,0), //Left
+                new Coords2D(-1,1),  //Up - Left
+            };
+
+
             public static Coords2D GetRandomCardinalDirection()
             {
                 Random rnd = new Random();
