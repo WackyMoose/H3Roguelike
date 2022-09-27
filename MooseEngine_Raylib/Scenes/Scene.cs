@@ -118,6 +118,8 @@ public class Scene : Disposeable, IScene
 
     public Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers)
     {
+        // TODO: Fix this!
+        
        //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
 
         Vector2 closestValidPosition = Vector2.Zero;
