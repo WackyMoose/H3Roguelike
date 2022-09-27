@@ -47,28 +47,58 @@ public class Scene : Disposeable, IScene
     public ISceneCamera SceneCamera { get { return _cameraEntity; } set { _cameraEntity = value; } }
     public IDictionary<int, IEntityLayer> EntityLayers { get { return _entityLayers; } set { _entityLayers = value; } }
 
-    public bool MoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition)
+    public bool TryMoveEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers)
     {
-        bool isKeyAvailable = GetLayer(entityLayer).Entities.TryAdd(targetPosition, entity);
+        //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
 
-        if (isKeyAvailable == true)
+        foreach (var layer in collisionLayers)
         {
-            GetLayer(entityLayer).Entities.Remove(entity.Position);
+            bool isKeyAvailable = !GetLayer(layer).ActiveEntities.ContainsKey(targetPosition);
+
+            if (isKeyAvailable == true) { continue; } else { return false; }
+        }
+
+        if (GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity) == true)
+        {
+            GetLayer(entityLayer).ActiveEntities.Remove(entity.Position);
             entity.Position = targetPosition;
+
             return true;
         }
+
         return false;
     }
 
-    public IDictionary<Vector2, IEntity>? GetEntitiesOfType<TType>(IEntityLayer entities)
+    public bool TryPlaceEntity(int entityLayer, IEntity entity, Vector2 targetPosition, params int[] collisionLayers)
     {
-        Dictionary<Vector2, IEntity> entitiesOfType = new Dictionary<Vector2, IEntity>();
+        //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
 
-        foreach(var entity in entities.Entities)
+        foreach (var layer in collisionLayers)
         {
-            if (entity.Value.GetType() == typeof(TType))
+            bool isKeyAvailable = !GetLayer(layer).ActiveEntities.ContainsKey(targetPosition);
+
+            if (isKeyAvailable == true) { continue; } else { return false; }
+        }
+
+        if (GetLayer(entityLayer).ActiveEntities.TryAdd(targetPosition, entity) == true)
+        {
+            entity.Position = targetPosition;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public IDictionary<Vector2, TEntity>? GetEntitiesOfType<TEntity>(IEntityLayer entities) where TEntity : class, IEntity
+    {
+        Dictionary<Vector2, TEntity>? entitiesOfType = new Dictionary<Vector2, TEntity>();
+
+        foreach (var entity in entities.ActiveEntities)
+        {
+            if (entity.Value.GetType() == typeof(TEntity))
             {
-                entitiesOfType.Add(entity.Key, entity.Value);
+                entitiesOfType.Add(entity.Key, (TEntity)entity.Value);
             }
         }
 
@@ -80,6 +110,64 @@ public class Scene : Disposeable, IScene
         // TODO: Performance check on lambda vs LINQ vs long-hand for loop.
         return entities.ContainsKey(position) ? entities[position] : default;
     }
+    
+    public Vector2 GetRandomValidPosition(IDictionary<Vector2, IEntity> entities)
+    {
+        return entities.ElementAt(Randomizer.RandomInt(0, entities.Count - 1)).Key;
+    }
+
+    public Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers)
+    {
+        // TODO: Fix this!
+        
+       //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
+
+        Vector2 closestValidPosition = Vector2.Zero;
+        float tempDist = (float)1e12; // Vector2.DistanceSquared(closestValidPosition, targetPosition); // TODO: const largetstInt
+
+        //foreach (var layer in collisionLayers)
+        //{
+            var layerRef = GetLayer(entityLayer).ActiveEntities;
+
+            bool isKeyAvailable = layerRef.ContainsKey(targetPosition) == false;
+
+            foreach (var pos in layerRef.Keys)
+            {
+                var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
+
+                if (distanceToTarget < tempDist)
+                {
+                    tempDist = distanceToTarget;
+                    closestValidPosition = pos;
+                }
+            }
+        //}
+
+        return closestValidPosition;
+    }
+
+    //public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)
+    //{
+    //    Vector2 closestValidPosition = Vector2.Zero;
+    //    float tempDist = Vector2.DistanceSquared(closestValidPosition, targetPosition);
+
+    //    foreach (var pos in entities.Keys)
+    //    {
+    //        var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
+
+    //        if (distanceToTarget < tempDist)
+    //        {
+    //            tempDist = distanceToTarget;
+    //            closestValidPosition = pos;
+    //        }
+
+    //        //Math.Abs(targetPosition.X - pos.X) < Math.Abs(closestValidPosition.X - pos.X) &&
+    //        //Math.Abs(targetPosition.Y - pos.Y) < Math.Abs(closestValidPosition.Y - pos.Y))
+
+    //    }
+
+    //    return closestValidPosition;
+    //}
 
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
@@ -108,6 +196,62 @@ public class Scene : Disposeable, IScene
 
         return tilesWithinDist;
     }
+
+    public IDictionary<Vector2, TEntity>? GetEntitiesWithinCircle<TEntity>(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance) where TEntity : class, IEntity
+    {
+        int distanceSquared = distance * distance;
+
+        var tilesWithinDist = new Dictionary<Vector2, TEntity>();
+
+        var topLft = new Vector2(position.X - distance, position.Y - distance);
+        var btmRgt = new Vector2(position.X + distance, position.Y + distance);
+        var v = new Vector2();
+
+        for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        {
+            for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+            {
+                if (entities.ContainsKey(v) && entities[v] is TEntity)
+                {
+                    if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
+                    //if (Vector2.DistanceSquared(position, v) <= distanceSquared)
+                    {
+                        tilesWithinDist.Add(v, (TEntity)entities[v]);
+                    }
+                }
+            }
+        }
+
+        return tilesWithinDist;
+    }
+
+    //public IList<IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
+    //{
+    //    int distanceSquared = distance * distance;
+
+    //    var tilesWithinDist = new List<IEntity>();
+
+    //    var topLft = new Vector2(position.X - distance, position.Y - distance);
+    //    var btmRgt = new Vector2(position.X + distance, position.Y + distance);
+    //    var v = new Vector2();
+
+    //    for (v.Y = topLft.Y; v.Y <= btmRgt.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+    //    {
+    //        for (v.X = topLft.X; v.X <= btmRgt.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+    //        {
+    //            if (entities.ContainsKey(v))
+    //            {
+    //                if (MathFunctions.DistanceSquaredBetween(position, v) <= distanceSquared)
+    //                //if (Vector2.DistanceSquared(position, v) <= distanceSquared)
+    //                {
+    //                    tilesWithinDist.Add(entities[v]);
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    return tilesWithinDist;
+    //}
 
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinRectangle(IDictionary<Vector2, IEntity> entities, Vector2 topLeft, Vector2 bottomRight)
     {
@@ -145,15 +289,15 @@ public class Scene : Disposeable, IScene
         var windowSize = new Vector2((int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)), (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var topLft = new Vector2(SceneCamera.Position.X - windowSize.X, SceneCamera.Position.Y - windowSize.Y);
         var btmRgt = new Vector2(SceneCamera.Position.X + windowSize.X, SceneCamera.Position.Y + windowSize.Y);
-        
-        
+
+
         var layers = _entityLayers.Keys;
-        
+
         Renderer.BeginScene(SceneCamera);
 
         foreach (var layer in layers)
         {
-            var entities = _entityLayers[layer].Entities;
+            var entities = _entityLayers[layer].ActiveEntities;
 
             var v = new Vector2();
 

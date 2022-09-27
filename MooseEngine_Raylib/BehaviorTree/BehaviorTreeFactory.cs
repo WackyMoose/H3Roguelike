@@ -1,8 +1,8 @@
-﻿using MooseEngine.Core;
-using MooseEngine.BehaviorTree.Actions;
+﻿using MooseEngine.BehaviorTree.Actions;
 using MooseEngine.BehaviorTree.Composites;
 using MooseEngine.BehaviorTree.Decorators;
 using MooseEngine.BehaviorTree.Interfaces;
+using MooseEngine.Core;
 using MooseEngine.Interfaces;
 
 namespace MooseEngine.BehaviorTree
@@ -24,9 +24,39 @@ namespace MooseEngine.BehaviorTree
             return new ActionDelegate(@delegate);
         }
 
-        public static IAction Action(Command command)
+        public static IAction Action(CommandBase command)
         {
             return new ActionCommand(command);
+        }
+
+        public static IDecorator AlwaysReturnFailure()
+        {
+            return new AlwaysReturnFailure();
+        }
+
+        public static IDecorator AlwaysReturnFailure(INode node)
+        {
+            return new AlwaysReturnFailure(node);
+        }
+
+        public static IDecorator AlwaysReturnRunning()
+        {
+            return new AlwaysReturnRunning();
+        }
+
+        public static IDecorator AlwaysReturnRunning(INode node)
+        {
+            return new AlwaysReturnRunning(node);
+        }
+
+        public static IDecorator AlwaysReturnSuccess()
+        {
+            return new AlwaysReturnSuccess();
+        }
+
+        public static IDecorator AlwaysReturnSuccess(INode node)
+        {
+            return new AlwaysReturnSuccess(node);
         }
 
         public static IDecorator Breakpoint(string message)
@@ -107,6 +137,16 @@ namespace MooseEngine.BehaviorTree
         public static IComposite Serializer(params INode[] nodes)
         {
             return new Serializer(nodes);
+        }
+
+        public static IComposite SerializerTurnBased()
+        {
+            return new SerializerTurnBased();
+        }
+
+        public static IComposite SerializerTurnBased(params INode[] nodes)
+        {
+            return new SerializerTurnBased(nodes);
         }
     }
 }

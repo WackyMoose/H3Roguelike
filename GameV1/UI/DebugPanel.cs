@@ -1,4 +1,4 @@
-﻿using GameV1.Entities;
+﻿using GameV1.Interfaces.Creatures;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
@@ -8,7 +8,7 @@ namespace GameV1.UI;
 
 internal class DebugPanel
 {
-    private Player _player;
+    private ICreature _player;
 
     private ButtonOptions _consoleButton;
     private SliderOptions _sliderOptions;
@@ -17,7 +17,7 @@ internal class DebugPanel
     private int damage = 50;
     private static int _index = 0;
 
-    public DebugPanel(int x, int y, Player player)
+    public DebugPanel(int x, int y, ICreature player)
     {
         _player = player;
 

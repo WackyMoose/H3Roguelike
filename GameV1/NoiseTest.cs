@@ -1,29 +1,31 @@
 ﻿using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Entities.Armors;
+using GameV1.Entities.Creatures;
+using GameV1.Entities.Items;
+using GameV1.Entities.Weapons;
 using GameV1.WorldGeneration;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
-using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.UI;
 using MooseEngine.Utilities;
 using System.Numerics;
-using System.Threading;
 
 namespace GameV1;
 
 internal class NoiseTest : IGame
 {
     private IScene? _scene;
-    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
+    private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-    private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
-    private Npc ork = new Npc("Ork", 100, new Coords2D(11, 0));
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
+    private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
+    private Creature ork = new Creature("Ork", 100, new Coords2D(11, 0));
+    private WeaponBase sword = new MeleeWeapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
+    private BodyArmor armor = new BodyArmor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
 
     private HashSet<Coords2D> forest = new HashSet<Coords2D>();
 
@@ -37,10 +39,9 @@ internal class NoiseTest : IGame
         sword.MinDamage = 50;
         sword.MaxDamage = 200;
         sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
+        sword.ArmorPenetrationChance = 20;
 
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
+        armor.DamageReduction = 50;
 
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
@@ -49,7 +50,7 @@ internal class NoiseTest : IGame
         // WorldGenerator.GenerateWorld(80085,ref tile);
 
         // Layers
-        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
+        var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
         _pathLayer = _scene.AddLayer<Tile>(EntityLayer.Path);
 
@@ -59,32 +60,32 @@ internal class NoiseTest : IGame
 
         // Spawn player
         player.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        player.MainHand.Add(sword);
-        player.Chest.Add(armor);
-        creatureLayer?.Add(player);
+        player.Inventory.PrimaryWeapon.Add(sword);
+        player.Inventory.BodyArmor.Add(armor);
+        creatureLayer?.AddEntity(player);
 
         light.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(light);
+        itemLayer?.AddEntity(light);
 
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(townLights);
+        itemLayer?.AddEntity(townLights);
 
         for (int i = 0; i < 64; i++)
         {
             var light = new LightSource(Randomizer.RandomInt(2, 16) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Torch", new Coords2D(9, 8), Color.White);
             light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
+            itemLayer?.AddEntity(light);
         }
 
         druid.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.MainHand.Add(sword);
-        druid.Chest.Add(armor);
-        creatureLayer?.Add(druid);
+        druid.Inventory.PrimaryWeapon.Add(sword);
+        druid.Inventory.BodyArmor.Add(armor);
+        creatureLayer?.AddEntity(druid);
 
         ork.Position = new Vector2(60, 32) * Constants.DEFAULT_ENTITY_SIZE;
-        ork.MainHand.Add(sword);
-        ork.Chest.Add(armor);
-        creatureLayer?.Add(ork);
+        ork.Inventory.PrimaryWeapon.Add(sword);
+        ork.Inventory.BodyArmor.Add(armor);
+        creatureLayer?.AddEntity(ork);
 
         _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
 
@@ -115,7 +116,7 @@ internal class NoiseTest : IGame
     public void Update(float deltaTime)
     {
         // Player
-        InputOptions? input = InputHandler.Handle();
+        var input = InputHandler.Handle();
 
         ICommand command = CommandFactory.Create(input, _scene, player);
 
@@ -127,13 +128,6 @@ internal class NoiseTest : IGame
             //Console.WriteLine("Players turn!");
             CommandQueue.Execute();
 
-            // AI NPC / Monster / Critter controls
-            //Console.WriteLine("AI's turn!");
-            AI.Execute(_scene);
-
-            // Execute AI commands
-            CommandQueue.Execute();
-
             _pathLayer.RemoveAll();
 
             var path = _scene.Pathfinder.GetPath(player.Position, ork.Position, _scene.PathMap);
@@ -143,14 +137,14 @@ internal class NoiseTest : IGame
                 var pathPoint = new Tile("PathPoint", true, new Coords2D(0, 7), Color.White);
                 pathPoint.Position = node.Position;
 
-                _pathLayer.Add(pathPoint);
+                _pathLayer.AddEntity(pathPoint);
             }
         }
 
         // TODO: Wrap in method
         // Dynamically updated light sources
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
-        var lightSources = itemLayer.GetEntitiesOfType<LightSource>();
+        var lightSources = itemLayer.GetActiveEntitiesOfType<LightSource>();
 
         foreach (var lightSource in lightSources)
         {

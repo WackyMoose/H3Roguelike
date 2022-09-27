@@ -1,6 +1,5 @@
 ﻿using MooseEngine.Graphics.UI.Options;
 using Raylib_cs;
-using System.Drawing;
 
 namespace MooseEngine.Graphics;
 

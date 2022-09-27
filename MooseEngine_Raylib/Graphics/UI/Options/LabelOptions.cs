@@ -7,7 +7,7 @@ public class LabelOptions : TextOptions
     {
     }
 
-    public LabelOptions(UIScreenCoords position, int fontSize) 
+    public LabelOptions(UIScreenCoords position, int fontSize)
         : this(position, fontSize, string.Empty)
     {
     }

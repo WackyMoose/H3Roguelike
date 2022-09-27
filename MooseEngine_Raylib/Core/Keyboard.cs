@@ -5,7 +5,7 @@ namespace MooseEngine.Core
     public static class Keyboard
     {
 
-        public static Dictionary<KeyboardKey, Command>? Key = new Dictionary<KeyboardKey, Command>();
+        public static Dictionary<KeyboardKey, CommandBase>? Key = new Dictionary<KeyboardKey, CommandBase>();
 
         public static KeyboardKey KeyIdle { get; set; }
         public static KeyboardKey KeyMoveUp { get; set; }

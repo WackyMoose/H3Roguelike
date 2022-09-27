@@ -21,7 +21,7 @@ public class ColorOptions
     public Color TextDisabledColor { get; set; }
 
     public ColorOptions()
-	{
+    {
         LineColor = new Color(144, 171, 181, 255);
         BackgroundColor = new Color(245, 245, 245, 255);
 
