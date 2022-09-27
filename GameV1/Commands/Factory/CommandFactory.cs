@@ -27,7 +27,7 @@ namespace GameV1.Commands.Factory
 
             foreach (var input in inputs)
             {
-                if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
+                if (input == InputOptions.UpAction || input == InputOptions.DownAction || input == InputOptions.LeftAction || input == InputOptions.RightAction)
                 {
                     //Console.WriteLine("We are attempting to walk!");
 
@@ -35,10 +35,10 @@ namespace GameV1.Commands.Factory
 
                     switch (input)
                     {
-                        case InputOptions.Up: direction = Constants.Up; break;
-                        case InputOptions.Down: direction = Constants.Down; break;
-                        case InputOptions.Left: direction = Constants.Left; break;
-                        case InputOptions.Right: direction = Constants.Right; break;
+                        case InputOptions.UpAction: direction = Constants.Up; break;
+                        case InputOptions.DownAction: direction = Constants.Down; break;
+                        case InputOptions.LeftAction: direction = Constants.Left; break;
+                        case InputOptions.RightAction: direction = Constants.Right; break;
                     }
 
                     var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.ActiveEntities, entity.Position + direction);
@@ -66,10 +66,10 @@ namespace GameV1.Commands.Factory
                     //Console.WriteLine("We are walking!");
                     switch (input)
                     {
-                        case InputOptions.Up: return new MoveUp(scene, entity);
-                        case InputOptions.Down: return new MoveDown(scene, entity);
-                        case InputOptions.Left: return new MoveLeft(scene, entity);
-                        case InputOptions.Right: return new MoveRight(scene, entity);
+                        case InputOptions.UpAction: return new MoveUp(scene, entity);
+                        case InputOptions.DownAction: return new MoveDown(scene, entity);
+                        case InputOptions.LeftAction: return new MoveLeft(scene, entity);
+                        case InputOptions.RightAction: return new MoveRight(scene, entity);
                     }
 
                 }

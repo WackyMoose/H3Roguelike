@@ -86,7 +86,7 @@ internal class TestGameMSN : IGame
 
 
         //ICreature? player = (ICreature)creatureLayer.Entities.FirstOrDefault(c => c.Value.Name == "Hero").Value;
-        var player = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Hero", new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
+        var player = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Hero", new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
         //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -110,7 +110,7 @@ internal class TestGameMSN : IGame
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
         itemLayer?.AddEntity(loot);
 
-        var orc = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        var orc = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
         ////player.Inventory.
         //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -151,30 +151,34 @@ internal class TestGameMSN : IGame
         }
 
         // Druid chasing player
-        var druid = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
+        var druid = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
 
         //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
-        creatureLayer?.AddEntity(druid);
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
 
         //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        creatureLayer?.AddEntity(dwarf);
 
-        // Patrolling guard
-        var guard = CreatureFactory.CreateCreature<Creature>(creatureLayer, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
-        
+        // Patrolling guard top-left
+        var guard_tl = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
+
         //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
-        guard.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        guard.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
-        creatureLayer?.AddEntity(guard);
+        guard_tl.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_tl.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
+
+        // Patrolling guard bottom-right
+        var guard_br = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+        guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
 
         var walkableTileLayer = (IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles);
@@ -234,51 +238,54 @@ internal class TestGameMSN : IGame
         var guardNode = 
             
             Selector(
-                Serializer(
-                    Action(new TargetCreatureInRange(_scene, guard)),
-                    Action(new MoveToTargetCreature(_scene, guard)),
-                    SerializerTurnBased(
-                        Action(new AttackTarget(_scene, guard)),
-                        Action(new AttackTarget(_scene, guard)),
-                        Action(new BlockAttack(_scene, guard))
-                    )),
-                Serializer(
-                    Action(new SearchForItemsInRange(_scene, guard)),
-                    Action(new MoveToTargetItem(_scene, guard)),
-                    Action(new PickUpItem(_scene, guard)),
-                    Action(new AutoEquip(_scene, guard))
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, guard_tl))
                 ),
                 Serializer(
-                    Action(new MoveToPosition(_scene, guard, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new TargetCreatureInRange(_scene, guard_tl)),
+                    Action(new MoveToTargetCreature(_scene, guard_tl)),
+                    SerializerTurnBased(
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new BlockAttack(_scene, guard_tl))
+                    )),
+                Serializer(
+                    Action(new SearchForItemsInRange(_scene, guard_tl)),
+                    Action(new MoveToTargetItem(_scene, guard_tl)),
+                    Action(new PickUpItem(_scene, guard_tl)),
+                    Action(new AutoEquip(_scene, guard_tl))
+                ),
+                Serializer(
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
-        var guardTree = BehaviorTree(guard, guardNode);
+        var guardTree = BehaviorTree(guard_tl, guardNode);
 
         btrees.Add(guardTree);
 
         // Key bindings
-        InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
-        InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
-        InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
-        InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
-        InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
-        InputHandler.Add(Keycode.KEY_I, InputOptions.ItemPickUp);
-        InputHandler.Add(Keycode.KEY_Q, InputOptions.ItemDrop);
-        InputHandler.Add(Keycode.KEY_ZERO, InputOptions.Zero);
-        InputHandler.Add(Keycode.KEY_ONE, InputOptions.One);
-        InputHandler.Add(Keycode.KEY_TWO, InputOptions.Two);
-        InputHandler.Add(Keycode.KEY_THREE, InputOptions.Three);
-        InputHandler.Add(Keycode.KEY_FOUR, InputOptions.Four);
-        InputHandler.Add(Keycode.KEY_FIVE, InputOptions.Five);
-        InputHandler.Add(Keycode.KEY_SIX, InputOptions.Six);
-        InputHandler.Add(Keycode.KEY_SEVEN, InputOptions.Seven);
-        InputHandler.Add(Keycode.KEY_EIGHT, InputOptions.Eight);
-        InputHandler.Add(Keycode.KEY_NINE, InputOptions.Nine);
-        InputHandler.Add(Keycode.KEY_A, InputOptions.AutoEquip);
+        InputHandler.Add( new KeyStroke() { Keycode = Keycode.KEY_UP, KeyModifier = KeyModifier.KeyPressed }, InputOptions.UpAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_DOWN, KeyModifier = KeyModifier.KeyPressed }, InputOptions.DownAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_LEFT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.LeftAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_RIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.RightAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SPACE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Idle);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I, KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemPickUp);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyDown }, InputOptions.ItemDrop); // <-- Notice the KeyDown modifier
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_TWO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Two);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_THREE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Three);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FOUR, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Four);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FIVE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Five);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SIX, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Six);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SEVEN, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Seven);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_EIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Eight);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_NINE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Nine);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A, KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
 
     }
 

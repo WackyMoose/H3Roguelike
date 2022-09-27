@@ -12,10 +12,10 @@
         Seven,
         Eight,
         Nine,
-        Up,
-        Down,
-        Left,
-        Right,
+        UpAction,
+        DownAction,
+        LeftAction,
+        RightAction,
         ItemPickUp,
         ItemDrop,
         Interact,
@@ -23,6 +23,7 @@
         Idle,
         QuitToMenu,
         QuitGame,
+        RestartGame,
         AutoEquip
     }
 }

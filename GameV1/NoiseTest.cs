@@ -90,11 +90,11 @@ internal class NoiseTest : IGame
         _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
 
 
-        InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
-        InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
-        InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
-        InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
-        InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+        //InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
+        //InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
+        //InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
+        //InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
+        //InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
 
         _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
         //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
