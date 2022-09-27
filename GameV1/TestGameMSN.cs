@@ -56,21 +56,6 @@ internal class TestGameMSN : IGame
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
 
-    //// Creatures
-    //private Creature player = new Creature("Hero", 120, new Coords2D(5, 0));
-    //private Creature druid = new Creature("Druid", 100, new Coords2D(9, 0));
-    ////private Creature orc = new Creature("Orc", 100, new Coords2D(11, 0));
-    //public Creature guard = new Creature("City guard", 100, new Coords2D(6, 0));
-    //public Creature dwarf = new Creature("Dwarf", 100, new Coords2D(15, 0));
-
-    //// LightSources
-    //private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
-    //private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-
-    //// Inventories
-    //private Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
-    //private Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
-
     public void Initialize()
     {
 
