@@ -1,9 +1,10 @@
 ﻿using GameV1.Entities;
+using GameV1.Entities.Armors;
 
 namespace GameV1.SpriteLibraries
 {
     public  class ArmorLibrary
     {
-        public Dictionary<string, Armor>? Armors { get; set; }
+        public Dictionary<string, ArmorBase>? Armors { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using GameV1.Interfaces.Containers;
 using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Weapons;
+using GameV1.UI;
 using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.UI;
 
 namespace GameV1.Commands
 {

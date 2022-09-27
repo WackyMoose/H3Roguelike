@@ -6,7 +6,7 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
-using MooseEngine.UI;
+using GameV1.UI;
 
 namespace GameV1.Commands
 {

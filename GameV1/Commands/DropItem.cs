@@ -4,7 +4,7 @@ using GameV1.Interfaces.Items;
 using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
-using MooseEngine.UI;
+using GameV1.UI;
 
 namespace GameV1.Commands
 {

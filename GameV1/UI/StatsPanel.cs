@@ -83,7 +83,7 @@ internal class StatsPanel
         };
      */
 
-    private Player _player;
+    private ICreature _player;
 
     private PanelOptions _panelOptions;
     private ImageOptions[] _seperatorOptions = new ImageOptions[3];
@@ -113,7 +113,7 @@ internal class StatsPanel
         "Goblin Looter"
     };
 
-    public StatsPanel(Player player)
+    public StatsPanel(ICreature player)
     {
         _player = player;
 
