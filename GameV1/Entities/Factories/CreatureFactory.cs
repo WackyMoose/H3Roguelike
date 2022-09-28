@@ -17,7 +17,7 @@ namespace GameV1.Entities.Factories
 {
     public static class CreatureFactory
     {
-        public static ICreature CreateCreature<TCreature>(IEntityLayer entityLayer, CreatureSpecies species, string name, Vector2 position) where TCreature : class, ICreature, new()
+        public static ICreature CreateCreature<TCreature>(IScene scene, int entityLayerNum, CreatureSpecies species, string name, Vector2 position, params int[] collisionLayers) where TCreature : class, ICreature, new()
         {
             IDictionary<CreatureSpecies, Coords2D> creatureSpriteCoords = new Dictionary<CreatureSpecies, Coords2D>()
             {
@@ -47,7 +47,12 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } }
             };
 
-            TCreature? newCreature = entityLayer.ActivateOrCreateEntity<TCreature>(position);
+            var entityLayer = scene.GetLayer(entityLayerNum);
+
+            // Is position available?
+            var validPosition = position; // scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
+
+            TCreature? newCreature = entityLayer.ActivateOrCreateEntity<TCreature>(validPosition);
 
             // Species
             //var speciesNum = Randomizer.RandomInt(0, creatureSpriteCoords.Count - 1);
@@ -64,7 +69,7 @@ namespace GameV1.Entities.Factories
             newCreature.Stats.Perception = Randomizer.RandomInt(0, 100);
             newCreature.Stats.Strength = Randomizer.RandomInt(0, 100);
             newCreature.Stats.Toughness = Randomizer.RandomInt(0, 100);
-
+            
             // Inventory
             newCreature.Inventory.DefaultWeapon = defaultWeapons[species];
 

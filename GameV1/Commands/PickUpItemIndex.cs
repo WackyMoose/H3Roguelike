@@ -5,6 +5,7 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using GameV1.UI;
+using GameV1.Entities.Containers;
 
 namespace GameV1.Commands
 {
@@ -12,14 +13,12 @@ namespace GameV1.Commands
     {
         public IScene Scene { get; set; }
         public ICreature Creature { get; set; }
-        public IContainer Container { get; set; }
         public int ItemIndex { get; set; }
 
-        public PickUpItemIndex(IScene scene, ICreature creature, IContainer container, int itemIndex)
+        public PickUpItemIndex(IScene scene, ICreature creature, int itemIndex)
         {
             Scene = scene;
             Creature = creature;
-            Container = container;
             ItemIndex = itemIndex;
         }
 
@@ -29,41 +28,40 @@ namespace GameV1.Commands
 
             IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.ActiveEntities, Creature.Position);
 
-            Type[]? itemAtPositionInterfaces = itemAtPosition?.GetType().GetInterfaces();
-
             // Does inventory item exist?
-            // No
             if (itemAtPosition is null)
             {
                 ConsolePanel.Add($"{Creature.Name} tried to pick up an item that doesn't exist.");
                 ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                
                 return NodeStates.Failure;
             }
-            // Yes
             else if (itemAtPosition is not null)
             {
+                var itemAtPositionInterfaces = itemAtPosition.GetType().GetInterfaces();
+
                 // Is itemAtPosition a container?
-                // No
-                if (itemAtPositionInterfaces?.Contains(typeof(IContainer)) == false)
+                if (itemAtPositionInterfaces.Contains(typeof(IContainer)) == false)
                 {
                     // Pick up item
                     if (Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemAtPosition) == true)
                     {
-                        // Remove item from ItemLayer
                         itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
+                        
                         ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                        
                         return NodeStates.Success;
                     }
                     else
                     {
                         ConsolePanel.Add($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                        
                         return NodeStates.Failure;
                     }
                 }
-                // Yes
-                else if (itemAtPositionInterfaces?.Contains(typeof(IContainer)) == true)
+                else if (itemAtPositionInterfaces.Contains(typeof(IContainer)) == true)
                 {
                     // Pick up item from container index ItemIndex
                     var containerAtPosition = (IContainer)itemAtPosition;
@@ -71,16 +69,26 @@ namespace GameV1.Commands
 
                     if (Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemToPickUp) == true)
                     {
-                        // Remove item from ItemLayer
-                        itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
+                        // Remove item from Container
+                        containerAtPosition.RemoveItem(itemToPickUp);
+
+                        // Remove container from scene if temporary and empty
+                        if (containerAtPosition.IsEmpty == true && containerAtPosition.Type == ContainerType.PileOfItems)
+                        {
+                            itemLayer.DeactivateEntity(containerAtPosition);
+                        }
+
+
                         ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                        
                         return NodeStates.Success;
                     }
                     else
                     {
                         ConsolePanel.Add($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
                         ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                        
                         return NodeStates.Failure;
                     }
                 }
