@@ -81,7 +81,7 @@ namespace GameV1.Commands.Factory
                     if (inputs.Contains(InputOptions.All))
                     {
                         // Pick up all
-
+                        return new PickUpItem(scene, (ICreature)entity);
                     }
 
                     for (int i = 0; i < 10; i++)
@@ -92,11 +92,6 @@ namespace GameV1.Commands.Factory
                         }
                     }
                 }
-
-                //if (input == InputOptions.PickUpItem)
-                //{
-                //    return new PickUpItem(scene, (ICreature)entity);
-                //}
 
                 if (input == InputOptions.ItemDropIndex)
                 {

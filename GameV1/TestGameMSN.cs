@@ -78,10 +78,10 @@ internal class TestGameMSN : IGame
         var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 45) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 46) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 47) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 48) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 45) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 46) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 47) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 48) * Constants.DEFAULT_ENTITY_SIZE);
         //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
@@ -179,11 +179,11 @@ internal class TestGameMSN : IGame
         guard_tl.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Patrolling guard bottom-right
-        var guard_br = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(60, 58) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        //var guard_br = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(60, 58) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
-        guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
+        //guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        //guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        //guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
 
         var walkableTileLayer = (IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles);
@@ -192,23 +192,23 @@ internal class TestGameMSN : IGame
 
 
         // dwarf walk guard Behavior tree
-        var dwarfNode =
+        //var dwarfNode =
 
-            Serializer(
-                Action(new PatrolRectangularArea(
-                    _scene,
-                    dwarf,
-                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
-                    )),
-                Delay(
-                    Action(new Idle()),
-                    2)
-                );
+        //    Serializer(
+        //        Action(new PatrolRectangularArea(
+        //            _scene,
+        //            dwarf,
+        //            campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+        //            campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+        //            )),
+        //        Delay(
+        //            Action(new Idle()),
+        //            2)
+        //        );
 
-        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
+        //var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        btrees.Add(dwarfTree);
+        //btrees.Add(dwarfTree);
 
         //Druid behavior tree
         //Roam around randomly in a part of the map
@@ -216,29 +216,29 @@ internal class TestGameMSN : IGame
         // Attack when standing beside creature
         // When no creatures within range, go back to roaming
 
-        var druidNode =
+        //var druidNode =
 
-            Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(_scene, druid))
-                ),
-                Serializer(
-                    Action(new TargetCreatureInRange(_scene, druid)),
-                    Action(new MoveToTargetCreature(_scene, druid)),
-                    Action(new AttackTarget(_scene, druid))
-                ),
-                Serializer(
-                    Action(new SearchForItemsInRange(_scene, druid)),
-                    Action(new MoveToTargetItem(_scene, druid)),
-                    Action(new PickUpItem(_scene, druid)),
-                    Action(new AutoEquip(_scene, druid))
-                ),
-                Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
-            );
+        //    Selector(
+        //        AlwaysReturnFailure(
+        //            Action(new InspectCreaturesInRange(_scene, druid))
+        //        ),
+        //        Serializer(
+        //            Action(new TargetCreatureInRange(_scene, druid)),
+        //            Action(new MoveToTargetCreature(_scene, druid)),
+        //            Action(new AttackTarget(_scene, druid))
+        //        ),
+        //        Serializer(
+        //            Action(new SearchForItemsInRange(_scene, druid)),
+        //            Action(new MoveToTargetItem(_scene, druid)),
+        //            Action(new PickUpItem(_scene, druid)),
+        //            Action(new AutoEquip(_scene, druid))
+        //        ),
+        //        Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
+        //    );
 
-        var druidTree = BehaviorTree(druid, druidNode);
+        //var druidTree = BehaviorTree(druid, druidNode);
 
-        btrees.Add(druidTree);
+        //btrees.Add(druidTree);
 
         //
         var guard_tl_Node =
@@ -254,7 +254,8 @@ internal class TestGameMSN : IGame
                         Action(new AttackTarget(_scene, guard_tl)),
                         Action(new AttackTarget(_scene, guard_tl)),
                         Action(new BlockAttack(_scene, guard_tl))
-                    )),
+                    )
+                ),
                 Serializer(
                     Action(new SearchForItemsInRange(_scene, guard_tl)),
                     Action(new MoveToTargetItem(_scene, guard_tl)),
@@ -274,37 +275,38 @@ internal class TestGameMSN : IGame
         btrees.Add(guard_tl_Tree);
 
         //
-        var guard_br_Node =
+        //var guard_br_Node =
 
-            Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(_scene, guard_br))
-                ),
-                Serializer(
-                    Action(new TargetCreatureInRange(_scene, guard_br)),
-                    Action(new MoveToTargetCreature(_scene, guard_br)),
-                    SerializerTurnBased(
-                        Action(new AttackTarget(_scene, guard_br)),
-                        Action(new AttackTarget(_scene, guard_br)),
-                        Action(new BlockAttack(_scene, guard_br))
-                    )),
-                Serializer(
-                    Action(new SearchForItemsInRange(_scene, guard_br)),
-                    Action(new MoveToTargetItem(_scene, guard_br)),
-                    Action(new PickUpItem(_scene, guard_br)),
-                    Action(new AutoEquip(_scene, guard_br))
-                ),
-                Serializer(
-                    Action(new MoveToPosition(_scene, guard_br, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_br, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_br, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(_scene, guard_br, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE))
-                )
-            );
+        //    Selector(
+        //        AlwaysReturnFailure(
+        //            Action(new InspectCreaturesInRange(_scene, guard_br))
+        //        ),
+        //        Serializer(
+        //            Action(new TargetCreatureInRange(_scene, guard_br)),
+        //            Action(new MoveToTargetCreature(_scene, guard_br)),
+        //            SerializerTurnBased(
+        //                Action(new AttackTarget(_scene, guard_br)),
+        //                Action(new AttackTarget(_scene, guard_br)),
+        //                Action(new BlockAttack(_scene, guard_br))
+        //            )
+        //        ),
+        //        Serializer(
+        //            Action(new SearchForItemsInRange(_scene, guard_br)),
+        //            Action(new MoveToTargetItem(_scene, guard_br)),
+        //            Action(new PickUpItem(_scene, guard_br)),
+        //            Action(new AutoEquip(_scene, guard_br))
+        //        ),
+        //        Serializer(
+        //            Action(new MoveToPosition(_scene, guard_br, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new MoveToPosition(_scene, guard_br, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new MoveToPosition(_scene, guard_br, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+        //            Action(new MoveToPosition(_scene, guard_br, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE))
+        //        )
+        //    );
 
-        var guard_br_Tree = BehaviorTree(guard_br, guard_br_Node);
+        //var guard_br_Tree = BehaviorTree(guard_br, guard_br_Node);
 
-        btrees.Add(guard_br_Tree);
+        //btrees.Add(guard_br_Tree);
 
         // Key bindings
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_UP,    KeyModifier = KeyModifier.KeyPressed }, InputOptions.UpAction);
@@ -316,8 +318,8 @@ internal class TestGameMSN : IGame
        
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I,     KeyModifier = KeyModifier.KeyDown },    InputOptions.PickUpItemIndex);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyPressed },    InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I,     KeyModifier = KeyModifier.KeyDown },    InputOptions.PickUpItemIndex); // <-- Notice the KeyDown modifier
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemDropIndex);    
         
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);

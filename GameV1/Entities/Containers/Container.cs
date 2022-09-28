@@ -67,7 +67,7 @@ namespace GameV1.Entities.Containers
 
             if (result == true)
             {
-                ConsolePanel.Add($"{item.Name} added to {slot.Name}");
+                Console.WriteLine($"{item.Name} added to {slot.Name}");
             }
             return result;
         }
@@ -88,7 +88,7 @@ namespace GameV1.Entities.Containers
         {
             var item = slot.Remove();
 
-            ConsolePanel.Add($"{item.Name} removed from {slot.Name}");
+            Console.WriteLine($"{item.Name} removed from {slot.Name}");
 
             return item;
         }

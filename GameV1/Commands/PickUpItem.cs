@@ -19,9 +19,14 @@ namespace GameV1.Commands
             Scene = scene;
             Creature = creature;
         }
-
+        
         public override NodeStates Execute()
         {
+            //if (Creature.Inventory.Inventory.HasEmptySlots == false)
+            //{
+            //    return NodeStates.Success;
+            //}
+
             var itemLayer = Scene.GetLayer((int)EntityLayer.Items);
 
             IItem? itemAtPosition = (IItem?)Scene.GetEntityAtPosition(itemLayer.ActiveEntities, Creature.Position);
@@ -46,9 +51,12 @@ namespace GameV1.Commands
                     // Transfer container content to Creature inventory
                     containerAtPosition.TransferContainerContent(Creature.Inventory.Inventory);
 
-                    ConsolePanel.Add($"{Creature.Name} picked up content of {containerAtPosition.Name}");
-                    ConsolePanel.Add(Creature.Inventory.ToString());
-                    ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                    //Console.WriteLine($"{Creature.Name} picked up content of {containerAtPosition.Name}");
+                    //Console.WriteLine(Creature.Inventory.ToString());
+                    //Console.WriteLine(Creature.Inventory.Inventory.ToString());
+                    Console.WriteLine($"{Creature.Name} picked up content of {containerAtPosition.Name}");
+                    Console.WriteLine(Creature.Inventory.ToString());
+                    Console.WriteLine(Creature.Inventory.Inventory.ToString());
 
                     // Remove container from scene if temporary and empty
                     if (containerAtPosition.IsEmpty == true && containerAtPosition.Type == ContainerType.PileOfItems)
@@ -67,9 +75,12 @@ namespace GameV1.Commands
                 if (result == false) 
                 {
 
-                    ConsolePanel.Add($"{Creature.Name} failed to pick up {itemAtPosition.Name}");
-                    ConsolePanel.Add(Creature.Inventory.ToString());
-                    ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                    //Console.WriteLine($"{Creature.Name} failed to pick up {itemAtPosition.Name}");
+                    //Console.WriteLine(Creature.Inventory.ToString());
+                    //Console.WriteLine(Creature.Inventory.Inventory.ToString());
+                    Console.WriteLine($"{Creature.Name} failed to pick up {itemAtPosition.Name}");
+                    Console.WriteLine(Creature.Inventory.ToString());
+                    Console.WriteLine(Creature.Inventory.Inventory.ToString());
 
                     return NodeStates.Failure; 
                 }
@@ -78,9 +89,12 @@ namespace GameV1.Commands
                     // Remove item from ItemLayer
                     itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
 
-                    ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
-                    ConsolePanel.Add(Creature.Inventory.ToString());
-                    ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                    //Console.WriteLine($"{Creature.Name} picked up {itemAtPosition.Name}");
+                    //Console.WriteLine(Creature.Inventory.ToString());
+                    //Console.WriteLine(Creature.Inventory.Inventory.ToString());
+                    Console.WriteLine($"{Creature.Name} picked up {itemAtPosition.Name}");
+                    Console.WriteLine(Creature.Inventory.ToString());
+                    Console.WriteLine(Creature.Inventory.Inventory.ToString());
 
                     return NodeStates.Success;
                 }

@@ -28,7 +28,7 @@ namespace MooseEngine.BehaviorTree.Composites
             if (Children == null || Children.Count == 0)
             {
                 State = NodeStates.Failure;
-                Console.WriteLine($"SerializerTurnBased returning {State} ({m_currentNode})");
+                //Console.WriteLine($"SerializerTurnBased returning {State} ({m_currentNode})");
                 return State;
             }
 
@@ -58,7 +58,7 @@ namespace MooseEngine.BehaviorTree.Composites
                 State = NodeStates.Success;
             }
 
-            Console.WriteLine($"SerializerTurnBased returning {State} ({m_currentNode})");
+            //Console.WriteLine($"SerializerTurnBased returning {State} ({m_currentNode})");
             return State;
         }
 

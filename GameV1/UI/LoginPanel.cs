@@ -85,16 +85,16 @@ internal class LoginPanel
         {
             if (string.IsNullOrWhiteSpace(_username))
             {
-                //ConsolePanel.Add($"Username is empty! Please enter a username.");
+                //Console.WriteLine($"Username is empty! Please enter a username.");
             }
             if (string.IsNullOrWhiteSpace(_password))
             {
-                //ConsolePanel.Add($"Password is empty! Please enter a password.");
+                //Console.WriteLine($"Password is empty! Please enter a password.");
             }
 
             if (!string.IsNullOrWhiteSpace(_username) && !string.IsNullOrWhiteSpace(_password))
             {
-                //ConsolePanel.Add($"{_username}:{_password} logging in...");
+                //Console.WriteLine($"{_username}:{_password} logging in...");
             }
 
             OnLoginButtonPressed?.Invoke();

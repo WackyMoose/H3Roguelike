@@ -17,7 +17,7 @@ namespace MooseEngine.BehaviorTree.Composites
             {
                 foreach (INode node in Children)
                 {
-                    Console.WriteLine("Sequence evaluating...");
+                    //Console.WriteLine("Sequence evaluating...");
 
                     switch (node.Evaluate())
                     {

@@ -151,29 +151,6 @@ public class Scene : Disposeable, IScene
         }
     }
 
-    //public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)
-    //{
-    //    Vector2 closestValidPosition = Vector2.Zero;
-    //    float tempDist = Vector2.DistanceSquared(closestValidPosition, targetPosition);
-
-    //    foreach (var pos in entities.Keys)
-    //    {
-    //        var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
-
-    //        if (distanceToTarget < tempDist)
-    //        {
-    //            tempDist = distanceToTarget;
-    //            closestValidPosition = pos;
-    //        }
-
-    //        //Math.Abs(targetPosition.X - pos.X) < Math.Abs(closestValidPosition.X - pos.X) &&
-    //        //Math.Abs(targetPosition.Y - pos.Y) < Math.Abs(closestValidPosition.Y - pos.Y))
-
-    //    }
-
-    //    return closestValidPosition;
-    //}
-
     public IDictionary<Vector2, IEntity>? GetEntitiesWithinCircle(IDictionary<Vector2, IEntity> entities, Coords2D position, int distance)
     {
         int distanceSquared = distance * distance;
