@@ -1,6 +1,6 @@
 ﻿namespace MooseEngine.Core
 {
-    public enum InputOptions : int
+    public enum InputOptions : uint
     {
         Zero,
         One,
@@ -16,14 +16,17 @@
         DownAction,
         LeftAction,
         RightAction,
-        ItemPickUp,
-        ItemDrop,
+        PickUpItem,
+        PickUpItemIndex,
+        ItemDropIndex,
+        InpectInventory,
         Interact,
         Tab,
         Idle,
         QuitToMenu,
         QuitGame,
         RestartGame,
-        AutoEquip
+        AutoEquip,
+        All
     }
 }

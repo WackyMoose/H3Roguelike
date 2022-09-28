@@ -24,6 +24,30 @@ namespace GameV1.Entities.Creatures
         public IBehaviorTree? BehaviorTree { get; set; }
         public bool IsDead { get { return Stats.Health <= 0; } }
 
+        public Creature(
+            ICreatureSpecies species, 
+            IEnumerable<ICreatureSkill> skills, 
+            ICreatureStats stats, 
+            ICreatureInventory inventory, 
+            IEnumerable<ICreatureSpecies> enemySpecies, 
+            IEnumerable<ICreature> enemyCreatures, 
+            IDictionary<Vector2, ICreature> creaturesWithinPerceptionRange, 
+            ICreature? targetCreature, 
+            IItem? targetItem, 
+            IBehaviorTree? behaviorTree)
+        {
+            Species = species;
+            Skills = skills;
+            Stats = stats;
+            Inventory = inventory;
+            EnemySpecies = enemySpecies;
+            EnemyCreatures = enemyCreatures;
+            CreaturesWithinPerceptionRange = creaturesWithinPerceptionRange;
+            TargetCreature = targetCreature;
+            TargetItem = targetItem;
+            BehaviorTree = behaviorTree;
+        }
+
         public Creature()
         {
             Species = new CreatureSpecies();
@@ -40,7 +64,7 @@ namespace GameV1.Entities.Creatures
             Species = new CreatureSpecies();
             Skills = new List<ICreatureSkill>();
             Stats = new CreatureStats();
-            Inventory = new CreatureInventory(new MeleeWeapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(ContainerType.Inventory, 8, "Inventory"));
+            Inventory = new CreatureInventory(new MeleeWeapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(ContainerType.Inventory, 10, "Inventory"));
             EnemySpecies = new List<ICreatureSpecies>();
             EnemyCreatures = new List<ICreature>();
             CreaturesWithinPerceptionRange = new Dictionary<Vector2, ICreature>();
@@ -53,7 +77,7 @@ namespace GameV1.Entities.Creatures
             Species = new CreatureSpecies();
             Skills = new List<ICreatureSkill>();
             Stats = new CreatureStats();
-            Inventory = new CreatureInventory(new MeleeWeapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(ContainerType.Inventory, 8, "Inventory"));
+            Inventory = new CreatureInventory(new MeleeWeapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(ContainerType.Inventory, 10, "Inventory"));
             EnemySpecies = new List<ICreatureSpecies>();
             EnemyCreatures = new List<ICreature>();
             CreaturesWithinPerceptionRange = new Dictionary<Vector2, ICreature>();

@@ -94,21 +94,23 @@ internal class TestGameMSN : IGame
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new HeadGear(100, 10, "Helmet", new Coords2D(6, 4), Color.White));
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new FootWear(100, 10, "Boots", new Coords2D(6, 4), Color.White));
 
-        creatureLayer?.AddEntity(player);
+        //creatureLayer?.AddEntity(player);
 
 
 
         // Spawn containers
-        Container weaponChest = new Container(ContainerType.Stationary, 8, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
+        Container weaponChest = new Container(ContainerType.Stationary, 10, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(weaponChest);
+        //itemLayer?.AddEntity(weaponChest);
+        _scene.TryPlaceEntity((int)EntityLayer.Items, weaponChest, weaponChest.Position);
 
-        Container loot = new Container(ContainerType.PileOfItems, 8, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
+        Container loot = new Container(ContainerType.PileOfItems, 10, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
         loot.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
         loot.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
         loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
-        itemLayer?.AddEntity(loot);
+        //itemLayer?.AddEntity(loot);
+        _scene.TryPlaceEntity((int)EntityLayer.Items, loot, loot.Position);
 
         var orc = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
         //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
@@ -268,24 +270,28 @@ internal class TestGameMSN : IGame
         btrees.Add(guardTree);
 
         // Key bindings
-        InputHandler.Add( new KeyStroke() { Keycode = Keycode.KEY_UP, KeyModifier = KeyModifier.KeyPressed }, InputOptions.UpAction);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_DOWN, KeyModifier = KeyModifier.KeyPressed }, InputOptions.DownAction);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_LEFT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.LeftAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_UP,    KeyModifier = KeyModifier.KeyPressed }, InputOptions.UpAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_DOWN,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.DownAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_LEFT,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.LeftAction);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_RIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.RightAction);
+        
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SPACE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Idle);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I, KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemPickUp);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyDown }, InputOptions.ItemDrop); // <-- Notice the KeyDown modifier
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_TWO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Two);
+       
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I,     KeyModifier = KeyModifier.KeyDown },    InputOptions.PickUpItemIndex);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyPressed },    InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
+        
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_TWO,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.Two);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_THREE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Three);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FOUR, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Four);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FIVE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Five);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SIX, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Six);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FOUR,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Four);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FIVE,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Five);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SIX,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.Six);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SEVEN, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Seven);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_EIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Eight);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_NINE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Nine);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A, KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_NINE,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Nine);
 
     }
 

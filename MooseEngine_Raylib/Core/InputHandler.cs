@@ -58,14 +58,7 @@
                             input.Add(keyInput.Value);
                         }
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
-
-                //if (Input.IsKeyPressed(keyInput.Key.Keycode))
-                //{
-                //    input.Add(keyInput.Value);
-                //}
             }
 
             if (input.Count > 0)
