@@ -118,32 +118,37 @@ public class Scene : Disposeable, IScene
 
     public Vector2 GetClosestValidPosition(int entityLayerNum, Vector2 targetPosition, params int[] collisionLayerNums)
     {
-        // TODO: Fix this!
-        
-       //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
+        bool searching = true;
+        int searchDist = 0;
 
-        Vector2 globalClosestValidPosition = Vector2.Zero;
-        float tempDist = (float)1e12; // Vector2.DistanceSquared(closestValidPosition, targetPosition); // TODO: const largetstInt
-
-        foreach (var layer in collisionLayerNums)
+        while (true)
         {
-            var entityLayer = GetLayer(entityLayerNum).ActiveEntities;
+            var topLft = new Vector2(-searchDist, -searchDist);
+            var btmRgt = new Vector2(searchDist, searchDist);
 
-            if (entityLayer.ContainsKey(targetPosition) == false) {  }
-
-            foreach (var pos in entityLayer.Keys)
+            for (int x = (int)topLft.X; x <= btmRgt.X; x++)
             {
-                var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
-
-                if (distanceToTarget < tempDist)
+                for (int y = (int)topLft.Y; y <= btmRgt.Y; y++)
                 {
-                    tempDist = distanceToTarget;
-                    globalClosestValidPosition = pos;
+                    var deltaPosition = new Vector2(x, y) * Constants.DEFAULT_ENTITY_SIZE;
+
+                    var testPosition = targetPosition + deltaPosition;
+
+                    searching = false;
+
+                    foreach (var layer in collisionLayerNums)
+                    {
+                        bool isPositionTaken = GetLayer(layer).ActiveEntities.ContainsKey(testPosition);
+
+                        if (isPositionTaken) { searching = true; break; }
+                    }
+
+                    if (searching == false) { return testPosition; }
                 }
             }
-        }
 
-        return globalClosestValidPosition;
+            searchDist++;
+        }
     }
 
     //public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)

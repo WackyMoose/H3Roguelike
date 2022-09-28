@@ -7,7 +7,9 @@ public static class Randomizer
 
     public static int RandomInt(int minVal, int maxVal)
     {
-        return _generator.Next(minVal, maxVal);
+        
+        
+        return _generator.Next(Math.Min(minVal, maxVal), Math.Max(minVal, maxVal));
     }
 
     public static float RandomFloat(float minVal, float maxVal)

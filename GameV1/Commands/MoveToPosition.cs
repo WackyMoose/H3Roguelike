@@ -23,7 +23,7 @@ namespace GameV1.Commands
             m_position = position;
 
             m_targetEntities = (int)EntityLayer.WalkableTiles; //Scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities;
-            m_currentTargetPosition = Scene.GetClosestValidPosition(m_targetEntities, m_position);
+            m_currentTargetPosition = Scene.GetClosestValidPosition(m_targetEntities, m_position, (int)EntityLayer.NonWalkableTiles);
         }
 
         public override NodeStates Execute()
@@ -36,7 +36,7 @@ namespace GameV1.Commands
 
             var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
 
-            if (path.Length == 0)
+            if (path is null || path.Length == 0)
             {
                 return NodeStates.Success;
             }

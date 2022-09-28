@@ -50,7 +50,7 @@ namespace GameV1.Entities.Factories
             var entityLayer = scene.GetLayer(entityLayerNum);
 
             // Is position available?
-            var validPosition = position; // scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
+            var validPosition = scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
 
             TCreature? newCreature = entityLayer.ActivateOrCreateEntity<TCreature>(validPosition);
 
