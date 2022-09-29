@@ -257,6 +257,13 @@ public class Scene : Disposeable, IScene
 
     protected override void DisposeManagedState()
     {
+        for(int i = 0; i < _entityLayers.Count; i++)
+        {
+            _entityLayers[i].ActiveEntities.Clear();
+            _entityLayers[i].InactiveEntities.Clear();
+            _entityLayers.Remove(i);
+        }
+
         _entityLayers.Clear();
         _entityLayers.GetEnumerator().Dispose();
     }

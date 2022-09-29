@@ -229,11 +229,12 @@ internal class StatsPanel
 
         var listViewPosition = new UIScreenCoords(window.Width - size.X + 10, seperatorPosition.Y + 15);
         var listViewSize = new UIScreenCoords(size.X - 10, 200);
-        _listViewOptions = new ListViewOptions(listViewPosition, listViewSize, false);
-        _listViewOptions.BorderWidth = 0;
-        _listViewOptions.FontSize = 36;
-        _listViewOptions.TextNormalColor = Color.White;
-        _listViewOptions.BackgroundColor = Color.Blank;
+        _selectorListView = new SelectorListView(listViewPosition, listViewSize);
+    }
+
+    public void SetPlayerName(string name)
+    {
+        _panelOptions.Text = name;
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -269,8 +270,8 @@ internal class StatsPanel
             UIRenderer.DrawImage(_equipmentOptions[i]);
             UIRenderer.DrawImage(_equippedItemsOptions[i]);
         }
-        
-        UIRenderer.DrawListViewEx(_listViewOptions, items, ref s_Focus, ref s_ScrollIndex, -1);
+
+        _selectorListView.OnGUI(UIRenderer);
     }
 
     public void UpdateInventory(ICreature player)

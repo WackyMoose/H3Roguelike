@@ -40,3 +40,4 @@ public static class PanelOptionsExtensions
         return rect;
     }
 }
+

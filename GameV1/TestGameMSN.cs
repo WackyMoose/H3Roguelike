@@ -12,6 +12,7 @@ using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
 using GameV1.UI;
+using GameV1.UI.Components;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
@@ -54,13 +55,11 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
-    private LoginPanel _loginPanel;
+    private LoginFormComponent _loginPanel;
     private bool _showDebugPanel = true;
 
     public void Initialize()
     {
-
-
         // Create the scene
         var app = Application.Instance;
         var window = app.Window;
@@ -99,8 +98,6 @@ internal class TestGameMSN : IGame
         player.Inventory.Inventory.AddItemToFirstEmptySlot(new FootWear(100, 10, "Boots", new Coords2D(6, 4), Color.White));
 
         //creatureLayer?.AddEntity(player);
-
-
 
         // Spawn containers
         Container weaponChest = new Container(ContainerType.Stationary, 10, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
@@ -143,7 +140,21 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
-        for (int i = 0; i < 128; i++)
+        #region Too ugly for Michael
+        //for (int i = 0; i < 128; i++)
+        //{
+        //    // Color(128, 128 - 48, 128 - 96, 255)
+        //    var color = new Color(
+        //        160 + Randomizer.RandomInt(-32, 32),
+        //        144 + Randomizer.RandomInt(-32, 32),
+        //        128 + Randomizer.RandomInt(-32, 32), 255);
+        //    var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+        //    light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+        //    //itemLayer?.Add(light);
+        //    _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
+        //}
+
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
         {
             // Color(128, 128 - 48, 128 - 96, 255)
             var color = new Color(
@@ -151,10 +162,11 @@ internal class TestGameMSN : IGame
                 144 + Randomizer.RandomInt(-32, 32),
                 128 + Randomizer.RandomInt(-32, 32), 255);
             var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+            light.Position = WorldGenerator._structurePositions[i] + new Vector2((3 * Constants.DEFAULT_ENTITY_SIZE), (3 * Constants.DEFAULT_ENTITY_SIZE));
             //itemLayer?.Add(light);
             _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
+        #endregion
 
         // Druid chasing player
         var druid = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
