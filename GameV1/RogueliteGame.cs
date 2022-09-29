@@ -319,12 +319,7 @@ internal class RogueliteGame : IGame
             var campDwellingOrcNode =
 
             Serializer(
-                Action(new PatrolRectangularArea(
-                    scene,
-                    campDwellingOrc,
-                    WorldGenerator._structurePositions[i] + new Vector2(-6, -6) * Constants.DEFAULT_ENTITY_SIZE,
-                    WorldGenerator._structurePositions[i] + new Vector2(6, 6) * Constants.DEFAULT_ENTITY_SIZE
-                    )),
+                Action( new PatrolCircularArea(scene, campDwellingOrc, WorldGenerator._structurePositions[i], 8 * Constants.DEFAULT_ENTITY_SIZE)),
                 Delay(
                     Action(new Idle()),
                     2)
