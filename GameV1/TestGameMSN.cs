@@ -140,7 +140,7 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
-        #region Too ugly for Michael
+        #region Too ugly for Michael <-- Så det godt! :-DDD
         //for (int i = 0; i < 128; i++)
         //{
         //    // Color(128, 128 - 48, 128 - 96, 255)
@@ -167,6 +167,13 @@ internal class TestGameMSN : IGame
             _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
         #endregion
+
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
+        {
+            var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", WorldGenerator._structurePositions[i] * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+            
+        }
 
         // Druid chasing player
         var druid = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);

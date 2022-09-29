@@ -306,5 +306,5 @@ internal class StatsPanel
     
     static int s_Focus = 0;
     static int s_ScrollIndex = 0;
-
+    private SelectorListView _selectorListView;
 }

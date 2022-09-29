@@ -92,7 +92,7 @@ namespace GameV1.WorldGeneration
                 {
                     for (int i = 0; i < _structurePositions.Count; i++)
                     {
-                        if (Vector2.Distance(_structurePositions[i], new Vector2(tile.Key.X, tile.Key.Y)) < 700)
+                        if (Vector2.Distance(_structurePositions[i], new Vector2(tile.Key.X, tile.Key.Y)) < 32 * Constants.DEFAULT_ENTITY_SIZE)
                         {
                             canCreate = false;
                         }
