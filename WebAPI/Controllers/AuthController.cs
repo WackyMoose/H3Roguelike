@@ -43,4 +43,32 @@ public class AuthController : ControllerBase
             return BadRequest(ex);
         }
     }
+
+    [HttpPost]
+    [Route("register", Name = nameof(RegisterAsync))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RegisterAsync(RegisterRequest registerRequest)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var registerResponse = await AuthService.RegisterAsync(registerRequest);
+            if (registerResponse == default)
+            {
+                return NotFound();
+            }
+
+            return Ok(registerResponse);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+    }
 }
