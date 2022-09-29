@@ -24,6 +24,7 @@ using MooseEngine.Scenes;
 using MooseEngine.Scenes.Factories;
 using MooseEngine.Utilities;
 using System.Numerics;
+using static GameV1.UI.UIColors;
 using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
 namespace GameV1;
@@ -222,6 +223,8 @@ internal class RogueliteGame : IGame
             }
         }
 
+        _gameUI.StatsPanel.UpdateInventory(_player);
+
         _gameScene.UpdateRuntime(deltaTime);
     }
 
@@ -308,8 +311,27 @@ internal class RogueliteGame : IGame
             scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
 
+        // Add Orcs with behavior to campsites
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
+        {
+            var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+            var campDwellingOrcNode =
+
+            Serializer(
+                Action( new PatrolCircularArea(scene, campDwellingOrc, WorldGenerator._structurePositions[i], 8 * Constants.DEFAULT_ENTITY_SIZE)),
+                Delay(
+                    Action(new Idle()),
+                    2)
+                );
+
+            var campDwellingOrcTree = BehaviorTree(campDwellingOrc, campDwellingOrcNode);
+
+            btrees.Add(campDwellingOrcTree);
+        }
+
         // Druid chasing player
-        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
+        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -317,14 +339,14 @@ internal class RogueliteGame : IGame
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
         dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
 
         // Patrolling guard top-left
-        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
+        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_tl.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -345,23 +367,23 @@ internal class RogueliteGame : IGame
 
 
         // dwarf walk guard Behavior tree
-        var dwarfNode =
+        //var dwarfNode =
 
-            Serializer(
-                Action(new PatrolRectangularArea(
-                    scene,
-                    dwarf,
-                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
-                    )),
-                Delay(
-                    Action(new Idle()),
-                    2)
-                );
+        //    Serializer(
+        //        Action(new PatrolRectangularArea(
+        //            scene,
+        //            dwarf,
+        //            campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+        //            campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+        //            )),
+        //        Delay(
+        //            Action(new Idle()),
+        //            2)
+        //        );
 
-        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
+        //var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        btrees.Add(dwarfTree);
+        //btrees.Add(dwarfTree);
 
         //Druid behavior tree
         //Roam around randomly in a part of the map
@@ -372,9 +394,9 @@ internal class RogueliteGame : IGame
         var druidNode =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(scene, druid))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(scene, druid))
+                //),
                 Serializer(
                     Action(new TargetCreatureInRange(scene, druid)),
                     Action(new MoveToTargetCreature(scene, druid)),
@@ -396,9 +418,9 @@ internal class RogueliteGame : IGame
         var guardNode =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(scene, guard_tl))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(scene, guard_tl))
+                //),
                 Serializer(
                     Action(new TargetCreatureInRange(scene, guard_tl)),
                     Action(new MoveToTargetCreature(scene, guard_tl)),
@@ -416,8 +438,8 @@ internal class RogueliteGame : IGame
                 Serializer(
                     Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
                     Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 58) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 58) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 

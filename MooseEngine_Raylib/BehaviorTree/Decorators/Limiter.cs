@@ -23,7 +23,7 @@ namespace MooseEngine.BehaviorTree.Decorators
         {
             if (m_currentRepeats < m_numRepeats || m_numRepeats < 0)
             {
-                Console.WriteLine($"Repeater evaluating... {m_currentRepeats}");
+               // Console.WriteLine($"Repeater evaluating... {m_currentRepeats}");
                 Child?.Evaluate();
                 m_currentRepeats++;
 

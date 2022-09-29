@@ -25,7 +25,7 @@ namespace MooseEngine.BehaviorTree.Decorators
             if (m_currentTurn < m_numTurns)
             {
                 //Console.WriteLine($"Delay evaluating... {m_currentTurns}");
-                Console.WriteLine(this.ToString());
+               // Console.WriteLine(this.ToString());
 
                 m_currentTurn++;
 

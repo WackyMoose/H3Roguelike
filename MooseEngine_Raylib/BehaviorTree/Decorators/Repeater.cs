@@ -33,25 +33,25 @@ namespace MooseEngine.BehaviorTree.Decorators
                 {
                     m_currentRepeats++;
                     State = NodeStates.Running;
-                    Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
+                   // Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
                     return State;
                 }
                 else if (currentState == NodeStates.Running)
                 {
                     State = NodeStates.Running;
-                    Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
+                   // Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
                     return State;
                 }
                 else if (currentState == NodeStates.Failure)
                 {
                     State = NodeStates.Failure;
-                    Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
+                   // Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
                     return State;
                 }
             }
 
             State = NodeStates.Success;
-            Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
+           // Console.WriteLine($"Repeater returns {State}, Repeats {m_currentRepeats}");
             return State;
         }
 

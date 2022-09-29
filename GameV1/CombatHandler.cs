@@ -26,18 +26,18 @@ namespace GameV1
             defender.TakeDamage((int)(damage * damageModifier));
 
             // Print attack message
-            ConsolePanel.Add($"{attacker.Name} attacks {defender.Name} with {attackWeapon.Name} for {damage} damage!");
+           // Console.WriteLine($"{attacker.Name} attacks {defender.Name} with {attackWeapon.Name} for {damage} damage!");
 
             // Print armor damage reduction message
             //if (defender.Inventory.BodyArmor.Item.DamageReduction > 0)
             //{
-            //    ConsolePanel.Add($"{defender.Name}'s {defender.Inventory.BodyArmor.Item.Name} reduces damage by {defender.Inventory.BodyArmor.Item.DamageReduction}!");
+            //   // Console.WriteLine($"{defender.Name}'s {defender.Inventory.BodyArmor.Item.Name} reduces damage by {defender.Inventory.BodyArmor.Item.DamageReduction}!");
             //}
 
             if (defender.IsDead)
             {
                 KillCreature(scene, defender);
-                ConsolePanel.Add($"{defender.Name} has died!");
+               // Console.WriteLine($"{defender.Name} has died!");
             }
         }
 
@@ -70,6 +70,13 @@ namespace GameV1
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.BodyArmor.Item);
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.HeadGear.Item);
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.FootWear.Item);
+
+            if(lootableCorpse.IsEmpty == true) 
+            {
+                creatureLayer.DeactivateEntity(creature);
+                
+                return; 
+            }
 
             IEntity? entityAtPosition = (IItem?)scene.GetEntityAtPosition(itemLayer.ActiveEntities, creature.Position);
 

@@ -53,7 +53,7 @@ namespace GameV1.Entities.Creatures
             Species = new CreatureSpecies();
             Skills = new List<ICreatureSkill>();
             Stats = new CreatureStats();
-            Inventory = new CreatureInventory();
+            Inventory = new CreatureInventory(new MeleeWeapon(0, 0, "Fist", new Coords2D(), Color.White), new Container(ContainerType.Inventory, 10, "Inventory"));
             EnemySpecies = new List<ICreatureSpecies>();
             EnemyCreatures = new List<ICreature>();
             CreaturesWithinPerceptionRange = new Dictionary<Vector2, ICreature>();
