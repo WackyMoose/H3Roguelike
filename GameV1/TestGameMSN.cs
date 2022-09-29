@@ -12,6 +12,7 @@ using GameV1.Interfaces.Creatures;
 using GameV1.Interfaces.Items;
 using GameV1.Interfaces.Weapons;
 using GameV1.UI;
+using GameV1.UI.Components;
 using GameV1.WorldGeneration;
 using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
@@ -53,7 +54,7 @@ internal class TestGameMSN : IGame
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
     private DebugPanel _debugPanel;
-    private LoginPanel _loginPanel;
+    private LoginFormComponent _loginPanel;
     private bool _showDebugPanel = true;
 
     public void Initialize()
