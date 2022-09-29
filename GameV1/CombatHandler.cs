@@ -71,6 +71,13 @@ namespace GameV1
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.HeadGear.Item);
             lootableCorpse.AddItemToFirstEmptySlot(creature.Inventory.FootWear.Item);
 
+            if(lootableCorpse.IsEmpty == true) 
+            {
+                creatureLayer.DeactivateEntity(creature);
+                
+                return; 
+            }
+
             IEntity? entityAtPosition = (IItem?)scene.GetEntityAtPosition(itemLayer.ActiveEntities, creature.Position);
 
             if (entityAtPosition is null)

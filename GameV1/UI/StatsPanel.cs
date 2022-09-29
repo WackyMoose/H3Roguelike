@@ -3,6 +3,9 @@ using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
+using MooseEngine.Utilities;
+using System.Numerics;
+//using System.Drawing;
 
 namespace GameV1.UI;
 
@@ -84,6 +87,7 @@ internal class StatsPanel
      */
 
     private ICreature _player;
+    private Raylib_cs.Texture2D _spriteSheet;
 
     private PanelOptions _panelOptions;
     private ImageOptions[] _seperatorOptions = new ImageOptions[3];
@@ -103,6 +107,9 @@ internal class StatsPanel
     // Inventory 
     private ImageOptions[] _inventoryOptions = new ImageOptions[INVENTORY_SIZE];
     private ImageOptions[] _equipmentOptions = new ImageOptions[EQUIPMENT_SIZE];
+
+    private SubImageOptions[] _inventoryItemsOptions = new SubImageOptions[INVENTORY_SIZE];
+    private SubImageOptions[] _equippedItemsOptions = new SubImageOptions[EQUIPMENT_SIZE];
 
     private ListViewOptions _listViewOptions;
     static string[] items =
@@ -194,6 +201,9 @@ internal class StatsPanel
             _inventoryOptions[i] = new ImageOptions(inventorySlotPosition, inventorySlotSize, inventorySlotTexture);
         }
 
+        // Spritesheet, for rendering inventory content
+        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+
         seperatorPosition.Y += 150;
         _seperatorOptions[1] = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
 
@@ -204,6 +214,8 @@ internal class StatsPanel
             equipmentSlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
         }
+
+        UpdateInventory(window, _player, position, size);
 
         seperatorPosition.Y += 90;
         _seperatorOptions[2] = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
@@ -241,15 +253,42 @@ internal class StatsPanel
         for (int i = 0; i < INVENTORY_SIZE; i++)
         {
             UIRenderer.DrawImage(_inventoryOptions[i]);
+           UIRenderer.DrawImage(_inventoryItemsOptions[i]);
         }
 
         // Equipment
         for (int i = 0; i < EQUIPMENT_SIZE; i++)
         {
             UIRenderer.DrawImage(_equipmentOptions[i]);
+            //UIRenderer.DrawImage(_equippedItemsOptions[i]);
         }
         
         UIRenderer.DrawListViewEx(_listViewOptions, items, ref s_Focus, ref s_ScrollIndex, -1);
+    }
+
+    public void UpdateInventory(IWindow window, ICreature player, UIScreenCoords position, UIScreenCoords size)
+    {
+        var inventorySlotSize = new UIScreenCoords(32, 32);
+        var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
+        const int padding = 10;
+
+        for (int i = 0; i < player.Inventory.Inventory.Slots.Count(); i++)
+        {
+            var inventorySlotPosition = startingPosition;
+            inventorySlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
+            inventorySlotPosition.Y = (i > 4) ? startingPosition.Y + inventorySlotSize.Y + padding : startingPosition.Y;
+
+            Coords2D? inventoryItem = player.Inventory.Inventory.Slots.ElementAt(i).Item?.SpriteCoords;
+
+            if(inventoryItem is not null)
+            {
+                _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventorySlotSize, (Coords2D)inventoryItem, 8, _spriteSheet);
+            }
+            else
+            {
+                _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventorySlotSize, new Coords2D(0, 0), 8, _spriteSheet);
+            }
+        }
     }
 
     static int s_Focus = 0;

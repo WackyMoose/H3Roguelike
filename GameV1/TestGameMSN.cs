@@ -17,6 +17,7 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
+using MooseEngine.Graphics.UI;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
@@ -122,7 +123,7 @@ internal class TestGameMSN : IGame
         //orc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         //_scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
 
-        Player = orc;
+        Player = player; //orc;
 
         Selector.AddEntities(Player.CreaturesWithinPerceptionRange);
 
@@ -244,19 +245,20 @@ internal class TestGameMSN : IGame
         var guard_tl_Node =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(_scene, guard_tl))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(_scene, guard_tl))
+                //),
+                //Serializer(
+                //    Action(new TargetCreatureInRange(_scene, guard_tl)),
+                //    Action(new MoveToTargetCreature(_scene, guard_tl)),
+                //    SerializerTurnBased(
+                //        Action(new AttackTarget(_scene, guard_tl)),
+                //        Action(new AttackTarget(_scene, guard_tl)),
+                //        Action(new BlockAttack(_scene, guard_tl))
+                //    )
+                //),
                 Serializer(
-                    Action(new TargetCreatureInRange(_scene, guard_tl)),
-                    Action(new MoveToTargetCreature(_scene, guard_tl)),
-                    SerializerTurnBased(
-                        Action(new AttackTarget(_scene, guard_tl)),
-                        Action(new AttackTarget(_scene, guard_tl)),
-                        Action(new BlockAttack(_scene, guard_tl))
-                    )
-                ),
-                Serializer(
+                    Action(new IsInventoryNotFull(_scene, guard_tl)),
                     Action(new SearchForItemsInRange(_scene, guard_tl)),
                     Action(new MoveToTargetItem(_scene, guard_tl)),
                     Action(new PickUpItem(_scene, guard_tl)),
@@ -319,7 +321,7 @@ internal class TestGameMSN : IGame
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I,     KeyModifier = KeyModifier.KeyDown },    InputOptions.PickUpItemIndex); // <-- Notice the KeyDown modifier
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemDropIndex);    
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyDown },    InputOptions.ItemDropIndex);    
         
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
@@ -401,6 +403,14 @@ internal class TestGameMSN : IGame
         {
             _showDebugPanel = !_showDebugPanel;
         }
+
+        var window = Application.Instance.Window;
+
+        var size = new UIScreenCoords(StatsPanel.WIDTH, window.Height);
+        var position = new UIScreenCoords(window.Width - size.X, 0);
+        var startPosition = position;
+
+        _statsPanel.UpdateInventory(window, Player, new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215), size);
 
         _scene?.UpdateRuntime(deltaTime);
     }

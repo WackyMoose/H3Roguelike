@@ -49,7 +49,7 @@ namespace GameV1.Commands.Factory
                     {
                         Tile tile = (Tile)TilesAtTargetPosition;
 
-                        if (!tile.IsWalkable)
+                        if (tile.IsWalkable == false)
                         {
                             return new Idle();
                         }
