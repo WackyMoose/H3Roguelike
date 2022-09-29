@@ -457,7 +457,7 @@ internal class RogueliteGame : IGame
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A, KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E, KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I, KeyModifier = KeyModifier.KeyDown }, InputOptions.PickUpItemIndex);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyDown }, InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
 
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
