@@ -125,7 +125,6 @@ namespace MooseEngine.Pathfinding
                     {
                         currentNode = node.Value;
                     }
-
                 }
 
                 _closedSet.Add(currentNode.Position, currentNode);

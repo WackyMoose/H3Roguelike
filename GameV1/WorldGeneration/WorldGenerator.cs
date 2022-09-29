@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Entities.Items;
 using GameV1.SpriteLibraries;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
@@ -86,7 +87,7 @@ namespace GameV1.WorldGeneration
                 }
 
                 bool canCreate = true;
-                
+
                 if (tile.Value > 0.1 && tile.Value < 0.5)
                 {
                     for (int i = 0; i < _structurePositions.Count; i++)
@@ -124,6 +125,9 @@ namespace GameV1.WorldGeneration
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
                 }
             }
+
+
+
 
             int index = 0;
             for (int e = 1; e < _structurePositions.Count; e++)
