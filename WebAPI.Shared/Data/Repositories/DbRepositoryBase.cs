@@ -10,7 +10,7 @@ public abstract class DbRepositoryBase : RepositoryBase<IDbProvider>
         : base(provider)
     {
     }
-
+    
     protected async Task<int> ExecuteAsync(string sql, object? param = null, int? commandTimeout = null, CommandType? commandType = null)
     {
         return await Provider.ExecuteAsync(sql, param, commandTimeout, commandType);

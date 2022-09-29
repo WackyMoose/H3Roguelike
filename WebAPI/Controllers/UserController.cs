@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     public UserController(IUserService userService)
-	{
+    {
         UserService = userService;
     }
 
@@ -23,9 +23,20 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUsersAsync()
     {
-        var users = await UserService.GetAsync();
-        
-        return Ok(users);
+        try
+        {
+            var users = await UserService.GetAsync();
+            if (users == default)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpGet]
@@ -35,9 +46,20 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUserByIdAsync(int id)
     {
-        var user = await UserService.GetByIdAsync(id);
+        try
+        {
+            var user = await UserService.GetByIdAsync(id);
+            if (user == default)
+            {
+                return NotFound();
+            }
 
-        return Ok(user);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpPost]
@@ -48,20 +70,20 @@ public class UserController : ControllerBase
     {
         try
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var created = await UserService.AddAsync(user);
-            if(created)
+            if (created)
             {
                 return CreatedAtRoute(nameof(GetUserByIdAsync), new { id = user.Id }, user);
             }
 
             return BadRequest();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return BadRequest(ex);
         }

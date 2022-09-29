@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebAPI.Extensions.Autofac\WebAPI.Extensions.Autofac.csproj" />
     <ProjectReference Include="..\WebAPI.H3Roguelite.Data\WebAPI.H3Roguelite.Data.csproj" />
     <ProjectReference Include="..\WebAPI.Shared\WebAPI.Shared.csproj" />
