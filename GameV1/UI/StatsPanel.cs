@@ -218,6 +218,8 @@ internal class StatsPanel
             var equipmentSlotPosition = startingPosition;
             equipmentSlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
+
+            _equippedItemsOptions[i] = new SubImageOptions(equipmentSlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
         }
         
         UpdateInventory(_player);
@@ -265,7 +267,7 @@ internal class StatsPanel
         for (int i = 0; i < EQUIPMENT_SIZE; i++)
         {
             UIRenderer.DrawImage(_equipmentOptions[i]);
-            //UIRenderer.DrawImage(_equippedItemsOptions[i]);
+            UIRenderer.DrawImage(_equippedItemsOptions[i]);
         }
         
         UIRenderer.DrawListViewEx(_listViewOptions, items, ref s_Focus, ref s_ScrollIndex, -1);
@@ -286,8 +288,21 @@ internal class StatsPanel
                 _inventoryItemsOptions[i].Coords = new Coords2D(0, 0);
             }
         }
-    }
+        
+        Coords2D? headGearCoords = player.Inventory.HeadGear.Item?.SpriteCoords;
+        Coords2D? bodyArmorCoords = player.Inventory.BodyArmor.Item?.SpriteCoords;
+        Coords2D? primaryWeaponCoords = player.Inventory.PrimaryWeapon.Item?.SpriteCoords;
+        Coords2D? secondaryWeaponCoords = player.Inventory.SecondaryWeapon.Item?.SpriteCoords;
+        Coords2D? BodyArmorCoords = player.Inventory.BodyArmor.Item?.SpriteCoords;
 
+        _equippedItemsOptions[0].Coords = (Coords2D)(headGearCoords is not null ? headGearCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[1].Coords = (Coords2D)(bodyArmorCoords is not null ? bodyArmorCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[2].Coords = (Coords2D)(primaryWeaponCoords is not null ? primaryWeaponCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[3].Coords = (Coords2D)(secondaryWeaponCoords is not null ? secondaryWeaponCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[4].Coords = (Coords2D)(BodyArmorCoords is not null ? BodyArmorCoords : new Coords2D(0, 0));
+
+    }
+    
     static int s_Focus = 0;
     static int s_ScrollIndex = 0;
 
