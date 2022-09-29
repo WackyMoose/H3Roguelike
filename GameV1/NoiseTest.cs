@@ -130,7 +130,7 @@ internal class NoiseTest : IGame
 
             _pathLayer.RemoveAll();
 
-            var path = _scene.Pathfinder.GetPath(player.Position, ork.Position, _scene.PathMap);
+            var path = _scene.Pathfinder.GetPath(player.Position, ork.Position, _scene.PathMap, _scene.GetLayer((int)EntityLayer.Creatures));
 
             foreach (var node in path)
             {

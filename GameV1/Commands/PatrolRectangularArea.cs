@@ -39,7 +39,7 @@ namespace GameV1.Commands
                 return NodeStates.Failure;
             }
 
-            var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap);
+            var path = Scene.Pathfinder.GetPath(Entity.Position, m_currentTargetPosition, Scene.PathMap, Scene.GetLayer((int)EntityLayer.Creatures));
 
             if (path.Length == 0)
             {

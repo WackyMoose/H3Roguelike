@@ -31,7 +31,7 @@ namespace GameV1.Commands
             }
 
             // TODO: path zero / null check
-            var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetItem.Position, Scene.PathMap);
+            var path = Scene.Pathfinder.GetPath(Creature.Position, Creature.TargetItem.Position, Scene.PathMap, Scene.GetLayer((int)EntityLayer.Creatures));
 
             if (path.Length > 0)
             {

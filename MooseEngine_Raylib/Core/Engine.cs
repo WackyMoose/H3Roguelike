@@ -14,7 +14,7 @@ public static class Engine
     {
         ClearColor = new Color(0, 0, 0, 255), // Color(34, 35, 35, 255)
         TargetFPS = 600,
-        SpritesheetPath = @"..\..\..\Resources\Textures\Tilemap_Modified.png",
+        SpritesheetPath = @"..\..\..\Resources\Textures\Tilemap_Modified_MSN.png",
         SpriteSize = 8,
         Padding = 1,
         Offset = 0
