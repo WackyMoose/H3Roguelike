@@ -86,9 +86,11 @@ namespace GameV1.Commands.Factory
 
                     for (int i = 0; i < 10; i++)
                     {
-                        if (inputs.Contains((InputOptions) i + 1))
+                        var slotIndex = i == 0 ? 9 : i - 1;
+
+                        if (inputs.Contains((InputOptions) i))
                         {
-                            return new PickUpItemIndex(scene, (ICreature)entity, i + 1);
+                            return new PickUpItemIndex(scene, (ICreature)entity, slotIndex);
                         }
                     }
                 }
