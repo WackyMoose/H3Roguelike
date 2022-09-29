@@ -192,17 +192,22 @@ internal class StatsPanel
         var inventorySlotSize = new UIScreenCoords(52, 52);
         var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
         const int padding = 10;
-        for (int i = 0; i < INVENTORY_SIZE; i++)
+
+        var inventoryItemSize = inventorySlotSize; // new UIScreenCoords(40, 40);
+
+        // Spritesheet, for rendering inventory content
+        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+
+        for (int i = 0; i < _player.Inventory.Inventory.Slots.Count(); i++)
         {
             var inventorySlotPosition = startingPosition;
             inventorySlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             inventorySlotPosition.Y = (i > 4) ? startingPosition.Y + inventorySlotSize.Y + padding : startingPosition.Y;
 
             _inventoryOptions[i] = new ImageOptions(inventorySlotPosition, inventorySlotSize, inventorySlotTexture);
-        }
 
-        // Spritesheet, for rendering inventory content
-        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+            _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
+        }
 
         seperatorPosition.Y += 150;
         _seperatorOptions[1] = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
@@ -214,8 +219,8 @@ internal class StatsPanel
             equipmentSlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
         }
-
-        UpdateInventory(window, _player, position, size);
+        
+        UpdateInventory(_player);
 
         seperatorPosition.Y += 90;
         _seperatorOptions[2] = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
@@ -266,27 +271,19 @@ internal class StatsPanel
         UIRenderer.DrawListViewEx(_listViewOptions, items, ref s_Focus, ref s_ScrollIndex, -1);
     }
 
-    public void UpdateInventory(IWindow window, ICreature player, UIScreenCoords position, UIScreenCoords size)
+    public void UpdateInventory(ICreature player)
     {
-        var inventorySlotSize = new UIScreenCoords(32, 32);
-        var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
-        const int padding = 10;
-
         for (int i = 0; i < player.Inventory.Inventory.Slots.Count(); i++)
         {
-            var inventorySlotPosition = startingPosition;
-            inventorySlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
-            inventorySlotPosition.Y = (i > 4) ? startingPosition.Y + inventorySlotSize.Y + padding : startingPosition.Y;
-
             Coords2D? inventoryItem = player.Inventory.Inventory.Slots.ElementAt(i).Item?.SpriteCoords;
 
-            if(inventoryItem is not null)
+            if (inventoryItem is not null)
             {
-                _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventorySlotSize, (Coords2D)inventoryItem, 8, _spriteSheet);
+                _inventoryItemsOptions[i].Coords = (Coords2D)inventoryItem;
             }
             else
             {
-                _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventorySlotSize, new Coords2D(0, 0), 8, _spriteSheet);
+                _inventoryItemsOptions[i].Coords = new Coords2D(0, 0);
             }
         }
     }

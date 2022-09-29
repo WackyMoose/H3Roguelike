@@ -193,23 +193,23 @@ internal class TestGameMSN : IGame
 
 
         // dwarf walk guard Behavior tree
-        //var dwarfNode =
+        var dwarfNode =
 
-        //    Serializer(
-        //        Action(new PatrolRectangularArea(
-        //            _scene,
-        //            dwarf,
-        //            campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-        //            campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay(
-        //            Action(new Idle()),
-        //            2)
-        //        );
+            Serializer(
+                Action(new PatrolRectangularArea(
+                    _scene,
+                    dwarf,
+                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay(
+                    Action(new Idle()),
+                    2)
+                );
 
-        //var dwarfTree = BehaviorTree(dwarf, dwarfNode);
+        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        //btrees.Add(dwarfTree);
+        btrees.Add(dwarfTree);
 
         //Druid behavior tree
         //Roam around randomly in a part of the map
@@ -217,48 +217,48 @@ internal class TestGameMSN : IGame
         // Attack when standing beside creature
         // When no creatures within range, go back to roaming
 
-        //var druidNode =
+        var druidNode =
 
-        //    Selector(
-        //        AlwaysReturnFailure(
-        //            Action(new InspectCreaturesInRange(_scene, druid))
-        //        ),
-        //        Serializer(
-        //            Action(new TargetCreatureInRange(_scene, druid)),
-        //            Action(new MoveToTargetCreature(_scene, druid)),
-        //            Action(new AttackTarget(_scene, druid))
-        //        ),
-        //        Serializer(
-        //            Action(new SearchForItemsInRange(_scene, druid)),
-        //            Action(new MoveToTargetItem(_scene, druid)),
-        //            Action(new PickUpItem(_scene, druid)),
-        //            Action(new AutoEquip(_scene, druid))
-        //        ),
-        //        Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
-        //    );
+            Selector(
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, druid))
+                ),
+                Serializer(
+                    Action(new TargetCreatureInRange(_scene, druid)),
+                    Action(new MoveToTargetCreature(_scene, druid)),
+                    Action(new AttackTarget(_scene, druid))
+                ),
+                Serializer(
+                    Action(new SearchForItemsInRange(_scene, druid)),
+                    Action(new MoveToTargetItem(_scene, druid)),
+                    Action(new PickUpItem(_scene, druid)),
+                    Action(new AutoEquip(_scene, druid))
+                ),
+                Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
+            );
 
-        //var druidTree = BehaviorTree(druid, druidNode);
+        var druidTree = BehaviorTree(druid, druidNode);
 
-        //btrees.Add(druidTree);
+        btrees.Add(druidTree);
 
         //
         var guard_tl_Node =
 
             Selector(
-                //AlwaysReturnFailure(
-                //    Action(new InspectCreaturesInRange(_scene, guard_tl))
-                //),
-                //Serializer(
-                //    Action(new TargetCreatureInRange(_scene, guard_tl)),
-                //    Action(new MoveToTargetCreature(_scene, guard_tl)),
-                //    SerializerTurnBased(
-                //        Action(new AttackTarget(_scene, guard_tl)),
-                //        Action(new AttackTarget(_scene, guard_tl)),
-                //        Action(new BlockAttack(_scene, guard_tl))
-                //    )
-                //),
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, guard_tl))
+                ),
                 Serializer(
-                    Action(new IsInventoryNotFull(_scene, guard_tl)),
+                    Action(new TargetCreatureInRange(_scene, guard_tl)),
+                    Action(new MoveToTargetCreature(_scene, guard_tl)),
+                    SerializerTurnBased(
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new BlockAttack(_scene, guard_tl))
+                    )
+                ),
+                Serializer(
+                    //Action(new IsInventoryNotFull(_scene, guard_tl)),
                     Action(new SearchForItemsInRange(_scene, guard_tl)),
                     Action(new MoveToTargetItem(_scene, guard_tl)),
                     Action(new PickUpItem(_scene, guard_tl)),
@@ -410,7 +410,7 @@ internal class TestGameMSN : IGame
         var position = new UIScreenCoords(window.Width - size.X, 0);
         var startPosition = position;
 
-        _statsPanel.UpdateInventory(window, Player, new UIScreenCoords(startPosition.X + 55, startPosition.Y + 215), size);
+        _statsPanel.UpdateInventory(Player);
 
         _scene?.UpdateRuntime(deltaTime);
     }
