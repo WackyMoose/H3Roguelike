@@ -1,7 +1,10 @@
-﻿using MooseEngine.Core;
+﻿using GameV1.Http;
+using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace GameV1.UI.Components;
 
@@ -17,6 +20,7 @@ internal class LoginFormComponent
     private bool _passwordEditMode = false;
 
     private bool _providedNoCredentials = false;
+    private bool _providedInvalidCredentials = false;
 
     private PanelOptions _panelOptions;
     private LabelOptions _loginTitleOptions;
@@ -36,6 +40,13 @@ internal class LoginFormComponent
 
     public event Action<string>? OnLoginButtonClicked;
     public event Action? OnRegisterButtonClicked;
+
+    class User
+    {
+        public string? Username { get; set; }
+    }
+
+    private HttpRequester _httpRequester;
 
     public LoginFormComponent()
     {
@@ -75,11 +86,14 @@ internal class LoginFormComponent
         var registerButtonPosition = new UIScreenCoords((panelPosition.X + panelSize.X / 2) - 200, loginTitlePosition.Y + 190);
         _registerButtonOptions = new ButtonOptions(registerButtonPosition, buttonSize, "Register");
         _registerButtonOptions.FontSize = 24;
+
+        _httpRequester = new HttpRequester("http://api.cavemangames.dk/api/Auth/");
     }
 
     public void Reset()
     {
         _providedNoCredentials = false;
+        _providedInvalidCredentials = false;
     }
 
     public void OnGUI(IUIRenderer UIRenderer)
@@ -99,7 +113,7 @@ internal class LoginFormComponent
             _passwordEditMode = !_passwordEditMode;
         }
 
-        if (_providedNoCredentials)
+        if (_providedNoCredentials || _providedInvalidCredentials)
         {
             UIRenderer.DrawLabel(_wrongCredentialsOptions);
         }
@@ -113,8 +127,15 @@ internal class LoginFormComponent
             }
 
             // TODO: Call web api...
+            _providedInvalidCredentials = false;
+            var user = _httpRequester.Post<User>("authenticate", new { Username = _username, Password = _password });
+            if(user == null || string.IsNullOrEmpty(user.Username))
+            {
+                _providedInvalidCredentials = true;
+                _wrongCredentialsOptions.Text = "Invalid user crendentials";
+            }
 
-            if (!_providedNoCredentials)
+            if (!_providedNoCredentials && !_providedInvalidCredentials)
             {
                 OnLoginButtonClicked?.Invoke(_username);
             }

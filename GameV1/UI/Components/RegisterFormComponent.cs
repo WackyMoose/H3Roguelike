@@ -1,4 +1,5 @@
-﻿using MooseEngine.Core;
+﻿using GameV1.Http;
+using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
@@ -36,6 +37,8 @@ internal class RegisterFormComponent : IUIElement
 
     public event Action? OnLoginButtonClicked;
     public event Action? OnRegisterButtonClicked;
+
+    private HttpRequester _httpRequester;
 
     public RegisterFormComponent()
     {
@@ -75,6 +78,8 @@ internal class RegisterFormComponent : IUIElement
         var loginButtonPosition = new UIScreenCoords((panelPosition.X + panelSize.X / 2) - 200, loginTitlePosition.Y + 190);
         _loginButtonOptions = new ButtonOptions(loginButtonPosition, buttonSize, "Login");
         _loginButtonOptions.FontSize = 24;
+
+        _httpRequester = new HttpRequester("http://api.cavemangames.dk/api/Auth/");
     }
 
     public void Reset()
@@ -118,6 +123,7 @@ internal class RegisterFormComponent : IUIElement
             }
 
             // TODO: Go to register user, and log in...
+            _httpRequester.Post("register", new { Username = _username, Password = _password });
 
             if (!_providedNoCredentials)
             {
