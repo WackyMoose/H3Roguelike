@@ -28,7 +28,7 @@ namespace GameV1.Commands
 
             if (itemsWithinRange.Count == 0)
             {
-                Console.WriteLine("SearchForItemsInRange found nothing.");
+               // Console.WriteLine("SearchForItemsInRange found nothing.");
 
                 return NodeStates.Failure;
             }
@@ -36,7 +36,7 @@ namespace GameV1.Commands
             {
                 Creature.TargetItem = (IItem?)items.Values.FirstOrDefault();
 
-                Console.WriteLine("SearchForItemsIRange found " + Creature.TargetItem?.Name);
+               // Console.WriteLine("SearchForItemsIRange found " + Creature.TargetItem?.Name);
 
                 return NodeStates.Success;
             }

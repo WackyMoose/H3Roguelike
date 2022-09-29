@@ -3,6 +3,9 @@ using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
+using MooseEngine.Utilities;
+using System.Numerics;
+//using System.Drawing;
 
 namespace GameV1.UI;
 
@@ -84,6 +87,7 @@ internal class StatsPanel
      */
 
     private ICreature _player;
+    private Raylib_cs.Texture2D _spriteSheet;
 
     private PanelOptions _panelOptions;
     private ImageOptions[] _seperatorOptions = new ImageOptions[3];
@@ -104,7 +108,17 @@ internal class StatsPanel
     private ImageOptions[] _inventoryOptions = new ImageOptions[INVENTORY_SIZE];
     private ImageOptions[] _equipmentOptions = new ImageOptions[EQUIPMENT_SIZE];
 
-    private SelectorListView _selectorListView;
+    private SubImageOptions[] _inventoryItemsOptions = new SubImageOptions[INVENTORY_SIZE];
+    private SubImageOptions[] _equippedItemsOptions = new SubImageOptions[EQUIPMENT_SIZE];
+
+    private ListViewOptions _listViewOptions;
+    static string[] items =
+    {
+        "Orc Warloard",
+        "> Orc Bruiser",
+        "Orc Shaman",
+        "Goblin Looter"
+    };
 
     public StatsPanel(ICreature player)
     {
@@ -178,13 +192,21 @@ internal class StatsPanel
         var inventorySlotSize = new UIScreenCoords(52, 52);
         var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
         const int padding = 10;
-        for (int i = 0; i < INVENTORY_SIZE; i++)
+
+        var inventoryItemSize = inventorySlotSize; // new UIScreenCoords(40, 40);
+
+        // Spritesheet, for rendering inventory content
+        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+
+        for (int i = 0; i < _player.Inventory.Inventory.Slots.Count(); i++)
         {
             var inventorySlotPosition = startingPosition;
             inventorySlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             inventorySlotPosition.Y = (i > 4) ? startingPosition.Y + inventorySlotSize.Y + padding : startingPosition.Y;
 
             _inventoryOptions[i] = new ImageOptions(inventorySlotPosition, inventorySlotSize, inventorySlotTexture);
+
+            _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
         }
 
         seperatorPosition.Y += 150;
@@ -196,7 +218,11 @@ internal class StatsPanel
             var equipmentSlotPosition = startingPosition;
             equipmentSlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
+
+            _equippedItemsOptions[i] = new SubImageOptions(equipmentSlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
         }
+        
+        UpdateInventory(_player);
 
         seperatorPosition.Y += 90;
         _seperatorOptions[2] = new ImageOptions(seperatorPosition, seperatorSize, seperatorImage);
@@ -235,15 +261,50 @@ internal class StatsPanel
         for (int i = 0; i < INVENTORY_SIZE; i++)
         {
             UIRenderer.DrawImage(_inventoryOptions[i]);
+           UIRenderer.DrawImage(_inventoryItemsOptions[i]);
         }
 
         // Equipment
         for (int i = 0; i < EQUIPMENT_SIZE; i++)
         {
             UIRenderer.DrawImage(_equipmentOptions[i]);
+            UIRenderer.DrawImage(_equippedItemsOptions[i]);
         }
 
         _selectorListView.OnGUI(UIRenderer);
     }
 
+    public void UpdateInventory(ICreature player)
+    {
+        for (int i = 0; i < player.Inventory.Inventory.Slots.Count(); i++)
+        {
+            Coords2D? inventoryItem = player.Inventory.Inventory.Slots.ElementAt(i).Item?.SpriteCoords;
+
+            if (inventoryItem is not null)
+            {
+                _inventoryItemsOptions[i].Coords = (Coords2D)inventoryItem;
+            }
+            else
+            {
+                _inventoryItemsOptions[i].Coords = new Coords2D(0, 0);
+            }
+        }
+        
+        Coords2D? headGearCoords = player.Inventory.HeadGear.Item?.SpriteCoords;
+        Coords2D? bodyArmorCoords = player.Inventory.BodyArmor.Item?.SpriteCoords;
+        Coords2D? primaryWeaponCoords = player.Inventory.PrimaryWeapon.Item?.SpriteCoords;
+        Coords2D? secondaryWeaponCoords = player.Inventory.SecondaryWeapon.Item?.SpriteCoords;
+        Coords2D? BodyArmorCoords = player.Inventory.BodyArmor.Item?.SpriteCoords;
+
+        _equippedItemsOptions[0].Coords = (Coords2D)(headGearCoords is not null ? headGearCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[1].Coords = (Coords2D)(bodyArmorCoords is not null ? bodyArmorCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[2].Coords = (Coords2D)(primaryWeaponCoords is not null ? primaryWeaponCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[3].Coords = (Coords2D)(secondaryWeaponCoords is not null ? secondaryWeaponCoords : new Coords2D(0, 0));
+        _equippedItemsOptions[4].Coords = (Coords2D)(BodyArmorCoords is not null ? BodyArmorCoords : new Coords2D(0, 0));
+
+    }
+    
+    static int s_Focus = 0;
+    static int s_ScrollIndex = 0;
+    private SelectorListView _selectorListView;
 }
