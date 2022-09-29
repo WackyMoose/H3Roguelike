@@ -94,8 +94,6 @@ internal class TestGameMSN : IGame
 
         //creatureLayer?.AddEntity(player);
 
-
-
         // Spawn containers
         Container weaponChest = new Container(ContainerType.Stationary, 10, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
         weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;

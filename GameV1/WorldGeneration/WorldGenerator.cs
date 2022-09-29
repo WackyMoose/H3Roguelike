@@ -126,9 +126,6 @@ namespace GameV1.WorldGeneration
                 }
             }
 
-
-
-
             int index = 0;
             for (int e = 1; e < _structurePositions.Count; e++)
             {
