@@ -189,6 +189,13 @@ internal class StatsPanel
 
         // Inventory
         var inventorySlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlot.png");
+        var bodyArmorSlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlotChest.png");
+        var footWearSlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlotFeet.png");
+        var headGearSlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlotHead.png");
+        var primaryWeaponSlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlotSword.png");
+        var secondaryWeaponSlotTexture = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\InventorySlotShield.png");
+
+
         var inventorySlotSize = new UIScreenCoords(52, 52);
         var startingPosition = new UIScreenCoords(window.Width - size.X + 15, position.Y + 55);
         const int padding = 10;
@@ -206,7 +213,7 @@ internal class StatsPanel
 
             _inventoryOptions[i] = new ImageOptions(inventorySlotPosition, inventorySlotSize, inventorySlotTexture);
 
-            _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
+            _inventoryItemsOptions[i] = new SubImageOptions(inventorySlotPosition, inventoryItemSize, new Coords2D(1, 0), 8, _spriteSheet);
         }
 
         seperatorPosition.Y += 150;
@@ -219,9 +226,16 @@ internal class StatsPanel
             equipmentSlotPosition.X += (inventorySlotSize.X + padding) * (i % 5);
             _equipmentOptions[i] = new ImageOptions(equipmentSlotPosition, inventorySlotSize, inventorySlotTexture);
 
-            _equippedItemsOptions[i] = new SubImageOptions(equipmentSlotPosition, inventoryItemSize, new Coords2D(0, 0), 8, _spriteSheet);
+            _equippedItemsOptions[i] = new SubImageOptions(equipmentSlotPosition, inventoryItemSize, new Coords2D(2000, 0), 8, _spriteSheet);
         }
-        
+
+        // Set equip slots background images
+        _equipmentOptions[0].Image = bodyArmorSlotTexture;
+        _equipmentOptions[1].Image = footWearSlotTexture;
+        _equipmentOptions[2].Image = headGearSlotTexture;
+        _equipmentOptions[3].Image = primaryWeaponSlotTexture;
+        _equipmentOptions[4].Image = secondaryWeaponSlotTexture;
+
         UpdateInventory(_player);
 
         seperatorPosition.Y += 90;
@@ -276,6 +290,8 @@ internal class StatsPanel
 
     public void UpdateInventory(ICreature player)
     {
+        var defaultTexture = new Coords2D(22, 0);
+
         for (int i = 0; i < player.Inventory.Inventory.Slots.Count(); i++)
         {
             Coords2D? inventoryItem = player.Inventory.Inventory.Slots.ElementAt(i).Item?.SpriteCoords;
@@ -286,7 +302,7 @@ internal class StatsPanel
             }
             else
             {
-                _inventoryItemsOptions[i].Coords = new Coords2D(0, 0);
+                _inventoryItemsOptions[i].Coords = defaultTexture;
             }
         }
         
@@ -296,12 +312,11 @@ internal class StatsPanel
         Coords2D? secondaryWeaponCoords = player.Inventory.SecondaryWeapon.Item?.SpriteCoords;
         Coords2D? BodyArmorCoords = player.Inventory.BodyArmor.Item?.SpriteCoords;
 
-        _equippedItemsOptions[0].Coords = (Coords2D)(headGearCoords is not null ? headGearCoords : new Coords2D(0, 0));
-        _equippedItemsOptions[1].Coords = (Coords2D)(bodyArmorCoords is not null ? bodyArmorCoords : new Coords2D(0, 0));
-        _equippedItemsOptions[2].Coords = (Coords2D)(primaryWeaponCoords is not null ? primaryWeaponCoords : new Coords2D(0, 0));
-        _equippedItemsOptions[3].Coords = (Coords2D)(secondaryWeaponCoords is not null ? secondaryWeaponCoords : new Coords2D(0, 0));
-        _equippedItemsOptions[4].Coords = (Coords2D)(BodyArmorCoords is not null ? BodyArmorCoords : new Coords2D(0, 0));
-
+        _equippedItemsOptions[0].Coords = (Coords2D)(headGearCoords is not null ? headGearCoords : defaultTexture);
+        _equippedItemsOptions[1].Coords = (Coords2D)(bodyArmorCoords is not null ? bodyArmorCoords : defaultTexture);
+        _equippedItemsOptions[2].Coords = (Coords2D)(primaryWeaponCoords is not null ? primaryWeaponCoords : defaultTexture);
+        _equippedItemsOptions[3].Coords = (Coords2D)(secondaryWeaponCoords is not null ? secondaryWeaponCoords : defaultTexture);
+        _equippedItemsOptions[4].Coords = (Coords2D)(BodyArmorCoords is not null ? BodyArmorCoords : defaultTexture);
     }
     
     static int s_Focus = 0;
