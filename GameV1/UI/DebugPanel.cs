@@ -49,7 +49,7 @@ internal class DebugPanel
 
         if (UIRenderer.DrawButton(_consoleButton))
         {
-            Console.WriteLine($"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+           // Console.WriteLine($"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         }
     }
 }

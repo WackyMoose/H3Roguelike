@@ -73,8 +73,8 @@ internal class TestGameMSN : IGame
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref _scene);
 
-        Console.WriteLine(new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE);
-        Console.WriteLine(_scene.GetClosestValidPosition((int)EntityLayer.Creatures, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles));
+       // Console.WriteLine(new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE);
+       // Console.WriteLine(_scene.GetClosestValidPosition((int)EntityLayer.Creatures, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles));
 
         var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
@@ -220,9 +220,9 @@ internal class TestGameMSN : IGame
         var druidNode =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(_scene, druid))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(_scene, druid))
+                //),
                 Serializer(
                     Action(new TargetCreatureInRange(_scene, druid)),
                     Action(new MoveToTargetCreature(_scene, druid)),
@@ -245,18 +245,18 @@ internal class TestGameMSN : IGame
         var guard_tl_Node =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(_scene, guard_tl))
-                ),
-                Serializer(
-                    Action(new TargetCreatureInRange(_scene, guard_tl)),
-                    Action(new MoveToTargetCreature(_scene, guard_tl)),
-                    SerializerTurnBased(
-                        Action(new AttackTarget(_scene, guard_tl)),
-                        Action(new AttackTarget(_scene, guard_tl)),
-                        Action(new BlockAttack(_scene, guard_tl))
-                    )
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(_scene, guard_tl))
+                //),
+                //Serializer(
+                //    Action(new TargetCreatureInRange(_scene, guard_tl)),
+                //    Action(new MoveToTargetCreature(_scene, guard_tl)),
+                //    SerializerTurnBased(
+                //        Action(new AttackTarget(_scene, guard_tl)),
+                //        Action(new AttackTarget(_scene, guard_tl)),
+                //        Action(new BlockAttack(_scene, guard_tl))
+                //    )
+                //),
                 Serializer(
                     //Action(new IsInventoryNotFull(_scene, guard_tl)),
                     Action(new SearchForItemsInRange(_scene, guard_tl)),

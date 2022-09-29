@@ -67,7 +67,7 @@ namespace GameV1.Entities.Containers
 
             if (result == true)
             {
-                Console.WriteLine($"{item.Name} added to {slot.Name}");
+               // Console.WriteLine($"{item.Name} added to {slot.Name}");
             }
             return result;
         }
@@ -88,7 +88,7 @@ namespace GameV1.Entities.Containers
         {
             var item = slot.Remove();
 
-            Console.WriteLine($"{item.Name} removed from {slot.Name}");
+           // Console.WriteLine($"{item.Name} removed from {slot.Name}");
 
             return item;
         }
@@ -97,7 +97,7 @@ namespace GameV1.Entities.Containers
         {
             if (slotIndex > NumSlots) { return default; }
 
-            var slot = Slots.ElementAt(slotIndex - 1);
+            var slot = Slots.ElementAt(slotIndex);
 
             if (slot.IsEmpty == true) { return default; }
 

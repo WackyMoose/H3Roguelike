@@ -1,6 +1,6 @@
 ﻿namespace MooseEngine.Core
 {
-    public enum InputOptions : uint
+    public enum InputOptions
     {
         Zero,
         One,

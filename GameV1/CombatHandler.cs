@@ -26,18 +26,18 @@ namespace GameV1
             defender.TakeDamage((int)(damage * damageModifier));
 
             // Print attack message
-            Console.WriteLine($"{attacker.Name} attacks {defender.Name} with {attackWeapon.Name} for {damage} damage!");
+           // Console.WriteLine($"{attacker.Name} attacks {defender.Name} with {attackWeapon.Name} for {damage} damage!");
 
             // Print armor damage reduction message
             //if (defender.Inventory.BodyArmor.Item.DamageReduction > 0)
             //{
-            //    Console.WriteLine($"{defender.Name}'s {defender.Inventory.BodyArmor.Item.Name} reduces damage by {defender.Inventory.BodyArmor.Item.DamageReduction}!");
+            //   // Console.WriteLine($"{defender.Name}'s {defender.Inventory.BodyArmor.Item.Name} reduces damage by {defender.Inventory.BodyArmor.Item.DamageReduction}!");
             //}
 
             if (defender.IsDead)
             {
                 KillCreature(scene, defender);
-                Console.WriteLine($"{defender.Name} has died!");
+               // Console.WriteLine($"{defender.Name} has died!");
             }
         }
 

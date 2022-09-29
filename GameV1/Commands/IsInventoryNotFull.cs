@@ -27,15 +27,15 @@ namespace GameV1.Commands
         {
             var doesInventoryHaveEmptySlots = Creature.Inventory.Inventory.HasEmptySlots;
 
-            Console.WriteLine($"Does {Creature.Name} inventory have empty slots? " + doesInventoryHaveEmptySlots);
+           // Console.WriteLine($"Does {Creature.Name} inventory have empty slots? " + doesInventoryHaveEmptySlots);
 
             switch (doesInventoryHaveEmptySlots)
             {
                 case true:
-                    Console.WriteLine("IsInventoryNotFull returns Success");
+                   // Console.WriteLine("IsInventoryNotFull returns Success");
                     return NodeStates.Success;
                 case false:
-                    Console.WriteLine("IsInventoryNotFull returns Failure");
+                   // Console.WriteLine("IsInventoryNotFull returns Failure");
                     return NodeStates.Failure;
             }
         }
