@@ -168,7 +168,7 @@ namespace MooseEngine.Pathfinding
                         return temp.ToArray();
                     }
 
-                    if (avoidanceLayer.ActiveEntities.ContainsKey(node.Position) == true && ) continue;
+                    if (avoidanceLayer.ActiveEntities.ContainsKey(node.Position) == true) continue;
 
                     node.G = Vector2.DistanceSquared(startPos, node.Position) + node.G;
                     node.H = Vector2.DistanceSquared(goalPos, node.Position);
