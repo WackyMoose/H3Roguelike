@@ -1,4 +1,5 @@
 ﻿using GameV1.Entities;
+using GameV1.Interfaces.Creatures;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -16,7 +17,7 @@ internal class GameUI : IUIElement
 
     public event Action BackToMenuButtonClicked;
 
-    public GameUI(Player player)
+    public GameUI(ICreature player)
     {
         var window = Application.Instance.Window;
 

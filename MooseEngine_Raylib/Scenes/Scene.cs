@@ -277,7 +277,8 @@ public class Scene : Disposeable, IScene
     {
         for(int i = 0; i < _entityLayers.Count; i++)
         {
-            _entityLayers[i].Entities.Clear();
+            _entityLayers[i].ActiveEntities.Clear();
+            _entityLayers[i].InactiveEntities.Clear();
             _entityLayers.Remove(i);
         }
 

@@ -1,4 +1,4 @@
-﻿using GameV1.Entities;
+﻿using GameV1.Interfaces.Creatures;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
