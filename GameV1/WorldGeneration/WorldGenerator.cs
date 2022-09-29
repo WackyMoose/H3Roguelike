@@ -12,9 +12,11 @@ namespace GameV1.WorldGeneration
         private static HashSet<Coords2D> _forest = new HashSet<Coords2D>();
         private static HashSet<Coords2D> _forests = new HashSet<Coords2D>();
         private static Dictionary<Coords2D, float> _overWorld = new Dictionary<Coords2D, float>();
-        private static List<List<StructureData>> _castle01Data = new List<List<StructureData>>();
-        private static List<List<StructureData>> _castle02Data = new List<List<StructureData>>();
+        private static List<List<StructureData>> _orcCamp01Data = new List<List<StructureData>>();
+        private static List<List<StructureData>> _orcCamp02Data = new List<List<StructureData>>();
+        private static List<List<StructureData>> _orcCamp03Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
+        private static List<Vector2> _structurePositions = new List<Vector2>();
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene)
@@ -22,8 +24,11 @@ namespace GameV1.WorldGeneration
             var world = new World(201, 201, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
+            _structurePositions.Add(world.StartPos);
+            _orcCamp01Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp01.csv");
+            _orcCamp02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp02.csv");
+            _orcCamp03Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp03.csv");
 
-            _castle02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\Castle02.csv");
             _startVillageData = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\StarterVillage.csv");
 
             TileLibrary lib = JsonUtility.LoadFromJson<TileLibrary>(@"..\..\..\Resources\JSON\Tiles.json");
@@ -68,27 +73,35 @@ namespace GameV1.WorldGeneration
 
                     foreach (var coord in _forest)
                     {
-                        var rand = Randomizer.RandomInt(3, 7);
-                        var treeTile = lib.Tiles.ElementAt(rand);
+                        if (Vector2.Distance(world.StartPos, new Vector2(coord.X, coord.Y)) > 450f)
+                        {
+                            var rand = Randomizer.RandomInt(3, 7);
+                            var treeTile = lib.Tiles.ElementAt(rand);
 
-                        Tile tree = treeTile.Value.DeepCopy();
-                        tree.Position = new Vector2(coord.X, coord.Y);
-                        world.AddTile(coord, tree);
+                            Tile tree = treeTile.Value.DeepCopy();
+                            tree.Position = new Vector2(coord.X, coord.Y);
+                            world.AddTile(coord, tree);
+                        }
                     }
                 }
 
-                //if (tile.Value > 0.1 && tile.Value < 0.101)
-                //{
-                //    for (int k = 0; k < _castle02Data.Count; k++)
-                //    {
-                //        for (int i = 0; i < _castle02Data[k].Count; i++)
-                //        {
-                //            Tile spriteTile = new Tile("Castle", _castle02Data[k][i].IsWalkable, _castle02Data[k][i].SpriteCoords);
-                //            spriteTile.Position = new Vector2(tile.Key.X + i * Constants.DEFAULT_ENTITY_SIZE, tile.Key.Y + k * Constants.DEFAULT_ENTITY_SIZE);
-                //            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
-                //        }
-                //    }
-                //}
+                bool canCreate = true;
+                
+                if (tile.Value > 0.1 && tile.Value < 0.5)
+                {
+                    for (int i = 0; i < _structurePositions.Count; i++)
+                    {
+                        if (Vector2.Distance(_structurePositions[i], new Vector2(tile.Key.X, tile.Key.Y)) < 700)
+                        {
+                            canCreate = false;
+                        }
+                    }
+
+                    if (canCreate == true)
+                    {
+                        _structurePositions.Add(new Vector2(tile.Key.X, tile.Key.Y));
+                    }
+                }
 
                 //Visualize PerlinNoise, used for debugging...
                 //float val = MathFunctions.InverseLerp(-1, 1, tile.Value);
@@ -109,6 +122,49 @@ namespace GameV1.WorldGeneration
                     spriteTile.Position = new Vector2((world.StartPos.X - (9 * Constants.DEFAULT_ENTITY_SIZE)) + (i * Constants.DEFAULT_ENTITY_SIZE), (world.StartPos.Y - (5 * Constants.DEFAULT_ENTITY_SIZE)) + (k * Constants.DEFAULT_ENTITY_SIZE));
                     world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
                     //Console.WriteLine($"Village tile at: {spriteTile.Position.X}:{spriteTile.Position.Y}");
+                }
+            }
+
+            int index = 0;
+            for (int e = 1; e < _structurePositions.Count; e++)
+            {
+                index = Randomizer.RandomInt(0, 3);
+
+                if (index == 0)
+                {
+                    for (int k = 0; k < _orcCamp01Data.Count; k++)
+                    {
+                        for (int i = 0; i < _orcCamp01Data[k].Count; i++)
+                        {
+                            Tile spriteTile = new Tile("OrcCamp", _orcCamp01Data[k][i].IsWalkable, _orcCamp01Data[k][i].SpriteCoords);
+                            spriteTile.Position = new Vector2(_structurePositions[e].X + i * Constants.DEFAULT_ENTITY_SIZE, _structurePositions[e].Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                        }
+                    }
+                }
+                else if (index == 1)
+                {
+                    for (int k = 0; k < _orcCamp02Data.Count; k++)
+                    {
+                        for (int i = 0; i < _orcCamp02Data[k].Count; i++)
+                        {
+                            Tile spriteTile = new Tile("OrcCamp", _orcCamp02Data[k][i].IsWalkable, _orcCamp02Data[k][i].SpriteCoords);
+                            spriteTile.Position = new Vector2(_structurePositions[e].X + i * Constants.DEFAULT_ENTITY_SIZE, _structurePositions[e].Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int k = 0; k < _orcCamp03Data.Count; k++)
+                    {
+                        for (int i = 0; i < _orcCamp03Data[k].Count; i++)
+                        {
+                            Tile spriteTile = new Tile("OrcCamp", _orcCamp03Data[k][i].IsWalkable, _orcCamp03Data[k][i].SpriteCoords);
+                            spriteTile.Position = new Vector2(_structurePositions[e].X + i * Constants.DEFAULT_ENTITY_SIZE, _structurePositions[e].Y + k * Constants.DEFAULT_ENTITY_SIZE);
+                            world.AddTile(new Coords2D(spriteTile.Position), spriteTile);
+                        }
+                    }
                 }
             }
 
