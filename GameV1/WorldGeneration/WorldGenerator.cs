@@ -68,7 +68,7 @@ namespace GameV1.WorldGeneration
 
                     foreach (var coord in _forest)
                     {
-                        var rand = Randomizer.RandomInt(3, 5);
+                        var rand = Randomizer.RandomInt(3, 7);
                         var treeTile = lib.Tiles.ElementAt(rand);
 
                         Tile tree = treeTile.Value.DeepCopy();
