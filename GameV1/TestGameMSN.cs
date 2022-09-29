@@ -1,6 +1,16 @@
 ﻿using GameV1.Commands;
 using GameV1.Commands.Factory;
 using GameV1.Entities;
+using GameV1.Entities.Armors;
+using GameV1.Entities.Containers;
+using GameV1.Entities.Creatures;
+using GameV1.Entities.Factories;
+using GameV1.Entities.Items;
+using GameV1.Entities.Weapons;
+using GameV1.Interfaces;
+using GameV1.Interfaces.Creatures;
+using GameV1.Interfaces.Items;
+using GameV1.Interfaces.Weapons;
 using GameV1.UI;
 using GameV1.UI.Components;
 using GameV1.WorldGeneration;
@@ -12,6 +22,7 @@ using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
+using System.Buffers;
 using System.Numerics;
 using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
@@ -28,24 +39,13 @@ public enum EntityLayer : int
 
 internal class TestGameMSN : IGame
 {
+    public ICreature? Player { get; set; }
+
+    public ISelector Selector { get; set; } = new Selector();
+
     private IScene? _scene;
 
-    // Creatures
-    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
-    private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
-    private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
-    private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
-    private Npc orc = new Npc("Orc", 100, new Coords2D(11, 0));
-    public Npc guard_01 = new Npc("City guard", 100, new Coords2D(6, 0));
-    public Npc guard_02 = new Npc("City guard", 100, new Coords2D(15, 0));
-
-    // Items
-    private Weapon sword = new Weapon(100, 100, "BloodSpiller", new Coords2D(6, 4), Color.White);
-    private Armor armor = new Armor(100, 100, "LifeSaver", new Coords2D(6, 4), Color.White);
-    private Weapon doubleAxe = new Weapon(100, 100, "Double Axe", new Coords2D(7, 4), Color.White);
-    private Weapon crossBow = new Weapon(100, 100, "Crossbow", new Coords2D(8, 4), Color.White);
-    private Weapon trident = new Weapon(100, 100, "Trident", new Coords2D(10, 4), Color.White);
-
+    // Behavior trees
     private IList<IBehaviorTree> btrees = new List<IBehaviorTree>();
 
     // Layers
@@ -59,13 +59,13 @@ internal class TestGameMSN : IGame
 
     public void Initialize()
     {
-        sword.MinDamage = 50;
-        sword.MaxDamage = 200;
-        sword.ArmorPenetrationFlat = 50;
-        sword.ArmorPenetrationPercent = 20;
 
-        armor.MinDamageReduction = 20;
-        armor.MaxDamageReduction = 120;
+
+        // Create the scene
+        var app = Application.Instance;
+        var window = app.Window;
+        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
+        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
 
         var sceneFactory = Application.Instance.SceneFactory;
         _scene = sceneFactory.CreateScene();
@@ -73,131 +73,227 @@ internal class TestGameMSN : IGame
         // Spawn world
         WorldGenerator.GenerateWorld(80085, ref _scene);
 
-        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
-
-        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
+        var itemLayer = _scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        var app = Application.Instance;
-        var window = app.Window;
-
-        // Spawn items
-        doubleAxe.Position = new Vector2(263, 242) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(doubleAxe);
-        crossBow.Position = new Vector2(264, 243) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(crossBow);
-        trident.Position = new Vector2(266, 247) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(trident);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 45) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 46) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 47) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 48) * Constants.DEFAULT_ENTITY_SIZE);
+        //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
-        player.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
+        //ICreature? player = (ICreature)creatureLayer?.Add(new Creature("Hero", 120, new Coords2D(5, 0)));
+
+
+        //ICreature? player = (ICreature)creatureLayer.Entities.FirstOrDefault(c => c.Value.Name == "Hero").Value;
+        var player = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Hero", new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
+        //player.Position = new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
-        player.MainHand.Add(sword);
-        player.Chest.Add(armor);
-        creatureLayer?.Add(player);
+        player.Inventory.Inventory.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        player.Inventory.Inventory.AddItemToFirstEmptySlot(new BodyArmor(100, 10, "Chainmail", new Coords2D(6, 4), Color.White));
+        player.Inventory.Inventory.AddItemToFirstEmptySlot(new HeadGear(100, 10, "Helmet", new Coords2D(6, 4), Color.White));
+        player.Inventory.Inventory.AddItemToFirstEmptySlot(new FootWear(100, 10, "Boots", new Coords2D(6, 4), Color.White));
+
+        //creatureLayer?.AddEntity(player);
+
+
+
+        // Spawn containers
+        Container weaponChest = new Container(ContainerType.Stationary, 10, 0, 0, "Weapon chest", new Coords2D(9, 3), Color.White);
+        weaponChest.Position = new Vector2(55, 28) * Constants.DEFAULT_ENTITY_SIZE;
+        //itemLayer?.AddEntity(weaponChest);
+        _scene.TryPlaceEntity((int)EntityLayer.Items, weaponChest, weaponChest.Position);
+
+        Container loot = new Container(ContainerType.PileOfItems, 10, 0, 0, "Pile of loot", new Coords2D(9, 3), Color.White);
+        loot.Position = new Vector2(55, 26) * Constants.DEFAULT_ENTITY_SIZE;
+        loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Double Axe", new Coords2D(7, 4), Color.White));
+        loot.AddItemToFirstEmptySlot(new ProjectileWeapon(100, 10, "Crossbow", new Coords2D(8, 4), Color.White));
+        loot.AddItemToFirstEmptySlot(new MeleeWeapon(100, 10, "Trident", new Coords2D(10, 4), Color.White));
+        //itemLayer?.AddEntity(loot);
+        _scene.TryPlaceEntity((int)EntityLayer.Items, loot, loot.Position);
+
+        var orc = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
+        //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        ////player.Inventory.
+        //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        //orc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        //_scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
+
+        Player = orc;
+
+        Selector.AddEntities(Player.CreaturesWithinPerceptionRange);
+
+        _scene.SceneCamera = new Camera(Player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
+
+        _consolePanel = new ConsolePanel(consolePosition, consoleSize);
+        _statsPanel = new StatsPanel(Player);
+        _debugPanel = new DebugPanel(10, 10, Player);
 
         // Light sources
-        light.Position = new Vector2(257, 229) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(light);
+        LightSource campFire = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
 
-        townLights.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.Add(townLights);
+        campFire.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.AddEntity(campFire);
 
-        for (int i = 0; i < 64; i++)
+        LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
+        townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
+        itemLayer?.AddEntity(townLights);
+
+        for (int i = 0; i < 128; i++)
         {
-            var light = new LightSource(Randomizer.RandomInt(3, 24) * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 500), Randomizer.RandomInt(0, 500)) * Constants.DEFAULT_ENTITY_SIZE;
-            itemLayer?.Add(light);
+            // Color(128, 128 - 48, 128 - 96, 255)
+            var color = new Color(
+                160 + Randomizer.RandomInt(-32, 32),
+                144 + Randomizer.RandomInt(-32, 32),
+                128 + Randomizer.RandomInt(-32, 32), 255);
+            var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+            light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+            //itemLayer?.Add(light);
+            _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
 
         // Druid chasing player
-        druid.Position = new Vector2(255, 228) * Constants.DEFAULT_ENTITY_SIZE;
-        druid.MainHand.Add(sword);
-        druid.Chest.Add(armor);
+        var druid = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
+
+        //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
+        druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
-        creatureLayer?.Add(druid);
 
         // Randomized walk guard
-        guard_02.Position = new Vector2(251, 251) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_02.MainHand.Add(sword);
-        guard_02.Chest.Add(armor);
-        creatureLayer?.Add(guard_02);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
 
-        // Patrolling guard
-        guard_01.Position = new Vector2(235, 240) * Constants.DEFAULT_ENTITY_SIZE;
-        guard_01.MainHand.Add(sword);
-        guard_01.Chest.Add(armor);
-        guard_01.Stats.Perception = 16 * Constants.DEFAULT_ENTITY_SIZE;
-        creatureLayer?.Add(guard_01);
+        //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
+        dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+
+        // Patrolling guard top-left
+        var guard_tl = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
+
+        //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
+        guard_tl.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_tl.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
+
+        // Patrolling guard bottom-right
+        var guard_br = CreatureFactory.CreateCreature<Creature>(_scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+        guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
 
-        // Randomized walk guard Behavior tree
-        var guard02Node = Serializer(
-                Action(new CommandPatrolRectangularArea(
+        var walkableTileLayer = (IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles);
+
+        _scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
+
+
+        // dwarf walk guard Behavior tree
+        var dwarfNode =
+
+            Serializer(
+                Action(new PatrolRectangularArea(
                     _scene,
-                    guard_02,
-                    light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
-                    light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
+                    dwarf,
+                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
                     )),
                 Delay(
-                    Action(new CommandIdle()),
+                    Action(new Idle()),
                     2)
                 );
 
-        var guard_02Tree = BehaviorTree(guard_02, guard02Node);
+        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        btrees.Add(guard_02Tree);
+        btrees.Add(dwarfTree);
 
-        // Druid behavior tree
-        var druidTree = new BTree(druid);
+        //Druid behavior tree
+        //Roam around randomly in a part of the map
+        //Follow creatures while inside perception range
+        // Attack when standing beside creature
+        // When no creatures within range, go back to roaming
 
-        // Follow the player, but only walk every other turn
-        druidTree.Add(Serializer(
-                //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
-                Delay(
-                    Action(new CommandMoveToEntity(_scene, druid, player)),
-                    1)
-                )
+        var druidNode =
+
+            Selector(
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, druid))
+                ),
+                Serializer(
+                    Action(new TargetCreatureInRange(_scene, druid)),
+                    Action(new MoveToTargetCreature(_scene, druid)),
+                    Action(new AttackTarget(_scene, druid))
+                ),
+                Serializer(
+                    Action(new SearchForItemsInRange(_scene, druid)),
+                    Action(new MoveToTargetItem(_scene, druid)),
+                    Action(new PickUpItem(_scene, druid)),
+                    Action(new AutoEquip(_scene, druid))
+                ),
+                Action(new PatrolCircularArea(_scene, druid, druid.Position, 8 * Constants.DEFAULT_ENTITY_SIZE))
             );
+
+        var druidTree = BehaviorTree(druid, druidNode);
 
         btrees.Add(druidTree);
 
-        // Roaming guard behavior tree
-        var guard_01Tree = new BTree(guard_01);
-
-        // March along the city walls
-        guard_01Tree.Add(Serializer(
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 244) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 244) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 257) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 257) * Constants.DEFAULT_ENTITY_SIZE))
+        var guardNode = 
+            
+            Selector(
+                AlwaysReturnFailure(
+                    Action(new InspectCreaturesInRange(_scene, guard_tl))
+                ),
+                Serializer(
+                    Action(new TargetCreatureInRange(_scene, guard_tl)),
+                    Action(new MoveToTargetCreature(_scene, guard_tl)),
+                    SerializerTurnBased(
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new AttackTarget(_scene, guard_tl)),
+                        Action(new BlockAttack(_scene, guard_tl))
+                    )),
+                Serializer(
+                    Action(new SearchForItemsInRange(_scene, guard_tl)),
+                    Action(new MoveToTargetItem(_scene, guard_tl)),
+                    Action(new PickUpItem(_scene, guard_tl)),
+                    Action(new AutoEquip(_scene, guard_tl))
+                ),
+                Serializer(
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(_scene, guard_tl, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
-        btrees.Add(guard_01Tree);
+        var guardTree = BehaviorTree(guard_tl, guardNode);
+
+        btrees.Add(guardTree);
 
         // Key bindings
-        InputHandler.Add(Keycode.KEY_UP, InputOptions.Up);
-        InputHandler.Add(Keycode.KEY_DOWN, InputOptions.Down);
-        InputHandler.Add(Keycode.KEY_LEFT, InputOptions.Left);
-        InputHandler.Add(Keycode.KEY_RIGHT, InputOptions.Right);
-        InputHandler.Add(Keycode.KEY_SPACE, InputOptions.Idle);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_UP,    KeyModifier = KeyModifier.KeyPressed }, InputOptions.UpAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_DOWN,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.DownAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_LEFT,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.LeftAction);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_RIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.RightAction);
+        
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SPACE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Idle);
+       
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E,     KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I,     KeyModifier = KeyModifier.KeyDown },    InputOptions.PickUpItemIndex);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q,     KeyModifier = KeyModifier.KeyPressed },    InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
+        
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_TWO,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.Two);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_THREE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Three);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FOUR,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Four);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_FIVE,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Five);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SIX,   KeyModifier = KeyModifier.KeyPressed }, InputOptions.Six);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_SEVEN, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Seven);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_EIGHT, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Eight);
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_NINE,  KeyModifier = KeyModifier.KeyPressed }, InputOptions.Nine);
 
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-        //Keyboard.Key.Add(key: KeyboardKey.KEY_UP, value: new MoveUpCommand(_scene, player));
-
-        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
-        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
-
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize, 4);
-        _statsPanel = new StatsPanel(player);
-        _debugPanel = new DebugPanel(10, 10, player);
-        _loginPanel = new LoginFormComponent();
-
-        ConsolePanel.Add("Hello there stranger!");
-
-        _scene.SceneCamera = new Camera(player, new Vector2((window.Width - StatsPanel.WIDTH) / 2.0f, (window.Height - consoleSize.Y) / 2.0f));
-        InputHandler.Add(Keycode.KEY_I, InputOptions.PickUp);
     }
 
     public void Uninitialize()
@@ -209,31 +305,47 @@ internal class TestGameMSN : IGame
     public void Update(float deltaTime)
     {
         // Player input
-        InputOptions? input = InputHandler.Handle();
+        var input = InputHandler.Handle();
 
         // Generate commands
-        ICommand command = CommandFactory.Create(input, _scene, player);
+        if (Player is not null)
+        {
+            ICommand? command = CommandFactory.Create(input, _scene, Player);
 
-        CommandQueue.Add(command);
+            CommandQueue.Add(command);
+        }
 
-        if (!CommandQueue.IsEmpty)
+        if (CommandQueue.IsEmpty == false)
         {
             // Execute Player commands
             CommandQueue.Execute();
 
             // AI NPC / Monster / Critter controls
+            foreach (BTree btree in btrees)
+            {
+                if (btree.Entity.IsActive == true)
+                {
+                    btree.Evaluate();
+                }
+            }
         }
 
-        // TODO: Only illuminate if range within viewport, AABB check
         // Dynamically updated light sources
         var windowSize = new Vector2(
             (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
             (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
         var cameraPosition = _scene.SceneCamera.Position;
+
         var itemLayer = _scene.GetLayer((int)EntityLayer.Items);
+
+        // TODO: Add lightsources in creature inventories and containers
+
+
+        var creatureLayer = _scene.GetLayer((int)EntityLayer.Creatures);
+
         var lightSources = _scene.GetEntitiesOfType<LightSource>(itemLayer);
 
-        foreach (LightSource lightSource in lightSources.Values)
+        foreach (ILightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
                 cameraPosition,

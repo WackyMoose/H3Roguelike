@@ -16,12 +16,12 @@ internal class TestGame : IGame
 
         _scene = sceneFactory!.CreateScene();
 
-        var playerFactory = new PlayerFactory(sceneFactory);
+        //var playerFactory = new PlayerFactory(sceneFactory);
 
-        var player = playerFactory.CreatePlayer();
-        player.Position = new Vector2(128, 192);
+        //var player = playerFactory.CreatePlayer();
+        //player.Position = new Vector2(128, 192);
 
-        sceneFactory.CreateCenteredCamera(player);
+        //sceneFactory.CreateCenteredCamera(player);
     }
 
     public void UIRender(IUIRenderer UIRenderer)

@@ -8,13 +8,13 @@ namespace MooseEngine.Scenes;
 public class Camera : Entity, ISceneCamera
 {
     private Camera2D _raylibCamera;
-    private readonly Entity? _targetEntity;
+    private readonly IEntity? _targetEntity;
 
     public Camera(Vector2 offset, float zoom = 1.0f) : this(null, offset, zoom)
     {
     }
 
-    public Camera(Entity? target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D(27, 27))
+    public Camera(IEntity? target, Vector2 offset, float zoom = 1.0f) : base("Camera", new Coords2D(27, 27))
     {
         _targetEntity = target;
 

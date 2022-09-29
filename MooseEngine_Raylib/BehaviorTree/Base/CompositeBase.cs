@@ -1,5 +1,4 @@
 ﻿using MooseEngine.BehaviorTree.Interfaces;
-using System.Xml.Linq;
 
 namespace MooseEngine.BehaviorTree.Base
 {
@@ -26,7 +25,7 @@ namespace MooseEngine.BehaviorTree.Base
 
         public IComposite Add(params INode[] nodes)
         {
-            foreach(INode node in nodes)
+            foreach (INode node in nodes)
             {
                 node.Root = Root;
                 node.Parent = this;

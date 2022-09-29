@@ -1,5 +1,4 @@
 ﻿using GameV1.Entities;
-using MooseEngine.BehaviorTree.Composites;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Graphics.UI;
@@ -84,7 +83,7 @@ internal class StatsPanel
         };
      */
 
-    private Player _player;
+    private ICreature _player;
 
     private PanelOptions _panelOptions;
     private ImageOptions[] _seperatorOptions = new ImageOptions[3];
@@ -107,7 +106,7 @@ internal class StatsPanel
 
     private SelectorListView _selectorListView;
 
-    public StatsPanel(Player player)
+    public StatsPanel(ICreature player)
     {
         _player = player;
 
@@ -123,13 +122,13 @@ internal class StatsPanel
         var portraitPosition = new UIScreenCoords(1200 + (400 - portaitSize.X - 10), 25);
         _portraitOptions = new SubImageOptions(portraitPosition, portaitSize, new MooseEngine.Utilities.Coords2D(0, 4), 24, portait);
 
-        _player.Stats.Strength = 9999;
-        _player.Stats.Agility = 9999;
-        _player.Stats.Toughness = 9999;
-        _player.Stats.Perception = 9999;
-        _player.Stats.Charisma = 9999;
+        //_player.Stats.Strength = 9999;
+        //_player.Stats.Agility = 9999;
+        //_player.Stats.Toughness = 9999;
+        //_player.Stats.Perception = 9999;
+        //_player.Stats.Charisma = 9999;
 
-        _player.Stats.Fatigue = 100;
+        //_player.Stats.Fatigue = 100;
 
         var strengthLabelPosition = new UIScreenCoords(startPosition.X + 4, 35);
         _strengthLabelOptions = new LabelOptions(strengthLabelPosition, $"STR: {_player.Stats.Strength}", 26, UIColors.StatsPanel.TEXT_COLOR);

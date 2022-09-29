@@ -12,7 +12,7 @@ public abstract class Entity : IEntity
     public Coords2D SpriteCoords { get; set; }
     public Color ColorTint { get; set; }
     public string Name { get; set; }
-    public virtual bool IsDead { get; set; } = false;
+    public bool IsActive { get; set; }
 
     public Entity() { }
 
@@ -27,6 +27,7 @@ public abstract class Entity : IEntity
         Scale = Vector2.One;
         SpriteCoords = spriteCoords;
         ColorTint = colorTint;
+        IsActive = true;
     }
 
     public abstract void Initialize();

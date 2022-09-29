@@ -17,9 +17,9 @@ namespace GameV1.WorldGeneration
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
-        public static bool GenerateWorld(int seed, ref IScene scene) 
+        public static bool GenerateWorld(int seed, ref IScene scene)
         {
-            var world = new World(501, 501, seed, new Coords2D(251 * Constants.DEFAULT_ENTITY_SIZE, 251 * Constants.DEFAULT_ENTITY_SIZE));
+            var world = new World(201, 201, seed, new Coords2D(51 * Constants.DEFAULT_ENTITY_SIZE, 51 * Constants.DEFAULT_ENTITY_SIZE));
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
 
@@ -68,7 +68,7 @@ namespace GameV1.WorldGeneration
 
                     foreach (var coord in _forest)
                     {
-                        var rand = Randomizer.RandomInt(3, 5);
+                        var rand = Randomizer.RandomInt(3, 7);
                         var treeTile = lib.Tiles.ElementAt(rand);
 
                         Tile tree = treeTile.Value.DeepCopy();
@@ -119,11 +119,11 @@ namespace GameV1.WorldGeneration
             {
                 if (tile.Value.IsWalkable == true)
                 {
-                    scene.GetLayer((int)EntityLayer.WalkableTiles).Entities.Add(tile.Key,tile.Value);
+                    scene.GetLayer((int)EntityLayer.WalkableTiles).ActiveEntities.Add(tile.Key, tile.Value);
                 }
                 else
                 {
-                    scene.GetLayer((int)EntityLayer.NonWalkableTiles).Entities.Add(tile.Key, tile.Value);
+                    scene.GetLayer((int)EntityLayer.NonWalkableTiles).ActiveEntities.Add(tile.Key, tile.Value);
                 }
             }
 

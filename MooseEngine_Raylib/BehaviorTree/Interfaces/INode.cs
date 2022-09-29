@@ -1,6 +1,4 @@
-﻿using MooseEngine.Core;
-
-namespace MooseEngine.BehaviorTree.Interfaces
+﻿namespace MooseEngine.BehaviorTree.Interfaces
 {
     public interface INode
     {

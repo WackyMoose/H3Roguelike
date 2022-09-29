@@ -8,7 +8,7 @@ namespace MooseEngine.BehaviorTree.Actions
     {
         private readonly ICommand m_command;
 
-        public ActionCommand(Command command) : base()
+        public ActionCommand(CommandBase command) : base()
         {
             m_command = command;
         }

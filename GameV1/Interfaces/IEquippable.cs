@@ -1,6 +1,9 @@
-﻿namespace GameV1.Interfaces
+﻿using GameV1.Interfaces.Items;
+
+namespace GameV1.Interfaces
 {
-    public interface IEquippable
+    // Weapons or Armor
+    public interface IEquippable : IItem
     {
     }
 }
