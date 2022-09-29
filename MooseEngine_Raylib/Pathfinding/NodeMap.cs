@@ -5,7 +5,6 @@ namespace MooseEngine.Pathfinding
 {
     public class NodeMap<TType> where TType : class, IPathMappable
     {
-
         public PathMap GenerateMap(IEntityLayer<TType> walkableLayer)
         {
             var map = new PathMap();

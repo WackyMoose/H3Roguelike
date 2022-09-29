@@ -1,5 +1,4 @@
 ﻿using GameV1.Entities;
-using GameV1.Entities.Items;
 using GameV1.SpriteLibraries;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
@@ -26,6 +25,7 @@ namespace GameV1.WorldGeneration
 
             _overWorld = ProceduralAlgorithms.GeneratePerlinNoiseMap(world.WorldWidth, world.WorldHeight, Constants.DEFAULT_ENTITY_SIZE, world.WorldSeed);
             _structurePositions.Add(world.StartPos);
+            
             _orcCamp01Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp01.csv");
             _orcCamp02Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp02.csv");
             _orcCamp03Data = StructureCreator.LoadStructure(@"..\..\..\Resources\CSV\OrcCamp03.csv");
@@ -87,12 +87,11 @@ namespace GameV1.WorldGeneration
                 }
 
                 bool canCreate = true;
-
                 if (tile.Value > 0.1 && tile.Value < 0.5)
                 {
                     for (int i = 0; i < _structurePositions.Count; i++)
                     {
-                        if (Vector2.Distance(_structurePositions[i], new Vector2(tile.Key.X, tile.Key.Y)) < 700)
+                        if (Vector2.Distance(_structurePositions[i], new Vector2(tile.Key.X, tile.Key.Y)) < 1200)
                         {
                             canCreate = false;
                         }

@@ -101,11 +101,6 @@ namespace MooseEngine.Pathfinding
 
         public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, PathMap map, IEntityLayer avoidanceLayer)
         {
-            _avoidanceSet = avoidanceLayer.ActiveEntities;
-
-            if (_avoidanceSet.ContainsKey(goalPos))
-                _avoidanceSet.Remove(goalPos);
-
             _openSet.Clear();
             _closedSet.Clear();
 
@@ -174,7 +169,7 @@ namespace MooseEngine.Pathfinding
                         return temp.ToArray();
                     }
 
-                    if (_avoidanceSet.ContainsKey(node.Position) == true) continue;
+                    if (avoidanceLayer.ActiveEntities.ContainsKey(node.Position) == true && node.Position != goalPos) continue;
 
                     node.G = Vector2.DistanceSquared(startPos, node.Position) + node.G;
                     node.H = Vector2.DistanceSquared(goalPos, node.Position);

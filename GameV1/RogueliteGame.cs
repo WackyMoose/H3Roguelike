@@ -343,7 +343,6 @@ internal class RogueliteGame : IGame
 
         scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
 
-
         // dwarf walk guard Behavior tree
         var dwarfNode =
 
