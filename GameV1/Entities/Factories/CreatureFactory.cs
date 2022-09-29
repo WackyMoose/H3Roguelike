@@ -44,7 +44,7 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Crab, new MeleeWeapon() { Name = "Claws", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Human, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Dwarf, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
-                { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } }
+                { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 10, MaxDamage = 25 } }
             };
 
             var entityLayer = scene.GetLayer(entityLayerNum);

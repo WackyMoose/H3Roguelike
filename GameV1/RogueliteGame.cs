@@ -312,7 +312,7 @@ internal class RogueliteGame : IGame
         {
             var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", new Coords2D(), WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
-            campDwellingOrc.Stats.Perception = Randomizer.RandomInt(2, 5) * Constants.DEFAULT_ENTITY_SIZE;
+            campDwellingOrc.Stats.Perception = Randomizer.RandomInt(4, 8) * Constants.DEFAULT_ENTITY_SIZE;
 
             var patrolRange = Randomizer.RandomInt(4, 8);
 
@@ -324,12 +324,12 @@ internal class RogueliteGame : IGame
                     Action(new MoveToTargetCreature(scene, campDwellingOrc)),
                     Action(new AttackTarget(scene, campDwellingOrc))
                 ),
-                Serializer(
-                    Action(new SearchForItemsInRange(scene, campDwellingOrc)),
-                    Action(new MoveToTargetItem(scene, campDwellingOrc)),
-                    Action(new PickUpItem(scene, campDwellingOrc)),
-                    Action(new AutoEquip(scene, campDwellingOrc))
-                ),
+                //Serializer(
+                //    Action(new SearchForItemsInRange(scene, campDwellingOrc)),
+                //    Action(new MoveToTargetItem(scene, campDwellingOrc)),
+                //    Action(new PickUpItem(scene, campDwellingOrc)),
+                //    Action(new AutoEquip(scene, campDwellingOrc))
+                //),
                 Action(new PatrolRectangularArea(
                         scene,
                         campDwellingOrc,

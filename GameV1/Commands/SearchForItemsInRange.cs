@@ -24,7 +24,7 @@ namespace GameV1.Commands
 
             if (itemsWithinRange == null || itemsWithinRange.Count == 0) { return NodeStates.Failure; }
 
-            var items = itemsWithinRange.ToDictionary(item => item.Key, item => item.Value);
+            //var items = itemsWithinRange.ToDictionary(item => item.Key, item => item.Value);
 
             if (itemsWithinRange.Count == 0)
             {
@@ -34,9 +34,11 @@ namespace GameV1.Commands
             }
             else
             {
-                Creature.TargetItem = (IItem?)items.Values.FirstOrDefault();
+                //Creature.TargetItem = (IItem?)items.Values.FirstOrDefault();
 
-               // Console.WriteLine("SearchForItemsIRange found " + Creature.TargetItem?.Name);
+                Creature.TargetItem = (IItem?)itemsWithinRange.Values.FirstOrDefault();
+
+                // Console.WriteLine("SearchForItemsIRange found " + Creature.TargetItem?.Name);
 
                 return NodeStates.Success;
             }
