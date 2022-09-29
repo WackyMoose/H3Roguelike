@@ -16,7 +16,7 @@ namespace GameV1.WorldGeneration
         private static List<List<StructureData>> _orcCamp02Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _orcCamp03Data = new List<List<StructureData>>();
         private static List<List<StructureData>> _startVillageData = new List<List<StructureData>>();
-        private static List<Vector2> _structurePositions = new List<Vector2>();
+        public static List<Vector2> _structurePositions = new List<Vector2>();
 
         //TODO We need to get scene out of param, perhaps make GenerateWorld return a map of sort.
         public static bool GenerateWorld(int seed, ref IScene scene)

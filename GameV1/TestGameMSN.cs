@@ -139,7 +139,20 @@ internal class TestGameMSN : IGame
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
         itemLayer?.AddEntity(townLights);
 
-        for (int i = 0; i < 128; i++)
+        //for (int i = 0; i < 128; i++)
+        //{
+        //    // Color(128, 128 - 48, 128 - 96, 255)
+        //    var color = new Color(
+        //        160 + Randomizer.RandomInt(-32, 32),
+        //        144 + Randomizer.RandomInt(-32, 32),
+        //        128 + Randomizer.RandomInt(-32, 32), 255);
+        //    var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
+        //    light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+        //    //itemLayer?.Add(light);
+        //    _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
+        //}
+
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
         {
             // Color(128, 128 - 48, 128 - 96, 255)
             var color = new Color(
@@ -147,7 +160,7 @@ internal class TestGameMSN : IGame
                 144 + Randomizer.RandomInt(-32, 32),
                 128 + Randomizer.RandomInt(-32, 32), 255);
             var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+            light.Position = WorldGenerator._structurePositions[i] + new Vector2((3*Constants.DEFAULT_ENTITY_SIZE), (3 * Constants.DEFAULT_ENTITY_SIZE));
             //itemLayer?.Add(light);
             _scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
