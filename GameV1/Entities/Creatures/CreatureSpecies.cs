@@ -21,6 +21,12 @@ namespace GameV1.Entities.Creatures
         public static CreatureSpecies Dwarf { get { return new CreatureSpecies("Dwarf", 700, 1000); } }
         public static CreatureSpecies Elf { get { return new CreatureSpecies("Elf", 700, 1000); } }
 
+        // Non-playable species
+        public static CreatureSpecies Spectre { get { return new CreatureSpecies("Spectre", 2000, 2000); } }
+        public static CreatureSpecies Skeleton { get { return new CreatureSpecies("Skeleton", 2000, 2000); } }
+        public static CreatureSpecies Zombie { get { return new CreatureSpecies("Zombie", 2000, 2000); } }
+        
+
         // Non-playable Critter species
         public static CreatureSpecies Snake { get { return new CreatureSpecies("Snake", 1, 1); } }
         public static CreatureSpecies Wolf { get { return new CreatureSpecies("Wolf", 50, 25); } }

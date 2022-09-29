@@ -17,7 +17,7 @@ namespace GameV1.Entities.Factories
 {
     public static class CreatureFactory
     {
-        public static ICreature CreateCreature<TCreature>(IScene scene, int entityLayerNum, CreatureSpecies species, string name, Vector2 position, params int[] collisionLayers) where TCreature : class, ICreature, new()
+        public static ICreature CreateCreature<TCreature>(IScene scene, int entityLayerNum, CreatureSpecies species, string name, Coords2D spritePosition, Vector2 position, params int[] collisionLayers) where TCreature : class, ICreature, new()
         {
             IDictionary<CreatureSpecies, Coords2D> creatureSpriteCoords = new Dictionary<CreatureSpecies, Coords2D>()
             {
@@ -30,7 +30,7 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Crab, new Coords2D(12, 0) },
                 { CreatureSpecies.Human, new Coords2D(8, 0) },
                 { CreatureSpecies.Dwarf, new Coords2D(15, 0) },
-                { CreatureSpecies.Orc, new Coords2D(11, 0) }
+                { CreatureSpecies.Orc, new Coords2D(18, 2) }
             };
 
             IDictionary<CreatureSpecies, MeleeWeapon> defaultWeapons = new Dictionary<CreatureSpecies, MeleeWeapon>()

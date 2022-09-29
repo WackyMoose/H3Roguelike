@@ -7,6 +7,7 @@ using MooseEngine.Core;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using GameV1.UI;
+using MooseEngine.Utilities;
 
 namespace GameV1.Commands
 {
@@ -33,6 +34,13 @@ namespace GameV1.Commands
 
             var inventoryItem = Creature.Inventory.Inventory.RemoveItemFromSlotIndex(ItemIndex);
 
+            List<Coords2D> LootTextures = new List<Coords2D>()
+            {
+                new Coords2D(21, 7),
+                new Coords2D(21, 8),
+                new Coords2D(21, 9),
+            };
+
             // Does inventory item exist?
             if (inventoryItem is null)
             {
@@ -48,7 +56,9 @@ namespace GameV1.Commands
             if (itemAtPosition is null)
             {
                 // Create Temporary Container
-                var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
+                var textureCoordsIndex = Randomizer.RandomInt(0, LootTextures.Count - 1);
+                var textureCoords = LootTextures.ElementAt(textureCoordsIndex);
+                var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", textureCoords, Color.White);
                 tempContainer.Position = Creature.Position;
 
                 // Add item to container and drop container
@@ -69,7 +79,9 @@ namespace GameV1.Commands
                 if (itemAtPositionInterfaces.Contains(typeof(IContainer)) == false)
                 {
                     // Create Temporary Container
-                    var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
+                    var textureCoordsIndex = Randomizer.RandomInt(0, LootTextures.Count - 1);
+                    var textureCoords = LootTextures.ElementAt(textureCoordsIndex);
+                    var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", textureCoords, Color.White);
                     tempContainer.Position = Creature.Position;
 
                     if (tempContainer.AddItemToFirstEmptySlot(inventoryItem) == true &&

@@ -203,7 +203,7 @@ internal class StatsPanel
         var inventoryItemSize = inventorySlotSize; // new UIScreenCoords(40, 40);
 
         // Spritesheet, for rendering inventory content
-        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified.png");
+        _spriteSheet = Raylib_cs.Raylib.LoadTexture(@"..\..\..\Resources\Textures\Tilemap_Modified_MSN.png");
 
         for (int i = 0; i < _player.Inventory.Inventory.Slots.Count(); i++)
         {
@@ -290,7 +290,7 @@ internal class StatsPanel
 
     public void UpdateInventory(ICreature player)
     {
-        var defaultTexture = new Coords2D(22, 0);
+        var defaultTexture = new Coords2D(0, 16);
 
         for (int i = 0; i < player.Inventory.Inventory.Slots.Count(); i++)
         {
