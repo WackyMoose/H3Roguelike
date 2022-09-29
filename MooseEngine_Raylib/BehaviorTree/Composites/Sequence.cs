@@ -1,6 +1,5 @@
 ﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Composites
 {
@@ -33,7 +32,6 @@ namespace MooseEngine.BehaviorTree.Composites
                         default:
                             State = NodeStates.Success;
                             return State;
-
                     }
                 }
             }

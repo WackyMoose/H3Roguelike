@@ -11,7 +11,7 @@ namespace MooseEngine.Pathfinding
         public float F { get { return G + H + W; } }
         public PathNode? Parent { get; set; }
 
-        public PathNode(Vector2 position, PathNode? parent) :base()
+        public PathNode(Vector2 position, PathNode? parent) : base()
         {
             Position = position;
             Parent = parent;

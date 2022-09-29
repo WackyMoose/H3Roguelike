@@ -1,7 +1,6 @@
-﻿using System.Numerics;
-using MooseEngine.Interfaces;
-using MooseEngine.Scenes;
+﻿using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
+using System.Numerics;
 
 namespace MooseEngine.Pathfinding
 {
@@ -99,7 +98,7 @@ namespace MooseEngine.Pathfinding
         //    return new PathNode[0];
         //}
 
-        public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, PathMap map)
+        public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, PathMap map, IEntityLayer avoidanceLayer)
         {
             _openSet.Clear();
             _closedSet.Clear();
@@ -169,6 +168,8 @@ namespace MooseEngine.Pathfinding
 
                         return temp.ToArray();
                     }
+
+                    if (avoidanceLayer.ActiveEntities.ContainsKey(node.Position) == true) continue;
 
                     node.G = Vector2.DistanceSquared(startPos, node.Position) + node.G;
                     node.H = Vector2.DistanceSquared(goalPos, node.Position);

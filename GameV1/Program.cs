@@ -12,7 +12,9 @@ using MooseEngine.Core;
 //};
 
 //Engine.Start<NoiseTest>(); 
-Engine.Start<TestGameMSN>();
+//Engine.Start<TestGameMSN>();
+//Engine.Start<MenuTest>();
+Engine.Start<RogueliteGame>();
 
 
 

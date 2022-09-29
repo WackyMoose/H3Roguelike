@@ -1,37 +1,40 @@
 ﻿using GameV1.Interfaces;
+using GameV1.Interfaces.Creatures;
 using MooseEngine.Graphics;
 using MooseEngine.Interfaces;
 using MooseEngine.Scenes;
 using MooseEngine.Utilities;
+using System.Numerics;
 
 namespace GameV1.Entities
 {
-    internal class Selector : Entity, ISelector
+    internal class Selector : ISelector
     {
-
+        public IDictionary<Vector2, ICreature> Entities { get; set; }
         public IEntity SelectedEntity { get; set; }
+        public int SelectedEntityIndex { get; set; }
 
-        //public IDictionary<Vector2, IEntity>? TilesWithinRange(IScene scene, IDictionary<Vector2, IEntity> Tiles, int range)
-        //{
-        //    return scene.GetEntitiesWithinRange(Tiles, SelectedEntity, range);
-        //}
-
-        public Selector(string name, Coords2D spriteCoords) : base(name, spriteCoords)
+        public Selector()
         {
         }
 
-        public Selector(string name, Coords2D spriteCoords, Color colorTint) : base(name, spriteCoords, colorTint)
+        public void AddEntities(IDictionary<Vector2, ICreature> entities)
         {
+            Entities = entities;
         }
 
-        public override void Initialize()
+        public void SelectNextEntity()
         {
-
-        }
-
-        public override void Update(float deltaTime)
-        {
-
+            if (SelectedEntityIndex < Entities.Count - 1)
+            {
+                SelectedEntityIndex++;
+            }
+            else
+            {
+                SelectedEntityIndex = 0;
+            }
+            
+            SelectedEntity = Entities.ElementAt(SelectedEntityIndex).Value;
         }
     }
 }

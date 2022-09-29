@@ -1,5 +1,6 @@
 ﻿using GameV1.Entities;
-using GameV1.Interfaces;
+using GameV1.Entities.Creatures;
+using GameV1.Interfaces.Creatures;
 using MooseEngine.Core;
 using MooseEngine.Interfaces;
 using MooseEngine.Utilities;
@@ -12,67 +13,101 @@ namespace GameV1.Commands.Factory
     {
 
         // All player behavior-related business logic goes here
-        public static ICommand? Create(InputOptions? input, IScene scene, IEntity entity)
+        public static ICommand? Create(IEnumerable<InputOptions>? inputs, IScene scene, IEntity entity)
         {
+            if (inputs == null) { return null; }
+
             // Retrieve list of Tiles in walk direction
             var tiles = scene.GetLayer((int)EntityLayer.NonWalkableTiles);
             var creatures = scene.GetLayer((int)EntityLayer.Creatures);
 
-            if (input == InputOptions.Up || input == InputOptions.Down || input == InputOptions.Left || input == InputOptions.Right)
+            foreach (var input in inputs)
             {
-                //Console.WriteLine("We are attempting to walk!");
-
-                Vector2 direction = new Vector2();
-
-                switch (input)
+                if (input == InputOptions.UpAction || input == InputOptions.DownAction || input == InputOptions.LeftAction || input == InputOptions.RightAction)
                 {
-                    case InputOptions.Up: direction = Constants.Up; break;
-                    case InputOptions.Down: direction = Constants.Down; break;
-                    case InputOptions.Left: direction = Constants.Left; break;
-                    case InputOptions.Right: direction = Constants.Right; break;
-                }
+                    Vector2 direction = new Vector2();
 
-                var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.Entities, entity.Position + direction);
-                var CreaturesAtTargetPosition = scene.GetEntityAtPosition(creatures.Entities, entity.Position + direction);
-
-                // Creature
-                if (entity is Creature && CreaturesAtTargetPosition is not null)
-                {
-                    //Console.WriteLine("We are attacking!");
-                    return new CommandAttack(scene, (ICreature)entity, (ICreature)CreaturesAtTargetPosition);
-                }
-
-                // Tile
-                if (entity is Creature && TilesAtTargetPosition is not null)
-                {
-                    Tile tile = (Tile)TilesAtTargetPosition;
-
-                    if (!tile.IsWalkable)
+                    switch (input)
                     {
-                        //Console.WriteLine("Tile in the way!");
-                        return new CommandIdle();
+                        case InputOptions.UpAction: direction = Constants.Up; break;
+                        case InputOptions.DownAction: direction = Constants.Down; break;
+                        case InputOptions.LeftAction: direction = Constants.Left; break;
+                        case InputOptions.RightAction: direction = Constants.Right; break;
+                    }
+
+                    var TilesAtTargetPosition = scene.GetEntityAtPosition(tiles.ActiveEntities, entity.Position + direction);
+                    var CreaturesAtTargetPosition = scene.GetEntityAtPosition(creatures.ActiveEntities, entity.Position + direction);
+
+                    // Creature in target position
+                    if (entity is Creature && CreaturesAtTargetPosition is not null)
+                    {
+                        return new Attack(scene, (ICreature)entity, (ICreature)CreaturesAtTargetPosition);
+                    }
+
+                    // Non-walkable Tile in target position
+                    if (entity is Creature && TilesAtTargetPosition is not null)
+                    {
+                        Tile tile = (Tile)TilesAtTargetPosition;
+
+                        if (!tile.IsWalkable)
+                        {
+                            return new Idle();
+                        }
+                    }
+
+                    // Walkable Tile in target position
+                    switch (input)
+                    {
+                        case InputOptions.UpAction: return new MoveUp(scene, entity);
+                        case InputOptions.DownAction: return new MoveDown(scene, entity);
+                        case InputOptions.LeftAction: return new MoveLeft(scene, entity);
+                        case InputOptions.RightAction: return new MoveRight(scene, entity);
+                    }
+
+                }
+
+                if (input == InputOptions.Idle)
+                {
+                    return new Idle();
+                }
+
+                if (input == InputOptions.AutoEquip)
+                {
+                    return new AutoEquip(scene, (ICreature)entity);
+                }
+
+                if (input == InputOptions.PickUpItemIndex)
+                {
+                    if (inputs.Contains(InputOptions.All))
+                    {
+                        // Pick up all
+
+                    }
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (inputs.Contains((InputOptions) i + 1))
+                        {
+                            return new PickUpItemIndex(scene, (ICreature)entity, i + 1);
+                        }
                     }
                 }
 
-                //Console.WriteLine("We are walking!");
-                switch (input)
+                //if (input == InputOptions.PickUpItem)
+                //{
+                //    return new PickUpItem(scene, (ICreature)entity);
+                //}
+
+                if (input == InputOptions.ItemDropIndex)
                 {
-                    case InputOptions.Up: return new CommandMoveUp(scene, entity);
-                    case InputOptions.Down: return new CommandMoveDown(scene, entity);
-                    case InputOptions.Left: return new CommandMoveLeft(scene, entity);
-                    case InputOptions.Right: return new CommandMoveRight(scene, entity);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (inputs.Contains((InputOptions) i + 1))
+                        {
+                            return new DropItemIndex(scene, (ICreature)entity, i + 1);
+                        }
+                    }
                 }
-
-            }
-            if(input == InputOptions.PickUp)
-            {
-                return new CommandItemPickUp(scene, entity);
-            }
-
-            if (input == InputOptions.Idle)
-            {
-                //Console.WriteLine("We are idling!");
-                return new CommandIdle();
             }
 
             return null;

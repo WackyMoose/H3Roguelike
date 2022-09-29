@@ -1,31 +1,20 @@
 ﻿using MooseEngine.BehaviorTree.Base;
 using MooseEngine.BehaviorTree.Interfaces;
-using MooseEngine.Core;
 
 namespace MooseEngine.BehaviorTree.Composites
 {
     // This composite runs a series of tasks, one at a time.
     // It starts with the first, and only steps on to the next once the previous has returned success.
     // Once a task has been completed successfully, it is not evaluated again.
-
-    /// <summary>
-    /// This composite runs a series of tasks, one at a time.
-    /// </summary>
     public class Serializer : CompositeBase
     {
         int m_currentNode;
 
-        /// <summary>
-        /// This composite runs a series of tasks, one at a time.
-        /// </summary>
         public Serializer() : base()
         {
             Reset();
         }
 
-        /// <summary>
-        /// This composite runs a series of tasks, one at a time.
-        /// </summary>
         public Serializer(params INode[] nodes) : base(nodes)
         {
             Reset();
@@ -33,32 +22,37 @@ namespace MooseEngine.BehaviorTree.Composites
 
         public override NodeStates Evaluate()
         {
-            if (Children != null)
+            if (Children == null)
             {
-                if (m_currentNode == Children.Count)
-                {
-                    State = NodeStates.Success;
-                    Console.WriteLine($"Serializer returns {State} ");
-                    Reset();
-                    return State;
-                }
-
-                switch (Children[m_currentNode].Evaluate())
-                {
-                    case NodeStates.Success:
-                        m_currentNode++;
-                        State = NodeStates.Running;
-                        break;
-                    case NodeStates.Running:
-                        State = NodeStates.Running;
-                        break;
-                    case NodeStates.Failure:
-                        State = NodeStates.Failure;
-                        break;
-
-                }
+                State = NodeStates.Failure;
+                return State;
             }
-            Console.WriteLine($"Serializer returns {State} ");
+
+            if (m_currentNode == Children.Count)
+            {
+                State = NodeStates.Success;
+                Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
+                Reset();
+                return State;
+            }
+
+            switch (Children[m_currentNode].Evaluate())
+            {
+                case NodeStates.Success:
+                    m_currentNode++;
+                    Evaluate();
+                    State = NodeStates.Running;
+                    break;
+                case NodeStates.Running:
+                    State = NodeStates.Running;
+                    break;
+                case NodeStates.Failure:
+                    Reset();
+                    State = NodeStates.Failure;
+                    break;
+            }
+
+            Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
             return State;
         }
 
