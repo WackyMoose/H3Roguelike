@@ -116,34 +116,34 @@ public class Scene : Disposeable, IScene
         return entities.ElementAt(Randomizer.RandomInt(0, entities.Count - 1)).Key;
     }
 
-    public Vector2 GetClosestValidPosition(int entityLayer, Vector2 targetPosition, params int[] collisionLayers)
+    public Vector2 GetClosestValidPosition(int entityLayerNum, Vector2 targetPosition, params int[] collisionLayerNums)
     {
         // TODO: Fix this!
         
        //if (collisionLayers.Contains(entityLayer) == false) { collisionLayers.Append(entityLayer); }
 
-        Vector2 closestValidPosition = Vector2.Zero;
+        Vector2 globalClosestValidPosition = Vector2.Zero;
         float tempDist = (float)1e12; // Vector2.DistanceSquared(closestValidPosition, targetPosition); // TODO: const largetstInt
 
-        //foreach (var layer in collisionLayers)
-        //{
-            var layerRef = GetLayer(entityLayer).ActiveEntities;
+        foreach (var layer in collisionLayerNums)
+        {
+            var entityLayer = GetLayer(entityLayerNum).ActiveEntities;
 
-            bool isKeyAvailable = layerRef.ContainsKey(targetPosition) == false;
+            if (entityLayer.ContainsKey(targetPosition) == false) {  }
 
-            foreach (var pos in layerRef.Keys)
+            foreach (var pos in entityLayer.Keys)
             {
                 var distanceToTarget = Vector2.DistanceSquared(pos, targetPosition);
 
                 if (distanceToTarget < tempDist)
                 {
                     tempDist = distanceToTarget;
-                    closestValidPosition = pos;
+                    globalClosestValidPosition = pos;
                 }
             }
-        //}
+        }
 
-        return closestValidPosition;
+        return globalClosestValidPosition;
     }
 
     //public static Vector2 GetClosestValidPosition(IDictionary<Vector2, IEntity> entities, Vector2 targetPosition)

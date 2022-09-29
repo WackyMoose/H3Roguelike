@@ -58,7 +58,7 @@ namespace GameV1
             creature.Stats.Health = 0;
 
             // Create Inventory item
-            var lootableCorpse = new Container(ContainerType.PileOfItems, 8, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7), Color.White);
+            var lootableCorpse = new Container(ContainerType.PileOfItems, 10, 1000, 1000, $"{creature.Name}'s corpse", new Coords2D(8, 7), Color.White);
             lootableCorpse.Position = creature.Position;
 
             // Add creature inventory to lootable corpse

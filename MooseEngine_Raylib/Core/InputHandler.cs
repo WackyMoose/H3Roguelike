@@ -1,26 +1,63 @@
 ﻿namespace MooseEngine.Core
 {
+    public enum KeyModifier : uint
+    {
+        KeyPressed,
+        KeyReleased,
+        KeyDown,
+        KeyUp
+    }
+
+    public struct KeyStroke
+    {
+        public Keycode Keycode { get; set; }
+        public KeyModifier KeyModifier { get; set; }
+    }
+
     public static class InputHandler
     {
-        private static Dictionary<Keycode, InputOptions> KeyInput = new Dictionary<Keycode, InputOptions>();
+        private static Dictionary<KeyStroke, InputOptions> KeyInputs = new Dictionary<KeyStroke, InputOptions>();
 
-        public static void Add(Keycode key, InputOptions input)
+        public static void Add(KeyStroke keyStroke, InputOptions input)
         {
-            if (!KeyInput.ContainsKey(key))
+            if (KeyInputs.ContainsKey(keyStroke) == false)
             {
-                KeyInput.Add(key, input);
+                KeyInputs.Add(keyStroke, input);
             }
         }
 
         public static IEnumerable<InputOptions>? Handle()
         {
             var input = new List<InputOptions>();
-
-            foreach (var pair in KeyInput)
+            
+            foreach (var keyInput in KeyInputs)
             {
-                if (Input.IsKeyPressed(pair.Key))
+                switch (keyInput.Key.KeyModifier)
                 {
-                    input.Add(pair.Value);
+                    case KeyModifier.KeyPressed:
+                        if (Input.IsKeyPressed(keyInput.Key.Keycode))
+                        {
+                            input.Add(keyInput.Value);
+                        }
+                        break;
+                    case KeyModifier.KeyReleased:
+                        if (Input.IsKeyReleased(keyInput.Key.Keycode))
+                        {
+                            input.Add(keyInput.Value);
+                        }
+                        break;
+                    case KeyModifier.KeyDown:
+                        if (Input.IsKeyDown(keyInput.Key.Keycode))
+                        {
+                            input.Add(keyInput.Value);
+                        }
+                        break;
+                    case KeyModifier.KeyUp:
+                        if (Input.IsKeyUp(keyInput.Key.Keycode))
+                        {
+                            input.Add(keyInput.Value);
+                        }
+                        break;
                 }
             }
 
