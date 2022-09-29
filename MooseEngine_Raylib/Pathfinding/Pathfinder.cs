@@ -8,6 +8,7 @@ namespace MooseEngine.Pathfinding
     {
         private Dictionary<Vector2, PathNode> _openSet = new Dictionary<Vector2, PathNode>();
         private Dictionary<Vector2, PathNode> _closedSet = new Dictionary<Vector2, PathNode>();
+        private IDictionary<Vector2, IEntity> _avoidanceSet = new Dictionary<Vector2, IEntity>();
         private List<PathNode> _neighbours = new List<PathNode>();
         //private PathNode _lastNode;
 
@@ -100,6 +101,11 @@ namespace MooseEngine.Pathfinding
 
         public PathNode[] GetPath(Vector2 startPos, Vector2 goalPos, PathMap map, IEntityLayer avoidanceLayer)
         {
+            _avoidanceSet = avoidanceLayer.ActiveEntities;
+
+            if (_avoidanceSet.ContainsKey(goalPos))
+                _avoidanceSet.Remove(goalPos);
+
             _openSet.Clear();
             _closedSet.Clear();
 
@@ -168,7 +174,7 @@ namespace MooseEngine.Pathfinding
                         return temp.ToArray();
                     }
 
-                    if (avoidanceLayer.ActiveEntities.ContainsKey(node.Position) == true) continue;
+                    if (_avoidanceSet.ContainsKey(node.Position) == true) continue;
 
                     node.G = Vector2.DistanceSquared(startPos, node.Position) + node.G;
                     node.H = Vector2.DistanceSquared(goalPos, node.Position);
