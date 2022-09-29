@@ -207,6 +207,11 @@ internal class StatsPanel
         _selectorListView = new SelectorListView(listViewPosition, listViewSize);
     }
 
+    public void SetPlayerName(string name)
+    {
+        _panelOptions.Text = name;
+    }
+
     public void OnGUI(IUIRenderer UIRenderer)
     {
         UIRenderer.DrawPanel(_panelOptions);

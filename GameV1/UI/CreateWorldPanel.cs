@@ -30,8 +30,8 @@ internal class CreateWorldPanel
     private ButtonOptions _createButtonOptions;
     private ButtonOptions _backButtonOptions;
 
-    public event Action OnCreateButtonPressed;
-    public event Action OnBackButtonPressed;
+    public event Action<string, int> OnCreateButtonClicked;
+    public event Action OnBackButtonClicked;
 
     public CreateWorldPanel()
     {
@@ -89,12 +89,13 @@ internal class CreateWorldPanel
 
         if (UIRenderer.DrawButton(_createButtonOptions))
         {
-            OnCreateButtonPressed?.Invoke();
+            _ = int.TryParse(_mapSeed, out var seed);
+            OnCreateButtonClicked?.Invoke(_playerName, seed);
         }
 
         if (UIRenderer.DrawButton(_backButtonOptions))
         {
-            OnBackButtonPressed?.Invoke();
+            OnBackButtonClicked?.Invoke();
         }
     }
 }

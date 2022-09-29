@@ -1,4 +1,5 @@
 ﻿using GameV1.Commands;
+using GameV1.Commands.Factory;
 using GameV1.Entities;
 using GameV1.UI;
 using GameV1.UI.Components;
@@ -7,7 +8,6 @@ using MooseEngine.BehaviorTree;
 using MooseEngine.BehaviorTree.Interfaces;
 using MooseEngine.Core;
 using MooseEngine.Graphics;
-using MooseEngine.Graphics.UI;
 using MooseEngine.Graphics.UI.Options;
 using MooseEngine.Interfaces;
 using MooseEngine.Pathfinding;
@@ -19,31 +19,28 @@ using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
 namespace GameV1;
 
-internal class MenuTest : IGame
+enum GameState
 {
-    enum SceneState
-    {
-        Login,
-        Menu,
-        Create,
-        Load,
-        Game
-    }
-    private SceneState _sceneState = SceneState.Login;
-    private ISceneFactory _sceneFactory;
-    private IScene _scene;
-    private IScene _menuScene;
+    Menu,
+    Game
+}
 
-    // Menu
-    private LoginFormComponent _loginPanel;
-    private Menu _mainMenu;
-    private CreateWorldPanel _createWorldPanel;
-    private SaveGamesPanel _loadPanel;
+internal class RogueliteGame : IGame
+{
+    private GameState _gameState = GameState.Menu;
 
+    private ISceneFactory? _sceneFactory;
+    private IScene? _menuScene;
+    private IScene? _gameScene;
+
+    private MenuUI _menuUI;
+    private GameUI _gameUI;
+
+    // Game
     private ButtonOptions _backToMenuButton;
 
     // Creatures
-    private Player player = new Player("Hero", 120, new Coords2D(5, 0));
+    private Player _player;
     private LightSource light = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
     private LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
     private Npc druid = new Npc("Druid", 100, new Coords2D(9, 0));
@@ -63,145 +60,169 @@ internal class MenuTest : IGame
     // Layers
     private NodeMap<Tile> _nodeMap = new NodeMap<Tile>();
 
-    private ConsolePanel _consolePanel;
-    private StatsPanel _statsPanel;
-    private DebugPanel _debugPanel;
-    private bool _showDebugPanel = true;
-
-    static string[] items =
-{
-        "Orc Warloard",
-        "> Orc Bruiser",
-        "Orc Shaman",
-        "Goblin Looter"
-    };
-
     public void Initialize()
     {
-        var window = Application.Instance.Window;
-
         _sceneFactory = Application.Instance.SceneFactory;
 
-        _menuScene = _sceneFactory.CreateScene();
-        _menuScene.SceneCamera = new Camera(new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-
-        var buttonPosition = new UIScreenCoords(10, 10);
-        var buttonSize = new UIScreenCoords(200, 30);
-        _backToMenuButton = new ButtonOptions(buttonPosition, buttonSize, "Back to Menu");
-
-        _loginPanel = new LoginFormComponent();
-        _loginPanel.OnLoginButtonClicked += OnLoginButtonPressed;
-
-        _mainMenu = new Menu();
-        _mainMenu.OnPlayButtonPressed += OnPlayButtonPressed;
-        _mainMenu.OnLoadButtonPressed += OnLoadButtonPressed;
-
-        _createWorldPanel = new CreateWorldPanel();
-        _createWorldPanel.OnCreateButtonClicked += OnCreateButtonPressed;
-        _createWorldPanel.OnBackButtonClicked += OnBackButtonPressed;
-
-        _loadPanel = new SaveGamesPanel();
-        _loadPanel.OnBackButtonPressed += OnBackButtonPressed;
+        switch (_gameState)
+        {
+            case GameState.Menu: CreateMenu(_sceneFactory!); break;
+            case GameState.Game: CreateGame(_sceneFactory!); break;
+        }
     }
 
-    private void OnCreateButtonPressed(string playerName, int seed)
+    private void CreateMenu(ISceneFactory sceneFactory)
     {
-        Console.WriteLine($"Created new game, playername: {playerName}, using seed: {seed}");
-
-        _sceneState = SceneState.Game;
+        if (_gameScene != null)
+        {
+            _gameScene.EntityLayers.Clear();
+            _gameScene = null;
+        }
+        _gameState = GameState.Menu;
 
         var window = Application.Instance.Window;
 
-        _scene = _sceneFactory.CreateScene();
+        _menuScene = sceneFactory.CreateScene();
+        _menuScene.SceneCamera = new Camera(new Vector2(window.Width / 2.0f, window.Height / 2.0f));
 
-        GenerateWorld(seed);
-
-        _scene.SceneCamera = new Camera(player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
-
-        var consoleSize = new Coords2D(window.Width - StatsPanel.WIDTH, ConsolePanel.HEIGHT);
-        var consolePosition = new Coords2D(((window.Width - StatsPanel.WIDTH) / 2) - (consoleSize.X / 2), window.Height - consoleSize.Y);
-
-        _consolePanel = new ConsolePanel(consolePosition, consoleSize, 4);
-        _statsPanel = new StatsPanel(player);
-        _debugPanel = new DebugPanel(10, 10, player);
-        _loginPanel = new LoginFormComponent();
-
-        ConsolePanel.Add("Hello there stranger!");
-
-        SelectorListView.SetData(items);
+        _menuUI = new MenuUI();
+        _menuUI.OnCreateNewGameButtonClicked += OnCreateNewGameButtonClicked;
     }
 
-    private void OnBackButtonPressed()
+    private void OnCreateNewGameButtonClicked(string name, int seed)
     {
-        _sceneState = SceneState.Menu;
+        _player = new Player(name, 120, new Coords2D(5, 0));
+
+        CreateGame(_sceneFactory!);
+
+        _gameUI.SetPlayerName(_player.Name);
     }
 
-    private void OnLoginButtonPressed(string username)
+    private void CreateGame(ISceneFactory sceneFactory)
     {
-        _sceneState = SceneState.Menu;
+        if (_menuScene != null)
+        {
+            _menuScene.EntityLayers.Clear();
+            _menuScene = null;
+        }
+        _gameState = GameState.Game;
+
+        var window = Application.Instance.Window;
+
+        _gameScene = sceneFactory.CreateScene();
+
+        var seed = Randomizer.RandomInt(int.MinValue, int.MaxValue);
+        GenerateWorld(_gameScene, seed);
+
+        _gameScene.SceneCamera = new Camera(_player, new Vector2(window.Width / 2.0f, window.Height / 2.0f));
+
+        _gameUI = new GameUI(_player);
+        _gameUI.BackToMenuButtonClicked += BackToMenuButtonClicked;
     }
 
-    private void OnLoadButtonPressed()
+    private void BackToMenuButtonClicked()
     {
-        _sceneState = SceneState.Load;
-    }
-
-    private void OnPlayButtonPressed()
-    {
-        _sceneState = SceneState.Create;
+        CreateMenu(_sceneFactory!);
+        _menuUI.SetMenuState(MenuState.MainMenu);
     }
 
     public void Uninitialize()
     {
+        _gameScene?.Dispose();
+        _gameScene = null;
+
+        _menuScene?.Dispose();
+        _menuScene = null;
     }
 
     public void Update(float deltaTime)
     {
-        if (_sceneState == SceneState.Game)
+        switch (_gameState)
         {
-            _scene.UpdateRuntime(deltaTime);
+            case GameState.Menu: UpdateMenu(deltaTime); break;
+            case GameState.Game: UpdateGame(deltaTime); break;
         }
-        else
+    }
+
+    private void UpdateMenu(float deltaTime)
+    {
+        if (_menuScene == default)
         {
-            _menuScene.UpdateRuntime(deltaTime);
+            CreateMenu(_sceneFactory!);
+            return;
         }
+
+        _menuScene.UpdateRuntime(deltaTime);
+    }
+
+    private void UpdateGame(float deltaTime)
+    {
+        if (_gameScene == default)
+        {
+            CreateGame(_sceneFactory!);
+            return;
+        }
+
+        // Player input
+        var input = InputHandler.Handle();
+
+        // Generate commands
+        var command = CommandFactory.Create(input, _gameScene, _player);
+
+        CommandQueue.Add(command);
+
+        if (!CommandQueue.IsEmpty)
+        {
+            // Execute Player commands
+            CommandQueue.Execute();
+
+            // AI NPC / Monster / Critter controls
+        }
+
+        // TODO: Only illuminate if range within viewport, AABB check
+        // Dynamically updated light sources
+        var windowSize = new Vector2(
+            (int)(Application.Instance.Window.Width * 0.5 - (Application.Instance.Window.Width * 0.5 % Constants.DEFAULT_ENTITY_SIZE)),
+            (int)(Application.Instance.Window.Height * 0.5 - (Application.Instance.Window.Height * 0.5 % Constants.DEFAULT_ENTITY_SIZE)));
+        var cameraPosition = _gameScene.SceneCamera.Position;
+        var itemLayer = _gameScene.GetLayer((int)EntityLayer.Items);
+        var lightSources = _gameScene.GetEntitiesOfType<LightSource>(itemLayer);
+
+        foreach (LightSource lightSource in lightSources.Values)
+        {
+            var isOverlapping = MathFunctions.IsOverlappingAABB(
+                cameraPosition,
+                windowSize,
+                lightSource.Position,
+                new Vector2(lightSource.Range, lightSource.Range));
+
+            if (isOverlapping)
+            {
+                lightSource.Illuminate(_gameScene);
+            }
+        }
+
+        _gameScene.UpdateRuntime(deltaTime);
     }
 
     public void UIRender(IUIRenderer UIRenderer)
     {
-        switch (_sceneState)
+        switch (_gameState)
         {
-            case SceneState.Login: _loginPanel.OnGUI(UIRenderer); break;
-            case SceneState.Load: _loadPanel.OnGUI(UIRenderer); break;
-            case SceneState.Create: _createWorldPanel.OnGUI(UIRenderer); break;
-            case SceneState.Game: DrawBackToMenuButton(UIRenderer); break;
-            case SceneState.Menu:
-            default: _mainMenu.OnGUI(UIRenderer); break;
+            case GameState.Menu: _menuUI.OnGUI(UIRenderer); break;
+            case GameState.Game: _gameUI.OnGUI(UIRenderer); break;
         }
     }
 
-    private void DrawBackToMenuButton(IUIRenderer UIRenderer)
-    {
-        UIRenderer.DrawFPS(16, 32);
-
-        _consolePanel.OnGUI(UIRenderer);
-        _statsPanel.OnGUI(UIRenderer);
-
-        if (UIRenderer.DrawButton(_backToMenuButton))
-        {
-            _sceneState = SceneState.Menu;
-        }
-    }
-
-    private void GenerateWorld(int seed)
+    private void GenerateWorld(IScene scene, int seed)
     {
         // Spawn world
-        WorldGenerator.GenerateWorld(seed, ref _scene);
+        WorldGenerator.GenerateWorld(seed, ref scene);
 
-        _scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)_scene.GetLayer((int)EntityLayer.WalkableTiles));
+        scene.PathMap = _nodeMap.GenerateMap((IEntityLayer<Tile>)scene.GetLayer((int)EntityLayer.WalkableTiles));
 
-        var itemLayer = _scene.AddLayer<Item>(EntityLayer.Items);
-        var creatureLayer = _scene.AddLayer<Creature>(EntityLayer.Creatures);
+        var itemLayer = scene.AddLayer<Item>(EntityLayer.Items);
+        var creatureLayer = scene.AddLayer<Creature>(EntityLayer.Creatures);
 
         // Spawn items
         doubleAxe.Position = new Vector2(263, 242) * Constants.DEFAULT_ENTITY_SIZE;
@@ -212,11 +233,11 @@ internal class MenuTest : IGame
         itemLayer?.Add(trident);
 
         // Spawn player
-        player.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
+        _player.Position = new Vector2(251, 250) * Constants.DEFAULT_ENTITY_SIZE;
         //player.Inventory.
-        player.MainHand.Add(sword);
-        player.Chest.Add(armor);
-        creatureLayer?.Add(player);
+        _player.MainHand.Add(sword);
+        _player.Chest.Add(armor);
+        creatureLayer?.Add(_player);
 
         // Light sources
         light.Position = new Vector2(257, 229) * Constants.DEFAULT_ENTITY_SIZE;
@@ -256,7 +277,7 @@ internal class MenuTest : IGame
         // Randomized walk guard Behavior tree
         var guard02Node = Serializer(
                 Action(new CommandPatrolRectangularArea(
-                    _scene,
+                    scene,
                     guard_02,
                     light.Position + new Vector2(-6, -3) * Constants.DEFAULT_ENTITY_SIZE,
                     light.Position + new Vector2(6, 3) * Constants.DEFAULT_ENTITY_SIZE
@@ -277,7 +298,7 @@ internal class MenuTest : IGame
         druidTree.Add(Serializer(
         //Action(new CommandCheckForCreaturesWithinRange(_scene, druid)),
                 Delay(
-                    Action(new CommandMoveToEntity(_scene, druid, player)),
+                    Action(new CommandMoveToEntity(scene, druid, _player)),
                     1)
                 )
             );
@@ -289,10 +310,10 @@ internal class MenuTest : IGame
 
         // March along the city walls
         guard_01Tree.Add(Serializer(
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 244) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 244) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(262, 257) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new CommandMoveToPosition(_scene, guard_01, new Vector2(240, 257) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new CommandMoveToPosition(scene, guard_01, new Vector2(240, 244) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(scene, guard_01, new Vector2(262, 244) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(scene, guard_01, new Vector2(262, 257) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new CommandMoveToPosition(scene, guard_01, new Vector2(240, 257) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
