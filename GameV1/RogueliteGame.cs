@@ -237,7 +237,7 @@ internal class RogueliteGame : IGame
     private void GenerateWorld(IScene scene, int seed)
     {
         // Spawn world
-        WorldGenerator.GenerateWorld(80085, ref scene);
+        WorldGenerator.GenerateWorld(516613364, ref scene);
 
         var itemLayer = scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = scene.AddLayer<Creature>(EntityLayer.Creatures);

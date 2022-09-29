@@ -3,7 +3,7 @@ using MooseEngine.Utilities;
 
 namespace GameV1.WorldGeneration
 {
-    internal static class ProceduralAlgorithms
+    public static class ProceduralAlgorithms
     {
         //TODO Add overworld generation...
         /*
@@ -53,7 +53,6 @@ namespace GameV1.WorldGeneration
 
             path.Add(startPosition);
             var prevPosition = startPosition;
-
             for (int i = 0; i < walkLength; i++)
             {
                 var dir = Direction2D.GetRandomCardinalDirection() * Constants.DEFAULT_ENTITY_SIZE;
@@ -78,6 +77,7 @@ namespace GameV1.WorldGeneration
             public static Coords2D GetRandomCardinalDirection()
             {
                 Random rnd = new Random();
+
                 return CardinalDirectionList[rnd.Next(CardinalDirectionList.Count)];
             }
         }

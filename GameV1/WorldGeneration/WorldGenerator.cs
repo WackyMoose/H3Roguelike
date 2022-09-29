@@ -70,7 +70,7 @@ namespace GameV1.WorldGeneration
 
                 if (tile.Value > 0.3 && tile.Value < 0.305)
                 {
-                    _forest = ProceduralAlgorithms.GenerateForest(75, 5, tile.Key);
+                    _forest = ProceduralAlgorithms.GenerateForest(150, 5, tile.Key);
 
                     foreach (var coord in _forest)
                     {
