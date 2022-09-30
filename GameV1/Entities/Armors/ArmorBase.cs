@@ -9,6 +9,11 @@ namespace GameV1.Entities.Armors
     {
         public int DamageReduction { get; set; }
 
+        public ArmorBase() : base()
+        {
+
+        }
+
         protected ArmorBase(int durability, int maxValue, string name, Coords2D spriteCoords, Color colorTint) : base(durability, maxValue, name, spriteCoords, colorTint)
         {
         }

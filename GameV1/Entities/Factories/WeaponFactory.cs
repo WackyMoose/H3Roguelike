@@ -51,7 +51,7 @@ namespace GameV1.Entities.Factories
         //}
 
         
-        public static IWeapon? CreateWeapon<TWeapon>(IEntityLayer entityLayer, Vector2 position) where TWeapon : class, IWeapon, new()
+        public static IWeapon? CreateWeapon<TWeapon>(IScene scene, int entityLayerNum, Vector2 position, params int[] collisionLayers) where TWeapon : class, IWeapon, new()
         {
             IDictionary<string, Coords2D> meleeWeaponSpriteCoords = new Dictionary<string, Coords2D>()
             {
@@ -77,8 +77,13 @@ namespace GameV1.Entities.Factories
                 { "Blowpipe", new Coords2D(10, 4) }
             };
 
+            var entityLayer = scene.GetLayer(entityLayerNum);
+
+            // Is position available?
+            var validPosition = scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
+
             // check if deactivated weapon instance is available
-            TWeapon? newWeapon = entityLayer.ActivateOrCreateEntity<TWeapon>(position);
+            TWeapon? newWeapon = entityLayer.ActivateOrCreateEntity<TWeapon>(validPosition);
 
             // IEntity
             newWeapon.Scale = Vector2.One;

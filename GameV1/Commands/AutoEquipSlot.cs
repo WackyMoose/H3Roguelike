@@ -86,7 +86,7 @@ namespace GameV1.Commands
                         // remove weapon from inventory and add to weapon slot
                         Slot.Add((TItem?)inventory.RemoveItem(weapon));
 
-                        ConsolePanel.Add($"{Creature.Name} equipped {weapon.Name} as {Slot.Name}");
+                       // Console.WriteLine($"{Creature.Name} equipped {weapon.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }
@@ -116,7 +116,7 @@ namespace GameV1.Commands
                         // remove armor from inventory and add to armor slot
                         Slot.Add((TItem?)inventory.RemoveItem(armor));
 
-                        ConsolePanel.Add($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
+                       // Console.WriteLine($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }
@@ -162,7 +162,7 @@ namespace GameV1.Commands
                         // add old weapon to inventory
                         Creature.Inventory.Inventory.AddItemToFirstEmptySlot(temp);
 
-                        ConsolePanel.Add($"{Creature.Name} equipped {inventoryWeapon.Name} as {Slot.Name}");
+                       // Console.WriteLine($"{Creature.Name} equipped {inventoryWeapon.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }
@@ -206,7 +206,7 @@ namespace GameV1.Commands
                         // add old weapon to inventory
                         Creature.Inventory.Inventory.AddItemToFirstEmptySlot(temp);
 
-                        ConsolePanel.Add($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
+                       // Console.WriteLine($"{Creature.Name} equipped {armor.Name} as {Slot.Name}");
 
                         return NodeStates.Success;
                     }

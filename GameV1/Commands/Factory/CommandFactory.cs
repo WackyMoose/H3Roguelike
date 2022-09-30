@@ -49,7 +49,7 @@ namespace GameV1.Commands.Factory
                     {
                         Tile tile = (Tile)TilesAtTargetPosition;
 
-                        if (!tile.IsWalkable)
+                        if (tile.IsWalkable == false)
                         {
                             return new Idle();
                         }
@@ -81,30 +81,29 @@ namespace GameV1.Commands.Factory
                     if (inputs.Contains(InputOptions.All))
                     {
                         // Pick up all
-
+                        return new PickUpItem(scene, (ICreature)entity);
                     }
 
                     for (int i = 0; i < 10; i++)
                     {
-                        if (inputs.Contains((InputOptions) i + 1))
+                        var slotIndex = i == 0 ? 9 : i - 1;
+
+                        if (inputs.Contains((InputOptions) i))
                         {
-                            return new PickUpItemIndex(scene, (ICreature)entity, i + 1);
+                            return new PickUpItemIndex(scene, (ICreature)entity, slotIndex);
                         }
                     }
                 }
-
-                //if (input == InputOptions.PickUpItem)
-                //{
-                //    return new PickUpItem(scene, (ICreature)entity);
-                //}
 
                 if (input == InputOptions.ItemDropIndex)
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        if (inputs.Contains((InputOptions) i + 1))
+                        var slotIndex = i == 0 ? 9 : i - 1;
+
+                        if (inputs.Contains((InputOptions)i))
                         {
-                            return new DropItemIndex(scene, (ICreature)entity, i + 1);
+                            return new DropItemIndex(scene, (ICreature)entity, slotIndex);
                         }
                     }
                 }

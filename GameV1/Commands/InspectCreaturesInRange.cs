@@ -44,7 +44,7 @@ namespace GameV1.Commands
             {
                 Creature.CreaturesWithinPerceptionRange.Clear();
 
-                Console.WriteLine($"InspectCreaturesWithinRange found nothing.");
+               // Console.WriteLine($"InspectCreaturesWithinRange found nothing.");
 
                 return NodeStates.Failure;
             }
@@ -52,11 +52,11 @@ namespace GameV1.Commands
             {
                 Creature.CreaturesWithinPerceptionRange = CreaturesInRange;
 
-                Console.WriteLine($"InspectCreaturesWithinRange found:");
+               // Console.WriteLine($"InspectCreaturesWithinRange found:");
 
                 foreach (var creature in Creature.CreaturesWithinPerceptionRange)
                 {
-                    Console.WriteLine(creature.Value.Name);
+                   // Console.WriteLine(creature.Value.Name);
                 }
 
                 return NodeStates.Success;

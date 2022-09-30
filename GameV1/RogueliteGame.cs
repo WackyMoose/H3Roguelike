@@ -24,6 +24,7 @@ using MooseEngine.Scenes;
 using MooseEngine.Scenes.Factories;
 using MooseEngine.Utilities;
 using System.Numerics;
+using static GameV1.UI.UIColors;
 using static MooseEngine.BehaviorTree.BehaviorTreeFactory;
 
 namespace GameV1;
@@ -101,7 +102,7 @@ internal class RogueliteGame : IGame
         var seed = Randomizer.RandomInt(int.MinValue, int.MaxValue);
         GenerateWorld(_gameScene, seed);
 
-        _player = CreatureFactory.CreateCreature<Creature>(_gameScene!, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, name, new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
+        _player = CreatureFactory.CreateCreature<Creature>(_gameScene!, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, name, new Coords2D(15, 0), new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
 
         var window = Application.Instance.Window;
 
@@ -111,15 +112,6 @@ internal class RogueliteGame : IGame
         _gameUI.BackToMenuButtonClicked += BackToMenuButtonClicked;
 
         _gameUI.SetPlayerName(_player.Name);
-
-        //var orc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Crab, "Crab", new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE);
-        //orc.Position = new Vector2(52, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        ////player.Inventory.
-        //orc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        //orc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
-        //_scene.TryPlaceEntity((int)EntityLayer.Creatures, orc, orc.Position);
-
-        //_player = orc;
 
         _selector.AddEntities(_player.CreaturesWithinPerceptionRange);
     }
@@ -204,23 +196,44 @@ internal class RogueliteGame : IGame
         // TODO: Add lightsources in creature inventories and containers
 
 
-        var creatureLayer = _gameScene.GetLayer((int)EntityLayer.Creatures);
+        //var creatureLayer = _gameScene.GetLayer((int)EntityLayer.Creatures);
 
         var lightSources = _gameScene.GetEntitiesOfType<LightSource>(itemLayer);
+
+        var containers = _gameScene.GetEntitiesOfType<Container>(itemLayer);
+        
+        foreach(var container in containers)
+        {
+            if (container.Value.IsEmpty == false)
+            {
+                foreach (var item in container.Value.Slots)
+                {
+                    if (item.Item is LightSource lightSource)
+                    {
+                        lightSource.Position = container.Key;
+                        lightSources.Add(container.Key, lightSource);
+                    }
+                }
+            }
+        }
 
         foreach (ILightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
                 cameraPosition,
-                windowSize,
+                (int)windowSize.X,
+                (int)windowSize.Y,
                 lightSource.Position,
-                new Vector2(lightSource.Range, lightSource.Range));
+                lightSource.Range, 
+                lightSource.Range);
 
             if (isOverlapping)
             {
                 lightSource.Illuminate(_gameScene);
             }
         }
+
+        _gameUI.StatsPanel.UpdateInventory(_player);
 
         _gameScene.UpdateRuntime(deltaTime);
     }
@@ -242,10 +255,15 @@ internal class RogueliteGame : IGame
         var itemLayer = scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 45) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 46) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 47) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(60, 48) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 49) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 50) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 51) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 52) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+        ArmorFactory.CreateArmor<BodyArmor>(scene, (int)EntityLayer.Items, new Vector2(53, 50) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        ArmorFactory.CreateArmor<HeadGear>(scene, (int)EntityLayer.Items, new Vector2(53, 51) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        ArmorFactory.CreateArmor<FootWear>(scene, (int)EntityLayer.Items, new Vector2(53, 52) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
         //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
         // Spawn player
@@ -289,60 +307,99 @@ internal class RogueliteGame : IGame
         LightSource campFire = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
 
         campFire.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(campFire);
+        //itemLayer?.AddEntity(campFire);
+        scene.TryPlaceEntity((int)EntityLayer.Items, campFire, campFire.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
 
         LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(townLights);
+        //itemLayer?.AddEntity(townLights);
+        scene.TryPlaceEntity((int)EntityLayer.Items, townLights, townLights.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
 
-        for (int i = 0; i < 128; i++)
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
         {
             // Color(128, 128 - 48, 128 - 96, 255)
             var color = new Color(
-                160 + Randomizer.RandomInt(-32, 32),
-                144 + Randomizer.RandomInt(-32, 32),
-                128 + Randomizer.RandomInt(-32, 32), 255);
-            var light = new LightSource(Randomizer.RandomInt(3, 12) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(9, 8), Color.White);
-            light.Position = new Vector2(Randomizer.RandomInt(0, 200), Randomizer.RandomInt(0, 200)) * Constants.DEFAULT_ENTITY_SIZE;
+                160 + Randomizer.RandomInt(-16, 16),
+                144 + Randomizer.RandomInt(-16, 16),
+                128 + Randomizer.RandomInt(-16, 16), 255);
+            var light = new LightSource(Randomizer.RandomInt(4, 8) * Constants.DEFAULT_ENTITY_SIZE, color, 1000, 100, "Camp fire", new Coords2D(8, 8), Color.White);
+            light.Position = WorldGenerator._structurePositions[i] + new Vector2((3 * Constants.DEFAULT_ENTITY_SIZE), (3 * Constants.DEFAULT_ENTITY_SIZE));
             //itemLayer?.Add(light);
             scene.TryPlaceEntity((int)EntityLayer.Items, light, light.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
         }
 
+        // Add Orcs with behavior to campsites
+        for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
+        {
+            var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", new Coords2D(18, 2), WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+
+            campDwellingOrc.Stats.Perception = Randomizer.RandomInt(3, 6) * Constants.DEFAULT_ENTITY_SIZE;
+            campDwellingOrc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+            campDwellingOrc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
+
+            var patrolRange = Randomizer.RandomInt(4, 8);
+
+            var campDwellingOrcNode = 
+
+            Selector(
+                Serializer(
+                    Action(new TargetCreatureInRange(scene, campDwellingOrc)),
+                    Action(new MoveToTargetCreature(scene, campDwellingOrc)),
+                    Action(new AttackTarget(scene, campDwellingOrc))
+                ),
+                //Serializer(
+                //    Action(new SearchForItemsInRange(scene, campDwellingOrc)),
+                //    Action(new MoveToTargetItem(scene, campDwellingOrc)),
+                //    Action(new PickUpItem(scene, campDwellingOrc)),
+                //    Action(new AutoEquip(scene, campDwellingOrc))
+                //),
+                Action(new PatrolRectangularArea(
+                        scene,
+                        campDwellingOrc,
+                        WorldGenerator._structurePositions[i] + new Vector2(-patrolRange, -patrolRange) * Constants.DEFAULT_ENTITY_SIZE,
+                        WorldGenerator._structurePositions[i] + new Vector2(patrolRange, patrolRange) * Constants.DEFAULT_ENTITY_SIZE)
+                )
+            );
+
+            var campDwellingOrcTree = BehaviorTree(campDwellingOrc, campDwellingOrcNode);
+
+            btrees.Add(campDwellingOrcTree);
+        }
+
         // Druid chasing player
-        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE);
+        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Coords2D(9, 0), new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Coords2D(15, 0), new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
 
         // Patrolling guard top-left
-        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE);
+        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Coords2D(20, 2), new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_tl.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         guard_tl.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Patrolling guard bottom-right
-        var guard_br = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        var guard_br = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Skeleton, "Guard", new Coords2D(21, 2), new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
 
         var walkableTileLayer = (IEntityLayer<Tile>)scene.GetLayer((int)EntityLayer.WalkableTiles);
 
         scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
-
 
         // dwarf walk guard Behavior tree
         var dwarfNode =
@@ -372,9 +429,9 @@ internal class RogueliteGame : IGame
         var druidNode =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(scene, druid))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(scene, druid))
+                //),
                 Serializer(
                     Action(new TargetCreatureInRange(scene, druid)),
                     Action(new MoveToTargetCreature(scene, druid)),
@@ -396,9 +453,9 @@ internal class RogueliteGame : IGame
         var guardNode =
 
             Selector(
-                AlwaysReturnFailure(
-                    Action(new InspectCreaturesInRange(scene, guard_tl))
-                ),
+                //AlwaysReturnFailure(
+                //    Action(new InspectCreaturesInRange(scene, guard_tl))
+                //),
                 Serializer(
                     Action(new TargetCreatureInRange(scene, guard_tl)),
                     Action(new MoveToTargetCreature(scene, guard_tl)),
@@ -416,8 +473,8 @@ internal class RogueliteGame : IGame
                 Serializer(
                     Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 44) * Constants.DEFAULT_ENTITY_SIZE)),
                     Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 44) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE)),
-                    Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 57) * Constants.DEFAULT_ENTITY_SIZE))
+                    Action(new MoveToPosition(scene, guard_tl, new Vector2(62, 58) * Constants.DEFAULT_ENTITY_SIZE)),
+                    Action(new MoveToPosition(scene, guard_tl, new Vector2(40, 58) * Constants.DEFAULT_ENTITY_SIZE))
                 )
             );
 
@@ -436,7 +493,7 @@ internal class RogueliteGame : IGame
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_A, KeyModifier = KeyModifier.KeyPressed }, InputOptions.All);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_E, KeyModifier = KeyModifier.KeyPressed }, InputOptions.AutoEquip);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_I, KeyModifier = KeyModifier.KeyDown }, InputOptions.PickUpItemIndex);
-        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyPressed }, InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
+        InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_Q, KeyModifier = KeyModifier.KeyDown }, InputOptions.ItemDropIndex);     // <-- Notice the KeyDown modifier
 
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ZERO, KeyModifier = KeyModifier.KeyPressed }, InputOptions.Zero);
         InputHandler.Add(new KeyStroke() { Keycode = Keycode.KEY_ONE, KeyModifier = KeyModifier.KeyPressed }, InputOptions.One);

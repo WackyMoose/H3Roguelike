@@ -36,7 +36,7 @@ namespace GameV1.Commands
             {
                 Creature.TargetCreature = null;
                 
-                Console.WriteLine($"TargetCreaturesWithinRange found nothing.");
+               // Console.WriteLine($"TargetCreaturesWithinRange found nothing.");
 
                 return NodeStates.Failure;
             }
@@ -44,7 +44,7 @@ namespace GameV1.Commands
             {
                 Creature.TargetCreature = (ICreature?)creaturesInRange.Values.FirstOrDefault();
 
-                Console.WriteLine($"TargetCreaturesWithinRange found {Creature?.TargetCreature?.Name}");
+               // Console.WriteLine($"TargetCreaturesWithinRange found {Creature?.TargetCreature?.Name}");
 
                 return NodeStates.Success;
             }

@@ -10,33 +10,45 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1.Entities.Factories
 {
     public static class ArmorFactory
     {
-        public static IArmor? CreateArmor<TArmor>(IEntityLayer entityLayer, Vector2 position) where TArmor : class, IArmor, new()
+        public static IArmor? CreateArmor<TArmor>(IScene scene, int entityLayerNum, Vector2 position, params int[] collisionLayers) where TArmor : class, IArmor, new()
         {
             IDictionary<string, Coords2D> headGearSpriteCoords = new Dictionary<string, Coords2D>()
             {
-                { "Helmet", new Coords2D(6, 4) },
-                { "Hat", new Coords2D(6, 4) }
+                { "Steel Helmet", new Coords2D(17, 7) },
+                { "Iron Helmet", new Coords2D(17, 8) },
+                { "Bronze Helmet", new Coords2D(17, 9) }
             };
 
             IDictionary<string, Coords2D> bodyArmorSpriteCoords = new Dictionary<string, Coords2D>()
             {
-                { "Armor", new Coords2D(10, 3) },
-                { "Chainmail", new Coords2D(6, 4) }
+                { "Iron Armor", new Coords2D(16, 7) },
+                { "Leather Armor", new Coords2D(16, 8) },
+                { "Bronze Armor", new Coords2D(16, 9) },
+                { "Steel Chainmail", new Coords2D(18, 7) },
+                { "Iron Chainmail", new Coords2D(18, 8) },
+                { "Bronze Chainmail", new Coords2D(18, 9) }
             };
 
             IDictionary<string, Coords2D> footWearSpriteCoords = new Dictionary<string, Coords2D>()
             {
-                { "Boots", new Coords2D(6, 4) },
-                { "Shoes", new Coords2D(6, 4) }
+                { "Steel Boots", new Coords2D(19, 7) },
+                { "Leather Boots", new Coords2D(19, 8) },
+                { "Bronze Boots", new Coords2D(19, 9) },
             };
 
+            var entityLayer = scene.GetLayer(entityLayerNum);
+
+            // Is position available?
+            var validPosition = scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
+
             // check if deactivated weapon instance is available
-            TArmor? newArmor = entityLayer.ActivateOrCreateEntity<TArmor>(position);
+            TArmor? newArmor = entityLayer.ActivateOrCreateEntity<TArmor>(validPosition);
 
             // IArmor
             newArmor.DamageReduction = Randomizer.RandomInt(0, 100);

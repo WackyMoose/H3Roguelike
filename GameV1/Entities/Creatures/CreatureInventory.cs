@@ -14,7 +14,7 @@ namespace GameV1.Entities.Creatures
 
         public CreatureInventory()
         {
-            Inventory = new Container(ContainerType.Inventory, 8, "Inventory");
+            Inventory = new Container(ContainerType.Inventory, 10, "Inventory");
             HeadGear = new Slot<IHeadGear?>("Head Gear");
             PrimaryWeapon = new Slot<IWeapon?>("Primary Weapon");
             SecondaryWeapon = new Slot<IWeapon?>("Secondary Weapon");

@@ -15,6 +15,8 @@ internal class GameUI : IUIElement
     private ConsolePanel _consolePanel;
     private StatsPanel _statsPanel;
 
+    public StatsPanel StatsPanel { get { return _statsPanel; } set { _statsPanel = value; } }
+
     public event Action BackToMenuButtonClicked;
 
     public GameUI(ICreature player)

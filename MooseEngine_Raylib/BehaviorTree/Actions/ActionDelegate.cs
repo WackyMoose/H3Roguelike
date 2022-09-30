@@ -16,7 +16,7 @@ namespace MooseEngine.BehaviorTree.Actions
         public override NodeStates Evaluate()
         {
             State = m_delegate();
-            Console.WriteLine($"ActionNode returns {State} ");
+           // Console.WriteLine($"ActionNode returns {State} ");
             return State;
         }
 

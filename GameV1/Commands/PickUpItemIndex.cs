@@ -31,8 +31,8 @@ namespace GameV1.Commands
             // Does inventory item exist?
             if (itemAtPosition is null)
             {
-                ConsolePanel.Add($"{Creature.Name} tried to pick up an item that doesn't exist.");
-                ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+               // Console.WriteLine($"{Creature.Name} tried to pick up an item that doesn't exist.");
+               // Console.WriteLine(Creature.Inventory.Inventory.ToString());
                 
                 return NodeStates.Failure;
             }
@@ -48,15 +48,15 @@ namespace GameV1.Commands
                     {
                         itemLayer.ActiveEntities.Remove(itemAtPosition.Position);
                         
-                        ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
-                        ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                       // Console.WriteLine($"{Creature.Name} picked up {itemAtPosition.Name}");
+                       // Console.WriteLine(Creature.Inventory.Inventory.ToString());
                         
                         return NodeStates.Success;
                     }
                     else
                     {
-                        ConsolePanel.Add($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
-                        ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                       // Console.WriteLine($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
+                       // Console.WriteLine(Creature.Inventory.Inventory.ToString());
                         
                         return NodeStates.Failure;
                     }
@@ -65,6 +65,9 @@ namespace GameV1.Commands
                 {
                     // Pick up item from container index ItemIndex
                     var containerAtPosition = (IContainer)itemAtPosition;
+
+                    if (containerAtPosition.Slots.Count()-1 < ItemIndex) { return NodeStates.Failure; }
+
                     var itemToPickUp = containerAtPosition.Slots.ElementAt(ItemIndex).Item;
 
                     if (Creature.Inventory.Inventory.AddItemToFirstEmptySlot(itemToPickUp) == true)
@@ -79,15 +82,15 @@ namespace GameV1.Commands
                         }
 
 
-                        ConsolePanel.Add($"{Creature.Name} picked up {itemAtPosition.Name}");
-                        ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                       // Console.WriteLine($"{Creature.Name} picked up {itemAtPosition.Name}");
+                       // Console.WriteLine(Creature.Inventory.Inventory.ToString());
                         
                         return NodeStates.Success;
                     }
                     else
                     {
-                        ConsolePanel.Add($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
-                        ConsolePanel.Add(Creature.Inventory.Inventory.ToString());
+                       // Console.WriteLine($"{Creature.Name} tried to pick up {itemAtPosition.Name} but their inventory is full.");
+                       // Console.WriteLine(Creature.Inventory.Inventory.ToString());
                         
                         return NodeStates.Failure;
                     }

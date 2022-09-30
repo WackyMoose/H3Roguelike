@@ -31,7 +31,7 @@ namespace MooseEngine.BehaviorTree.Composites
             if (m_currentNode == Children.Count)
             {
                 State = NodeStates.Success;
-                Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
+               // Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
                 Reset();
                 return State;
             }
@@ -52,7 +52,7 @@ namespace MooseEngine.BehaviorTree.Composites
                     break;
             }
 
-            Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
+           // Console.WriteLine($"Serializer returns {State} ({m_currentNode})");
             return State;
         }
 
