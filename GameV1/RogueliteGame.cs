@@ -102,7 +102,7 @@ internal class RogueliteGame : IGame
         var seed = Randomizer.RandomInt(int.MinValue, int.MaxValue);
         GenerateWorld(_gameScene, seed);
 
-        _player = CreatureFactory.CreateCreature<Creature>(_gameScene!, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, name, new Coords2D(), new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
+        _player = CreatureFactory.CreateCreature<Creature>(_gameScene!, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, name, new Coords2D(15, 0), new Vector2(51, 51) * Constants.DEFAULT_ENTITY_SIZE);
 
         var window = Application.Instance.Window;
 
@@ -331,7 +331,7 @@ internal class RogueliteGame : IGame
         // Add Orcs with behavior to campsites
         for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
         {
-            var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", new Coords2D(), WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+            var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", new Coords2D(18, 2), WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
             campDwellingOrc.Stats.Perception = Randomizer.RandomInt(3, 6) * Constants.DEFAULT_ENTITY_SIZE;
             campDwellingOrc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
@@ -367,33 +367,33 @@ internal class RogueliteGame : IGame
         }
 
         // Druid chasing player
-        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Coords2D(), new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        var druid = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Druid", new Coords2D(9, 0), new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //druid.Position = new Vector2(85, 38) * Constants.DEFAULT_ENTITY_SIZE;
         druid.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        druid.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         druid.Stats.Perception = 8 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Randomized walk guard
-        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Coords2D(), new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        var dwarf = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Dwarf, "Dwarf", new Coords2D(15, 0), new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //dwarf.Position = new Vector2(51, 41) * Constants.DEFAULT_ENTITY_SIZE;
         dwarf.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        dwarf.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
 
         // Patrolling guard top-left
-        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Coords2D(), new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        var guard_tl = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Coords2D(20, 2), new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //guard.Position = new Vector2(40, 40) * Constants.DEFAULT_ENTITY_SIZE;
         guard_tl.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_tl.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         guard_tl.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
         // Patrolling guard bottom-right
-        var guard_br = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Human, "Guard", new Coords2D(), new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        var guard_br = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Skeleton, "Guard", new Coords2D(21, 2), new Vector2(62, 57) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         guard_br.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
-        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(6, 4), Color.White));
+        guard_br.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
         guard_br.Stats.Perception = 3 * Constants.DEFAULT_ENTITY_SIZE;
 
 

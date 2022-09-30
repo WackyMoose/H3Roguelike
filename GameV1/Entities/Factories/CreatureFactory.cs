@@ -44,7 +44,8 @@ namespace GameV1.Entities.Factories
                 { CreatureSpecies.Crab, new MeleeWeapon() { Name = "Claws", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Human, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
                 { CreatureSpecies.Dwarf, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 1, MaxDamage = 5 } },
-                { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 10, MaxDamage = 25 } }
+                { CreatureSpecies.Orc, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 10, MaxDamage = 25 } },
+                { CreatureSpecies.Skeleton, new MeleeWeapon() { Name = "Fist", Range = 1, MinDamage = 2, MaxDamage = 8 } }
             };
 
             var entityLayer = scene.GetLayer(entityLayerNum);
@@ -58,17 +59,17 @@ namespace GameV1.Entities.Factories
             //var speciesNum = Randomizer.RandomInt(0, creatureSpriteCoords.Count - 1);
             //newCreature.SpriteCoords = creatureSpriteCoords.ElementAt(speciesNum).Value;
             //newCreature.Species = creatureSpriteCoords.ElementAt(speciesNum).Key;
-            newCreature.SpriteCoords = creatureSpriteCoords.ContainsKey(species) ? creatureSpriteCoords[species] : new Coords2D(4, 1);
+            newCreature.SpriteCoords = spritePosition; // creatureSpriteCoords.ContainsKey(species) ? creatureSpriteCoords[species] : new Coords2D(4, 1);
             newCreature.Species = species;
 
             // Stats
-            newCreature.Stats.Agility = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Charisma = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Fatigue = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Health = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Perception = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Strength = Randomizer.RandomInt(0, 100);
-            newCreature.Stats.Toughness = Randomizer.RandomInt(0, 100);
+            newCreature.Stats.Agility = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Charisma = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Fatigue = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Health = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Perception = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Strength = Randomizer.RandomInt(20, 100);
+            newCreature.Stats.Toughness = Randomizer.RandomInt(20, 100);
             
             // Inventory
             newCreature.Inventory.DefaultWeapon = defaultWeapons[species];

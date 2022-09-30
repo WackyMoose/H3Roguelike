@@ -34,6 +34,13 @@ namespace GameV1.Commands
 
             var inventoryItem = Creature.Inventory.Inventory.RemoveItemFromSlotIndex(ItemIndex);
 
+            List<Coords2D> campFireTextures = new List<Coords2D>()
+            {
+                new Coords2D(8, 8),
+                new Coords2D(9, 8),
+            };
+
+
             List<Coords2D> LootTextures = new List<Coords2D>()
             {
                 new Coords2D(21, 7),
@@ -56,9 +63,9 @@ namespace GameV1.Commands
             if (itemAtPosition is null)
             {
                 // Create Temporary Container
-                var textureCoordsIndex = Randomizer.RandomInt(0, LootTextures.Count - 1);
-                var textureCoords = LootTextures.ElementAt(textureCoordsIndex);
-                var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", textureCoords, Color.White);
+                //var textureCoordsIndex = Randomizer.RandomInt(0, LootTextures.Count - 1);
+                //var textureCoords = LootTextures.ElementAt(textureCoordsIndex);
+                var tempContainer = new Container(ContainerType.PileOfItems, 10, 1000, 1000, "Pile of loot", inventoryItem.SpriteCoords, Color.White);
                 tempContainer.Position = Creature.Position;
 
                 // Add item to container and drop container
@@ -117,9 +124,13 @@ namespace GameV1.Commands
                     {
                         if (containerAtPosition.AddItemToFirstEmptySlot(inventoryItem) == true)
                         {
-                           // Console.WriteLine($"{Creature.Name} dropped {inventoryItem.Name} into {containerAtPosition.Name}");
-                           // Console.WriteLine(Creature.Inventory.ToString());
-                           // Console.WriteLine(Creature.Inventory.Inventory.ToString());
+                            var textureCoordsIndex = Randomizer.RandomInt(0, LootTextures.Count - 1);
+                            var textureCoords = LootTextures.ElementAt(textureCoordsIndex);
+                            
+                            containerAtPosition.SpriteCoords = textureCoords;
+                            // Console.WriteLine($"{Creature.Name} dropped {inventoryItem.Name} into {containerAtPosition.Name}");
+                            // Console.WriteLine(Creature.Inventory.ToString());
+                            // Console.WriteLine(Creature.Inventory.Inventory.ToString());
 
                             return NodeStates.Success;
                         }
