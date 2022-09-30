@@ -10,12 +10,13 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameV1.Entities.Factories
 {
     public static class ArmorFactory
     {
-        public static IArmor? CreateArmor<TArmor>(IEntityLayer entityLayer, Vector2 position) where TArmor : class, IArmor, new()
+        public static IArmor? CreateArmor<TArmor>(IScene scene, int entityLayerNum, Vector2 position, params int[] collisionLayers) where TArmor : class, IArmor, new()
         {
             IDictionary<string, Coords2D> headGearSpriteCoords = new Dictionary<string, Coords2D>()
             {
@@ -41,8 +42,13 @@ namespace GameV1.Entities.Factories
                 { "Bronze Boots", new Coords2D(19, 9) },
             };
 
+            var entityLayer = scene.GetLayer(entityLayerNum);
+
+            // Is position available?
+            var validPosition = scene.GetClosestValidPosition(entityLayerNum, position, collisionLayers);
+
             // check if deactivated weapon instance is available
-            TArmor? newArmor = entityLayer.ActivateOrCreateEntity<TArmor>(position);
+            TArmor? newArmor = entityLayer.ActivateOrCreateEntity<TArmor>(validPosition);
 
             // IArmor
             newArmor.DamageReduction = Randomizer.RandomInt(0, 100);

@@ -239,12 +239,25 @@ public class Scene : Disposeable, IScene
     {
         Dictionary<Vector2, IEntity> tilesWithinDist = new Dictionary<Vector2, IEntity>();
 
-        var v = new Vector2();
+        //var v = new Vector2();
 
-        for (v.Y = topLeft.Y; v.Y <= bottomRight.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        //for (v.Y = topLeft.Y; v.Y <= bottomRight.Y; v.Y += Constants.DEFAULT_ENTITY_SIZE)
+        //{
+        //    for (v.X = topLeft.X; v.X <= bottomRight.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+        //    {
+        //        if (entities.ContainsKey(v))
+        //        {
+        //            tilesWithinDist.Add(v, entities[v]);
+        //        }
+        //    }
+        //}
+
+        for (int y = (int)topLeft.Y; y < bottomRight.Y; y += Constants.DEFAULT_ENTITY_SIZE)
         {
-            for (v.X = topLeft.X; v.X <= bottomRight.X; v.X += Constants.DEFAULT_ENTITY_SIZE)
+            for (int x = (int)topLeft.X; x < bottomRight.X; x += Constants.DEFAULT_ENTITY_SIZE)
             {
+                var v = new Vector2(x, y);
+
                 if (entities.ContainsKey(v))
                 {
                     tilesWithinDist.Add(v, entities[v]);

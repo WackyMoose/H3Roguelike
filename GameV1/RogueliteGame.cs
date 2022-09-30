@@ -200,13 +200,32 @@ internal class RogueliteGame : IGame
 
         var lightSources = _gameScene.GetEntitiesOfType<LightSource>(itemLayer);
 
+        var containers = _gameScene.GetEntitiesOfType<Container>(itemLayer);
+        
+        foreach(var container in containers)
+        {
+            if (container.Value.IsEmpty == false)
+            {
+                foreach (var item in container.Value.Slots)
+                {
+                    if (item.Item is LightSource lightSource)
+                    {
+                        lightSource.Position = container.Key;
+                        lightSources.Add(container.Key, lightSource);
+                    }
+                }
+            }
+        }
+
         foreach (ILightSource lightSource in lightSources.Values)
         {
             var isOverlapping = MathFunctions.IsOverlappingAABB(
                 cameraPosition,
-                windowSize,
+                (int)windowSize.X,
+                (int)windowSize.Y,
                 lightSource.Position,
-                new Vector2(lightSource.Range, lightSource.Range));
+                lightSource.Range, 
+                lightSource.Range);
 
             if (isOverlapping)
             {
@@ -236,14 +255,14 @@ internal class RogueliteGame : IGame
         var itemLayer = scene.AddLayer<ItemBase>(EntityLayer.Items);
         var creatureLayer = scene.AddLayer<Creature>(EntityLayer.Creatures);
 
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 50) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 51) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 52) * Constants.DEFAULT_ENTITY_SIZE);
-        WeaponFactory.CreateWeapon<MeleeWeapon>(itemLayer, new Vector2(62, 53) * Constants.DEFAULT_ENTITY_SIZE);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 49) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 50) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 51) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        WeaponFactory.CreateWeapon<MeleeWeapon>(scene, (int)EntityLayer.Items, new Vector2(48, 52) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
-        ArmorFactory.CreateArmor<BodyArmor>(itemLayer, new Vector2(63, 50) * Constants.DEFAULT_ENTITY_SIZE);
-        ArmorFactory.CreateArmor<HeadGear>(itemLayer, new Vector2(63, 51) * Constants.DEFAULT_ENTITY_SIZE);
-        ArmorFactory.CreateArmor<FootWear>(itemLayer, new Vector2(63, 52) * Constants.DEFAULT_ENTITY_SIZE);
+        ArmorFactory.CreateArmor<BodyArmor>(scene, (int)EntityLayer.Items, new Vector2(53, 50) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        ArmorFactory.CreateArmor<HeadGear>(scene, (int)EntityLayer.Items, new Vector2(53, 51) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
+        ArmorFactory.CreateArmor<FootWear>(scene, (int)EntityLayer.Items, new Vector2(53, 52) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
         //WeaponFactory.CreateMeleeWeapon(itemLayer, new Vector2(65, 44) * Constants.DEFAULT_ENTITY_SIZE);
 
@@ -288,11 +307,13 @@ internal class RogueliteGame : IGame
         LightSource campFire = new LightSource(8 * Constants.DEFAULT_ENTITY_SIZE, new Color(128, 128 - 48, 128 - 96, 255), 1000, 1000, "Torch", new Coords2D(9, 8), Color.White);
 
         campFire.Position = new Vector2(57, 29) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(campFire);
+        //itemLayer?.AddEntity(campFire);
+        scene.TryPlaceEntity((int)EntityLayer.Items, campFire, campFire.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
 
         LightSource townLights = new LightSource(32 * Constants.DEFAULT_ENTITY_SIZE, new Color(128 + 32, 128 + 16, 128, 255), 1000, 1000, "Town lights", new Coords2D(9, 8), Color.White);
         townLights.Position = new Vector2(51, 50) * Constants.DEFAULT_ENTITY_SIZE;
-        itemLayer?.AddEntity(townLights);
+        //itemLayer?.AddEntity(townLights);
+        scene.TryPlaceEntity((int)EntityLayer.Items, townLights, townLights.Position, (int)EntityLayer.Creatures, (int)EntityLayer.NonWalkableTiles);
 
         for (int i = 0; i < WorldGenerator._structurePositions.Count; i++)
         {
@@ -312,7 +333,9 @@ internal class RogueliteGame : IGame
         {
             var campDwellingOrc = CreatureFactory.CreateCreature<Creature>(scene, (int)EntityLayer.Creatures, CreatureSpecies.Orc, "Orc", new Coords2D(), WorldGenerator._structurePositions[i] + new Vector2(5, 5) * Constants.DEFAULT_ENTITY_SIZE, (int)EntityLayer.NonWalkableTiles);
 
-            campDwellingOrc.Stats.Perception = Randomizer.RandomInt(4, 8) * Constants.DEFAULT_ENTITY_SIZE;
+            campDwellingOrc.Stats.Perception = Randomizer.RandomInt(3, 6) * Constants.DEFAULT_ENTITY_SIZE;
+            campDwellingOrc.Inventory.PrimaryWeapon.Add(new MeleeWeapon(100, 10, "Sword", new Coords2D(6, 4), Color.White));
+            campDwellingOrc.Inventory.BodyArmor.Add(new BodyArmor(100, 10, "Body Armor", new Coords2D(18, 7), Color.White));
 
             var patrolRange = Randomizer.RandomInt(4, 8);
 
@@ -379,23 +402,23 @@ internal class RogueliteGame : IGame
         scene.PathMap = _nodeMap.GenerateMap(walkableTileLayer);
 
         // dwarf walk guard Behavior tree
-        //var dwarfNode =
+        var dwarfNode =
 
-        //    Serializer(
-        //        Action(new PatrolRectangularArea(
-        //            scene,
-        //            dwarf,
-        //            campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
-        //            campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
-        //            )),
-        //        Delay(
-        //            Action(new Idle()),
-        //            2)
-        //        );
+            Serializer(
+                Action(new PatrolRectangularArea(
+                    scene,
+                    dwarf,
+                    campFire.Position + new Vector2(-4, -4) * Constants.DEFAULT_ENTITY_SIZE,
+                    campFire.Position + new Vector2(4, 4) * Constants.DEFAULT_ENTITY_SIZE
+                    )),
+                Delay(
+                    Action(new Idle()),
+                    2)
+                );
 
-        //var dwarfTree = BehaviorTree(dwarf, dwarfNode);
+        var dwarfTree = BehaviorTree(dwarf, dwarfNode);
 
-        //btrees.Add(dwarfTree);
+        btrees.Add(dwarfTree);
 
         //Druid behavior tree
         //Roam around randomly in a part of the map
