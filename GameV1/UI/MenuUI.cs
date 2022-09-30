@@ -36,6 +36,8 @@ internal class MenuUI : IUIElement
     private ButtonOptions _loadButton;
     private ButtonOptions _quitButton;
 
+    private string _username;
+
     public event Action<string, int> OnCreateNewGameButtonClicked;
 
     public MenuUI()
@@ -65,8 +67,7 @@ internal class MenuUI : IUIElement
         var panelHeaderPosition = new UIScreenCoords((int)panelHeaderRect.x, (int)panelHeaderRect.y);
         var panelHeaderSize = new UIScreenCoords((int)panelHeaderRect.width, (int)panelHeaderRect.height);
 
-        var username = "KingoBoiii";
-        _greetingsLabel = new LabelOptions(new UIScreenCoords(panelHeaderPosition.X + 10, panelHeaderPosition.Y + 10), $"Hello, {username}", 24);
+        _greetingsLabel = new LabelOptions(new UIScreenCoords(panelHeaderPosition.X + 10, panelHeaderPosition.Y + 10), "Hello, xxx", 24);
 
         var buttonSize = new UIScreenCoords(275, 50);
         var buttonPosition = new UIScreenCoords(panelPosition.X + (panelSize.X / 2) - buttonSize.X / 2, panelPosition.Y + 65);
@@ -108,6 +109,7 @@ internal class MenuUI : IUIElement
 
     private void LoginForm_OnLoginButtonClicked(string username)
     {
+        _greetingsLabel.Text = $"Hello, {username}";
         _menuState = MenuState.MainMenu;
     }
 
